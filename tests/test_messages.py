@@ -6,6 +6,8 @@ from aven.core.messages import (
     ToolCall,
     ToolResultMessage,
     UserMessage,
+    from_dict,
+    to_dict,
     to_llm,
 )
 
@@ -57,3 +59,52 @@ def test_assistant_with_no_text_emits_no_empty_text_block():
 def test_failed_tool_result_keeps_is_error():
     seen = to_llm([ToolResultMessage(tool_call_id="1", tool_name="x", output="boom", is_error=True)])
     assert seen[0]["content"][0]["is_error"] is True
+
+
+# --- serialisation ---------------------------------------------------------
+
+
+def test_roundtrip_preserves_equality():
+    for msg in (
+        UserMessage(text="整理发票", source="trigger:cron"),
+        NoteMessage(text="matched routine", level="warn"),
+        ToolResultMessage(tool_call_id="1", tool_name="x", output="ok", is_error=True),
+    ):
+        assert from_dict(to_dict(msg)) == msg
+
+
+def test_roundtrip_rebuilds_tool_calls_as_objects():
+    """asdict flattens ToolCall into a dict; from_dict has to build it back.
+
+    Without this, a restored session would hand to_llm a list of dicts and blow
+    up with AttributeError on the first .id access.
+    """
+    msg = AssistantMessage(text="x", tool_calls=[ToolCall(name="f", args={"a": 1})])
+    back = from_dict(to_dict(msg))
+
+    assert back == msg
+    assert isinstance(back.tool_calls[0], ToolCall)
+    assert to_llm([back])[0]["content"][1]["name"] == "f"
+
+
+def test_kind_survives_even_though_it_is_not_a_field():
+    assert to_dict(UserMessage(text="hi"))["kind"] == "user"
+
+
+def test_unknown_fields_from_a_newer_version_are_dropped():
+    line = {"kind": "user", "text": "hi", "redacted_handles": ["<<person:7>>"]}
+    assert from_dict(line).text == "hi"
+
+
+def test_unknown_kind_is_rejected_loudly():
+    import pytest
+
+    with pytest.raises(ValueError, match="unknown message kind"):
+        from_dict({"kind": "hologram"})
+
+
+def test_json_line_is_human_readable_with_chinese():
+    import json
+
+    line = json.dumps(to_dict(UserMessage(text="整理发票")), ensure_ascii=False)
+    assert "整理发票" in line

@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import time
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field, fields
 from typing import Any, ClassVar, Literal
 
 # The wire format we normalise on internally is Anthropic's, because it is the
@@ -152,3 +152,52 @@ def to_llm(messages: list[Message]) -> list[LlmMessage]:
 def _is_tool_result_batch(llm_msg: LlmMessage) -> bool:
     content = llm_msg.get("content")
     return bool(content) and all(b.get("type") == "tool_result" for b in content)
+
+
+# ---------------------------------------------------------------------------
+# Serialisation
+#
+# Sessions are append-only JSONL: one message per line, never rewritten. That
+# shapes both directions below - `to_dict` must be complete (nothing is stored
+# anywhere else), and `from_dict` must tolerate lines written by a future
+# version of aven, because old code will keep reading new files.
+# ---------------------------------------------------------------------------
+
+_KINDS: dict[str, type[BaseMessage]] = {
+    cls.kind: cls
+    for cls in (UserMessage, AssistantMessage, ToolResultMessage, NoteMessage)
+}
+
+
+def to_dict(msg: Message) -> dict[str, Any]:
+    """Message -> a plain dict ready for json.dumps.
+
+    `asdict` recurses into nested dataclasses, so `tool_calls` becomes a list of
+    dicts for free. What it cannot do is emit `kind`: that is a ClassVar, not a
+    field, so it never appears in `fields()` - we put it back by hand. Without
+    it the line would be unreadable on the way in.
+    """
+    data = asdict(msg)
+    data["kind"] = msg.kind
+    return data
+
+
+def from_dict(data: dict[str, Any]) -> Message:
+    """A stored dict -> the message it came from.
+
+    Unknown keys are dropped rather than raising. A session file outlives the
+    code that wrote it; a field added in a later version must not make every
+    older build crash on the whole history.
+    """
+    kind = data.get("kind")
+    cls = _KINDS.get(kind)
+    if cls is None:
+        raise ValueError(f"unknown message kind: {kind!r}")
+
+    known = {f.name for f in fields(cls)}
+    kwargs = {k: v for k, v in data.items() if k in known}
+
+    if cls is AssistantMessage:
+        kwargs["tool_calls"] = [ToolCall(**c) for c in data.get("tool_calls", [])]
+
+    return cls(**kwargs)
