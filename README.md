@@ -51,8 +51,8 @@ into this tree.
 | 2 | Session tree, JSONL store, branching | **done** |
 | 3 | Event stream + agent loop | **done** |
 | 4 | Tool protocol (`preview` / `undo` / `reversible`) | **done** |
-| 5 | Transaction layer: staging, commit, undo | next |
-| 6 | Real model, first end-to-end task | |
+| 5 | Transaction layer: staging, commit, undo | **done** |
+| 6 | Real model, first end-to-end task | next |
 
 ### Implemented
 
@@ -72,6 +72,11 @@ into this tree.
   from the function signature and makes each tool declare its risk
   (`read` / `reversible` / `irreversible`), how to preview a call before it
   runs, and how to undo it afterwards.
+- `aven/tx/tray.py` - `Tray`, which turns that declared risk into behaviour:
+  reads run unrecorded, reversible work runs and keeps its undo, irreversible
+  work is staged and the model is told so. The agent finishes its whole task
+  without sending, paying or deleting; the user then reviews one batch and
+  commits, discards, or rolls back newest-first.
 
 ## Run
 

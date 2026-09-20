@@ -33,6 +33,7 @@ from aven.core.messages import (
 )
 from aven.core.session import Session
 from aven.core.tools import Tool
+from aven.tx import Tray
 
 # Injected, never imported: the loop must stay runnable with no API key, and a
 # test must be able to script a model's replies exactly.
@@ -45,6 +46,7 @@ def run(
     prompt: str,
     model: ModelFn,
     tools: Sequence[Tool] | None = None,
+    tray: Tray | None = None,
     max_turns: int = 12,
     source: str = "chat",
 ) -> Iterator[Event]:
@@ -55,6 +57,10 @@ def run(
     without having to recognise tool results among the message stream.
     """
     by_name = {t.name: t for t in tools or ()}
+
+    # No tray passed still means no irreversible action: one is created here and
+    # its pending entries are simply never committed. Safe by omission.
+    tray = tray if tray is not None else Tray()
 
     yield AgentStart(prompt=prompt)
     yield MessageEnd(message=session.append(UserMessage(text=prompt, source=source)))
@@ -75,10 +81,10 @@ def run(
 
         for call in reply.tool_calls:
             yield ToolStart(call=call)
-            message, undo = _execute(call, by_name)
+            message, staged = _execute(call, by_name, tray, origin=reply.id)
             session.append(message)
             yield MessageEnd(message=message)
-            yield ToolEnd(call=call, result=message, undo=undo)
+            yield ToolEnd(call=call, result=message, staged=staged)
 
         yield TurnEnd(index=index, message=reply)
 
@@ -88,34 +94,35 @@ def run(
 
 
 def _execute(
-    call: ToolCall, tools: dict[str, Tool]
-) -> tuple[ToolResultMessage, Callable[[], None] | None]:
-    """Run one tool call, turning any failure into a result.
+    call: ToolCall, tools: dict[str, Tool], tray: Tray, origin: str
+) -> tuple[ToolResultMessage, bool]:
+    """Hand one tool call to the tray, turning any failure into a result.
 
     Never raise out of here. A tool_use with no matching tool_result is a
     malformed conversation, so a crashed tool has to come back as an errored
     result the model can read and react to.
 
-    Returns the message to store plus the tool's undo, which is not part of the
-    conversation - the model has no business knowing how to reverse itself.
+    The loop no longer decides whether a call runs - the tray does, from the
+    tool's declared risk. All the loop passes on is which message the call came
+    out of, so an undo can roll the conversation back to the same point.
     """
 
-    def failure(output: str) -> tuple[ToolResultMessage, None]:
+    def failure(output: str) -> tuple[ToolResultMessage, bool]:
         message = ToolResultMessage(
             tool_call_id=call.id, tool_name=call.name, output=output, is_error=True
         )
-        return message, None
+        return message, False
 
     found = tools.get(call.name)
     if found is None:
         return failure(f"no such tool: {call.name!r}")
 
     try:
-        result = found(**call.args)
+        output, staged = tray.execute(found, call.args, origin_message_id=origin)
     except Exception as exc:
         return failure(f"{type(exc).__name__}: {exc}")
 
     message = ToolResultMessage(
-        tool_call_id=call.id, tool_name=call.name, output=result.output
+        tool_call_id=call.id, tool_name=call.name, output=output
     )
-    return message, result.undo
+    return message, staged

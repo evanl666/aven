@@ -11,6 +11,7 @@ from aven.core.events import ToolEnd, ToolStart
 from aven.core.messages import AssistantMessage, ToolCall, new_id
 from aven.core.session import Session
 from aven.core.tools import ToolResult, tool
+from aven.tx import Tray
 
 # --- a sandbox with real files ---------------------------------------------
 
@@ -78,26 +79,23 @@ session = Session.open(path)
 
 print(f"\n═══ ② 执行前 报销/ = {sorted(p.name for p in (BOX / '报销').iterdir())} ═══")
 
-undos = []
+tray = Tray()
 by_name = {t.name: t for t in TOOLS}
-for ev in run(session=session, prompt="把发票归档", model=model, tools=TOOLS):
+for ev in run(session=session, prompt="把发票归档", model=model, tools=TOOLS, tray=tray):
     match ev:
         case ToolStart():
             t = by_name[ev.call.name]
             print(f"  [{t.risk}] {t.preview(ev.call.args)}")     # ← 执行之前
         case ToolEnd():
             print(f"      ✓ {ev.result.output}")
-            if ev.undo:
-                undos.append(ev.undo)
 
 print(f"\n执行后 报销/    = {sorted(p.name for p in (BOX / '报销').iterdir())}")
 print(f"       Downloads/ = {sorted(p.name for p in (BOX / 'Downloads').iterdir())}")
 
 # --- ③ undo ----------------------------------------------------------------
 
-print(f"\n═══ ③ 用户点了撤销({len(undos)} 个可撤销操作)═══")
-for u in reversed(undos):
-    u()
+print(f"\n═══ ③ 用户点了撤销({len(tray.undoable())} 个可撤销操作)═══")
+tray.undo()
 
 print(f"撤销后 报销/    = {sorted(p.name for p in (BOX / '报销').iterdir())}")
 print(f"       Downloads/ = {sorted(p.name for p in (BOX / 'Downloads').iterdir())}")

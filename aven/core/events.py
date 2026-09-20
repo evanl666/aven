@@ -10,7 +10,6 @@ nothing downstream should be able to edit it.
 
 from __future__ import annotations
 
-from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Literal
 
@@ -44,9 +43,10 @@ class ToolEnd:
     call: ToolCall
     result: ToolResultMessage
 
-    # How to take this one back, when the tool knew how. Step 5 collects these
-    # into the pending tray; for now it lets a caller undo by hand.
-    undo: Callable[[], None] | None = None
+    # True when risk was irreversible and the call was put in the tray instead
+    # of being made. The undo itself belongs to the tray, not to an event - one
+    # owner, so nothing can roll back twice.
+    staged: bool = False
 
 
 @dataclass(frozen=True, kw_only=True)
