@@ -35,9 +35,10 @@ aven/
   core/        messages, events, agent loop, tool protocol
   tx/          staging / commit / undo          <- the heart
   model/       the only place a provider SDK is imported
+  tools/       the tools that ship with aven, scoped to one root
+  cli/         a client of the daemon, nothing more
   actuators/   native | shortcuts | osascript | browser
   daemon/      resident process + trigger bus
-  cli/         a client of the daemon, nothing more
 ```
 
 `aven` is a plain package. Third-party extensions will be discovered through
@@ -54,6 +55,7 @@ into this tree.
 | 4 | Tool protocol (`preview` / `undo` / `reversible`) | **done** |
 | 5 | Transaction layer: staging, commit, undo | **done** |
 | 6 | Real model, first end-to-end task | **done** |
+| 7 | CLI: file tools, event rendering, the review step | **done** |
 
 ### Implemented
 
@@ -83,19 +85,26 @@ into this tree.
   thinking blocks, keeps the latter whole for replay, maps stop reasons, and
   totals token usage. The client is injectable, so the adapter is tested with
   no key and no network.
+- `aven/tools/files.py` - list / read / write / move / delete, every path
+  resolved and checked against one root before anything happens. Deletion moves
+  to an aven-owned trash, which is what makes it reversible.
+- `aven/cli/` - `render.py` turns events into terminal output and can do nothing
+  else; `review.py` is the approval step; `main.py` wires a session, a root, a
+  model and a tray together behind the `aven` command.
 
 ## Run
 
 ```bash
 python3 -m venv .venv
-.venv/bin/pip install -e ".[dev,claude]"
-
-.venv/bin/python -m pytest -q            # 56 tests, no key, no network
-.venv/bin/python examples/06_tray.py     # staging and undo, scripted model
+.venv/bin/pip install -e ".[dev]"
+.venv/bin/python -m pytest -q             # 75 tests, no key, no network
 
 export ANTHROPIC_API_KEY=sk-ant-...
-.venv/bin/python examples/07_real.py     # the same loop against Claude
+cd ~/some/folder
+aven "把下载目录里的发票整理一下"          # one task, then review
+aven                                       # keep talking
+aven -c                                    # continue the last session
 ```
 
-Python 3.11+. The core has no runtime dependencies; `anthropic` is needed only
-to talk to Claude.
+`--root` is the only directory aven may touch and defaults to the current one.
+Python 3.11+.

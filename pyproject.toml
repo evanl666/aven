@@ -3,10 +3,12 @@ name = "aven"
 version = "0.0.1"
 description = "A local-first personal assistant harness: your machine, your keys, your data."
 requires-python = ">=3.11"
-dependencies = []
+dependencies = ["anthropic>=1.0"]
+
+[project.scripts]
+aven = "aven.cli.main:main"
 
 [project.optional-dependencies]
-claude = ["anthropic>=1.0"]
 dev = ["pytest>=8.0"]
 
 [build-system]
