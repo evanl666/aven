@@ -34,6 +34,7 @@ These are decided up front because retrofitting any of them is painful.
 aven/
   core/        messages, events, agent loop, tool protocol
   tx/          staging / commit / undo          <- the heart
+  model/       the only place a provider SDK is imported
   actuators/   native | shortcuts | osascript | browser
   daemon/      resident process + trigger bus
   cli/         a client of the daemon, nothing more
@@ -52,7 +53,7 @@ into this tree.
 | 3 | Event stream + agent loop | **done** |
 | 4 | Tool protocol (`preview` / `undo` / `reversible`) | **done** |
 | 5 | Transaction layer: staging, commit, undo | **done** |
-| 6 | Real model, first end-to-end task | next |
+| 6 | Real model, first end-to-end task | **done** |
 
 ### Implemented
 
@@ -77,15 +78,24 @@ into this tree.
   work is staged and the model is told so. The agent finishes its whole task
   without sending, paying or deleting; the user then reviews one batch and
   commits, discards, or rolls back newest-first.
+- `aven/model/claude.py` - the only file importing a provider SDK. It satisfies
+  `ModelFn` and nothing else: splits a response into text, tool calls and
+  thinking blocks, keeps the latter whole for replay, maps stop reasons, and
+  totals token usage. The client is injectable, so the adapter is tested with
+  no key and no network.
 
 ## Run
 
 ```bash
 python3 -m venv .venv
-.venv/bin/pip install -e ".[dev]"
+.venv/bin/pip install -e ".[dev,claude]"
 
-.venv/bin/python examples/01_messages.py
-.venv/bin/python -m pytest -q
+.venv/bin/python -m pytest -q            # 56 tests, no key, no network
+.venv/bin/python examples/06_tray.py     # staging and undo, scripted model
+
+export ANTHROPIC_API_KEY=sk-ant-...
+.venv/bin/python examples/07_real.py     # the same loop against Claude
 ```
 
-No runtime dependencies yet, Python 3.11+.
+Python 3.11+. The core has no runtime dependencies; `anthropic` is needed only
+to talk to Claude.

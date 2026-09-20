@@ -70,7 +70,15 @@ class AssistantMessage(BaseMessage):
 
     text: str = ""
     tool_calls: list[ToolCall] = field(default_factory=list)
-    stop_reason: Literal["end_turn", "tool_use", "max_tokens", "aborted", "error"] = "end_turn"
+    stop_reason: Literal[
+        "end_turn", "tool_use", "max_tokens", "refusal", "aborted", "error"
+    ] = "end_turn"
+
+    # Provider blocks we store without understanding them. Claude reasons before
+    # calling a tool, and the next request has to carry that reasoning back
+    # verbatim or the call is rejected. Opaque in, opaque out - never edited,
+    # never shown to the user.
+    thinking: list[dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass(kw_only=True)
@@ -103,10 +111,11 @@ Message = UserMessage | AssistantMessage | ToolResultMessage | NoteMessage
 def to_llm(messages: list[Message]) -> list[LlmMessage]:
     """Project stored messages down to what the model sees.
 
-    Two things happen here that are easy to get wrong:
+    Three things happen here that are easy to get wrong:
 
     1. NoteMessage disappears entirely.
-    2. Consecutive tool results are merged into one user message. Anthropic
+    2. Thinking blocks lead the assistant turn, in their original order.
+    3. Consecutive tool results are merged into one user message. Anthropic
        carries tool results under role "user", and a parallel tool batch must
        come back as one message with several tool_result blocks, not one
        message each.
@@ -121,7 +130,8 @@ def to_llm(messages: list[Message]) -> list[LlmMessage]:
             out.append({"role": "user", "content": [{"type": "text", "text": msg.text}]})
 
         elif isinstance(msg, AssistantMessage):
-            content: list[dict[str, Any]] = []
+            # Thinking first: the provider requires the original order back.
+            content: list[dict[str, Any]] = list(msg.thinking)
             if msg.text:
                 content.append({"type": "text", "text": msg.text})
             for call in msg.tool_calls:
