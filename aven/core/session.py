@@ -59,6 +59,12 @@ class Session:
         a truncated line but never a message that exists in memory and not on
         disk.
         """
+        if msg.id in self._messages:
+            # append mutates parent_id, so re-appending the same object would
+            # quietly make it its own ancestor. Fail here, not three calls later
+            # inside history().
+            raise ValueError(f"message {msg.id!r} is already in this session")
+
         msg.parent_id = self.head
 
         with self.path.open("a", encoding="utf-8") as f:

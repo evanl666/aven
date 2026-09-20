@@ -84,3 +84,13 @@ def test_checkout_rejects_unknown_ids(tmp_path):
     s = Session.open(tmp_path / "s.jsonl")
     with pytest.raises(KeyError):
         s.checkout("nope")
+
+
+def test_appending_the_same_message_twice_is_rejected(tmp_path):
+    """append mutates parent_id, so a re-append would make a node its own parent."""
+    s = Session.open(tmp_path / "s.jsonl")
+    m = s.append(UserMessage(text="hi"))
+    s.append(AssistantMessage(text="yo"))
+
+    with pytest.raises(ValueError, match="already in this session"):
+        s.append(m)

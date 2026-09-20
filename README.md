@@ -49,8 +49,8 @@ into this tree.
 |---|---|---|
 | 1 | Message types, session/LLM split | **done** |
 | 2 | Session tree, JSONL store, branching | **done** |
-| 3 | Event stream + agent loop | next |
-| 4 | Tool protocol (`preview` / `undo` / `reversible`) | |
+| 3 | Event stream + agent loop | **done** |
+| 4 | Tool protocol (`preview` / `undo` / `reversible`) | next |
 | 5 | Transaction layer: staging, commit, undo | |
 | 6 | Real model, first end-to-end task | |
 
@@ -63,6 +63,11 @@ into this tree.
 - `aven/core/session.py` - `Session`, an append-only JSONL file holding the
   message tree. `head` is the next append point, so branching is `checkout` plus
   `append` - one extra line, never a rewrite.
+- `aven/core/events.py` - the frozen records the loop hands out.
+- `aven/core/agent.py` - `run()`, a generator driving model call -> tool
+  execution -> feed back, bounded by `max_turns`. The model function and the
+  tools are injected, so the loop runs with no API key and a test can script a
+  model's replies exactly.
 
 ## Run
 
