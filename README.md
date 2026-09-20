@@ -48,8 +48,8 @@ into this tree.
 | Step | | |
 |---|---|---|
 | 1 | Message types, session/LLM split | **done** |
-| 2 | Session tree, JSONL store, branching | next |
-| 3 | Event stream + agent loop | |
+| 2 | Session tree, JSONL store, branching | **done** |
+| 3 | Event stream + agent loop | next |
 | 4 | Tool protocol (`preview` / `undo` / `reversible`) | |
 | 5 | Transaction layer: staging, commit, undo | |
 | 6 | Real model, first end-to-end task | |
@@ -57,8 +57,12 @@ into this tree.
 ### Implemented
 
 - `aven/core/messages.py` - `UserMessage` / `AssistantMessage` /
-  `ToolResultMessage` / `NoteMessage`, all nodes in a tree via `parent_id`, plus
-  `to_llm()` which projects stored messages down to what the model sees.
+  `ToolResultMessage` / `NoteMessage`, all nodes in a tree via `parent_id`;
+  `to_llm()` projects them down to what the model sees; `to_dict` / `from_dict`
+  round-trip them through plain JSON.
+- `aven/core/session.py` - `Session`, an append-only JSONL file holding the
+  message tree. `head` is the next append point, so branching is `checkout` plus
+  `append` - one extra line, never a rewrite.
 
 ## Run
 
