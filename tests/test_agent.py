@@ -6,6 +6,7 @@ from aven.core.agent import run
 from aven.core.events import AgentEnd, AgentStart, MessageEnd, ToolEnd, ToolStart, TurnEnd, TurnStart
 from aven.core.messages import AssistantMessage, ToolCall, new_id
 from aven.core.session import Session
+from aven.core.tools import ToolResult, tool
 
 
 def scripted(*replies):
@@ -21,6 +22,18 @@ def scripted(*replies):
         return replace(reply, id=new_id())
 
     return model
+
+
+@tool()
+def echo(x: str) -> str:
+    """Echo a string back."""
+    return x
+
+
+@tool(name="echo")
+def echo0() -> str:
+    """Echo with no arguments."""
+    return "x"
 
 
 def test_a_plain_answer_is_one_turn(tmp_path):
@@ -42,7 +55,7 @@ def test_tool_call_feeds_back_into_a_second_turn(tmp_path):
         AssistantMessage(text="done"),
     )
 
-    events = list(run(session=s, prompt="go", model=model, tools={"echo": lambda x: x}))
+    events = list(run(session=s, prompt="go", model=model, tools=[echo]))
 
     assert sum(isinstance(e, TurnStart) for e in events) == 2
     tool_end = next(e for e in events if isinstance(e, ToolEnd))
@@ -55,6 +68,7 @@ def test_a_crashing_tool_becomes_an_errored_result(tmp_path):
     """A tool_use with no tool_result is a malformed conversation."""
     s = Session.open(tmp_path / "s.jsonl")
 
+    @tool(name="boom")
     def boom():
         raise RuntimeError("nope")
 
@@ -64,7 +78,7 @@ def test_a_crashing_tool_becomes_an_errored_result(tmp_path):
         AssistantMessage(text="recovered"),
     )
 
-    events = list(run(session=s, prompt="go", model=model, tools={"boom": boom}))
+    events = list(run(session=s, prompt="go", model=model, tools=[boom]))
     result = next(e for e in events if isinstance(e, ToolEnd)).result
 
     assert result.is_error is True
@@ -94,7 +108,7 @@ def test_max_turns_stops_a_runaway_model(tmp_path):
     )
 
     events = list(
-        run(session=s, prompt="go", model=model, tools={"echo": lambda: "x"}, max_turns=3)
+        run(session=s, prompt="go", model=model, tools=[echo0], max_turns=3)
     )
 
     assert sum(isinstance(e, TurnStart) for e in events) == 3
@@ -109,7 +123,7 @@ def test_every_appended_message_emits_exactly_one_message_end(tmp_path):
         AssistantMessage(text="done"),
     )
 
-    events = list(run(session=s, prompt="go", model=model, tools={"echo": lambda x: x}))
+    events = list(run(session=s, prompt="go", model=model, tools=[echo]))
     ended = [e.message.id for e in events if isinstance(e, MessageEnd)]
 
     assert ended == [m.id for m in s.history()]
@@ -128,5 +142,5 @@ def test_the_model_sees_the_current_path_growing(tmp_path):
         seen.append(len(llm_messages))
         return replies.pop(0)
 
-    list(run(session=s, prompt="go", model=model, tools={"echo": lambda x: x}))
+    list(run(session=s, prompt="go", model=model, tools=[echo]))
     assert seen == [1, 3], "turn 2 sees the user turn, the tool call, and its result"

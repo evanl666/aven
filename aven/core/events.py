@@ -10,6 +10,7 @@ nothing downstream should be able to edit it.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Literal
 
@@ -42,6 +43,10 @@ class ToolStart:
 class ToolEnd:
     call: ToolCall
     result: ToolResultMessage
+
+    # How to take this one back, when the tool knew how. Step 5 collects these
+    # into the pending tray; for now it lets a caller undo by hand.
+    undo: Callable[[], None] | None = None
 
 
 @dataclass(frozen=True, kw_only=True)

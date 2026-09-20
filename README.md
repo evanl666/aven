@@ -50,8 +50,8 @@ into this tree.
 | 1 | Message types, session/LLM split | **done** |
 | 2 | Session tree, JSONL store, branching | **done** |
 | 3 | Event stream + agent loop | **done** |
-| 4 | Tool protocol (`preview` / `undo` / `reversible`) | next |
-| 5 | Transaction layer: staging, commit, undo | |
+| 4 | Tool protocol (`preview` / `undo` / `reversible`) | **done** |
+| 5 | Transaction layer: staging, commit, undo | next |
 | 6 | Real model, first end-to-end task | |
 
 ### Implemented
@@ -68,6 +68,10 @@ into this tree.
   execution -> feed back, bounded by `max_turns`. The model function and the
   tools are injected, so the loop runs with no API key and a test can script a
   model's replies exactly.
+- `aven/core/tools.py` - `@tool`, which derives the model-facing JSON schema
+  from the function signature and makes each tool declare its risk
+  (`read` / `reversible` / `irreversible`), how to preview a call before it
+  runs, and how to undo it afterwards.
 
 ## Run
 

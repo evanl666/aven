@@ -11,7 +11,7 @@ to talk to a model, what a tool does, or how any of it is displayed.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterator, Sequence
 
 from aven.core.events import (
     AgentEnd,
@@ -32,14 +32,11 @@ from aven.core.messages import (
     to_llm,
 )
 from aven.core.session import Session
+from aven.core.tools import Tool
 
 # Injected, never imported: the loop must stay runnable with no API key, and a
 # test must be able to script a model's replies exactly.
 ModelFn = Callable[[list[LlmMessage]], AssistantMessage]
-
-# Step 4 replaces this with a real tool protocol carrying preview/undo. For now
-# a tool is just a callable that returns something printable.
-ToolFn = Callable[..., object]
 
 
 def run(
@@ -47,7 +44,7 @@ def run(
     session: Session,
     prompt: str,
     model: ModelFn,
-    tools: dict[str, ToolFn] | None = None,
+    tools: Sequence[Tool] | None = None,
     max_turns: int = 12,
     source: str = "chat",
 ) -> Iterator[Event]:
@@ -57,7 +54,7 @@ def run(
     results additionally get a ToolEnd, so a renderer can show a finished tool
     without having to recognise tool results among the message stream.
     """
-    tools = tools or {}
+    by_name = {t.name: t for t in tools or ()}
 
     yield AgentStart(prompt=prompt)
     yield MessageEnd(message=session.append(UserMessage(text=prompt, source=source)))
@@ -78,9 +75,10 @@ def run(
 
         for call in reply.tool_calls:
             yield ToolStart(call=call)
-            result = session.append(_execute(call, tools))
-            yield MessageEnd(message=result)
-            yield ToolEnd(call=call, result=result)
+            message, undo = _execute(call, by_name)
+            session.append(message)
+            yield MessageEnd(message=message)
+            yield ToolEnd(call=call, result=message, undo=undo)
 
         yield TurnEnd(index=index, message=reply)
 
@@ -89,32 +87,35 @@ def run(
     yield AgentEnd(reason="max_turns")
 
 
-def _execute(call: ToolCall, tools: dict[str, ToolFn]) -> ToolResultMessage:
+def _execute(
+    call: ToolCall, tools: dict[str, Tool]
+) -> tuple[ToolResultMessage, Callable[[], None] | None]:
     """Run one tool call, turning any failure into a result.
 
     Never raise out of here. A tool_use with no matching tool_result is a
     malformed conversation, so a crashed tool has to come back as an errored
     result the model can read and react to.
+
+    Returns the message to store plus the tool's undo, which is not part of the
+    conversation - the model has no business knowing how to reverse itself.
     """
-    fn = tools.get(call.name)
-    if fn is None:
-        return ToolResultMessage(
-            tool_call_id=call.id,
-            tool_name=call.name,
-            output=f"no such tool: {call.name!r}",
-            is_error=True,
+
+    def failure(output: str) -> tuple[ToolResultMessage, None]:
+        message = ToolResultMessage(
+            tool_call_id=call.id, tool_name=call.name, output=output, is_error=True
         )
+        return message, None
+
+    found = tools.get(call.name)
+    if found is None:
+        return failure(f"no such tool: {call.name!r}")
 
     try:
-        output = fn(**call.args)
+        result = found(**call.args)
     except Exception as exc:
-        return ToolResultMessage(
-            tool_call_id=call.id,
-            tool_name=call.name,
-            output=f"{type(exc).__name__}: {exc}",
-            is_error=True,
-        )
+        return failure(f"{type(exc).__name__}: {exc}")
 
-    return ToolResultMessage(
-        tool_call_id=call.id, tool_name=call.name, output=str(output)
+    message = ToolResultMessage(
+        tool_call_id=call.id, tool_name=call.name, output=result.output
     )
+    return message, result.undo
