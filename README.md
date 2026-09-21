@@ -36,8 +36,8 @@ aven/
   tx/          staging / commit / undo          <- the heart
   model/       the only place a provider SDK is imported
   tools/       the tools that ship with aven, scoped to one root
-  cli/         a client of the daemon, nothing more
   actuators/   native | shortcuts | osascript | browser
+  cli/         a client of the daemon, nothing more
   daemon/      resident process + trigger bus
 ```
 
@@ -56,6 +56,7 @@ into this tree.
 | 5 | Transaction layer: staging, commit, undo | **done** |
 | 6 | Real model, first end-to-end task | **done** |
 | 7 | CLI: file tools, event rendering, the review step | **done** |
+| 8 | macOS actuators: Spotlight, Calendar, Mail | **done** |
 
 ### Implemented
 
@@ -91,6 +92,11 @@ into this tree.
 - `aven/cli/` - `render.py` turns events into terminal output and can do nothing
   else; `review.py` is the approval step; `main.py` wires a session, a root, a
   model and a tray together behind the `aven` command.
+- `aven/actuators/mac.py` - Spotlight, Calendar and Mail through `osascript`.
+  Values never enter the script text: AppleScript evaluates as it concatenates,
+  so everything is passed out of band via `on run argv`, which is to AppleScript
+  what a bound parameter is to SQL. This is also where the first irreversible
+  tool lives, which is what makes the tray matter outside a demo.
 
 ## Run
 
@@ -106,5 +112,7 @@ aven                                       # keep talking
 aven -c                                    # continue the last session
 ```
 
-`--root` is the only directory aven may touch and defaults to the current one.
-Python 3.11+.
+`--root` is the only directory the file tools may touch and defaults to the
+current one. On macOS, Calendar, Mail and Spotlight are also available -
+macOS does that scoping itself, and will ask you the first time. `--no-mac`
+turns them off. Python 3.11+.

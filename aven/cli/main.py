@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import platform
 import sys
 import time
 from pathlib import Path
@@ -21,6 +22,7 @@ from aven.cli.review import review
 from aven.core.agent import run
 from aven.core.session import Session
 from aven.model import Claude
+from aven.actuators import mac_tools
 from aven.tools import file_tools
 from aven.tx import Tray
 
@@ -29,6 +31,9 @@ SESSIONS = Path.home() / ".aven" / "sessions"
 SYSTEM = """你是 aven,一个运行在用户自己电脑上的个人助理。
 
 你只能在一个目录范围内操作,路径都相对于它。越界的请求会被工具拒绝。
+
+文件类工具的路径都相对于那个目录。日历、邮件和 Spotlight 由 macOS 管,
+不受它限制,但 macOS 会自己向用户要授权。
 
 你的工具分三类:
 - 只读的,随时可以用
@@ -48,7 +53,9 @@ def build_parser() -> argparse.ArgumentParser:
                         help="接着最近一次会话")
     parser.add_argument("--session", type=Path, help="指定会话文件")
     parser.add_argument("--root", type=Path, default=Path.cwd(),
-                        help="允许操作的目录,默认是当前目录")
+                        help="文件工具允许操作的目录,默认是当前目录")
+    parser.add_argument("--no-mac", dest="mac", action="store_false",
+                        help="关掉日历 / 邮件 / Spotlight")
     parser.add_argument("--model", default=None, help="模型 id")
     parser.add_argument("--max-turns", type=int, default=12)
     parser.add_argument("-v", "--verbose", action="store_true", help="显示每个工具的结果")
@@ -99,10 +106,17 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     session = Session.open(pick_session(args))
+
     tools = file_tools(root)
+    on_mac = args.mac and platform.system() == "Darwin"
+    if on_mac:
+        # Everything irreversible lives here, which is what makes the tray
+        # matter outside a demo.
+        tools = tools + mac_tools()
+
     model = Claude(tools=tools, system=SYSTEM, **({"model": args.model} if args.model else {}))
 
-    print(DIM(f"aven · {root} · {session.path.name}"))
+    print(DIM(f"aven · {root} · {len(tools)} 个工具{' (含日历/邮件)' if on_mac else ''} · {session.path.name}"))
 
     if args.prompt:
         turn(session=session, prompt=args.prompt, model=model, tools=tools, args=args)
