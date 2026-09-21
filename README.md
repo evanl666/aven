@@ -58,6 +58,7 @@ into this tree.
 | 7 | CLI: file tools, event rendering, the review step | **done** |
 | 8 | macOS actuators: Spotlight, Calendar, Mail | **done** |
 | 9 | Streaming output and a spinner while waiting | **done** |
+| 10 | Prompt caching, opt-in macOS tools, tidier undo | **done** |
 
 ### Implemented
 
@@ -121,6 +122,7 @@ aven -c                                    # continue the last session
 ```
 
 `--root` is the only directory the file tools may touch and defaults to the
-current one. On macOS, Calendar, Mail and Spotlight are also available -
-macOS does that scoping itself, and will ask you the first time. `--no-mac`
-turns them off. Python 3.11+.
+current one. `--mac` adds Calendar, Mail and Spotlight, which macOS scopes itself and will
+ask about the first time; they are opt-in because forgetting a flag should not
+be what decides whether Mail is reachable. `AVEN_MODEL` sets the model.
+Python 3.11+.

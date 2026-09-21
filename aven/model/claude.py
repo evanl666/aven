@@ -37,24 +37,56 @@ _STOP_REASONS = {
 
 @dataclass
 class Usage:
-    """Running total for one session, so cost is visible while it accrues."""
+    """Running total for one session, so cost is visible while it accrues.
+
+    Cached tokens are counted apart because they are the cheap ones: an agent
+    loop resends the whole conversation every turn, so on a long task most of
+    the input should be a cache read, and a hit rate near zero means something
+    upstream is changing bytes it should not.
+    """
 
     requests: int = 0
     input_tokens: int = 0
     output_tokens: int = 0
     cached_tokens: int = 0
+    written_tokens: int = 0
 
     def add(self, usage: Any) -> None:
         self.requests += 1
         self.input_tokens += getattr(usage, "input_tokens", 0) or 0
         self.output_tokens += getattr(usage, "output_tokens", 0) or 0
         self.cached_tokens += getattr(usage, "cache_read_input_tokens", 0) or 0
+        self.written_tokens += getattr(usage, "cache_creation_input_tokens", 0) or 0
+
+    @property
+    def total_input(self) -> int:
+        """Every input token, however it was billed.
+
+        `input_tokens` counts only what was neither read from nor written to
+        the cache, and with caching on that is almost nothing - so it is not
+        the number to show a person.
+        """
+        return self.input_tokens + self.cached_tokens + self.written_tokens
+
+    @property
+    def hit_rate(self) -> float:
+        """Share of input served from cache, at a tenth of the price.
+
+        Written tokens belong in the denominator: a turn that filled the cache
+        paid 1.25x for those, and calling that a hit would make the first turn
+        of every session look free.
+        """
+        return self.cached_tokens / self.total_input if self.total_input else 0.0
 
     def __str__(self) -> str:
+        if self.total_input == 0:
+            cache = "无缓存"
+        else:
+            cache = f"缓存读 {self.cached_tokens} · 写 {self.written_tokens}"
         return (
-            f"{self.requests} requests · "
-            f"in {self.input_tokens} (cached {self.cached_tokens}) · "
-            f"out {self.output_tokens}"
+            f"{self.requests} 次请求 · "
+            f"输入 {self.total_input}({cache}) · "
+            f"输出 {self.output_tokens}"
         )
 
 
@@ -68,6 +100,7 @@ class Claude:
         system: str | None = None,
         model: str = DEFAULT_MODEL,
         max_tokens: int = 8000,
+        cache: bool = True,
         client: Any | None = None,
     ) -> None:
         # The client is injectable for the same reason the model function is:
@@ -76,6 +109,11 @@ class Claude:
         self.model = model
         self.max_tokens = max_tokens
         self.system = system
+        self.cache = cache
+
+        # Order matters and must never vary: the request is assembled
+        # tools -> system -> messages, and caching is a prefix match, so one
+        # reordered tool invalidates every turn that follows.
         self.tools = [t.for_model() for t in tools]
         self.usage = Usage()
 
@@ -100,6 +138,13 @@ class Claude:
             request["system"] = self.system
         if self.tools:
             request["tools"] = self.tools
+        if self.cache:
+            # Top-level caching marks the last cacheable block, which in an
+            # agent loop is the end of the conversation so far. Next turn that
+            # whole prefix - tools, system and every message already sent - is
+            # a cache read at a tenth of the price. Anything volatile in the
+            # system prompt (a timestamp, a uuid) would silently defeat it.
+            request["cache_control"] = {"type": "ephemeral"}
 
         # Streaming is also what keeps a long reply from hitting the SDK's
         # request timeout, so this is not only a matter of how it looks.

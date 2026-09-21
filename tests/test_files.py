@@ -83,3 +83,32 @@ def test_delete_goes_to_the_trash_and_comes_back(box, tools):
 def test_delete_is_reversible_so_it_needs_no_approval(tools):
     assert tools["delete_file"].risk == "reversible"
     assert tools["list_dir"].risk == "read"
+
+
+def test_undo_removes_a_folder_it_invented(box, tools):
+    result = tools["move_file"](src="Downloads/a.pdf", dst="报销/2026/a.pdf")
+    assert (box / "报销" / "2026").is_dir()
+
+    result.undo()
+
+    assert not (box / "报销").exists(), "the whole invented branch goes"
+    assert (box / "Downloads" / "a.pdf").exists()
+
+
+def test_undo_keeps_a_folder_that_already_existed(box, tools):
+    (box / "archive").mkdir()
+    result = tools["move_file"](src="Downloads/a.pdf", dst="archive/a.pdf")
+
+    result.undo()
+
+    assert (box / "archive").is_dir(), "aven did not create it, so it stays"
+
+
+def test_undo_keeps_a_folder_someone_else_put_a_file_in(box, tools):
+    result = tools["write_file"](path="notes/today.md", content="x")
+    (box / "notes" / "other.md").write_text("not ours")
+
+    result.undo()
+
+    assert (box / "notes").is_dir(), "not empty, not ours to delete"
+    assert (box / "notes" / "other.md").exists()

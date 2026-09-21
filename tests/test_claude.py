@@ -6,6 +6,8 @@ you can only exercise by spending money is an adapter nobody exercises.
 
 from types import SimpleNamespace
 
+import pytest
+
 from aven.core.messages import to_llm
 from aven.core.tools import tool
 from aven.model.claude import Claude, to_assistant
@@ -23,6 +25,7 @@ def response(*content, stop_reason="end_turn", **usage):
             input_tokens=usage.get("input_tokens", 10),
             output_tokens=usage.get("output_tokens", 5),
             cache_read_input_tokens=usage.get("cache_read_input_tokens", 0),
+            cache_creation_input_tokens=usage.get("cache_creation_input_tokens", 0),
         ),
     )
 
@@ -182,3 +185,50 @@ def test_nothing_is_sent_until_the_first_chunk_is_asked_for():
     assert client.requests == [], "a generator does nothing until it is driven"
     drain(generator)
     assert len(client.requests) == 1
+
+
+# --- prompt caching ---------------------------------------------------------
+
+
+def test_caching_is_on_by_default():
+    client = FakeClient(response(block(type="text", text="hi")))
+    drain(Claude(client=client)([]))
+
+    assert client.requests[0]["cache_control"] == {"type": "ephemeral"}
+
+
+def test_caching_can_be_turned_off():
+    client = FakeClient(response(block(type="text", text="hi")))
+    drain(Claude(cache=False, client=client)([]))
+
+    assert "cache_control" not in client.requests[0]
+
+
+def test_written_tokens_are_not_counted_as_hits():
+    """The turn that fills the cache paid 1.25x; calling that a hit would make
+    the first turn of every session look free."""
+    client = FakeClient(
+        response(block(type="text", text="a"), input_tokens=2,
+                 cache_creation_input_tokens=1000),
+        response(block(type="text", text="b"), input_tokens=2,
+                 cache_read_input_tokens=1000),
+    )
+    model = Claude(client=client)
+
+    drain(model([]))
+    assert model.usage.hit_rate == 0.0, "a write is not a hit"
+
+    drain(model([]))
+    assert model.usage.total_input == 2004
+    assert model.usage.hit_rate == pytest.approx(1000 / 2004)
+
+
+def test_usage_reads_and_writes_are_shown_apart():
+    client = FakeClient(
+        response(block(type="text", text="a"), input_tokens=2,
+                 cache_read_input_tokens=900, cache_creation_input_tokens=100)
+    )
+    model = Claude(client=client)
+    drain(model([]))
+
+    assert "缓存读 900 · 写 100" in str(model.usage)

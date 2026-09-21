@@ -47,6 +47,34 @@ def file_tools(root: Path) -> list[Tool]:
     def show(path: Path) -> str:
         return str(path.relative_to(root)) if path != root else "."
 
+    def make_parents(path: Path) -> list[Path]:
+        """Create the missing parents of `path`, returning them deepest first.
+
+        Undo has to put the tree back as it was, and a folder aven invented on
+        the way in is part of that. They come back deepest first so removing
+        them in order is safe.
+        """
+        invented: list[Path] = []
+        cursor = path.parent
+        while cursor != root and not cursor.exists():
+            invented.append(cursor)
+            cursor = cursor.parent
+
+        path.parent.mkdir(parents=True, exist_ok=True)
+        return invented
+
+    def drop_invented(folders: list[Path]) -> None:
+        """Remove folders we created, while they are still empty.
+
+        Stops at the first one that is not: something else put a file there,
+        and it is not aven's to delete.
+        """
+        for folder in folders:
+            try:
+                folder.rmdir()
+            except OSError:
+                return
+
     @tool(risk="read")
     def list_dir(
         path: Annotated[str, "Folder to list, relative to the root. Use '.' for the root"] = ".",
@@ -83,7 +111,7 @@ def file_tools(root: Path) -> list[Tool]:
         existed = target.exists()
         before = target.read_text(encoding="utf-8") if existed else None
 
-        target.parent.mkdir(parents=True, exist_ok=True)
+        invented = make_parents(target)
         target.write_text(content, encoding="utf-8")
 
         def undo() -> None:
@@ -91,6 +119,7 @@ def file_tools(root: Path) -> list[Tool]:
                 target.unlink(missing_ok=True)
             else:
                 target.write_text(before, encoding="utf-8")
+            drop_invented(invented)
 
         verb = "replaced" if existed else "created"
         return ToolResult(output=f"{verb} {show(target)} ({len(content)} chars)", undo=undo)
@@ -107,12 +136,14 @@ def file_tools(root: Path) -> list[Tool]:
         if target.exists():
             raise FileExistsError(f"{show(target)} already exists")
 
-        target.parent.mkdir(parents=True, exist_ok=True)
+        invented = make_parents(target)
         shutil.move(source, target)
-        return ToolResult(
-            output=f"moved {show(source)} → {show(target)}",
-            undo=lambda: shutil.move(target, source),
-        )
+
+        def undo() -> None:
+            shutil.move(target, source)
+            drop_invented(invented)
+
+        return ToolResult(output=f"moved {show(source)} → {show(target)}", undo=undo)
 
     @tool(risk="reversible", preview="删除 {path}")
     def delete_file(

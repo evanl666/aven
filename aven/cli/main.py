@@ -54,9 +54,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--session", type=Path, help="指定会话文件")
     parser.add_argument("--root", type=Path, default=Path.cwd(),
                         help="文件工具允许操作的目录,默认是当前目录")
-    parser.add_argument("--no-mac", dest="mac", action="store_false",
-                        help="关掉日历 / 邮件 / Spotlight")
-    parser.add_argument("--model", default=None, help="模型 id")
+    parser.add_argument("--mac", action="store_true",
+                        help="打开日历 / 邮件 / Spotlight(macOS 会向你申请权限)")
+    parser.add_argument("--model", default=os.environ.get("AVEN_MODEL"),
+                        help="模型 id,也可用 AVEN_MODEL 环境变量设定")
+    parser.add_argument("--no-cache", dest="cache", action="store_false",
+                        help="关掉 prompt 缓存(调试用)")
     parser.add_argument("--max-turns", type=int, default=12)
     parser.add_argument("-v", "--verbose", action="store_true", help="显示每个工具的结果")
     parser.add_argument("--yes", action="store_true",
@@ -111,13 +114,19 @@ def main(argv: list[str] | None = None) -> int:
     session = Session.open(pick_session(args))
 
     tools = file_tools(root)
+    # Opt-in, not opt-out. These are the tools that reach outside the root and
+    # ask macOS for permission, and forgetting a --no-mac should not be what
+    # decides whether Mail is reachable.
     on_mac = args.mac and platform.system() == "Darwin"
     if on_mac:
-        # Everything irreversible lives here, which is what makes the tray
-        # matter outside a demo.
         tools = tools + mac_tools()
 
-    model = Claude(tools=tools, system=SYSTEM, **({"model": args.model} if args.model else {}))
+    model = Claude(
+        tools=tools,
+        system=SYSTEM,
+        cache=args.cache,
+        **({"model": args.model} if args.model else {}),
+    )
 
     print(DIM(f"aven · {root} · {len(tools)} 个工具{' (含日历/邮件)' if on_mac else ''} · {session.path.name}"))
 
