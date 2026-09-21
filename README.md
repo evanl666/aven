@@ -57,6 +57,7 @@ into this tree.
 | 6 | Real model, first end-to-end task | **done** |
 | 7 | CLI: file tools, event rendering, the review step | **done** |
 | 8 | macOS actuators: Spotlight, Calendar, Mail | **done** |
+| 9 | Streaming output and a spinner while waiting | **done** |
 
 ### Implemented
 
@@ -89,9 +90,16 @@ into this tree.
 - `aven/tools/files.py` - list / read / write / move / delete, every path
   resolved and checked against one root before anything happens. Deletion moves
   to an aven-owned trash, which is what makes it reversible.
-- `aven/cli/` - `render.py` turns events into terminal output and can do nothing
-  else; `review.py` is the approval step; `main.py` wires a session, a root, a
-  model and a tray together behind the `aven` command.
+- `aven/cli/` - `Renderer` turns events into terminal output and can do nothing
+  else; a spinner runs from a thread while the loop is blocked on the network,
+  since there is no other moment to draw in. `review.py` is the approval step;
+  `main.py` wires a session, a root, a model and a tray behind the `aven`
+  command.
+
+A model may either return a finished `AssistantMessage` or be a generator that
+yields text and returns the message at the end; `run()` handles both with a
+`yield from`, so streaming is a property of the model rather than of the loop,
+and a scripted test model stays one line long.
 - `aven/actuators/mac.py` - Spotlight, Calendar and Mail through `osascript`.
   Values never enter the script text: AppleScript evaluates as it concatenates,
   so everything is passed out of band via `on run argv`, which is to AppleScript

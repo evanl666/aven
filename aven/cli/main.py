@@ -17,7 +17,7 @@ import sys
 import time
 from pathlib import Path
 
-from aven.cli.render import BOLD, DIM, RED, render
+from aven.cli.render import BOLD, DIM, RED, Renderer
 from aven.cli.review import review
 from aven.core.agent import run
 from aven.core.session import Session
@@ -79,11 +79,14 @@ def pick_session(args: argparse.Namespace) -> Path:
 def turn(*, session: Session, prompt: str, model: Claude, tools, args) -> None:
     """One prompt: run it, then decide what takes effect."""
     tray = Tray()
+    screen = Renderer(verbose=args.verbose)
+    screen.waiting("思考中")
+
     for event in run(
         session=session, prompt=prompt, model=model, tools=tools,
         tray=tray, max_turns=args.max_turns,
     ):
-        render(event, verbose=args.verbose)
+        screen.handle(event)
 
     print(DIM(f"\n  {model.usage}"))
 

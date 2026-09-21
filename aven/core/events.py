@@ -27,6 +27,17 @@ class TurnStart:
 
 
 @dataclass(frozen=True, kw_only=True)
+class MessageDelta:
+    """A piece of the assistant's text, as it arrives.
+
+    Only emitted by models that stream. A model that returns a finished message
+    produces none of these, and a renderer that ignores them still works.
+    """
+
+    text: str
+
+
+@dataclass(frozen=True, kw_only=True)
 class MessageEnd:
     """A message was completed and written to the session."""
 
@@ -60,4 +71,4 @@ class AgentEnd:
     reason: Literal["end_turn", "max_turns"]
 
 
-Event = AgentStart | TurnStart | MessageEnd | ToolStart | ToolEnd | TurnEnd | AgentEnd
+Event = AgentStart | TurnStart | MessageDelta | MessageEnd | ToolStart | ToolEnd | TurnEnd | AgentEnd

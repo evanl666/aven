@@ -11,6 +11,7 @@ of them changed when it arrived.
 
 from __future__ import annotations
 
+from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Any
 
@@ -78,7 +79,15 @@ class Claude:
         self.tools = [t.for_model() for t in tools]
         self.usage = Usage()
 
-    def __call__(self, messages: list[LlmMessage]) -> AssistantMessage:
+    def __call__(
+        self, messages: list[LlmMessage]
+    ) -> Generator[str, None, AssistantMessage]:
+        """Stream the reply, yielding text as it arrives.
+
+        A generator, so nothing is sent until the loop asks for the first
+        chunk. Only text is yielded: thinking is kept for replay, not shown,
+        and a tool call is not something to type out character by character.
+        """
         request: dict[str, Any] = {
             "model": self.model,
             "max_tokens": self.max_tokens,
@@ -92,9 +101,15 @@ class Claude:
         if self.tools:
             request["tools"] = self.tools
 
-        response = self.client.messages.create(**request)
-        self.usage.add(response.usage)
-        return to_assistant(response)
+        # Streaming is also what keeps a long reply from hitting the SDK's
+        # request timeout, so this is not only a matter of how it looks.
+        with self.client.messages.stream(**request) as stream:
+            for chunk in stream.text_stream:
+                yield chunk
+            complete = stream.get_final_message()
+
+        self.usage.add(complete.usage)
+        return to_assistant(complete)
 
 
 def to_assistant(response: Any) -> AssistantMessage:

@@ -10,7 +10,7 @@ from dataclasses import replace
 from pathlib import Path
 
 from aven.actuators import mac, mac_tools
-from aven.cli.render import render, render_tray
+from aven.cli.render import Renderer, render_tray
 from aven.core.agent import run
 from aven.core.messages import AssistantMessage as AM, ToolCall, new_id
 from aven.core.session import Session
@@ -49,6 +49,7 @@ path = Path("/tmp/aven-demo/mac.jsonl")
 path.unlink(missing_ok=True)
 session = Session.open(path)
 tray = Tray()
+screen = Renderer(verbose=True)
 
 for ev in run(
     session=session,
@@ -57,7 +58,7 @@ for ev in run(
     tools=TOOLS,
     tray=tray,
 ):
-    render(ev, verbose=True)
+    screen.handle(ev)
 
 render_tray(tray)
 print("\n→ 草稿已经写了(可撤销),发送还没发生(等确认)")

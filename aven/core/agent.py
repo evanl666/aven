@@ -11,12 +11,13 @@ to talk to a model, what a tool does, or how any of it is displayed.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterator, Sequence
+from collections.abc import Callable, Generator, Iterator, Sequence
 
 from aven.core.events import (
     AgentEnd,
     AgentStart,
     Event,
+    MessageDelta,
     MessageEnd,
     ToolEnd,
     ToolStart,
@@ -37,7 +38,14 @@ from aven.tx import Tray
 
 # Injected, never imported: the loop must stay runnable with no API key, and a
 # test must be able to script a model's replies exactly.
-ModelFn = Callable[[list[LlmMessage]], AssistantMessage]
+# Two shapes are allowed. A model may return a finished AssistantMessage, which
+# keeps a scripted test model to one line; or it may be a generator that yields
+# text as it arrives and returns the finished message at the end. The loop
+# handles both, so streaming is a property of the model, not of the loop.
+ModelFn = Callable[
+    [list[LlmMessage]],
+    "AssistantMessage | Generator[str, None, AssistantMessage]",
+]
 
 
 def run(
@@ -70,7 +78,7 @@ def run(
 
         # history() flattens the tree to the current path - the branch the user
         # abandoned is in the file and not in this prompt.
-        reply = model(to_llm(session.history()))
+        reply = yield from _ask(model, to_llm(session.history()))
         session.append(reply)
         yield MessageEnd(message=reply)
 
@@ -91,6 +99,29 @@ def run(
     # A model that keeps calling tools would otherwise run until the money is
     # gone. Stopping is a bug report, not a failure mode to hide.
     yield AgentEnd(reason="max_turns")
+
+
+def _ask(
+    model: ModelFn, llm_messages: list[LlmMessage]
+) -> Generator[Event, None, AssistantMessage]:
+    """Call the model, turning whatever it produces into events.
+
+    `yield from` is what makes this readable at the call site: it forwards every
+    MessageDelta outward *and* hands back the generator's return value, so the
+    loop still reads as `reply = ...` with streaming hidden inside.
+    """
+    produced = model(llm_messages)
+
+    if isinstance(produced, AssistantMessage):
+        return produced
+
+    while True:
+        try:
+            chunk = next(produced)
+        except StopIteration as done:
+            # A generator's `return` value arrives as StopIteration.value.
+            return done.value
+        yield MessageDelta(text=chunk)
 
 
 def _execute(

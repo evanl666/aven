@@ -3,7 +3,16 @@
 from dataclasses import replace
 
 from aven.core.agent import run
-from aven.core.events import AgentEnd, AgentStart, MessageEnd, ToolEnd, ToolStart, TurnEnd, TurnStart
+from aven.core.events import (
+    AgentEnd,
+    AgentStart,
+    MessageDelta,
+    MessageEnd,
+    ToolEnd,
+    ToolStart,
+    TurnEnd,
+    TurnStart,
+)
 from aven.core.messages import AssistantMessage, ToolCall, new_id
 from aven.core.session import Session
 from aven.core.tools import ToolResult, tool
@@ -144,3 +153,68 @@ def test_the_model_sees_the_current_path_growing(tmp_path):
 
     list(run(session=s, prompt="go", model=model, tools=[echo]))
     assert seen == [1, 3], "turn 2 sees the user turn, the tool call, and its result"
+
+
+# --- streaming --------------------------------------------------------------
+
+
+def streaming(*chunks, reply):
+    """A model that yields text and returns the finished message."""
+
+    def model(llm_messages):
+        yield from chunks
+        return replace(reply, id=new_id())
+
+    return model
+
+
+def test_a_streaming_model_produces_deltas_before_the_message(tmp_path):
+    s = Session.open(tmp_path / "s.jsonl")
+    model = streaming("我先", "看看 ", "Downloads。", reply=AssistantMessage(text="我先看看 Downloads。"))
+
+    events = list(run(session=s, prompt="go", model=model))
+
+    assert [type(e).__name__ for e in events] == [
+        "AgentStart", "MessageEnd",
+        "TurnStart", "MessageDelta", "MessageDelta", "MessageDelta", "MessageEnd",
+        "TurnEnd", "AgentEnd",
+    ]
+    assert "".join(e.text for e in events if isinstance(e, MessageDelta)) == "我先看看 Downloads。"
+
+
+def test_the_streamed_message_is_the_one_stored(tmp_path):
+    s = Session.open(tmp_path / "s.jsonl")
+    model = streaming("part", reply=AssistantMessage(text="the whole thing"))
+
+    list(run(session=s, prompt="go", model=model))
+
+    assert [m.text for m in s.history()] == ["go", "the whole thing"]
+
+
+def test_a_non_streaming_model_produces_no_deltas(tmp_path):
+    """Streaming is a property of the model, not of the loop."""
+    s = Session.open(tmp_path / "s.jsonl")
+
+    events = list(run(session=s, prompt="go", model=scripted(AssistantMessage(text="hi"))))
+
+    assert not any(isinstance(e, MessageDelta) for e in events)
+
+
+def test_a_streaming_model_can_still_call_tools(tmp_path):
+    s = Session.open(tmp_path / "s.jsonl")
+    call = ToolCall(name="echo", args={"x": "ok"})
+    turns = [
+        AssistantMessage(text="working", tool_calls=[call], stop_reason="tool_use"),
+        AssistantMessage(text="done"),
+    ]
+
+    def model(llm_messages):
+        yield "th"
+        yield "inking"
+        return replace(turns.pop(0), id=new_id())
+
+    events = list(run(session=s, prompt="go", model=model, tools=[echo]))
+
+    assert sum(isinstance(e, TurnStart) for e in events) == 2
+    assert sum(isinstance(e, MessageDelta) for e in events) == 4, "both turns streamed"
+    assert [m.kind for m in s.history()] == ["user", "assistant", "tool_result", "assistant"]

@@ -27,17 +27,45 @@ def response(*content, stop_reason="end_turn", **usage):
     )
 
 
+class FakeStream:
+    """Stands in for the SDK's stream context manager."""
+
+    def __init__(self, reply, chunks):
+        self.reply = reply
+        self.text_stream = chunks
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_):
+        return False
+
+    def get_final_message(self):
+        return self.reply
+
+
 class FakeClient:
-    """Records the request, returns whatever it was handed."""
+    """Records the request, streams whatever it was handed."""
 
-    def __init__(self, *replies):
+    def __init__(self, *replies, chunks=()):
         self.replies = list(replies)
+        self.chunks = list(chunks)
         self.requests = []
-        self.messages = SimpleNamespace(create=self._create)
+        self.messages = SimpleNamespace(stream=self._stream)
 
-    def _create(self, **request):
+    def _stream(self, **request):
         self.requests.append(request)
-        return self.replies.pop(0)
+        return FakeStream(self.replies.pop(0), self.chunks)
+
+
+def drain(generator):
+    """Run a model generator to the end. Returns (chunks, final message)."""
+    chunks = []
+    while True:
+        try:
+            chunks.append(next(generator))
+        except StopIteration as done:
+            return chunks, done.value
 
 
 def test_text_only_reply():
@@ -101,7 +129,7 @@ def test_the_request_carries_the_tool_schemas():
     client = FakeClient(response(block(type="text", text="hi")))
     model = Claude(tools=[find], system="You are aven.", client=client)
 
-    model([{"role": "user", "content": [{"type": "text", "text": "go"}]}])
+    drain(model([{"role": "user", "content": [{"type": "text", "text": "go"}]}]))
     request = client.requests[0]
 
     assert request["model"] == "claude-opus-5"
@@ -112,7 +140,7 @@ def test_the_request_carries_the_tool_schemas():
 
 def test_optional_fields_are_left_out_rather_than_sent_as_none():
     client = FakeClient(response(block(type="text", text="hi")))
-    Claude(client=client)([{"role": "user", "content": []}])
+    drain(Claude(client=client)([{"role": "user", "content": []}]))
 
     assert "system" not in client.requests[0]
     assert "tools" not in client.requests[0]
@@ -126,8 +154,31 @@ def test_usage_accumulates_across_calls():
     )
     model = Claude(client=client)
 
-    model([])
-    model([])
+    drain(model([]))
+    drain(model([]))
 
     assert (model.usage.requests, model.usage.input_tokens) == (2, 250)
     assert (model.usage.output_tokens, model.usage.cached_tokens) == (50, 90)
+
+
+def test_text_arrives_in_pieces_and_the_message_comes_last():
+    """The whole point: the caller sees words before the turn is finished."""
+    client = FakeClient(
+        response(block(type="text", text="我先看看 Downloads。")),
+        chunks=["我先", "看看 ", "Downloads。"],
+    )
+
+    chunks, message = drain(Claude(client=client)([]))
+
+    assert chunks == ["我先", "看看 ", "Downloads。"]
+    assert message.text == "我先看看 Downloads。"
+
+
+def test_nothing_is_sent_until_the_first_chunk_is_asked_for():
+    client = FakeClient(response(block(type="text", text="hi")))
+
+    generator = Claude(client=client)([])
+
+    assert client.requests == [], "a generator does nothing until it is driven"
+    drain(generator)
+    assert len(client.requests) == 1
