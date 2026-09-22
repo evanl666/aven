@@ -273,3 +273,64 @@ async def test_a_slow_tool_does_not_block_the_event_loop(tmp_path):
     ticker.cancel()
 
     assert ticks > 5, "the event loop kept running while the tool slept"
+
+
+# --- interruption ------------------------------------------------------------
+
+
+def _unanswered(session):
+    answered = {m.tool_call_id for m in session.history() if m.kind == "tool_result"}
+    return [
+        c.args for m in session.history() if m.kind == "assistant"
+        for c in m.tool_calls if c.id not in answered
+    ]
+
+
+def _three_slow_calls():
+    import time
+
+    @tool(name="slow")
+    def slow(n: str) -> str:
+        time.sleep(0.2)
+        return n
+
+    calls = [ToolCall(name="slow", args={"n": x}) for x in "ABC"]
+    return slow, scripted(AssistantMessage(tool_calls=calls, stop_reason="tool_use"))
+
+
+async def test_cancelling_mid_batch_leaves_no_tool_use_unanswered(tmp_path):
+    """Esc in the UI cancels the task; the conversation must stay well formed."""
+    import asyncio
+
+    slow, model = _three_slow_calls()
+    s = Session.open(tmp_path / "s.jsonl")
+
+    async def consume():
+        async for _ in run(session=s, prompt="go", model=model, tools=[slow]):
+            pass
+
+    task = asyncio.create_task(consume())
+    await asyncio.sleep(0.3)
+    task.cancel()
+    try:
+        await task
+    except asyncio.CancelledError:
+        pass
+
+    assert _unanswered(s) == []
+    interrupted = [m for m in s.history() if m.kind == "tool_result" and m.is_error]
+    assert interrupted and "interrupted" in interrupted[0].output
+
+
+async def test_a_caller_that_stops_listening_leaves_none_unanswered(tmp_path):
+    """The approval-gate pattern: break at ToolStart, never ask for more."""
+    slow, model = _three_slow_calls()
+    s = Session.open(tmp_path / "s.jsonl")
+
+    events = run(session=s, prompt="go", model=model, tools=[slow])
+    async for event in events:
+        if isinstance(event, ToolStart):
+            break
+    await events.aclose()
+
+    assert _unanswered(s) == []

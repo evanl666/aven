@@ -102,12 +102,22 @@ async def run(
             yield AgentEnd(reason="end_turn")
             return
 
-        for call in reply.tool_calls:
-            yield ToolStart(call=call)
-            message, staged = await _execute(call, by_name, tray, origin=reply.id)
-            session.append(message)
-            yield MessageEnd(message=message)
-            yield ToolEnd(call=call, result=message, staged=staged)
+        answered = 0
+        try:
+            for call in reply.tool_calls:
+                yield ToolStart(call=call)
+                message, staged = await _execute(call, by_name, tray, origin=reply.id)
+                session.append(message)
+                answered += 1
+                yield MessageEnd(message=message)
+                yield ToolEnd(call=call, result=message, staged=staged)
+        except (asyncio.CancelledError, GeneratorExit):
+            # Interrupted mid-batch - Esc in the UI, or a caller that stopped
+            # asking for events. Every tool_use in the reply still needs a
+            # tool_result, or the next request is a malformed conversation,
+            # so close the unanswered ones before letting the interruption on.
+            _close_unanswered(session, reply.tool_calls[answered:])
+            raise
 
         yield TurnEnd(index=index, message=reply)
 
@@ -139,6 +149,25 @@ async def _ask(
             yield item
         else:
             yield MessageDelta(text=item)
+
+
+def _close_unanswered(session: Session, calls: Sequence[ToolCall]) -> None:
+    """Record an interruption as the result of every call that has none.
+
+    The first of these may in fact have finished: a tool runs in a thread, and
+    a thread cannot be cancelled, only abandoned. So the result says what is
+    known - it was interrupted - and not that nothing happened. Anything it did
+    that was reversible is already in the tray and can still be undone.
+    """
+    for call in calls:
+        session.append(
+            ToolResultMessage(
+                tool_call_id=call.id,
+                tool_name=call.name,
+                output="interrupted by the user; it may or may not have taken effect",
+                is_error=True,
+            )
+        )
 
 
 async def _execute(
