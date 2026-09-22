@@ -3,6 +3,20 @@ name = "aven"
 version = "0.0.1"
 description = "A local-first personal assistant harness: your machine, your keys, your data."
 requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Evan L" }]
+keywords = ["agent", "assistant", "llm", "claude", "local-first", "macos"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Utilities",
+]
+
+[project.urls]
+Homepage = "https://github.com/evanl666/aven"
+Issues = "https://github.com/evanl666/aven/issues"
 dependencies = ["anthropic>=1.0"]
 
 [project.scripts]
