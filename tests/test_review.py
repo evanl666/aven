@@ -51,32 +51,32 @@ def test_both_kinds_offer_everything():
     assert allowed == {"c", "d", "u"}
 
 
-def test_an_unoffered_key_is_refused_rather_than_ignored(monkeypatch, capsys):
+async def test_an_unoffered_key_is_refused_rather_than_ignored(monkeypatch, capsys):
     """A mistyped key that quietly exits looks exactly like one that worked."""
     tray = tray_with(done_work)
     keys(monkeypatch, "c", "")
 
-    review(tray)
+    await review(tray)
 
     out = capsys.readouterr().out
     assert "这里没有 [c] 这个选项" in out
     assert tray.undoable(), "nothing happened to the finished work"
 
 
-def test_enter_leaves_everything_as_it_is(monkeypatch):
+async def test_enter_leaves_everything_as_it_is(monkeypatch):
     tray = tray_with(done_work, waiting_work)
     keys(monkeypatch, "")
 
-    review(tray)
+    await review(tray)
 
     assert len(tray.pending()) == 1
     assert len(tray.undoable()) == 1
 
 
-def test_undo_empties_the_tray_and_ends_the_loop(monkeypatch):
+async def test_undo_empties_the_tray_and_ends_the_loop(monkeypatch):
     tray = tray_with(done_work)
     keys(monkeypatch, "u")
 
-    review(tray)
+    await review(tray)
 
     assert not tray.undoable()

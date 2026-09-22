@@ -11,7 +11,7 @@ of them changed when it arrived.
 
 from __future__ import annotations
 
-from collections.abc import Generator
+from collections.abc import AsyncIterator
 from dataclasses import dataclass
 from typing import Any
 
@@ -105,7 +105,7 @@ class Claude:
     ) -> None:
         # The client is injectable for the same reason the model function is:
         # the tests below run the whole adapter with no key and no network.
-        self.client = client if client is not None else anthropic.Anthropic()
+        self.client = client if client is not None else anthropic.AsyncAnthropic()
         self.model = model
         self.max_tokens = max_tokens
         self.system = system
@@ -117,14 +117,16 @@ class Claude:
         self.tools = [t.for_model() for t in tools]
         self.usage = Usage()
 
-    def __call__(
+    async def __call__(
         self, messages: list[LlmMessage]
-    ) -> Generator[str, None, AssistantMessage]:
-        """Stream the reply, yielding text as it arrives.
+    ) -> AsyncIterator[str | AssistantMessage]:
+        """Stream the reply: text as it arrives, then the finished message.
 
-        A generator, so nothing is sent until the loop asks for the first
-        chunk. Only text is yielded: thinking is kept for replay, not shown,
-        and a tool call is not something to type out character by character.
+        An async generator, so nothing is sent until the loop asks for the
+        first chunk. Only text is streamed - thinking is kept for replay, not
+        shown, and a tool call is not something to type out character by
+        character. The AssistantMessage comes last because an async generator
+        has nowhere else to put a return value.
         """
         request: dict[str, Any] = {
             "model": self.model,
@@ -148,13 +150,13 @@ class Claude:
 
         # Streaming is also what keeps a long reply from hitting the SDK's
         # request timeout, so this is not only a matter of how it looks.
-        with self.client.messages.stream(**request) as stream:
-            for chunk in stream.text_stream:
+        async with self.client.messages.stream(**request) as stream:
+            async for chunk in stream.text_stream:
                 yield chunk
-            complete = stream.get_final_message()
+            complete = await stream.get_final_message()
 
         self.usage.add(complete.usage)
-        return to_assistant(complete)
+        yield to_assistant(complete)
 
 
 def to_assistant(response: Any) -> AssistantMessage:

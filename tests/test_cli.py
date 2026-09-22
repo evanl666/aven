@@ -26,7 +26,7 @@ def fake_claude(monkeypatch, *replies):
         def __init__(self, **_):
             self.usage = SimpleNamespace()
 
-        def __call__(self, messages):
+        async def __call__(self, messages):
             return replace(queue.pop(0) if len(queue) > 1 else queue[0], id=new_id())
 
     monkeypatch.setattr(cli, "Claude", FakeClaude)

@@ -1,9 +1,15 @@
 """The agent loop.
 
-A generator, not a callback API: the caller drives it with a `for`, sees every
-step as it happens, and can stop simply by not asking for the next event. There
-is no subscriber list, no risk of an exception in a renderer taking the loop
-down with it, and a test reads as a plain list of what happened.
+An async generator, not a callback API: the caller drives it with an
+`async for`, sees every step as it happens, and can stop simply by not asking
+for the next event. There is no subscriber list, no risk of an exception in a
+renderer taking the loop down with it, and a test reads as a plain list of what
+happened.
+
+Async because everything the loop waits on is someone else's - a model
+streaming over the network, a subprocess talking to Calendar. A blocking wait
+is invisible in a script and fatal in a UI, where it freezes the whole screen
+including the key that would cancel it.
 
 The loop owns exactly one thing - the order of operations. It does not know how
 to talk to a model, what a tool does, or how any of it is displayed.
@@ -11,7 +17,10 @@ to talk to a model, what a tool does, or how any of it is displayed.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Generator, Iterator, Sequence
+import asyncio
+import inspect
+from collections.abc import AsyncIterator, Callable, Sequence
+from typing import Any
 
 from aven.core.events import (
     AgentEnd,
@@ -38,17 +47,15 @@ from aven.tx import Tray
 
 # Injected, never imported: the loop must stay runnable with no API key, and a
 # test must be able to script a model's replies exactly.
-# Two shapes are allowed. A model may return a finished AssistantMessage, which
-# keeps a scripted test model to one line; or it may be a generator that yields
-# text as it arrives and returns the finished message at the end. The loop
-# handles both, so streaming is a property of the model, not of the loop.
-ModelFn = Callable[
-    [list[LlmMessage]],
-    "AssistantMessage | Generator[str, None, AssistantMessage]",
-]
+# Three shapes are allowed, and the loop sorts them out at the call site. A
+# model may return a finished AssistantMessage, which keeps a scripted test
+# model to one line; it may return an awaitable of one; or it may be an async
+# generator that yields text as it arrives and carries the finished message on
+# its final chunk. Streaming stays a property of the model, not of the loop.
+ModelFn = Callable[[list[LlmMessage]], Any]
 
 
-def run(
+async def run(
     *,
     session: Session,
     prompt: str,
@@ -57,7 +64,7 @@ def run(
     tray: Tray | None = None,
     max_turns: int = 12,
     source: str = "chat",
-) -> Iterator[Event]:
+) -> AsyncIterator[Event]:
     """Run one prompt to completion, yielding events as they happen.
 
     Every message appended to the session emits exactly one MessageEnd. Tool
@@ -78,7 +85,15 @@ def run(
 
         # history() flattens the tree to the current path - the branch the user
         # abandoned is in the file and not in this prompt.
-        reply = yield from _ask(model, to_llm(session.history()))
+        reply: AssistantMessage | None = None
+        async for produced in _ask(model, to_llm(session.history())):
+            if isinstance(produced, AssistantMessage):
+                # An async generator cannot `return` a value the way a plain
+                # one can, so the finished message rides out as the last item.
+                reply = produced
+            else:
+                yield produced
+        assert reply is not None, "the model produced no message"
         session.append(reply)
         yield MessageEnd(message=reply)
 
@@ -89,7 +104,7 @@ def run(
 
         for call in reply.tool_calls:
             yield ToolStart(call=call)
-            message, staged = _execute(call, by_name, tray, origin=reply.id)
+            message, staged = await _execute(call, by_name, tray, origin=reply.id)
             session.append(message)
             yield MessageEnd(message=message)
             yield ToolEnd(call=call, result=message, staged=staged)
@@ -101,30 +116,32 @@ def run(
     yield AgentEnd(reason="max_turns")
 
 
-def _ask(
+async def _ask(
     model: ModelFn, llm_messages: list[LlmMessage]
-) -> Generator[Event, None, AssistantMessage]:
+) -> AsyncIterator[Event | AssistantMessage]:
     """Call the model, turning whatever it produces into events.
 
-    `yield from` is what makes this readable at the call site: it forwards every
-    MessageDelta outward *and* hands back the generator's return value, so the
-    loop still reads as `reply = ...` with streaming hidden inside.
+    Yields MessageDelta as text arrives and the finished AssistantMessage last.
+    Mixing the two in one stream is the price of async generators not having
+    return values; the caller tells them apart by type.
     """
     produced = model(llm_messages)
 
+    if inspect.isawaitable(produced):
+        produced = await produced
+
     if isinstance(produced, AssistantMessage):
-        return produced
+        yield produced
+        return
 
-    while True:
-        try:
-            chunk = next(produced)
-        except StopIteration as done:
-            # A generator's `return` value arrives as StopIteration.value.
-            return done.value
-        yield MessageDelta(text=chunk)
+    async for item in produced:
+        if isinstance(item, AssistantMessage):
+            yield item
+        else:
+            yield MessageDelta(text=item)
 
 
-def _execute(
+async def _execute(
     call: ToolCall, tools: dict[str, Tool], tray: Tray, origin: str
 ) -> tuple[ToolResultMessage, bool]:
     """Hand one tool call to the tray, turning any failure into a result.
@@ -149,7 +166,11 @@ def _execute(
         return failure(f"no such tool: {call.name!r}")
 
     try:
-        output, staged = tray.execute(found, call.args, origin_message_id=origin)
+        # Tools are ordinary blocking functions - shutil.move, osascript. Run
+        # them off the event loop so a slow one cannot freeze the interface.
+        output, staged = await asyncio.to_thread(
+            tray.execute, found, call.args, origin
+        )
     except Exception as exc:
         return failure(f"{type(exc).__name__}: {exc}")
 

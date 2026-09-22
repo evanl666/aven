@@ -11,6 +11,7 @@ work; the tray owns what actually takes effect.
 from __future__ import annotations
 
 import argparse
+import asyncio
 import os
 import platform
 import sys
@@ -79,13 +80,13 @@ def pick_session(args: argparse.Namespace) -> Path:
     return SESSIONS / f"{time.strftime('%Y%m%d-%H%M%S')}.jsonl"
 
 
-def turn(*, session: Session, prompt: str, model: Claude, tools, args) -> None:
+async def turn(*, session: Session, prompt: str, model: Claude, tools, args) -> None:
     """One prompt: run it, then decide what takes effect."""
     tray = Tray()
     screen = Renderer(verbose=args.verbose)
     screen.waiting("思考中")
 
-    for event in run(
+    async for event in run(
         session=session, prompt=prompt, model=model, tools=tools,
         tray=tray, max_turns=args.max_turns,
     ):
@@ -94,12 +95,12 @@ def turn(*, session: Session, prompt: str, model: Claude, tools, args) -> None:
     print(DIM(f"\n  {model.usage}"))
 
     if args.yes:
-        tray.commit()
+        await asyncio.to_thread(tray.commit)
     else:
-        review(tray, session)
+        await review(tray, session)
 
 
-def main(argv: list[str] | None = None) -> int:
+async def _main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
 
     if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
@@ -131,18 +132,23 @@ def main(argv: list[str] | None = None) -> int:
     print(DIM(f"aven · {root} · {len(tools)} 个工具{' (含日历/邮件)' if on_mac else ''} · {session.path.name}"))
 
     if args.prompt:
-        turn(session=session, prompt=args.prompt, model=model, tools=tools, args=args)
+        await turn(session=session, prompt=args.prompt, model=model, tools=tools, args=args)
         return 0
 
     print(DIM("说点什么,Ctrl-D 退出\n"))
     while True:
         try:
-            prompt = input(BOLD("› ")).strip()
+            typed = await asyncio.to_thread(input, BOLD("› "))
         except (EOFError, KeyboardInterrupt):
             print()
             return 0
-        if prompt:
-            turn(session=session, prompt=prompt, model=model, tools=tools, args=args)
+        if typed.strip():
+            await turn(session=session, prompt=typed.strip(), model=model, tools=tools, args=args)
+
+
+def main(argv: list[str] | None = None) -> int:
+    """The console entry point. asyncio.run is the only place the loop starts."""
+    return asyncio.run(_main(argv))
 
 
 if __name__ == "__main__":

@@ -6,6 +6,8 @@ irreversible has happened yet, and one person looks at one list and decides.
 
 from __future__ import annotations
 
+import asyncio
+
 from aven.cli.render import DIM, YELLOW, render_outcome, render_tray
 from aven.core.session import Session
 from aven.tx import Tray
@@ -29,7 +31,7 @@ def menu(tray: Tray) -> tuple[str, set[str]]:
     return "   ".join(keys), {k[1] for k in keys if k[1] != "E"}
 
 
-def review(tray: Tray, session: Session | None = None) -> None:
+async def review(tray: Tray, session: Session | None = None) -> None:
     """Show the batch and act on one keystroke. Returns when the user is done."""
     while tray.pending() or tray.undoable():
         render_tray(tray)
@@ -37,7 +39,9 @@ def review(tray: Tray, session: Session | None = None) -> None:
         print(DIM(line))
 
         try:
-            choice = input("> ").strip().lower()
+            # Reading a line blocks; off the event loop it goes, like the tools.
+            typed = await asyncio.to_thread(input, "> ")
+            choice = typed.strip().lower()
         except (EOFError, KeyboardInterrupt):
             # Interrupted means nothing was approved. Staged work stays staged.
             print()
@@ -53,11 +57,11 @@ def review(tray: Tray, session: Session | None = None) -> None:
 
         match choice:
             case "c":
-                render_outcome("提交了", tray.commit())
+                render_outcome("提交了", await asyncio.to_thread(tray.commit))
             case "d":
                 render_outcome("丢弃了", tray.discard())
             case "u":
-                rolled = tray.undo()
+                rolled = await asyncio.to_thread(tray.undo)
                 render_outcome("撤销了", rolled)
                 # Rolling the world back without the conversation leaves the
                 # model believing the work still stands.

@@ -31,19 +31,27 @@ def response(*content, stop_reason="end_turn", **usage):
 
 
 class FakeStream:
-    """Stands in for the SDK's stream context manager."""
+    """Stands in for the SDK's async stream context manager."""
 
     def __init__(self, reply, chunks):
         self.reply = reply
-        self.text_stream = chunks
+        self._chunks = chunks
 
-    def __enter__(self):
+    async def __aenter__(self):
         return self
 
-    def __exit__(self, *_):
+    async def __aexit__(self, *_):
         return False
 
-    def get_final_message(self):
+    @property
+    def text_stream(self):
+        async def chunks():
+            for chunk in self._chunks:
+                yield chunk
+
+        return chunks()
+
+    async def get_final_message(self):
         return self.reply
 
 
@@ -61,17 +69,20 @@ class FakeClient:
         return FakeStream(self.replies.pop(0), self.chunks)
 
 
-def drain(generator):
+async def drain(generator):
     """Run a model generator to the end. Returns (chunks, final message)."""
-    chunks = []
-    while True:
-        try:
-            chunks.append(next(generator))
-        except StopIteration as done:
-            return chunks, done.value
+    from aven.core.messages import AssistantMessage
+
+    chunks, message = [], None
+    async for item in generator:
+        if isinstance(item, AssistantMessage):
+            message = item
+        else:
+            chunks.append(item)
+    return chunks, message
 
 
-def test_text_only_reply():
+async def test_text_only_reply():
     msg = to_assistant(response(block(type="text", text="hello")))
 
     assert msg.text == "hello"
@@ -79,7 +90,7 @@ def test_text_only_reply():
     assert msg.stop_reason == "end_turn"
 
 
-def test_tool_use_keeps_the_providers_id():
+async def test_tool_use_keeps_the_providers_id():
     """The tool_result we send back has to quote this id exactly."""
     msg = to_assistant(
         response(
@@ -95,7 +106,7 @@ def test_tool_use_keeps_the_providers_id():
     ]
 
 
-def test_thinking_is_kept_whole_and_replayed_first():
+async def test_thinking_is_kept_whole_and_replayed_first():
     """Claude reasons before calling a tool; the next request must carry it back."""
     thought = {"type": "thinking", "thinking": "let me check", "signature": "sig"}
     msg = to_assistant(
@@ -113,17 +124,17 @@ def test_thinking_is_kept_whole_and_replayed_first():
     assert [b["type"] for b in content] == ["thinking", "text", "tool_use"]
 
 
-def test_unknown_stop_reason_becomes_error_not_a_normal_finish():
+async def test_unknown_stop_reason_becomes_error_not_a_normal_finish():
     assert to_assistant(response(stop_reason="something_new")).stop_reason == "error"
     assert to_assistant(response(stop_reason="refusal")).stop_reason == "refusal"
 
 
-def test_multiple_text_blocks_are_joined():
+async def test_multiple_text_blocks_are_joined():
     msg = to_assistant(response(block(type="text", text="a"), block(type="text", text="b")))
     assert msg.text == "a\nb"
 
 
-def test_the_request_carries_the_tool_schemas():
+async def test_the_request_carries_the_tool_schemas():
     @tool()
     def find(dir: str) -> str:
         """Find things."""
@@ -132,7 +143,7 @@ def test_the_request_carries_the_tool_schemas():
     client = FakeClient(response(block(type="text", text="hi")))
     model = Claude(tools=[find], system="You are aven.", client=client)
 
-    drain(model([{"role": "user", "content": [{"type": "text", "text": "go"}]}]))
+    await drain(model([{"role": "user", "content": [{"type": "text", "text": "go"}]}]))
     request = client.requests[0]
 
     assert request["model"] == "claude-opus-5"
@@ -141,15 +152,15 @@ def test_the_request_carries_the_tool_schemas():
     assert request["tools"] == [find.for_model()]
 
 
-def test_optional_fields_are_left_out_rather_than_sent_as_none():
+async def test_optional_fields_are_left_out_rather_than_sent_as_none():
     client = FakeClient(response(block(type="text", text="hi")))
-    drain(Claude(client=client)([{"role": "user", "content": []}]))
+    await drain(Claude(client=client)([{"role": "user", "content": []}]))
 
     assert "system" not in client.requests[0]
     assert "tools" not in client.requests[0]
 
 
-def test_usage_accumulates_across_calls():
+async def test_usage_accumulates_across_calls():
     client = FakeClient(
         response(block(type="text", text="a"), input_tokens=100, output_tokens=20),
         response(block(type="text", text="b"), input_tokens=150, output_tokens=30,
@@ -157,54 +168,54 @@ def test_usage_accumulates_across_calls():
     )
     model = Claude(client=client)
 
-    drain(model([]))
-    drain(model([]))
+    await drain(model([]))
+    await drain(model([]))
 
     assert (model.usage.requests, model.usage.input_tokens) == (2, 250)
     assert (model.usage.output_tokens, model.usage.cached_tokens) == (50, 90)
 
 
-def test_text_arrives_in_pieces_and_the_message_comes_last():
+async def test_text_arrives_in_pieces_and_the_message_comes_last():
     """The whole point: the caller sees words before the turn is finished."""
     client = FakeClient(
         response(block(type="text", text="我先看看 Downloads。")),
         chunks=["我先", "看看 ", "Downloads。"],
     )
 
-    chunks, message = drain(Claude(client=client)([]))
+    chunks, message = await drain(Claude(client=client)([]))
 
     assert chunks == ["我先", "看看 ", "Downloads。"]
     assert message.text == "我先看看 Downloads。"
 
 
-def test_nothing_is_sent_until_the_first_chunk_is_asked_for():
+async def test_nothing_is_sent_until_the_first_chunk_is_asked_for():
     client = FakeClient(response(block(type="text", text="hi")))
 
     generator = Claude(client=client)([])
 
     assert client.requests == [], "a generator does nothing until it is driven"
-    drain(generator)
+    await drain(generator)
     assert len(client.requests) == 1
 
 
 # --- prompt caching ---------------------------------------------------------
 
 
-def test_caching_is_on_by_default():
+async def test_caching_is_on_by_default():
     client = FakeClient(response(block(type="text", text="hi")))
-    drain(Claude(client=client)([]))
+    await drain(Claude(client=client)([]))
 
     assert client.requests[0]["cache_control"] == {"type": "ephemeral"}
 
 
-def test_caching_can_be_turned_off():
+async def test_caching_can_be_turned_off():
     client = FakeClient(response(block(type="text", text="hi")))
-    drain(Claude(cache=False, client=client)([]))
+    await drain(Claude(cache=False, client=client)([]))
 
     assert "cache_control" not in client.requests[0]
 
 
-def test_written_tokens_are_not_counted_as_hits():
+async def test_written_tokens_are_not_counted_as_hits():
     """The turn that fills the cache paid 1.25x; calling that a hit would make
     the first turn of every session look free."""
     client = FakeClient(
@@ -215,20 +226,20 @@ def test_written_tokens_are_not_counted_as_hits():
     )
     model = Claude(client=client)
 
-    drain(model([]))
+    await drain(model([]))
     assert model.usage.hit_rate == 0.0, "a write is not a hit"
 
-    drain(model([]))
+    await drain(model([]))
     assert model.usage.total_input == 2004
     assert model.usage.hit_rate == pytest.approx(1000 / 2004)
 
 
-def test_usage_reads_and_writes_are_shown_apart():
+async def test_usage_reads_and_writes_are_shown_apart():
     client = FakeClient(
         response(block(type="text", text="a"), input_tokens=2,
                  cache_read_input_tokens=900, cache_creation_input_tokens=100)
     )
     model = Claude(client=client)
-    drain(model([]))
+    await drain(model([]))
 
     assert "缓存读 900 · 写 100" in str(model.usage)

@@ -138,7 +138,7 @@ def test_commit_stops_at_the_first_failure():
     assert [e.state for e in tray.entries] == ["committed", "failed", "pending"]
 
 
-def test_a_run_without_a_tray_still_fires_nothing_irreversible(tmp_path):
+async def test_a_run_without_a_tray_still_fires_nothing_irreversible(tmp_path):
     """Safe by omission: forgetting the tray must not mean sending the mail."""
     log, _, _, send = recorder()
     s = Session.open(tmp_path / "s.jsonl")
@@ -149,20 +149,21 @@ def test_a_run_without_a_tray_still_fires_nothing_irreversible(tmp_path):
         AssistantMessage(text="staged"),
     ]
 
-    events = list(
-        run(
+    events = [
+        event
+        async for event in run(
             session=s,
             prompt="go",
             model=lambda _: replace(script.pop(0), id=new_id()),
             tools=[send],
         )
-    )
+    ]
 
     assert log == []
     assert next(e for e in events if isinstance(e, ToolEnd)).staged is True
 
 
-def test_rewind_point_names_the_message_the_changes_came_from(tmp_path):
+async def test_rewind_point_names_the_message_the_changes_came_from(tmp_path):
     log, _, add, _ = recorder()
     s = Session.open(tmp_path / "s.jsonl")
     tray = Tray()
@@ -173,15 +174,14 @@ def test_rewind_point_names_the_message_the_changes_came_from(tmp_path):
         AssistantMessage(text="done"),
     ]
 
-    list(
-        run(
-            session=s,
-            prompt="go",
-            model=lambda _: replace(script.pop(0), id=new_id()),
-            tools=[add],
-            tray=tray,
-        )
-    )
+    async for _event in run(
+        session=s,
+        prompt="go",
+        model=lambda _: replace(script.pop(0), id=new_id()),
+        tools=[add],
+        tray=tray,
+    ):
+        pass
 
     assistant_ids = [m.id for m in s.history() if m.kind == "assistant"]
     assert tray.rewind_point() == assistant_ids[0]
