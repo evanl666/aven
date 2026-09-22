@@ -82,9 +82,10 @@ started in. Requests for `../`, `/etc/passwd`, `~/.ssh` or a symlink pointing
 out are refused at the tool boundary, not in the prompt.
 
 ```bash
-aven "one task"          # do it, show the batch, exit
-aven                     # keep talking; Ctrl-D to leave
-aven -c "and also..."    # continue the last session — has the context, and costs ~60% less
+aven "one task"          # do it, show the batch, exit - pipes and redirects fine
+aven                     # the full-screen app: live staging tray, Esc to interrupt
+aven -c                  # the app, continuing the last session (~60% cheaper per turn)
+aven --plain             # line by line, no full screen
 aven --mac "..."         # add Calendar, Mail and Spotlight (macOS will ask)
 aven -v "..."            # show every tool result
 ```

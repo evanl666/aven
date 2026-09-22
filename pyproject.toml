@@ -17,7 +17,7 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/evanl666/aven"
 Issues = "https://github.com/evanl666/aven/issues"
-dependencies = ["anthropic>=1.0"]
+dependencies = ["anthropic>=1.0", "textual>=8.2"]
 
 [project.scripts]
 aven = "aven.cli.main:main"

@@ -114,7 +114,7 @@ class Renderer:
 
             case ToolStart():
                 self._quiet()
-                self._tool_line = f"  {DIM('·')} {event.call.name}({_arguments(event.call.args)})"
+                self._tool_line = f"  {DIM('·')} {event.call.name}({format_arguments(event.call.args)})"
                 self._spinner = Spinner(prefix=self._tool_line + " ").start()
 
             case ToolEnd():
@@ -171,7 +171,7 @@ def render_outcome(verb: str, entries: list[Entry]) -> None:
             print(RED(f"  ! {entry.preview} — {entry.output}"))
 
 
-def _arguments(args: dict[str, object]) -> str:
+def format_arguments(args: dict[str, object]) -> str:
     """Render a call's arguments, folding away anything long.
 
     A file's whole contents arriving as one argument would otherwise take the

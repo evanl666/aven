@@ -1,8 +1,9 @@
 """The aven command.
 
     aven "把下载目录里的发票整理一下"      one task, then review
-    aven                                     keep talking
-    aven -c                                  continue the last session
+    aven                                     the full-screen app
+    aven -c                                  the app, continuing the last session
+    aven --plain                             keep talking, line by line
 
 A client of the loop and nothing more. It owns the terminal; the loop owns the
 work; the tray owns what actually takes effect.
@@ -63,6 +64,8 @@ def build_parser() -> argparse.ArgumentParser:
                         help="关掉 prompt 缓存(调试用)")
     parser.add_argument("--max-turns", type=int, default=12)
     parser.add_argument("-v", "--verbose", action="store_true", help="显示每个工具的结果")
+    parser.add_argument("--plain", action="store_true",
+                        help="不用全屏界面,一行一行地对话")
     parser.add_argument("--yes", action="store_true",
                         help="跳过确认,直接提交(自动化用,慎用)")
     return parser
@@ -133,6 +136,15 @@ async def _main(argv: list[str] | None = None) -> int:
 
     if args.prompt:
         await turn(session=session, prompt=args.prompt, model=model, tools=tools, args=args)
+        return 0
+
+    if not args.plain and sys.stdin.isatty() and sys.stdout.isatty():
+        # Imported here so a one-shot `aven "..."` never pays for Textual.
+        from aven.tui import AvenApp
+
+        await AvenApp(
+            session=session, model=model, tools=tools, root=root, max_turns=args.max_turns
+        ).run_async()
         return 0
 
     print(DIM("说点什么,Ctrl-D 退出\n"))
