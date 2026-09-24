@@ -25,6 +25,7 @@ from textual.widgets import Button, Footer, Header, Input
 from textual.worker import Worker, WorkerState
 
 from aven.core.agent import ModelFn, run
+from aven.core.compact import Compactor
 from aven.core.events import (
     AgentEnd,
     MessageDelta,
@@ -33,7 +34,12 @@ from aven.core.events import (
     ToolStart,
     TurnStart,
 )
-from aven.core.messages import AssistantMessage, ToolResultMessage, UserMessage
+from aven.core.messages import (
+    AssistantMessage,
+    SummaryMessage,
+    ToolResultMessage,
+    UserMessage,
+)
 from aven.core.session import Session
 from aven.core.tools import Tool
 from aven.tui.widgets import Note, Reply, Thinking, ToolLine, TrayPanel, UserLine
@@ -83,6 +89,7 @@ class AvenApp(App[None]):
         model: ModelFn,
         tools: Sequence[Tool],
         root: Path,
+        compactor: Compactor | None = None,
         max_turns: int = 12,
     ) -> None:
         super().__init__()
@@ -90,6 +97,7 @@ class AvenApp(App[None]):
         self.model = model
         self.tools = list(tools)
         self.root = root
+        self.compactor = compactor
         self.max_turns = max_turns
         self.tray = Tray()
         self._turn: Worker[None] | None = None
@@ -180,6 +188,7 @@ class AvenApp(App[None]):
                 model=self.model,
                 tools=self.tools,
                 tray=self.tray,
+                compactor=self.compactor,
                 max_turns=self.max_turns,
             ):
                 match event:
@@ -194,6 +203,9 @@ class AvenApp(App[None]):
                             stream = Reply.get_stream(reply)
                         await stream.write(event.text)
                         transcript.scroll_end(animate=False)
+
+                    case MessageEnd() if isinstance(event.message, SummaryMessage):
+                        await place(Note("⧗ 对话太长了,早先的部分已压缩成摘要(原文都还在会话文件里)"))
 
                     case MessageEnd() if isinstance(event.message, AssistantMessage):
                         if stream is not None:

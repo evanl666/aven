@@ -18,9 +18,7 @@ to talk to a model, what a tool does, or how any of it is displayed.
 from __future__ import annotations
 
 import asyncio
-import inspect
-from collections.abc import AsyncIterator, Callable, Sequence
-from typing import Any
+from collections.abc import AsyncIterator, Sequence
 
 from aven.core.events import (
     AgentEnd,
@@ -33,6 +31,8 @@ from aven.core.events import (
     TurnEnd,
     TurnStart,
 )
+from aven.core.calling import ModelFn, stream_model
+from aven.core.compact import Compactor
 from aven.core.messages import (
     AssistantMessage,
     LlmMessage,
@@ -45,14 +45,9 @@ from aven.core.session import Session
 from aven.core.tools import Tool
 from aven.tx import Tray
 
-# Injected, never imported: the loop must stay runnable with no API key, and a
-# test must be able to script a model's replies exactly.
-# Three shapes are allowed, and the loop sorts them out at the call site. A
-# model may return a finished AssistantMessage, which keeps a scripted test
-# model to one line; it may return an awaitable of one; or it may be an async
-# generator that yields text as it arrives and carries the finished message on
-# its final chunk. Streaming stays a property of the model, not of the loop.
-ModelFn = Callable[[list[LlmMessage]], Any]
+# ModelFn is injected, never imported: the loop must stay runnable with no API
+# key, and a test must be able to script a model's replies exactly.
+__all__ = ["ModelFn", "run"]
 
 
 async def run(
@@ -62,6 +57,7 @@ async def run(
     model: ModelFn,
     tools: Sequence[Tool] | None = None,
     tray: Tray | None = None,
+    compactor: Compactor | None = None,
     max_turns: int = 12,
     source: str = "chat",
 ) -> AsyncIterator[Event]:
@@ -85,8 +81,18 @@ async def run(
 
         # history() flattens the tree to the current path - the branch the user
         # abandoned is in the file and not in this prompt.
+        llm_messages = to_llm(session.history())
+
+        # Between turns is the only safe moment: every tool call has its result,
+        # so a summary can stand in for a whole prefix without orphaning one.
+        if compactor is not None:
+            summary = await compactor.maybe_compact(session, llm_messages)
+            if summary is not None:
+                yield MessageEnd(message=summary)
+                llm_messages = to_llm(session.history())
+
         reply: AssistantMessage | None = None
-        async for produced in _ask(model, to_llm(session.history())):
+        async for produced in _ask(model, llm_messages):
             if isinstance(produced, AssistantMessage):
                 # An async generator cannot `return` a value the way a plain
                 # one can, so the finished message rides out as the last item.
@@ -135,16 +141,7 @@ async def _ask(
     Mixing the two in one stream is the price of async generators not having
     return values; the caller tells them apart by type.
     """
-    produced = model(llm_messages)
-
-    if inspect.isawaitable(produced):
-        produced = await produced
-
-    if isinstance(produced, AssistantMessage):
-        yield produced
-        return
-
-    async for item in produced:
+    async for item in stream_model(model, llm_messages):
         if isinstance(item, AssistantMessage):
             yield item
         else:

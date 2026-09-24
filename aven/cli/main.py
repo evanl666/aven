@@ -22,6 +22,7 @@ from pathlib import Path
 from aven.cli.render import BOLD, DIM, RED, Renderer
 from aven.cli.review import review
 from aven.core.agent import run
+from aven.core.compact import Compactor
 from aven.core.session import Session
 from aven.model import Claude
 from aven.actuators import mac_tools
@@ -63,6 +64,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--no-cache", dest="cache", action="store_false",
                         help="关掉 prompt 缓存(调试用)")
     parser.add_argument("--max-turns", type=int, default=12)
+    parser.add_argument("--context-limit", type=int, default=120_000,
+                        help="上下文估算超过这个 token 数就压缩,0 表示不压缩")
     parser.add_argument("-v", "--verbose", action="store_true", help="显示每个工具的结果")
     parser.add_argument("--plain", action="store_true",
                         help="不用全屏界面,一行一行地对话")
@@ -83,7 +86,7 @@ def pick_session(args: argparse.Namespace) -> Path:
     return SESSIONS / f"{time.strftime('%Y%m%d-%H%M%S')}.jsonl"
 
 
-async def turn(*, session: Session, prompt: str, model: Claude, tools, args) -> None:
+async def turn(*, session: Session, prompt: str, model: Claude, tools, compactor, args) -> None:
     """One prompt: run it, then decide what takes effect."""
     tray = Tray()
     screen = Renderer(verbose=args.verbose)
@@ -91,7 +94,7 @@ async def turn(*, session: Session, prompt: str, model: Claude, tools, args) -> 
 
     async for event in run(
         session=session, prompt=prompt, model=model, tools=tools,
-        tray=tray, max_turns=args.max_turns,
+        tray=tray, compactor=compactor, max_turns=args.max_turns,
     ):
         screen.handle(event)
 
@@ -125,17 +128,23 @@ async def _main(argv: list[str] | None = None) -> int:
     if on_mac:
         tools = tools + mac_tools()
 
-    model = Claude(
-        tools=tools,
-        system=SYSTEM,
-        cache=args.cache,
-        **({"model": args.model} if args.model else {}),
+    picked = {"model": args.model} if args.model else {}
+    model = Claude(tools=tools, system=SYSTEM, cache=args.cache, **picked)
+
+    # A separate instance with no tools and no system prompt: summarising needs
+    # neither, and handing them over would only make the request bigger and
+    # invite the model to call something.
+    compactor = (
+        Compactor(model=Claude(cache=args.cache, **picked), limit=args.context_limit)
+        if args.context_limit
+        else None
     )
 
     print(DIM(f"aven · {root} · {len(tools)} 个工具{' (含日历/邮件)' if on_mac else ''} · {session.path.name}"))
 
     if args.prompt:
-        await turn(session=session, prompt=args.prompt, model=model, tools=tools, args=args)
+        await turn(session=session, prompt=args.prompt, model=model, tools=tools,
+                   compactor=compactor, args=args)
         return 0
 
     if not args.plain and sys.stdin.isatty() and sys.stdout.isatty():
@@ -143,7 +152,8 @@ async def _main(argv: list[str] | None = None) -> int:
         from aven.tui import AvenApp
 
         await AvenApp(
-            session=session, model=model, tools=tools, root=root, max_turns=args.max_turns
+            session=session, model=model, tools=tools, root=root,
+            compactor=compactor, max_turns=args.max_turns,
         ).run_async()
         return 0
 
@@ -155,7 +165,8 @@ async def _main(argv: list[str] | None = None) -> int:
             print()
             return 0
         if typed.strip():
-            await turn(session=session, prompt=typed.strip(), model=model, tools=tools, args=args)
+            await turn(session=session, prompt=typed.strip(), model=model, tools=tools,
+                       compactor=compactor, args=args)
 
 
 def main(argv: list[str] | None = None) -> int:

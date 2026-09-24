@@ -92,6 +92,22 @@ class ToolResultMessage(BaseMessage):
 
 
 @dataclass(kw_only=True)
+class SummaryMessage(BaseMessage):
+    """What a stretch of the conversation amounted to.
+
+    Appended like anything else - the messages it stands for are still in the
+    file, still on the path, still readable. `covers` only decides what is left
+    out of the projection sent to the model. Compaction is lossy for the model
+    and lossless on disk.
+    """
+
+    kind: ClassVar[str] = "summary"
+
+    text: str
+    covers: list[str] = field(default_factory=list)
+
+
+@dataclass(kw_only=True)
 class NoteMessage(BaseMessage):
     """UI-only. Recorded in the session, never shown to the model.
 
@@ -105,7 +121,9 @@ class NoteMessage(BaseMessage):
     level: Literal["info", "warn", "error"] = "info"
 
 
-Message = UserMessage | AssistantMessage | ToolResultMessage | NoteMessage
+Message = (
+    UserMessage | AssistantMessage | ToolResultMessage | SummaryMessage | NoteMessage
+)
 
 
 def to_llm(messages: list[Message]) -> list[LlmMessage]:
@@ -114,16 +132,39 @@ def to_llm(messages: list[Message]) -> list[LlmMessage]:
     Three things happen here that are easy to get wrong:
 
     1. NoteMessage disappears entirely.
-    2. Thinking blocks lead the assistant turn, in their original order.
-    3. Consecutive tool results are merged into one user message. Anthropic
+    2. A SummaryMessage hides every message it covers, and leads what is left.
+       It was appended after them, because the file only ever grows, but it
+       describes what came before and has to be read that way.
+    3. Thinking blocks lead the assistant turn, in their original order.
+    4. Consecutive tool results are merged into one user message. Anthropic
        carries tool results under role "user", and a parallel tool batch must
        come back as one message with several tool_result blocks, not one
        message each.
     """
-    out: list[LlmMessage] = []
+    hidden: set[str] = set()
+    summaries: list[SummaryMessage] = []
+    for msg in messages:
+        if isinstance(msg, SummaryMessage):
+            hidden |= set(msg.covers)
+            summaries.append(msg)
+
+    # A later summary may cover an earlier one, so at most one survives.
+    out: list[LlmMessage] = [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": f"<earlier_conversation>\n{s.text}\n</earlier_conversation>",
+                }
+            ],
+        }
+        for s in summaries
+        if s.id not in hidden
+    ]
 
     for msg in messages:
-        if isinstance(msg, NoteMessage):
+        if msg.id in hidden or isinstance(msg, (NoteMessage, SummaryMessage)):
             continue
 
         if isinstance(msg, UserMessage):
@@ -175,7 +216,13 @@ def _is_tool_result_batch(llm_msg: LlmMessage) -> bool:
 
 _KINDS: dict[str, type[BaseMessage]] = {
     cls.kind: cls
-    for cls in (UserMessage, AssistantMessage, ToolResultMessage, NoteMessage)
+    for cls in (
+        UserMessage,
+        AssistantMessage,
+        ToolResultMessage,
+        SummaryMessage,
+        NoteMessage,
+    )
 }
 
 

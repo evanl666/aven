@@ -103,6 +103,10 @@ class Renderer:
                 sys.stdout.write(event.text)
                 sys.stdout.flush()
 
+            case MessageEnd() if event.message.kind == "summary":
+                self._quiet()
+                print(DIM("\n  ⧗ 对话太长了,早先的部分已压缩成摘要(原文都还在会话文件里)"))
+
             case MessageEnd() if event.message.kind == "assistant":
                 self._quiet()
                 if self._streaming:
