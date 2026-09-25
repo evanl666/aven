@@ -223,3 +223,30 @@ async def test_the_loop_compacts_before_asking_and_reports_it(tmp_path):
     said = [b.get("text", "") for m in model.last for b in m["content"]]
     assert any("早先" in s for s in said), "the model was given the summary"
     assert not any("第 0 个请求" in s for s in said), "and not what it replaced"
+
+
+def test_the_summariser_does_not_write_to_the_prompt_cache(tmp_path, monkeypatch):
+    """Its prefix is the conversation being retired: read once, never again."""
+    import aven.cli.main as cli
+
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "fake")
+    monkeypatch.setattr(cli, "SESSIONS", tmp_path / "sessions")
+
+    built = []
+
+    class FakeClaude:
+        def __init__(self, **kwargs):
+            built.append(kwargs)
+            self.usage = None
+
+        async def __call__(self, messages):
+            return AssistantMessage(text="hi")
+
+    monkeypatch.setattr(cli, "Claude", FakeClaude)
+    monkeypatch.setattr("sys.stdin", __import__("io").StringIO("\n"))
+    cli.main(["hi", "--root", str(tmp_path)])
+
+    main_model, summariser_model = built
+    assert main_model.get("cache") is True
+    assert summariser_model.get("cache") is False
+    assert "tools" not in summariser_model, "and no tools either"

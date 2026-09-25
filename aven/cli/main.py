@@ -133,9 +133,11 @@ async def _main(argv: list[str] | None = None) -> int:
 
     # A separate instance with no tools and no system prompt: summarising needs
     # neither, and handing them over would only make the request bigger and
-    # invite the model to call something.
+    # invite the model to call something. Caching is off too - the prefix it
+    # sends is the conversation being retired, read once and never again, so a
+    # cache write would be paid for at 1.25x and never read back.
     compactor = (
-        Compactor(model=Claude(cache=args.cache, **picked), limit=args.context_limit)
+        Compactor(model=Claude(cache=False, **picked), limit=args.context_limit)
         if args.context_limit
         else None
     )
