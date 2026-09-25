@@ -31,7 +31,7 @@ from aven.core.events import (
     TurnEnd,
     TurnStart,
 )
-from aven.core.calling import ModelFn, stream_model
+from aven.core.calling import ContextOverflow, ModelFn, stream_model
 from aven.core.compact import Compactor
 from aven.core.messages import (
     AssistantMessage,
@@ -92,13 +92,29 @@ async def run(
                 llm_messages = to_llm(session.history())
 
         reply: AssistantMessage | None = None
-        async for produced in _ask(model, llm_messages):
-            if isinstance(produced, AssistantMessage):
-                # An async generator cannot `return` a value the way a plain
-                # one can, so the finished message rides out as the last item.
-                reply = produced
-            else:
-                yield produced
+        for attempt in (1, 2):
+            try:
+                async for produced in _ask(model, llm_messages):
+                    if isinstance(produced, AssistantMessage):
+                        # An async generator cannot `return` a value the way a
+                        # plain one can, so the finished message rides out as
+                        # the last item.
+                        reply = produced
+                    else:
+                        yield produced
+                break
+            except ContextOverflow:
+                # The estimate was wrong and the provider said so. Shorten for
+                # real and ask once more; a second refusal is the caller's to
+                # see, since compacting again would only cost another summary.
+                if attempt == 2 or compactor is None:
+                    raise
+                recovered = await compactor.compact_now(session, insist=True)
+                if recovered is None:
+                    raise
+                yield MessageEnd(message=recovered)
+                llm_messages = to_llm(session.history())
+
         assert reply is not None, "the model produced no message"
         session.append(reply)
         yield MessageEnd(message=reply)

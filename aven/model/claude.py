@@ -17,12 +17,18 @@ from typing import Any
 
 import anthropic
 
+from aven.core.calling import ContextOverflow
 from aven.core.messages import AssistantMessage, LlmMessage, ToolCall
 from aven.core.tools import Tool
 
 # Opus 5. An assistant acting on someone's real files and real mail is the last
 # place to save a few cents on a weaker model.
 DEFAULT_MODEL = "claude-opus-5"
+
+# What a refusal for length looks like in the message body. Matched as text
+# because the status code alone (400) covers every malformed request, and a
+# genuine bad request must not be mistaken for something compaction can fix.
+_TOO_LONG = ("prompt is too long", "too many tokens", "context window", "maximum context")
 
 # Anthropic's stop reasons mapped onto ours. Anything unrecognised becomes
 # "error" rather than being quietly treated as a normal finish.
@@ -150,10 +156,15 @@ class Claude:
 
         # Streaming is also what keeps a long reply from hitting the SDK's
         # request timeout, so this is not only a matter of how it looks.
-        async with self.client.messages.stream(**request) as stream:
-            async for chunk in stream.text_stream:
-                yield chunk
-            complete = await stream.get_final_message()
+        try:
+            async with self.client.messages.stream(**request) as stream:
+                async for chunk in stream.text_stream:
+                    yield chunk
+                complete = await stream.get_final_message()
+        except anthropic.BadRequestError as refusal:
+            if any(hint in str(refusal).lower() for hint in _TOO_LONG):
+                raise ContextOverflow(str(refusal)) from refusal
+            raise
 
         self.usage.add(complete.usage)
         yield to_assistant(complete)

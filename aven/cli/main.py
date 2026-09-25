@@ -23,6 +23,7 @@ from aven.cli.render import BOLD, DIM, RED, Renderer
 from aven.cli.review import review
 from aven.core.agent import run
 from aven.core.compact import Compactor
+from aven.core.context import find, read
 from aven.core.session import Session
 from aven.model import Claude
 from aven.actuators import mac_tools
@@ -63,6 +64,8 @@ def build_parser() -> argparse.ArgumentParser:
                         help="模型 id,也可用 AVEN_MODEL 环境变量设定")
     parser.add_argument("--no-cache", dest="cache", action="store_false",
                         help="关掉 prompt 缓存(调试用)")
+    parser.add_argument("--no-instructions", dest="instructions", action="store_false",
+                        help="不加载 AVEN.md / AGENTS.md")
     parser.add_argument("--max-turns", type=int, default=12)
     parser.add_argument("--context-limit", type=int, default=120_000,
                         help="上下文估算超过这个 token 数就压缩,0 表示不压缩")
@@ -128,8 +131,17 @@ async def _main(argv: list[str] | None = None) -> int:
     if on_mac:
         tools = tools + mac_tools()
 
+    # Standing instructions are part of the system prompt, so they sit in the
+    # cached prefix and cost nothing after the first turn.
+    instruction_files = find(root) if args.instructions else []
+    system = SYSTEM
+    if instruction_files:
+        system = SYSTEM + "\n\n以下是用户自己写下的长期指示,优先于上面的通用说明:\n\n" + read(
+            instruction_files
+        )
+
     picked = {"model": args.model} if args.model else {}
-    model = Claude(tools=tools, system=SYSTEM, cache=args.cache, **picked)
+    model = Claude(tools=tools, system=system, cache=args.cache, **picked)
 
     # A separate instance with no tools and no system prompt: summarising needs
     # neither, and handing them over would only make the request bigger and
@@ -143,6 +155,9 @@ async def _main(argv: list[str] | None = None) -> int:
     )
 
     print(DIM(f"aven · {root} · {len(tools)} 个工具{' (含日历/邮件)' if on_mac else ''} · {session.path.name}"))
+    for path in instruction_files:
+        # Read from the user's disk into the prompt: say so, every time.
+        print(DIM(f"  ↳ 已读取指示 {path}"))
 
     if args.prompt:
         await turn(session=session, prompt=args.prompt, model=model, tools=tools,

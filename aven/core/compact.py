@@ -85,19 +85,36 @@ class Compactor:
     async def maybe_compact(
         self, session: Session, llm_messages: list[LlmMessage]
     ) -> SummaryMessage | None:
-        """Summarise the old part of the path, if there is too much of it.
+        """Summarise the old turns if the estimate says there are too many.
 
         Returns the summary it appended, or None when nothing was done - either
         the context still fits, or everything in it is too recent to drop.
         """
         if not self.too_long(llm_messages):
             return None
+        return await self.compact_now(session)
 
+    async def compact_now(
+        self, session: Session, *, insist: bool = False
+    ) -> SummaryMessage | None:
+        """Summarise regardless of the estimate.
+
+        `insist` separates two different situations. Compacting early because
+        an estimate said so should not cost the turns the model is working on -
+        the estimate is deliberately pessimistic and may simply be wrong. But
+        once the provider has actually refused the request for length, there is
+        nothing left to be careful about, so keep_turns is given up too: half a
+        conversation beats a dead one.
+        """
         path = session.history()
-        old, _keep = split_at_turn(path, self.keep_turns)
-        if not old:
-            # Fewer turns than we promised to keep. Summarising them would buy
-            # room by throwing away exactly what the model is working on.
+
+        for keep in ((self.keep_turns, 1) if insist else (self.keep_turns,)):
+            old, _keep = split_at_turn(path, keep)
+            if old:
+                break
+        else:
+            # One turn, and it is already too long. Nothing here can be given
+            # up without discarding the very thing being worked on.
             return None
 
         reply = await ask_model(

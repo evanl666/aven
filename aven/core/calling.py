@@ -21,6 +21,16 @@ from aven.core.messages import AssistantMessage, LlmMessage
 ModelFn = Callable[[list[LlmMessage]], Any]
 
 
+class ContextOverflow(Exception):
+    """The request was refused for being longer than the model can read.
+
+    Providers say this in their own words and their own error classes. The
+    adapter translates; the loop only needs to know that shortening the
+    conversation and asking again is worth a try.
+    """
+
+
+
 async def stream_model(
     model: ModelFn, llm_messages: list[LlmMessage]
 ) -> AsyncIterator[str | AssistantMessage]:

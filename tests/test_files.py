@@ -112,3 +112,71 @@ def test_undo_keeps_a_folder_someone_else_put_a_file_in(box, tools):
 
     assert (box / "notes").is_dir(), "not empty, not ours to delete"
     assert (box / "notes" / "other.md").exists()
+
+
+# --- editing -----------------------------------------------------------------
+
+
+@pytest.fixture
+def notes(box):
+    (box / "notes.md").write_text("# 报销\n\n- 滴滴 38.50\n- 美团 126.00\n\n合计 164.50\n")
+    return box / "notes.md"
+
+
+def test_edit_replaces_only_the_passage_given(notes, tools):
+    tools["edit_file"](path="notes.md", old="合计 164.50", new="合计 164.50 元")
+
+    text = notes.read_text()
+    assert "合计 164.50 元" in text
+    assert "- 滴滴 38.50" in text, "nothing else moved"
+
+
+def test_edit_undo_restores_the_whole_file(notes, tools):
+    result = tools["edit_file"](path="notes.md", old="- 美团 126.00", new="- 美团 0")
+    before = notes.read_text()
+
+    result.undo()
+
+    assert notes.read_text() != before
+    assert "- 美团 126.00" in notes.read_text()
+
+
+def test_a_passage_that_is_not_there_says_why_it_might_not_be(notes, tools):
+    """The model is working from read_file's output, so a miss is usually
+    whitespace. The message has to point at that."""
+    from aven.tools.files import NotFound
+
+    with pytest.raises(NotFound, match="indentation"):
+        tools["edit_file"](path="notes.md", old="-  美团 126.00", new="x")
+
+
+def test_a_passage_that_appears_twice_is_refused(notes, tools):
+    """Guessing which one was meant is worse than asking for a longer passage."""
+    from aven.tools.files import Ambiguous
+
+    with pytest.raises(Ambiguous, match="appears 2 times"):
+        tools["edit_file"](path="notes.md", old="- ", new="* ")
+
+
+def test_a_failed_edit_leaves_the_file_alone(notes, tools):
+    from aven.tools.files import NotFound
+
+    before = notes.read_text()
+    with pytest.raises(NotFound):
+        tools["edit_file"](path="notes.md", old="不存在的文字", new="x")
+
+    assert notes.read_text() == before
+
+
+def test_edit_is_scoped_to_the_root_like_everything_else(tools):
+    with pytest.raises(Outside):
+        tools["edit_file"](path="../outside.md", old="a", new="b")
+
+
+def test_the_preview_shows_what_is_being_replaced_without_touching_the_file(notes, tools):
+    shown = tools["edit_file"].preview(
+        {"path": "notes.md", "old": "合计 164.50", "new": "合计 164.50 元"}
+    )
+
+    assert "notes.md" in shown and "合计 164.50" in shown
+    assert notes.read_text().endswith("合计 164.50\n"), "preview read nothing and wrote nothing"

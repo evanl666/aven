@@ -2,7 +2,10 @@
 
 from dataclasses import replace
 
+import pytest
+
 from aven.core.agent import run
+from aven.core.calling import ContextOverflow
 from aven.core.compact import Compactor, estimate_tokens, split_at_turn
 from aven.core.events import MessageEnd
 from aven.core.messages import (
@@ -250,3 +253,79 @@ def test_the_summariser_does_not_write_to_the_prompt_cache(tmp_path, monkeypatch
     assert main_model.get("cache") is True
     assert summariser_model.get("cache") is False
     assert "tools" not in summariser_model, "and no tools either"
+
+
+# --- recovering from a refusal -----------------------------------------------
+
+
+def refusing_once(text="好的"):
+    """A model that rejects the first request for length, then answers."""
+    calls = []
+
+    async def model(llm_messages):
+        calls.append(llm_messages)
+        if len(calls) == 1:
+            raise ContextOverflow("prompt is too long: 250000 tokens > 200000 maximum")
+        return AssistantMessage(text=text)
+
+    model.calls = calls
+    return model
+
+
+async def test_a_refusal_for_length_is_recovered_by_compacting(tmp_path):
+    session = Session.open(tmp_path / "s.jsonl")
+    conversation(session, turns=6)
+    model = refusing_once()
+
+    events = [
+        event
+        async for event in run(
+            session=session,
+            prompt="继续",
+            model=model,
+            compactor=Compactor(model=summariser(), limit=1_000_000, keep_turns=2),
+        )
+    ]
+
+    assert len(model.calls) == 2, "asked again after shortening"
+    assert len(model.calls[1]) < len(model.calls[0]), "and with less to read"
+    assert any(
+        isinstance(e, MessageEnd) and isinstance(e.message, SummaryMessage) for e in events
+    )
+    assert [m.text for m in session.history() if m.kind == "assistant"][-1] == "好的"
+
+
+async def test_a_second_refusal_is_not_hidden(tmp_path):
+    """Compacting twice would only cost another summary and refuse again."""
+    session = Session.open(tmp_path / "s.jsonl")
+    conversation(session, turns=6)
+
+    async def always_refuses(llm_messages):
+        raise ContextOverflow("prompt is too long")
+        yield  # pragma: no cover - makes this an async generator
+
+    with pytest.raises(ContextOverflow):
+        async for _ in run(
+            session=session,
+            prompt="继续",
+            model=always_refuses,
+            compactor=Compactor(model=summariser(), limit=1_000_000, keep_turns=2),
+        ):
+            pass
+
+
+async def test_without_a_compactor_the_refusal_travels_on(tmp_path):
+    session = Session.open(tmp_path / "s.jsonl")
+
+    with pytest.raises(ContextOverflow):
+        async for _ in run(session=session, prompt="go", model=refusing_once()):
+            pass
+
+
+async def test_insisting_gives_up_the_turns_it_would_normally_keep(tmp_path):
+    session = Session.open(tmp_path / "s.jsonl")
+    conversation(session, turns=2)
+    careful = Compactor(model=summariser(), limit=1, keep_turns=4)
+
+    assert await careful.compact_now(session) is None, "careful: leaves too few turns alone"
+    assert await careful.compact_now(session, insist=True) is not None, "insisting: takes them"

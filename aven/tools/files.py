@@ -25,6 +25,19 @@ class Outside(Exception):
     """A path resolved to somewhere outside the root."""
 
 
+class NotFound(Exception):
+    """The passage to edit is not in the file."""
+
+
+class Ambiguous(Exception):
+    """The passage to edit appears more than once."""
+
+
+def _clip(text: str, width: int = 40) -> str:
+    flat = " ".join(text.split())
+    return flat if len(flat) <= width else flat[: width - 1] + "…"
+
+
 def file_tools(root: Path) -> list[Tool]:
     """Build the file toolset bound to one directory."""
     root = Path(root).expanduser().resolve()
@@ -124,6 +137,40 @@ def file_tools(root: Path) -> list[Tool]:
         verb = "replaced" if existed else "created"
         return ToolResult(output=f"{verb} {show(target)} ({len(content)} chars)", undo=undo)
 
+    @tool(risk="reversible", preview=lambda path, old, **_: f"改 {path}:{_clip(old)}")
+    def edit_file(
+        path: Annotated[str, "File to change, relative to the root"],
+        old: Annotated[str, "The exact text to replace, copied from the file"],
+        new: Annotated[str, "What to put in its place"],
+    ) -> ToolResult:
+        """Replace one exact passage in a text file.
+
+        Prefer this over write_file for anything but a new or tiny file: it
+        costs the few lines that change rather than the whole document.
+        """
+        target = inside(path)
+        before = target.read_text(encoding="utf-8")
+
+        found = before.count(old)
+        if found == 0:
+            # The model is working from what read_file gave it, so a miss is
+            # almost always whitespace. Say that rather than just "not found".
+            raise NotFound(
+                f"that text is not in {show(target)}. Copy it exactly as read_file "
+                f"returned it, including indentation and line breaks."
+            )
+        if found > 1:
+            raise Ambiguous(
+                f"that text appears {found} times in {show(target)}. Include "
+                f"enough surrounding lines to make it unique."
+            )
+
+        target.write_text(before.replace(old, new, 1), encoding="utf-8")
+        return ToolResult(
+            output=f"changed {show(target)} ({len(old)} chars → {len(new)})",
+            undo=lambda: target.write_text(before, encoding="utf-8"),
+        )
+
     @tool(risk="reversible", preview="{src} → {dst}")
     def move_file(
         src: Annotated[str, "Current path, relative to the root"],
@@ -161,4 +208,4 @@ def file_tools(root: Path) -> list[Tool]:
             undo=lambda: shutil.move(target, source),
         )
 
-    return [list_dir, read_file, write_file, move_file, delete_file]
+    return [list_dir, read_file, write_file, edit_file, move_file, delete_file]
