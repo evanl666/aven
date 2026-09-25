@@ -12,10 +12,12 @@ is exactly the seam to_llm was built for.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from collections.abc import Callable
+from dataclasses import dataclass, field
 
 from aven.core.calling import ModelFn, ask_model
 from aven.core.messages import (
+    AssistantMessage,
     LlmMessage,
     Message,
     SummaryMessage,
@@ -40,6 +42,42 @@ amounts, dates, identifiers
 
 Leave out pleasantries and reasoning it no longer needs. No preamble - start \
 with the summary itself."""
+
+FILES_SEEN = """\
+
+These files were acted on, in order. Keep the ones that still matter, by their \
+exact paths:
+
+{files}"""
+
+
+# Argument names that carry a path. Tools name their arguments for the model to
+# read, so these are the words that mean "a file" across the whole toolset.
+PATH_ARGS = ("path", "src", "dst", "folder", "file")
+
+
+def touched_files(messages: list[Message]) -> list[str]:
+    """Every file the given stretch of conversation acted on, in order.
+
+    Taken from the tool calls, not from what anyone said about them. A summary
+    is prose and prose loses paths; this list is the part that must survive
+    verbatim, because the next turn will ask for one of them by name.
+    """
+    seen: list[str] = []
+    for message in messages:
+        if isinstance(message, SummaryMessage):
+            # Already-summarised stretches carry their own list. Compaction is
+            # cumulative or it forgets the beginning of long tasks.
+            for path in message.files:
+                if path not in seen:
+                    seen.append(path)
+        elif isinstance(message, AssistantMessage):
+            for call in message.tool_calls:
+                for name in PATH_ARGS:
+                    value = call.args.get(name)
+                    if isinstance(value, str) and value and value not in seen:
+                        seen.append(value)
+    return seen
 
 
 def estimate_tokens(llm_messages: list[LlmMessage]) -> int:
@@ -79,8 +117,16 @@ class Compactor:
     limit: int = 120_000
     keep_turns: int = 4
 
+    # How to weigh the context. The default guesses from the characters; the
+    # CLI passes one that reports what the provider actually counted, which is
+    # exact and costs nothing because the number came back with the last reply.
+    measure: Callable[[list[LlmMessage]], int] = field(default=estimate_tokens)
+
+    def size(self, llm_messages: list[LlmMessage]) -> int:
+        return self.measure(llm_messages) or estimate_tokens(llm_messages)
+
     def too_long(self, llm_messages: list[LlmMessage]) -> bool:
-        return estimate_tokens(llm_messages) >= self.limit
+        return self.size(llm_messages) >= self.limit
 
     async def maybe_compact(
         self, session: Session, llm_messages: list[LlmMessage]
@@ -117,13 +163,18 @@ class Compactor:
             # up without discarding the very thing being worked on.
             return None
 
+        files = touched_files(old)
+        instructions = INSTRUCTIONS
+        if files:
+            instructions += FILES_SEEN.format(files="\n".join(f"- {f}" for f in files))
+
         reply = await ask_model(
             self.model,
             to_llm(old) + [
-                {"role": "user", "content": [{"type": "text", "text": INSTRUCTIONS}]}
+                {"role": "user", "content": [{"type": "text", "text": instructions}]}
             ],
         )
 
         return session.append(
-            SummaryMessage(text=reply.text, covers=[m.id for m in old])
+            SummaryMessage(text=reply.text, covers=[m.id for m in old], files=files)
         )

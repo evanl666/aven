@@ -2,11 +2,13 @@
 
 from dataclasses import replace
 
+from types import SimpleNamespace
+
 import pytest
 
 from aven.core.agent import run
 from aven.core.calling import ContextOverflow
-from aven.core.compact import Compactor, estimate_tokens, split_at_turn
+from aven.core.compact import Compactor, estimate_tokens, split_at_turn, touched_files
 from aven.core.events import MessageEnd
 from aven.core.messages import (
     AssistantMessage,
@@ -30,6 +32,17 @@ def summariser(text="早先:归档了 3 张发票到 报销/,财务是 finance@c
         return AssistantMessage(text=text)
 
     model.seen = seen
+    return model
+
+
+def scripted_stop(stop_reason):
+    """A model whose reply ends for a given reason."""
+
+    def model(_llm_messages):
+        return AssistantMessage(
+            id=new_id(), text="说到一半就", stop_reason=stop_reason
+        )
+
     return model
 
 
@@ -240,7 +253,10 @@ def test_the_summariser_does_not_write_to_the_prompt_cache(tmp_path, monkeypatch
     class FakeClaude:
         def __init__(self, **kwargs):
             built.append(kwargs)
-            self.usage = None
+            self.usage = SimpleNamespace(last_input=0)
+
+        async def context_window(self):
+            return 200_000
 
         async def __call__(self, messages):
             return AssistantMessage(text="hi")
@@ -329,3 +345,195 @@ async def test_insisting_gives_up_the_turns_it_would_normally_keep(tmp_path):
 
     assert await careful.compact_now(session) is None, "careful: leaves too few turns alone"
     assert await careful.compact_now(session, insist=True) is not None, "insisting: takes them"
+
+
+# --- measuring ---------------------------------------------------------------
+
+
+def test_the_provider_count_is_preferred_over_the_guess(tmp_path):
+    """Exact, and free: the number came back with the last reply."""
+    compactor = Compactor(model=summariser(), limit=100, measure=lambda _: 150)
+
+    assert compactor.size(["短"]) == 150
+    assert compactor.too_long(["短"]) is True
+
+
+def test_the_guess_covers_the_first_turn(tmp_path):
+    """Nothing has been sent yet, so there is nothing for the provider to have
+    counted."""
+    compactor = Compactor(model=summariser(), limit=100, measure=lambda _: 0)
+
+    assert compactor.size(["中" * 500]) == estimate_tokens(["中" * 500])
+
+
+async def test_the_window_is_asked_for_once_and_remembered(monkeypatch):
+    from aven.model.claude import ASSUMED_WINDOW, Claude
+
+    asked = []
+
+    class Models:
+        async def retrieve(self, model_id):
+            asked.append(model_id)
+            return SimpleNamespace(max_input_tokens=1_000_000)
+
+    client = SimpleNamespace(models=Models(), messages=None)
+    model = Claude(client=client)
+
+    assert await model.context_window() == 1_000_000
+    assert await model.context_window() == 1_000_000
+    assert asked == ["claude-opus-5"], "asked once"
+    assert ASSUMED_WINDOW < 1_000_000, "the fallback errs on the small side"
+
+
+async def test_an_unreachable_models_api_falls_back_to_the_smaller_guess():
+    from aven.model.claude import ASSUMED_WINDOW, Claude
+
+    class Models:
+        async def retrieve(self, model_id):
+            raise RuntimeError("offline")
+
+    model = Claude(client=SimpleNamespace(models=Models(), messages=None))
+
+    assert await model.context_window() == ASSUMED_WINDOW
+
+
+def test_last_input_is_every_token_that_went_in():
+    from aven.model.claude import Usage
+
+    usage = Usage()
+    usage.add(
+        SimpleNamespace(
+            input_tokens=10, output_tokens=5,
+            cache_read_input_tokens=900, cache_creation_input_tokens=90,
+        )
+    )
+
+    assert usage.last_input == 1000, "uncached, read and written together"
+
+    usage.add(SimpleNamespace(input_tokens=7, output_tokens=1,
+                              cache_read_input_tokens=0, cache_creation_input_tokens=0))
+    assert usage.last_input == 7, "the latest request, not a running total"
+    assert usage.input_tokens == 17, "while the totals do accumulate"
+
+
+# --- files ---------------------------------------------------------------------
+
+
+def files_conversation(session, names):
+    for name in names:
+        session.append(UserMessage(text=f"处理 {name}"))
+        call = ToolCall(name="move_file", args={"src": f"Downloads/{name}", "dst": f"报销/{name}"})
+        session.append(AssistantMessage(tool_calls=[call], stop_reason="tool_use"))
+        session.append(
+            ToolResultMessage(tool_call_id=call.id, tool_name="move_file", output="moved")
+        )
+        session.append(AssistantMessage(text="好了"))
+
+
+def test_paths_are_read_out_of_the_calls_not_the_prose(tmp_path):
+    session = Session.open(tmp_path / "s.jsonl")
+    files_conversation(session, ["a.pdf", "b.pdf"])
+
+    assert touched_files(session.history()) == [
+        "Downloads/a.pdf", "报销/a.pdf", "Downloads/b.pdf", "报销/b.pdf",
+    ]
+
+
+def test_the_same_path_is_listed_once(tmp_path):
+    session = Session.open(tmp_path / "s.jsonl")
+    files_conversation(session, ["a.pdf", "a.pdf"])
+
+    assert touched_files(session.history()) == ["Downloads/a.pdf", "报销/a.pdf"]
+
+
+async def test_the_summariser_is_given_the_paths_verbatim(tmp_path):
+    session = Session.open(tmp_path / "s.jsonl")
+    files_conversation(session, ["发票_滴滴.pdf", "发票_美团.pdf"])
+    model = summariser()
+
+    summary = await Compactor(model=model, limit=1, keep_turns=1).maybe_compact(
+        session, to_llm(session.history())
+    )
+
+    instructions = model.seen[0][-1]["content"][0]["text"]
+    assert "Downloads/发票_滴滴.pdf" in instructions
+    assert "exact paths" in instructions
+    assert "Downloads/发票_滴滴.pdf" in summary.files, "and kept on the summary"
+
+
+async def test_the_list_survives_being_summarised_again(tmp_path):
+    """Compaction is cumulative, or it forgets the beginning of long tasks."""
+    session = Session.open(tmp_path / "s.jsonl")
+    files_conversation(session, ["第一批.pdf", "还有一批.pdf"])
+
+    first = await Compactor(model=summariser(), limit=1, keep_turns=1).maybe_compact(
+        session, to_llm(session.history())
+    )
+    assert "Downloads/第一批.pdf" in first.files
+
+    files_conversation(session, ["第二批.pdf", "再一批.pdf"])
+    second = await Compactor(model=summariser(), limit=1, keep_turns=1).maybe_compact(
+        session, to_llm(session.history())
+    )
+
+    assert "Downloads/第一批.pdf" in second.files, "the earlier batch is still named"
+    assert "Downloads/第二批.pdf" in second.files
+
+
+def test_a_conversation_that_touched_nothing_adds_no_instructions(tmp_path):
+    session = Session.open(tmp_path / "s.jsonl")
+    session.append(UserMessage(text="今天天气怎么样"))
+    session.append(AssistantMessage(text="我看不到天气"))
+
+    assert touched_files(session.history()) == []
+
+
+# --- a truncated reply -------------------------------------------------------
+
+
+async def test_a_truncated_reply_is_reported_rather_than_passed_off_as_finished(tmp_path):
+    session = Session.open(tmp_path / "s.jsonl")
+
+    events = [
+        event
+        async for event in run(
+            session=session,
+            prompt="写一篇很长的东西",
+            model=scripted_stop("max_tokens"),
+        )
+    ]
+
+    assert events[-1].reason == "truncated"
+
+
+async def test_a_truncated_reply_makes_room_for_the_next_turn(tmp_path):
+    session = Session.open(tmp_path / "s.jsonl")
+    conversation(session, turns=6)
+
+    events = [
+        event
+        async for event in run(
+            session=session,
+            prompt="继续",
+            model=scripted_stop("max_tokens"),
+            compactor=Compactor(model=summariser(), limit=1, keep_turns=2),
+        )
+    ]
+
+    assert any(
+        isinstance(e, MessageEnd) and isinstance(e.message, SummaryMessage) for e in events
+    ), "the context that left no room is shortened"
+    assert events[-1].reason == "truncated"
+
+
+async def test_an_ordinary_finish_still_says_end_turn(tmp_path):
+    session = Session.open(tmp_path / "s.jsonl")
+
+    events = [
+        event
+        async for event in run(
+            session=session, prompt="你好", model=scripted_stop("end_turn")
+        )
+    ]
+
+    assert events[-1].reason == "end_turn"

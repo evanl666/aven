@@ -22,7 +22,7 @@ from pathlib import Path
 from aven.cli.render import BOLD, DIM, RED, Renderer
 from aven.cli.review import review
 from aven.core.agent import run
-from aven.core.compact import Compactor
+from aven.core.compact import Compactor, estimate_tokens
 from aven.core.context import find, read
 from aven.core.session import Session
 from aven.model import Claude
@@ -71,8 +71,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--no-instructions", dest="instructions", action="store_false",
                         help="不加载 AVEN.md / AGENTS.md")
     parser.add_argument("--max-turns", type=int, default=12)
-    parser.add_argument("--context-limit", type=int, default=120_000,
-                        help="上下文估算超过这个 token 数就压缩,0 表示不压缩")
+    parser.add_argument("--reserve", type=int, default=24_000,
+                        help="给回复和下一轮增长留出的 token 余量")
+    parser.add_argument("--no-compact", dest="compact", action="store_false",
+                        help="关掉自动压缩")
     parser.add_argument("-v", "--verbose", action="store_true", help="显示每个工具的结果")
     parser.add_argument("--plain", action="store_true",
                         help="不用全屏界面,一行一行地对话")
@@ -147,16 +149,25 @@ async def _main(argv: list[str] | None = None) -> int:
     picked = {"model": args.model} if args.model else {}
     model = Claude(tools=tools, system=system, cache=args.cache, **picked)
 
-    # A separate instance with no tools and no system prompt: summarising needs
-    # neither, and handing them over would only make the request bigger and
-    # invite the model to call something. Caching is off too - the prefix it
-    # sends is the conversation being retired, read once and never again, so a
-    # cache write would be paid for at 1.25x and never read back.
-    compactor = (
-        Compactor(model=Claude(cache=False, **picked), limit=args.context_limit)
-        if args.context_limit
-        else None
-    )
+    compactor = None
+    if args.compact:
+        # The threshold is the model's own window less what the reply and the
+        # turn's tool results will add before we look again. Asking the Models
+        # API beats hard-coding a number that is wrong for every model but one.
+        limit = await model.context_window() - args.reserve
+
+        # A separate instance with no tools and no system prompt: summarising
+        # needs neither, and handing them over would only make the request
+        # bigger and invite the model to call something. Caching is off too -
+        # the prefix it sends is the conversation being retired, read once and
+        # never again, so a cache write would be paid at 1.25x and never read.
+        compactor = Compactor(
+            model=Claude(cache=False, **picked),
+            limit=limit,
+            # What the provider counted for the last request, which is exact.
+            # It is one turn stale, and the reserve is what covers the gap.
+            measure=lambda _msgs: model.usage.last_input,
+        )
 
     print(DIM(f"aven · {root} · {len(tools)} 个工具{' (含日历/邮件)' if on_mac else ''} · {session.path.name}"))
     for path in instruction_files:

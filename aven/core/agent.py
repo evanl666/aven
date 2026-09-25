@@ -121,6 +121,25 @@ async def run(
 
         if not reply.tool_calls:
             yield TurnEnd(index=index, message=reply)
+
+            if reply.stop_reason == "max_tokens":
+                # The reply ran out of room mid-sentence. Until now that ended
+                # the run looking like an ordinary finish, leaving the person
+                # with half a thought and no reason for it.
+                #
+                # Compaction cannot undo the truncation - max_tokens is a cap
+                # we set on the output, not a full window. It is still worth
+                # doing: a context this long is why there was no room, and the
+                # next turn needs some.
+                if compactor is not None:
+                    shortened = await compactor.maybe_compact(
+                        session, to_llm(session.history())
+                    )
+                    if shortened is not None:
+                        yield MessageEnd(message=shortened)
+                yield AgentEnd(reason="truncated")
+                return
+
             yield AgentEnd(reason="end_turn")
             return
 

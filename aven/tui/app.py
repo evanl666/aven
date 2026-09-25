@@ -226,6 +226,9 @@ class AvenApp(App[None]):
 
                     case AgentEnd() if event.reason == "max_turns":
                         await place(Note("达到轮次上限,任务没有做完"))
+
+                    case AgentEnd() if event.reason == "truncated":
+                        await place(Note("回复太长被截断了。让它接着说,或者把任务拆小一点"))
         finally:
             # Runs on success, on error and on Esc alike. Awaiting here is
             # fine even while cancelling: the cancellation has already been

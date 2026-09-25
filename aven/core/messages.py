@@ -106,6 +106,12 @@ class SummaryMessage(BaseMessage):
     text: str
     covers: list[str] = field(default_factory=list)
 
+    # Files the summarised stretch touched, carried forward so the list
+    # survives being summarised again. Read out of the tool calls rather than
+    # out of the summary text: a model writing prose will drop a path it
+    # considers incidental, and the one it drops is the one asked for next.
+    files: list[str] = field(default_factory=list)
+
 
 @dataclass(kw_only=True)
 class NoteMessage(BaseMessage):

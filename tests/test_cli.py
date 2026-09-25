@@ -24,7 +24,10 @@ def fake_claude(monkeypatch, *replies):
 
     class FakeClaude:
         def __init__(self, **_):
-            self.usage = SimpleNamespace()
+            self.usage = SimpleNamespace(last_input=0)
+
+        async def context_window(self):
+            return 200_000
 
         async def __call__(self, messages):
             return replace(queue.pop(0) if len(queue) > 1 else queue[0], id=new_id())

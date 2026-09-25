@@ -133,6 +133,8 @@ class Renderer:
                 self._quiet()
                 if event.reason == "max_turns":
                     print(RED("\n■ 达到轮次上限,任务没有做完"))
+                elif event.reason == "truncated":
+                    print(RED("\n■ 回复太长被截断了。让它接着说,或者把任务拆小一点"))
 
     def waiting(self, label: str) -> None:
         """Show that something is happening before the first event arrives."""

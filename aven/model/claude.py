@@ -25,6 +25,10 @@ from aven.core.tools import Tool
 # place to save a few cents on a weaker model.
 DEFAULT_MODEL = "claude-opus-5"
 
+# Used only when the Models API cannot be reached. Small enough that assuming
+# it costs an early compaction rather than a rejected request.
+ASSUMED_WINDOW = 200_000
+
 # What a refusal for length looks like in the message body. Matched as text
 # because the status code alone (400) covers every malformed request, and a
 # genuine bad request must not be mistaken for something compaction can fix.
@@ -57,8 +61,19 @@ class Usage:
     cached_tokens: int = 0
     written_tokens: int = 0
 
+    # What the last request actually weighed, as the provider counted it. The
+    # totals above accumulate; this one is the only number that says how full
+    # the window is right now.
+    last_input: int = 0
+
     def add(self, usage: Any) -> None:
         self.requests += 1
+        went_in = (
+            (getattr(usage, "input_tokens", 0) or 0)
+            + (getattr(usage, "cache_read_input_tokens", 0) or 0)
+            + (getattr(usage, "cache_creation_input_tokens", 0) or 0)
+        )
+        self.last_input = went_in
         self.input_tokens += getattr(usage, "input_tokens", 0) or 0
         self.output_tokens += getattr(usage, "output_tokens", 0) or 0
         self.cached_tokens += getattr(usage, "cache_read_input_tokens", 0) or 0
@@ -122,6 +137,7 @@ class Claude:
         # reordered tool invalidates every turn that follows.
         self.tools = [t.for_model() for t in tools]
         self.usage = Usage()
+        self._window: int | None = None
 
     async def __call__(
         self, messages: list[LlmMessage]
@@ -168,6 +184,23 @@ class Claude:
 
         self.usage.add(complete.usage)
         yield to_assistant(complete)
+
+
+    async def context_window(self) -> int:
+        """How much this model can read, asked once and remembered.
+
+        Hard-coding it means every new model is wrong in one direction or the
+        other, and the direction that matters - assuming more room than there
+        is - ends in a rejected request. The Models API knows; a failure to
+        reach it falls back to the smaller assumption.
+        """
+        if self._window is None:
+            try:
+                info = await self.client.models.retrieve(self.model)
+                self._window = int(getattr(info, "max_input_tokens", 0)) or ASSUMED_WINDOW
+            except Exception:
+                self._window = ASSUMED_WINDOW
+        return self._window
 
 
 def to_assistant(response: Any) -> AssistantMessage:
