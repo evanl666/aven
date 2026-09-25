@@ -24,10 +24,12 @@ from aven.cli.review import review
 from aven.core.agent import run
 from aven.core.compact import Compactor, estimate_tokens
 from aven.core.context import find, read
+from aven.core.skills import catalogue
+from aven.core.skills import find as find_skills
 from aven.core.session import Session
 from aven.model import Claude
 from aven.actuators import mac_tools
-from aven.tools import file_tools, memory_tools
+from aven.tools import file_tools, memory_tools, skill_tools
 from aven.tx import Tray
 
 SESSIONS = Path.home() / ".aven" / "sessions"
@@ -129,7 +131,8 @@ async def _main(argv: list[str] | None = None) -> int:
 
     session = Session.open(pick_session(args))
 
-    tools = file_tools(root) + memory_tools(root)
+    found_skills = find_skills(root)
+    tools = file_tools(root) + memory_tools(root) + skill_tools(found_skills)
     # Opt-in, not opt-out. These are the tools that reach outside the root and
     # ask macOS for permission, and forgetting a --no-mac should not be what
     # decides whether Mail is reachable.
@@ -141,6 +144,8 @@ async def _main(argv: list[str] | None = None) -> int:
     # cached prefix and cost nothing after the first turn.
     instruction_files = find(root) if args.instructions else []
     system = SYSTEM
+    if found_skills:
+        system += "\n\n" + catalogue(found_skills)
     if instruction_files:
         system = SYSTEM + "\n\n以下是用户自己写下的长期指示,优先于上面的通用说明:\n\n" + read(
             instruction_files
@@ -173,6 +178,8 @@ async def _main(argv: list[str] | None = None) -> int:
     for path in instruction_files:
         # Read from the user's disk into the prompt: say so, every time.
         print(DIM(f"  ↳ 已读取指示 {path}"))
+    if found_skills:
+        print(DIM(f"  ↳ {len(found_skills)} 个技能可用:{', '.join(s.name for s in found_skills)}"))
 
     if args.prompt:
         await turn(session=session, prompt=args.prompt, model=model, tools=tools,
