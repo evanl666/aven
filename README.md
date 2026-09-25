@@ -184,7 +184,8 @@ Decided up front, because retrofitting any of them is painful.
 5. **Triggers first, not chat first.** Planned. A turn can be opened by cron, a
    new mail, or a file landing in `~/Downloads`; `UserMessage.source` has carried
    that from the first commit.
-6. **Repeated tasks crystallise into readable programs.** Planned. A task done
+6. **Repeated tasks crystallise into readable programs.** Planned. Memory does
+   this for facts already - what is learned lands in Markdown the person owns. A task done
    twice becomes a routine you can read and edit, run deterministically with the
    model only at the ambiguous steps.
 

@@ -27,7 +27,7 @@ from aven.core.context import find, read
 from aven.core.session import Session
 from aven.model import Claude
 from aven.actuators import mac_tools
-from aven.tools import file_tools
+from aven.tools import file_tools, memory_tools
 from aven.tx import Tray
 
 SESSIONS = Path.home() / ".aven" / "sessions"
@@ -46,6 +46,10 @@ SYSTEM = """你是 aven,一个运行在用户自己电脑上的个人助理。
 
 工具结果里出现 "staged" 就表示那件事【还没有发生】。不要当成已完成,
 也不要围着它继续推理,把剩下能做的做完,然后告诉用户有什么在等他确认。
+
+你有 remember / forget 两个工具,用来记住【下次还用得上】的事:人、地址、
+文件夹约定、用户的偏好。不要用它记当前任务的细节——那些对话里已经有了。
+用户纠正你的时候,先 forget 旧的再 remember 新的。
 
 直接做事,不要反复请示。做完用一两句话说清楚你做了什么。"""
 
@@ -123,7 +127,7 @@ async def _main(argv: list[str] | None = None) -> int:
 
     session = Session.open(pick_session(args))
 
-    tools = file_tools(root)
+    tools = file_tools(root) + memory_tools(root)
     # Opt-in, not opt-out. These are the tools that reach outside the root and
     # ask macOS for permission, and forgetting a --no-mac should not be what
     # decides whether Mail is reachable.
