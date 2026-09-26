@@ -573,3 +573,61 @@ def test_only_the_most_recent_paths_are_replayed(tmp_path):
     assert "15 earlier paths not listed" in said
     assert f"文件{SUMMARY_FILES + 14}.pdf" in said, "the newest are kept"
     assert "文件0.pdf" not in said
+
+
+async def test_compaction_also_trims_the_bulk_out_of_the_kept_turns(tmp_path):
+    """A single file read in the recent turns can outweigh everything that was
+    just summarised away."""
+    from aven.core.compact import BULKY_RESULT
+
+    session = Session.open(tmp_path / "s.jsonl")
+    for n in range(5):
+        session.append(UserMessage(text=f"读第 {n} 个"))
+        call = ToolCall(name="read_file", args={"path": f"{n}.txt"})
+        session.append(AssistantMessage(tool_calls=[call], stop_reason="tool_use"))
+        session.append(
+            ToolResultMessage(
+                tool_call_id=call.id, tool_name="read_file", output="x" * (BULKY_RESULT + 500)
+            )
+        )
+        session.append(AssistantMessage(text="读完了"))
+
+    before = estimate_tokens(to_llm(session.history()))
+    await Compactor(model=summariser(), limit=1, keep_turns=3).maybe_compact(
+        session, to_llm(session.history())
+    )
+    after = estimate_tokens(to_llm(session.history()))
+
+    projected = "\n".join(
+        str(b.get("content", "")) for m in to_llm(session.history()) for b in m["content"]
+    )
+    assert "dropped to make room" in projected
+    assert after < before / 2, "the kept turns lost their payload, not their shape"
+    assert well_formed(to_llm(session.history())), "and they are still answerable"
+
+
+async def test_the_most_recent_result_is_left_whole(tmp_path):
+    """It is the one the model is most likely still working from."""
+    from aven.core.compact import BULKY_RESULT
+
+    session = Session.open(tmp_path / "s.jsonl")
+    for n in range(4):
+        session.append(UserMessage(text=f"读第 {n} 个"))
+        call = ToolCall(name="read_file", args={"path": f"{n}.txt"})
+        session.append(AssistantMessage(tool_calls=[call], stop_reason="tool_use"))
+        session.append(
+            ToolResultMessage(
+                tool_call_id=call.id, tool_name="read_file",
+                output=f"第{n}个的内容" + "x" * BULKY_RESULT,
+            )
+        )
+        session.append(AssistantMessage(text="读完了"))
+
+    await Compactor(model=summariser(), limit=1, keep_turns=2).maybe_compact(
+        session, to_llm(session.history())
+    )
+
+    projected = "\n".join(
+        str(b.get("content", "")) for m in to_llm(session.history()) for b in m["content"]
+    )
+    assert "第3个的内容" in projected, "the last one is untouched"

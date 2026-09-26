@@ -18,9 +18,11 @@ from dataclasses import dataclass, field
 from aven.core.calling import ModelFn, ask_model
 from aven.core.messages import (
     AssistantMessage,
+    ContextEdit,
     LlmMessage,
     Message,
     SummaryMessage,
+    ToolResultMessage,
     UserMessage,
     to_llm,
 )
@@ -110,6 +112,12 @@ def split_at_turn(messages: list[Message], keep: int) -> tuple[list[Message], li
     return messages[:cut], messages[cut:]
 
 
+# A tool result longer than this is almost always a file read or a directory
+# listing whose moment has passed. Kept turns keep their shape; they do not
+# need to keep their bulk.
+BULKY_RESULT = 2_000
+
+
 @dataclass
 class Compactor:
     """Decides when the context is too long, and shortens it when it is."""
@@ -155,8 +163,8 @@ class Compactor:
         """
         path = session.history()
 
-        for keep in ((self.keep_turns, 1) if insist else (self.keep_turns,)):
-            old, _keep = split_at_turn(path, keep)
+        for turns in ((self.keep_turns, 1) if insist else (self.keep_turns,)):
+            old, keep = split_at_turn(path, turns)
             if old:
                 break
         else:
@@ -176,6 +184,38 @@ class Compactor:
             ],
         )
 
-        return session.append(
+        summary = session.append(
             SummaryMessage(text=reply.text, covers=[m.id for m in old], files=files)
         )
+        self._trim(session, keep)
+        return summary
+
+    def _trim(self, session: Session, keep: list[Message]) -> None:
+        """Replace the bulk of old tool results in the kept turns with a stub.
+
+        Summarising alone leaves the recent turns whole, and a single file read
+        in them can outweigh everything that was just summarised away. The turn
+        keeps its shape - the call, the result, the reply that followed - and
+        loses only the payload nobody is going to read again. The original is
+        one line away in the session file.
+
+        The most recent turn is left whole: it is the one being worked in, and
+        its results are what the next reply is most likely built from.
+        """
+        turn_starts = [i for i, m in enumerate(keep) if isinstance(m, UserMessage)]
+        older = keep[: turn_starts[-1]] if turn_starts else keep
+
+        for message in older:
+            if not isinstance(message, ToolResultMessage):
+                continue
+            if len(message.output) <= BULKY_RESULT:
+                continue
+            session.append(
+                ContextEdit(
+                    target=message.id,
+                    replacement=(
+                        f"[{len(message.output)} characters from {message.tool_name}, "
+                        f"dropped to make room. Run it again if it is still needed.]"
+                    ),
+                )
+            )

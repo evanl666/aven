@@ -118,6 +118,27 @@ class SummaryMessage(BaseMessage):
 
 
 @dataclass(kw_only=True)
+class ContextEdit(BaseMessage):
+    """An append-only edit of one earlier message's contribution to context.
+
+    The target is untouched: still on the path, still in the file, still what
+    the tree navigates through and what an export contains. Only the projection
+    handed to the model changes. Because the edit is itself a node, it is
+    branch-relative for free - check out a point before it and the original
+    contribution is back.
+
+    `replacement` of None drops the target. A string stands in for its content.
+    Compaction is the same idea done wholesale, which is why a SummaryMessage
+    carries a list of ids rather than one.
+    """
+
+    kind: ClassVar[str] = "context_edit"
+
+    target: str
+    replacement: str | None = None
+
+
+@dataclass(kw_only=True)
 class NoteMessage(BaseMessage):
     """UI-only. Recorded in the session, never shown to the model.
 
@@ -132,31 +153,37 @@ class NoteMessage(BaseMessage):
 
 
 Message = (
-    UserMessage | AssistantMessage | ToolResultMessage | SummaryMessage | NoteMessage
+    UserMessage
+    | AssistantMessage
+    | ToolResultMessage
+    | SummaryMessage
+    | ContextEdit
+    | NoteMessage
 )
 
 
 def to_llm(messages: list[Message]) -> list[LlmMessage]:
     """Project stored messages down to what the model sees.
 
-    Three things happen here that are easy to get wrong:
+    Five things happen here that are easy to get wrong:
 
     1. NoteMessage disappears entirely.
     2. A SummaryMessage hides every message it covers, and leads what is left.
        It was appended after them, because the file only ever grows, but it
        describes what came before and has to be read that way.
-    3. Thinking blocks lead the assistant turn, in their original order.
-    4. Consecutive tool results are merged into one user message. Anthropic
+    3. A ContextEdit drops or rewrites the one message it targets. Later edits
+       on the path win, so an edit can be taken back by another edit.
+    4. Thinking blocks lead the assistant turn, in their original order.
+    5. Consecutive tool results are merged into one user message. Anthropic
        carries tool results under role "user", and a parallel tool batch must
        come back as one message with several tool_result blocks, not one
        message each.
+
+    Nothing here alters `messages`. Every one of them is still on the path and
+    still in the file; this is only the view handed to the model.
     """
-    hidden: set[str] = set()
-    summaries: list[SummaryMessage] = []
-    for msg in messages:
-        if isinstance(msg, SummaryMessage):
-            hidden |= set(msg.covers)
-            summaries.append(msg)
+    hidden, replaced, summaries = _edits(messages)
+    hidden |= _orphaned_results(messages, hidden | set(replaced))
 
     # A later summary may cover an earlier one, so at most one survives.
     out: list[LlmMessage] = [
@@ -164,13 +191,21 @@ def to_llm(messages: list[Message]) -> list[LlmMessage]:
     ]
 
     for msg in messages:
-        if msg.id in hidden or isinstance(msg, (NoteMessage, SummaryMessage)):
+        if msg.id in hidden or isinstance(msg, (NoteMessage, SummaryMessage, ContextEdit)):
             continue
 
+        stands_in = replaced.get(msg.id)
+
         if isinstance(msg, UserMessage):
-            out.append({"role": "user", "content": [{"type": "text", "text": msg.text}]})
+            out.append(_text("user", stands_in if stands_in is not None else msg.text))
 
         elif isinstance(msg, AssistantMessage):
+            if stands_in is not None:
+                # Only text survives a rewrite. Any tool calls it made are gone,
+                # which is why their results were hidden above.
+                out.append(_text("assistant", stands_in))
+                continue
+
             # Thinking first: the provider requires the original order back.
             content: list[dict[str, Any]] = list(msg.thinking)
             if msg.text:
@@ -183,12 +218,14 @@ def to_llm(messages: list[Message]) -> list[LlmMessage]:
                 out.append({"role": "assistant", "content": content})
 
         elif isinstance(msg, ToolResultMessage):
+            # A rewritten result stays a tool_result: the call it answers is
+            # still in the transcript and still needs answering.
             block = {
                 "type": "tool_result",
                 "tool_use_id": msg.tool_call_id,
-                "content": msg.output,
+                "content": stands_in if stands_in is not None else msg.output,
             }
-            if msg.is_error:
+            if msg.is_error and stands_in is None:
                 block["is_error"] = True
 
             # Merge into the previous message if it is already a tool-result batch.
@@ -198,6 +235,62 @@ def to_llm(messages: list[Message]) -> list[LlmMessage]:
                 out.append({"role": "user", "content": [block]})
 
     return out
+
+
+def _edits(
+    messages: list[Message],
+) -> tuple[set[str], dict[str, str], list[SummaryMessage]]:
+    """Work out what is hidden, what stands in for what, and which summaries lead.
+
+    One pass, because an edit is appended after the message it targets and a
+    summary after everything it covers. Reading in order means the last edit on
+    a target is the one still standing when the pass ends.
+    """
+    hidden: set[str] = set()
+    replaced: dict[str, str] = {}
+    summaries: list[SummaryMessage] = []
+
+    for msg in messages:
+        if isinstance(msg, SummaryMessage):
+            hidden |= set(msg.covers)
+            summaries.append(msg)
+        elif isinstance(msg, ContextEdit):
+            if msg.replacement is None:
+                hidden.add(msg.target)
+                replaced.pop(msg.target, None)
+            else:
+                replaced[msg.target] = msg.replacement
+                hidden.discard(msg.target)
+
+    return hidden, replaced, summaries
+
+
+def _orphaned_results(messages: list[Message], gone: set[str]) -> set[str]:
+    """Results whose call went with its assistant turn.
+
+    An edit that drops or rewrites an assistant message takes its tool calls
+    with it. Leaving the results behind would put a tool_result in the
+    transcript answering nothing, which the API rejects - the same invariant
+    the loop protects when a run is interrupted.
+    """
+    unanswered = {
+        call.id
+        for msg in messages
+        if isinstance(msg, AssistantMessage) and msg.id in gone
+        for call in msg.tool_calls
+    }
+    if not unanswered:
+        return set()
+
+    return {
+        msg.id
+        for msg in messages
+        if isinstance(msg, ToolResultMessage) and msg.tool_call_id in unanswered
+    }
+
+
+def _text(role: str, text: str) -> LlmMessage:
+    return {"role": role, "content": [{"type": "text", "text": text}]}
 
 
 def _as_earlier_conversation(summary: SummaryMessage) -> LlmMessage:
@@ -247,6 +340,7 @@ _KINDS: dict[str, type[BaseMessage]] = {
         AssistantMessage,
         ToolResultMessage,
         SummaryMessage,
+        ContextEdit,
         NoteMessage,
     )
 }
