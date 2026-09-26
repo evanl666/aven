@@ -43,7 +43,7 @@ from aven.core.messages import (
 from aven.core.session import Session
 from aven.core.tools import Tool
 from aven.tui.widgets import Note, Reply, Thinking, ToolLine, TrayPanel, UserLine
-from aven.tx import Tray
+from aven.tx import Policy, Tray
 
 HELP = """\
 /undo      撤销已执行的改动(对话也一起回退)
@@ -90,6 +90,7 @@ class AvenApp(App[None]):
         tools: Sequence[Tool],
         root: Path,
         compactor: Compactor | None = None,
+        policy: Policy | None = None,
         max_turns: int = 12,
     ) -> None:
         super().__init__()
@@ -98,8 +99,9 @@ class AvenApp(App[None]):
         self.tools = list(tools)
         self.root = root
         self.compactor = compactor
+        self.policy = policy
         self.max_turns = max_turns
-        self.tray = Tray()
+        self.tray = Tray(policy=policy)
         self._turn: Worker[None] | None = None
 
     # -- layout --------------------------------------------------------------
@@ -293,7 +295,7 @@ class AvenApp(App[None]):
     def _settle(self) -> None:
         """Start a fresh tray once nothing in this one is waiting on a decision."""
         if not self.tray.pending() and not self.tray.undoable():
-            self.tray = Tray()
+            self.tray = Tray(policy=self.policy)
         self._refresh_tray()
 
     def _refresh_tray(self) -> None:

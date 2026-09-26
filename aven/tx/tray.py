@@ -23,6 +23,7 @@ from typing import Any, Literal
 
 from aven.core.messages import new_id
 from aven.core.tools import Risk, Tool, ToolResult
+from aven.tx.policy import Policy
 
 State = Literal["applied", "pending", "committed", "undone", "discarded", "failed"]
 
@@ -64,8 +65,9 @@ class Entry:
 class Tray:
     """Holds the entries for one run and decides when they take effect."""
 
-    def __init__(self) -> None:
+    def __init__(self, policy: Policy | None = None) -> None:
         self.entries: list[Entry] = []
+        self.policy = policy
 
     # -- during the run -----------------------------------------------------
 
@@ -80,17 +82,26 @@ class Tray:
         """
         preview = tool.preview(args)
 
-        if tool.risk == "read":
+        # The tool's declaration is a floor. A policy sees what the tool cannot
+        # - the arguments, and how much this run has already changed - and may
+        # raise the call above it, never below.
+        risk = tool.risk
+        verdict = self.policy.judge(tool, args, self.entries) if self.policy else None
+        if verdict is not None:
+            risk = verdict.risk
+            preview = f"{preview}  ⚠ {verdict.reason}"
+
+        if risk == "read":
             # Nothing changed, so there is nothing to review or undo.
             return tool(**args).output, False
 
-        if tool.risk == "irreversible":
+        if risk == "irreversible":
             self.entries.append(
                 Entry(
                     tool=tool.name,
                     args=dict(args),
                     preview=preview,
-                    risk=tool.risk,
+                    risk=risk,
                     state="pending",
                     apply=lambda: tool(**args),
                     origin_message_id=origin_message_id,
@@ -104,7 +115,7 @@ class Tray:
                 tool=tool.name,
                 args=dict(args),
                 preview=preview,
-                risk=tool.risk,
+                risk=risk,
                 state="applied",
                 output=result.output,
                 undo=result.undo,

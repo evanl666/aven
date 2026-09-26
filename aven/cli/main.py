@@ -30,7 +30,7 @@ from aven.core.session import Session
 from aven.model import Claude
 from aven.actuators import mac_tools
 from aven.tools import file_tools, memory_tools, skill_tools
-from aven.tx import Tray
+from aven.tx import Tray, bulk, guard, protect
 
 SESSIONS = Path.home() / ".aven" / "sessions"
 
@@ -73,6 +73,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--no-instructions", dest="instructions", action="store_false",
                         help="不加载 AVEN.md / AGENTS.md")
     parser.add_argument("--max-turns", type=int, default=12)
+    parser.add_argument("--bulk", type=int, default=25,
+                        help="一次运行改动超过这么多处,就先让你看一眼")
+    parser.add_argument("--protect", action="append", default=[], metavar="片段",
+                        help="路径里含这个片段就要确认,可以重复给")
     parser.add_argument("--reserve", type=int, default=24_000,
                         help="给回复和下一轮增长留出的 token 余量")
     parser.add_argument("--no-compact", dest="compact", action="store_false",
@@ -97,9 +101,10 @@ def pick_session(args: argparse.Namespace) -> Path:
     return SESSIONS / f"{time.strftime('%Y%m%d-%H%M%S')}.jsonl"
 
 
-async def turn(*, session: Session, prompt: str, model: Claude, tools, compactor, args) -> None:
+async def turn(*, session: Session, prompt: str, model: Claude, tools, compactor,
+               policy, args) -> None:
     """One prompt: run it, then decide what takes effect."""
-    tray = Tray()
+    tray = Tray(policy=policy)
     screen = Renderer(verbose=args.verbose)
     screen.waiting("思考中")
 
@@ -128,6 +133,8 @@ async def _main(argv: list[str] | None = None) -> int:
     if not root.is_dir():
         print(RED(f"不是一个目录:{root}"), file=sys.stderr)
         return 1
+
+    policy = guard(bulk(limit=args.bulk), protect(*args.protect))
 
     session = Session.open(pick_session(args))
 
@@ -183,7 +190,7 @@ async def _main(argv: list[str] | None = None) -> int:
 
     if args.prompt:
         await turn(session=session, prompt=args.prompt, model=model, tools=tools,
-                   compactor=compactor, args=args)
+                   compactor=compactor, policy=policy, args=args)
         return 0
 
     if not args.plain and sys.stdin.isatty() and sys.stdout.isatty():
@@ -192,7 +199,7 @@ async def _main(argv: list[str] | None = None) -> int:
 
         await AvenApp(
             session=session, model=model, tools=tools, root=root,
-            compactor=compactor, max_turns=args.max_turns,
+            compactor=compactor, policy=policy, max_turns=args.max_turns,
         ).run_async()
         return 0
 
@@ -205,7 +212,7 @@ async def _main(argv: list[str] | None = None) -> int:
             return 0
         if typed.strip():
             await turn(session=session, prompt=typed.strip(), model=model, tools=tools,
-                       compactor=compactor, args=args)
+                       compactor=compactor, policy=policy, args=args)
 
 
 def main(argv: list[str] | None = None) -> int:
