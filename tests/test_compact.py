@@ -8,10 +8,18 @@ import pytest
 
 from aven.core.agent import run
 from aven.core.calling import ContextOverflow
-from aven.core.compact import Compactor, estimate_tokens, split_at_turn, touched_files
+from aven.core.compact import (
+    CARRIED,
+    Compactor,
+    estimate_tokens,
+    split_at_turn,
+    split_within_turn,
+    touched_files,
+)
 from aven.core.events import MessageEnd
 from aven.core.messages import (
     AssistantMessage,
+    ContextEdit,
     SummaryMessage,
     ToolCall,
     ToolResultMessage,
@@ -631,3 +639,147 @@ async def test_the_most_recent_result_is_left_whole(tmp_path):
         str(b.get("content", "")) for m in to_llm(session.history()) for b in m["content"]
     )
     assert "第3个的内容" in projected, "the last one is untouched"
+
+
+# --- one turn too long for the window ----------------------------------------
+#
+# split_at_turn cuts before a user message and refuses when there is only one to
+# cut before. That refusal is right until the single turn is itself too long -
+# one request that reads twenty files - at which point refusing leaves a
+# conversation that can neither be shortened nor continued.
+
+
+def one_long_turn(session, steps=4):
+    """One request, answered over several tool calls and never handed back."""
+    session.append(UserMessage(text="把整个文件夹读一遍"))
+    for i in range(steps):
+        call = ToolCall(id=f"c{i}", name="read_file", args={"path": f"f{i}.txt"})
+        session.append(AssistantMessage(tool_calls=[call], stop_reason="tool_use"))
+        session.append(
+            ToolResultMessage(tool_call_id=call.id, tool_name="read_file", output="x" * 9_000)
+        )
+    return session
+
+
+def test_a_single_turn_is_cut_before_the_last_thing_said_back():
+    messages = [
+        UserMessage(text="一个请求"),
+        AssistantMessage(text="第一步"),
+        AssistantMessage(text="第二步"),
+    ]
+
+    old, keep = split_within_turn(messages)
+
+    assert [m.text for m in old] == ["一个请求", "第一步"]
+    assert [m.text for m in keep] == ["第二步"]
+
+
+def test_a_turn_with_nothing_said_back_yet_cannot_be_cut():
+    """Only the person's request is there, and that is the one thing to keep."""
+    messages = [UserMessage(text="一个请求")]
+
+    assert split_within_turn(messages) == ([], messages)
+
+
+async def test_insisting_cuts_inside_a_turn_rather_than_giving_up(tmp_path):
+    session = one_long_turn(Session.open(tmp_path / "s.jsonl"))
+    compactor = Compactor(model=summariser(), limit=1, keep_turns=4)
+
+    assert await compactor.compact_now(session) is None, "not without insisting"
+
+    summary = await compactor.compact_now(session, insist=True)
+
+    assert summary is not None, "an overflow inside one turn is still recoverable"
+    assert "f0.txt" in summary.files, "the paths it read survive verbatim"
+
+
+async def test_a_cut_inside_a_turn_keeps_the_results_it_kept_whole(tmp_path):
+    """Everything left after such a cut is the turn being worked in.
+
+    _trim stubs bulky results in the turns *before* the current one. With the
+    cut inside a turn there are none, and stubbing what is left would take away
+    exactly what the next reply has to read.
+    """
+    session = one_long_turn(Session.open(tmp_path / "s.jsonl"))
+    compactor = Compactor(model=summariser(), limit=1, keep_turns=4)
+
+    await compactor.compact_now(session, insist=True)
+
+    stubs = [m for m in session.history() if isinstance(m, ContextEdit)]
+    assert stubs == [], "the surviving results are left alone"
+
+
+async def test_a_cut_inside_a_turn_leaves_a_conversation_the_api_accepts(tmp_path):
+    """The invariant every cut has to hold: no tool_result answering nothing."""
+    session = one_long_turn(Session.open(tmp_path / "s.jsonl"))
+
+    await Compactor(model=summariser(), limit=1, keep_turns=4).compact_now(
+        session, insist=True
+    )
+
+    projected = to_llm(session.history())
+    offered = {
+        block["id"]
+        for m in projected if m["role"] == "assistant"
+        for block in m["content"] if block["type"] == "tool_use"
+    }
+    answered = {
+        block["tool_use_id"]
+        for m in projected if m["role"] == "user"
+        for block in m["content"] if block.get("type") == "tool_result"
+    }
+    assert answered <= offered, "every result answers a call that is still there"
+
+
+async def test_an_overflow_inside_one_turn_is_recovered_not_raised(tmp_path):
+    """End to end: the provider refuses for length and the run carries on."""
+    session = one_long_turn(Session.open(tmp_path / "s.jsonl"))
+    refusals = [0]
+
+    def model(llm_messages):
+        if refusals[0] == 0:
+            refusals[0] += 1
+            raise ContextOverflow("too long")
+        return AssistantMessage(text="读完了", stop_reason="end_turn")
+
+    events = [
+        event
+        async for event in run(
+            session=session,
+            prompt="说说看",
+            model=model,
+            compactor=Compactor(model=summariser(), limit=10**9, keep_turns=4),
+        )
+    ]
+
+    assert events[-1].reason == "end_turn"
+
+
+# --- carrying an earlier summary forward -------------------------------------
+
+
+async def test_a_later_compaction_is_told_to_carry_the_earlier_one_forward(tmp_path):
+    """The summary it is re-reading is the only record of what it covered.
+
+    Without saying so, the instructions read as "summarise this conversation",
+    and a block of prose among the messages gets compressed again like anything
+    else - losing a little more of the beginning on every compaction.
+    """
+    session = Session.open(tmp_path / "s.jsonl")
+    model = summariser()
+    compactor = Compactor(model=model, limit=1, keep_turns=1)
+
+    for i in range(3):
+        session.append(UserMessage(text=f"问题{i}"))
+        session.append(AssistantMessage(text=f"回答{i}"))
+    await compactor.compact_now(session)
+
+    for i in range(3, 5):
+        session.append(UserMessage(text=f"问题{i}"))
+        session.append(AssistantMessage(text=f"回答{i}"))
+    await compactor.compact_now(session)
+
+    first, second = (repr(seen) for seen in model.seen)
+    assert CARRIED.strip() not in first, "there was no earlier summary to carry"
+    assert CARRIED.strip() in second
+    assert "earlier_conversation" in second, "and it is in there to be carried"

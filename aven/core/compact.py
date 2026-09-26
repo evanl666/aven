@@ -45,6 +45,14 @@ amounts, dates, identifiers
 Leave out pleasantries and reasoning it no longer needs. No preamble - start \
 with the summary itself."""
 
+CARRIED = """\
+
+
+The <earlier_conversation> block above is a summary you wrote at an earlier \
+compaction. The messages it describes are already gone, so it is the only \
+record of them left. Carry its facts forward into the new summary rather than \
+compressing it again - anything you drop from it is lost for good."""
+
 FILES_SEEN = """\
 
 
@@ -112,6 +120,29 @@ def split_at_turn(messages: list[Message], keep: int) -> tuple[list[Message], li
     return messages[:cut], messages[cut:]
 
 
+def split_within_turn(messages: list[Message]) -> tuple[list[Message], list[Message]]:
+    """Divide inside one turn, for when the turn is too long on its own.
+
+    split_at_turn refuses to cut here, and refusing is right nearly always: a
+    turn is the unit the model is working in. But a single turn can outgrow the
+    window by itself - one request that reads twenty files - and then refusing
+    leaves a conversation that cannot be shortened and so cannot go on at all.
+
+    The cut lands immediately before an assistant message, which is the only
+    other place it is safe. A tool result always follows the call it answers, so
+    nothing above an assistant message is waiting on it; cutting there cannot
+    separate a call from its result.
+    """
+    replies = [i for i, m in enumerate(messages) if isinstance(m, AssistantMessage)]
+    if not replies or replies[-1] == 0:
+        # Nothing has been said back yet, so there is no boundary inside the
+        # turn - only the person's request, which is the one thing to keep.
+        return [], messages
+
+    cut = replies[-1]
+    return messages[:cut], messages[cut:]
+
+
 # A tool result longer than this is almost always a file read or a directory
 # listing whose moment has passed. Kept turns keep their shape; they do not
 # need to keep their bulk.
@@ -162,18 +193,14 @@ class Compactor:
         conversation beats a dead one.
         """
         path = session.history()
-
-        for turns in ((self.keep_turns, 1) if insist else (self.keep_turns,)):
-            old, keep = split_at_turn(path, turns)
-            if old:
-                break
-        else:
-            # One turn, and it is already too long. Nothing here can be given
-            # up without discarding the very thing being worked on.
+        old, keep = self._divide(path, insist=insist)
+        if not old:
             return None
 
         files = touched_files(old)
         instructions = INSTRUCTIONS
+        if any(isinstance(m, SummaryMessage) for m in old):
+            instructions += CARRIED
         if files:
             instructions += FILES_SEEN.format(files="\n".join(f"- {f}" for f in files))
 
@@ -190,6 +217,29 @@ class Compactor:
         self._trim(session, keep)
         return summary
 
+    def _divide(
+        self, path: list[Message], *, insist: bool
+    ) -> tuple[list[Message], list[Message]]:
+        """Pick where to cut, giving more up only when told to insist.
+
+        Three attempts, each conceding something the one before it kept. An
+        empty `old` from the last of them means there is genuinely nothing to
+        summarise, and the caller has to report the overflow rather than fix it.
+        """
+        old, keep = split_at_turn(path, self.keep_turns)
+        if old or not insist:
+            return old, keep
+
+        # keep_turns is a courtesy, and the provider has stopped accepting it.
+        old, keep = split_at_turn(path, 1)
+        if old:
+            return old, keep
+
+        # One turn, too long by itself. Cut inside it - the last thing said back
+        # is what the next reply builds on, and the request survives in the
+        # summary.
+        return split_within_turn(path)
+
     def _trim(self, session: Session, keep: list[Message]) -> None:
         """Replace the bulk of old tool results in the kept turns with a stub.
 
@@ -201,9 +251,14 @@ class Compactor:
 
         The most recent turn is left whole: it is the one being worked in, and
         its results are what the next reply is most likely built from.
+
+        So a `keep` with no user message in it - which is what a cut inside a
+        single turn leaves - has nothing to trim. All of it is the turn being
+        worked in, and stubbing it would take away the very results the reply
+        after this one has to read.
         """
         turn_starts = [i for i, m in enumerate(keep) if isinstance(m, UserMessage)]
-        older = keep[: turn_starts[-1]] if turn_starts else keep
+        older = keep[: turn_starts[-1]] if turn_starts else []
 
         for message in older:
             if not isinstance(message, ToolResultMessage):
