@@ -14,7 +14,7 @@ letting it through.
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Sequence
+import time
 from pathlib import Path
 from typing import Any
 
@@ -41,11 +41,15 @@ from aven.core.messages import (
     UserMessage,
 )
 from aven.core.session import Session
-from aven.core.tools import Tool
+from aven.core.steering import Steering
+from aven.core.toolbox import ToolSource, resolve
+from aven.core.tree import render as render_tree
 from aven.tui.widgets import Note, Reply, Thinking, ToolLine, TrayPanel, UserLine
 from aven.tx import Policy, Tray
 
 HELP = """\
+/tree      看这个会话的分支树;/tree <id> 回到某一处
+/fork      把当前分支另存成新会话;/fork <id> 从某处截断
 /undo      撤销已执行的改动(对话也一起回退)
 /commit    执行等待确认的操作
 /discard   丢弃等待确认的操作
@@ -87,7 +91,7 @@ class AvenApp(App[None]):
         *,
         session: Session,
         model: ModelFn,
-        tools: Sequence[Tool],
+        tools: ToolSource,
         root: Path,
         compactor: Compactor | None = None,
         policy: Policy | None = None,
@@ -96,12 +100,16 @@ class AvenApp(App[None]):
         super().__init__()
         self.session = session
         self.model = model
-        self.tools = list(tools)
+        # Kept as the source, not resolved: it may be a ToolBox that grows when
+        # the model brings a group in, and a list copy would freeze it at
+        # whatever was loaded when the app started.
+        self.tools = tools
         self.root = root
         self.compactor = compactor
         self.policy = policy
         self.max_turns = max_turns
         self.tray = Tray(policy=policy)
+        self.steering = Steering()
         self._turn: Worker[None] | None = None
 
     # -- layout --------------------------------------------------------------
@@ -131,7 +139,13 @@ class AvenApp(App[None]):
             await self._command(text)
             return
         if self.busy:
-            self.notify("上一个任务还在跑,按 Esc 中断它", severity="warning")
+            # Not an error and not a reason to make them wait. It goes in after
+            # the turn in flight finishes its tool calls, which is the next
+            # moment a user message can be added without malforming the
+            # conversation.
+            self.steering.add(text)
+            await self._say(UserLine(text))
+            await self._say(Note(f"↳ 排队中({self.steering.waiting()} 条),这一轮结束就送进去"))
             return
 
         await self._say(UserLine(text))
@@ -143,6 +157,10 @@ class AvenApp(App[None]):
     async def _command(self, text: str) -> None:
         name = text.split()[0].lower()
         match name:
+            case "/tree":
+                await self._tree(text)
+            case "/fork":
+                await self._fork(text)
             case "/undo":
                 await self._undo()
             case "/commit":
@@ -191,6 +209,7 @@ class AvenApp(App[None]):
                 tools=self.tools,
                 tray=self.tray,
                 compactor=self.compactor,
+                steering=self.steering,
                 max_turns=self.max_turns,
             ):
                 match event:
@@ -244,12 +263,79 @@ class AvenApp(App[None]):
         if event.worker is not self._turn:
             return
         if event.state == WorkerState.CANCELLED:
+            # Whatever was queued was never read, so it goes back to the editor
+            # rather than being thrown away with the run that would have read
+            # it. One line only: more than that, and the rest would be lost.
+            returned = self.steering.drain()
+            if returned:
+                self.query_one("#prompt", Input).value = returned[0]
             self.run_worker(self._say(Note("已中断。已做的可撤销改动还在暂存区里。")))
         elif event.state == WorkerState.ERROR:
             error = event.worker.error
             self.run_worker(self._say(Note(f"出错了:{type(error).__name__}: {error}")))
         if event.state in (WorkerState.SUCCESS, WorkerState.CANCELLED, WorkerState.ERROR):
             self._refresh_tray()
+
+    # -- the tree ------------------------------------------------------------
+
+    async def _tree(self, text: str) -> None:
+        """Show the branches, or move to one.
+
+        The tree has been in the file since the first session was written. This
+        is the first thing that lets anyone see it, and `/tree <id>` is the
+        first thing that lets them move without going through undo.
+        """
+        parts = text.split()
+        if len(parts) == 1:
+            await self._say(Note(render_tree(self.session)))
+            return
+
+        try:
+            target = self.session.find(parts[1])
+        except KeyError as problem:
+            await self._say(Note(str(problem)))
+            return
+
+        if self.busy:
+            await self._say(Note("任务还在跑,先按 Esc 中断"))
+            return
+
+        self.session.checkout(target)
+        # The tray belongs to the branch that was left. Its undos point at work
+        # done on a path we are no longer on, and firing one from here would
+        # roll back something this branch never did.
+        self.tray = Tray(policy=self.policy)
+        self.action_clear()
+        self._replay_history()
+        await self._say(Note(f"回到 {target[:6]}。接着说就会从这里分出一条新的分支。"))
+        self._refresh_tray()
+
+    async def _fork(self, text: str) -> None:
+        """Copy this branch into its own session file and continue there."""
+        if self.busy:
+            await self._say(Note("任务还在跑,先按 Esc 中断"))
+            return
+
+        parts = text.split()
+        at = parts[1] if len(parts) > 1 else None
+        destination = self.session.path.with_name(
+            f"{time.strftime('%Y%m%d-%H%M%S')}-fork.jsonl"
+        )
+        try:
+            forked = self.session.fork(destination, at=at)
+        except (KeyError, FileExistsError) as problem:
+            await self._say(Note(str(problem)))
+            return
+
+        self.session = forked
+        self.tray = Tray(policy=self.policy)
+        self.action_clear()
+        self._replay_history()
+        await self._say(
+            Note(f"已分出新会话 {forked.path.name}({len(forked)} 条)。原来那个一个字没动。")
+        )
+        self._update_subtitle()
+        self._refresh_tray()
 
     # -- the tray ------------------------------------------------------------
 
@@ -322,7 +408,7 @@ class AvenApp(App[None]):
 
     def _update_subtitle(self) -> None:
         name = getattr(self.model, "model", "model")
-        parts = [str(self.root), name, f"{len(self.tools)} 个工具"]
+        parts = [str(self.root), name, f"{len(resolve(self.tools))} 个工具"]
         usage = getattr(self.model, "usage", None)
         if usage is not None and getattr(usage, "requests", 0):
             parts.append(str(usage))

@@ -150,26 +150,61 @@ async def test_escape_interrupts_without_leaving_the_app(box):
         assert set(asked) <= answered, "the conversation is still well formed"
 
 
-async def test_a_second_prompt_while_busy_is_refused(box):
+def _slow_tool(seconds=0.4):
     @tool(name="slow")
     def slow() -> str:
-        """Take a while."""
-        time.sleep(0.4)
+        """Take a while, so there is a window to type into."""
+        time.sleep(seconds)
         return "ok"
 
+    return slow
+
+
+async def test_a_second_prompt_while_busy_is_queued_not_refused(box):
+    """It used to say "wait, or press Esc" - and Esc throws away good work."""
     app = app_for(
-        box, streaming(("等一下。", [ToolCall(name="slow", args={})]), ("好。", [])), [slow]
+        box,
+        streaming(("等一下。", [ToolCall(name="slow", args={})]), ("两件都做了。", [])),
+        [_slow_tool()],
     )
     async with app.run_test(size=(120, 40)) as pilot:
         app.query_one("#prompt", Input).value = "第一件"
         await pilot.press("enter")
         await asyncio.sleep(0.1)
-        app.query_one("#prompt", Input).value = "第二件"
+        app.query_one("#prompt", Input).value = "等等,还有第二件"
         await pilot.press("enter")
         await app.workers.wait_for_complete()
         await pilot.pause()
 
-        assert texts(app, UserLine) == ["› 第一件"]
+        assert texts(app, UserLine) == ["› 第一件", "› 等等,还有第二件"]
+        assert any("排队" in n for n in texts(app, Note))
+        assert [(m.source, m.text) for m in app.session.history() if m.kind == "user"] == [
+            ("chat", "第一件"),
+            ("steering", "等等,还有第二件"),
+        ]
+
+
+async def test_interrupting_gives_a_queued_message_back_to_the_editor(box):
+    """It was never read. Discarding it with the run would be losing their words."""
+    app = app_for(
+        box,
+        streaming(("等一下。", [ToolCall(name="slow", args={})]), ("好。", [])),
+        [_slow_tool(1.0)],
+    )
+    async with app.run_test(size=(120, 40)) as pilot:
+        app.query_one("#prompt", Input).value = "第一件"
+        await pilot.press("enter")
+        await asyncio.sleep(0.2)
+        app.query_one("#prompt", Input).value = "不对,别动那个目录"
+        await pilot.press("enter")
+        await asyncio.sleep(0.1)
+
+        await pilot.press("escape")
+        await app.workers.wait_for_complete()
+        await pilot.pause()
+
+        assert app.query_one("#prompt", Input).value == "不对,别动那个目录"
+        assert not any(getattr(m, "source", None) == "steering" for m in app.session.history())
 
 
 async def test_markup_in_names_is_shown_literally(box):

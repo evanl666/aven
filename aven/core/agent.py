@@ -42,6 +42,7 @@ from aven.core.messages import (
     to_llm,
 )
 from aven.core.session import Session
+from aven.core.steering import Steering
 from aven.core.tools import Tool
 from aven.core.toolbox import ToolSource, resolve
 from aven.tx import Tray
@@ -67,6 +68,7 @@ async def run(
     tools: ToolSource | None = None,
     tray: Tray | None = None,
     compactor: Compactor | None = None,
+    steering: Steering | None = None,
     max_turns: int = 12,
     source: str = "chat",
 ) -> AsyncIterator[Event]:
@@ -93,6 +95,15 @@ async def run(
         # Resolved each turn, not once: a tool the model brought in last turn
         # has to be callable this one.
         by_name = {t.name: t for t in resolve(tools)}
+
+        # Anything typed while the last turn ran joins the conversation here,
+        # and only here. Every tool call already has its result, so a user
+        # message cannot land between a call and its answer.
+        if steering is not None:
+            for text in steering.drain():
+                yield MessageEnd(
+                    message=session.append(UserMessage(text=text, source="steering"))
+                )
 
         # history() flattens the tree to the current path - the branch the user
         # abandoned is in the file and not in this prompt.
@@ -168,6 +179,12 @@ async def run(
 
                 yield AgentEnd(reason="truncated")
                 return
+
+            if steering:
+                # Typed a second too late to steer, so it arrives as a
+                # follow-up: carry on rather than stopping and making them
+                # press Enter again for something already queued.
+                continue
 
             yield AgentEnd(reason="end_turn")
             return
