@@ -22,6 +22,10 @@ from typing import Any, ClassVar, Literal
 # adapted from this shape in the provider layer, not here.
 LlmMessage = dict[str, Any]
 
+# How many of a summary's paths to replay. Enough that a long task keeps the
+# names it will be asked for; few enough that the summary stays a summary.
+SUMMARY_FILES = 40
+
 
 def new_id() -> str:
     return uuid.uuid4().hex[:12]
@@ -156,17 +160,7 @@ def to_llm(messages: list[Message]) -> list[LlmMessage]:
 
     # A later summary may cover an earlier one, so at most one survives.
     out: list[LlmMessage] = [
-        {
-            "role": "user",
-            "content": [
-                {
-                    "type": "text",
-                    "text": f"<earlier_conversation>\n{s.text}\n</earlier_conversation>",
-                }
-            ],
-        }
-        for s in summaries
-        if s.id not in hidden
+        _as_earlier_conversation(s) for s in summaries if s.id not in hidden
     ]
 
     for msg in messages:
@@ -204,6 +198,32 @@ def to_llm(messages: list[Message]) -> list[LlmMessage]:
                 out.append({"role": "user", "content": [block]})
 
     return out
+
+
+def _as_earlier_conversation(summary: SummaryMessage) -> LlmMessage:
+    """Render a summary for the model, with the paths it stands for.
+
+    The prose alone is not enough. A summariser writing prose drops a path it
+    judges incidental, and that is the one the next turn asks for by name - so
+    the paths are replayed beside the prose rather than trusted to it. Only the
+    most recent survive a long task, since the list grows without bound and the
+    oldest are the least likely to come up again.
+    """
+    text = summary.text
+    if summary.files:
+        shown = summary.files[-SUMMARY_FILES:]
+        listed = "\n".join(f"- {path}" for path in shown)
+        dropped = len(summary.files) - len(shown)
+        if dropped:
+            listed = f"[{dropped} earlier paths not listed]\n{listed}"
+        text = f"{text}\n\nFiles this covers:\n{listed}"
+
+    return {
+        "role": "user",
+        "content": [
+            {"type": "text", "text": f"<earlier_conversation>\n{text}\n</earlier_conversation>"}
+        ],
+    }
 
 
 def _is_tool_result_batch(llm_msg: LlmMessage) -> bool:

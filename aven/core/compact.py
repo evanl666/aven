@@ -45,6 +45,7 @@ with the summary itself."""
 
 FILES_SEEN = """\
 
+
 These files were acted on, in order. Keep the ones that still matter, by their \
 exact paths:
 

@@ -537,3 +537,39 @@ async def test_an_ordinary_finish_still_says_end_turn(tmp_path):
     ]
 
     assert events[-1].reason == "end_turn"
+
+
+async def test_the_paths_reach_the_model_even_if_the_prose_drops_them(tmp_path):
+    """The whole reason the list is tracked: prose cannot be trusted with it."""
+    session = Session.open(tmp_path / "s.jsonl")
+    files_conversation(session, ["发票_滴滴.pdf", "发票_美团.pdf"])
+
+    async def lazy(_llm_messages):
+        return AssistantMessage(text="整理了几张发票。")
+
+    await Compactor(model=lazy, limit=1, keep_turns=1).maybe_compact(
+        session, to_llm(session.history())
+    )
+
+    said = "\n".join(
+        b["text"] for m in to_llm(session.history()) for b in m["content"] if b["type"] == "text"
+    )
+    assert "整理了几张发票。" in said
+    assert "Downloads/发票_滴滴.pdf" in said, "the exact path survived the prose"
+
+
+def test_only_the_most_recent_paths_are_replayed(tmp_path):
+    """The list grows without bound; the oldest are least likely to come up."""
+    from aven.core.messages import SUMMARY_FILES
+
+    session = Session.open(tmp_path / "s.jsonl")
+    many = [f"文件{n}.pdf" for n in range(SUMMARY_FILES + 15)]
+    session.append(SummaryMessage(text="做了很多事", files=many))
+
+    said = "\n".join(
+        b["text"] for m in to_llm(session.history()) for b in m["content"] if b["type"] == "text"
+    )
+
+    assert "15 earlier paths not listed" in said
+    assert f"文件{SUMMARY_FILES + 14}.pdf" in said, "the newest are kept"
+    assert "文件0.pdf" not in said
