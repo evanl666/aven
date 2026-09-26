@@ -43,6 +43,7 @@ from aven.core.messages import (
 )
 from aven.core.session import Session
 from aven.core.tools import Tool
+from aven.core.toolbox import ToolSource, resolve
 from aven.tx import Tray
 
 # ModelFn is injected, never imported: the loop must stay runnable with no API
@@ -55,7 +56,7 @@ async def run(
     session: Session,
     prompt: str,
     model: ModelFn,
-    tools: Sequence[Tool] | None = None,
+    tools: ToolSource | None = None,
     tray: Tray | None = None,
     compactor: Compactor | None = None,
     max_turns: int = 12,
@@ -67,7 +68,6 @@ async def run(
     results additionally get a ToolEnd, so a renderer can show a finished tool
     without having to recognise tool results among the message stream.
     """
-    by_name = {t.name: t for t in tools or ()}
 
     # No tray passed still means no irreversible action: one is created here and
     # its pending entries are simply never committed. Safe by omission.
@@ -78,6 +78,10 @@ async def run(
 
     for index in range(max_turns):
         yield TurnStart(index=index)
+
+        # Resolved each turn, not once: a tool the model brought in last turn
+        # has to be callable this one.
+        by_name = {t.name: t for t in resolve(tools)}
 
         # history() flattens the tree to the current path - the branch the user
         # abandoned is in the file and not in this prompt.

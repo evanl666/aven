@@ -25,6 +25,7 @@ from aven.core.agent import run
 from aven.core.compact import Compactor, estimate_tokens
 from aven.core.context import find, read
 from aven.core.skills import catalogue
+from aven.core.toolbox import ToolBox
 from aven.core.skills import find as find_skills
 from aven.core.session import Session
 from aven.model import Claude
@@ -33,6 +34,15 @@ from aven.tools import file_tools, memory_tools, skill_tools
 from aven.tx import Tray, bulk, guard, protect
 
 SESSIONS = Path.home() / ".aven" / "sessions"
+
+# What each dormant group is for. The model reads this to decide whether a task
+# needs the group, so it says when, not only what.
+GROUPS = {
+    "memory": "记住/忘掉关于用户的长期事实。用户说了下次还用得上的事时拿这组。",
+    "calendar": "看日程、建日程。用户提到会议、日程、几号几点时拿这组。",
+    "mail": "写草稿、发邮件。用户要发东西给别人时拿这组。",
+    "search": "Spotlight 全盘搜索。要找的文件不在当前目录里时拿这组。",
+}
 
 SYSTEM = """你是 aven,一个运行在用户自己电脑上的个人助理。
 
@@ -49,7 +59,10 @@ SYSTEM = """你是 aven,一个运行在用户自己电脑上的个人助理。
 工具结果里出现 "staged" 就表示那件事【还没有发生】。不要当成已完成,
 也不要围着它继续推理,把剩下能做的做完,然后告诉用户有什么在等他确认。
 
-你有 remember / forget 两个工具,用来记住【下次还用得上】的事:人、地址、
+不是所有工具一开始就在。目录里列出的那些组,需要时用 use_tools 拿进来,
+一次拿一组,拿了就一直在。
+
+你有 remember / forget 两个工具(在 memory 组里),用来记住【下次还用得上】的事:人、地址、
 文件夹约定、用户的偏好。不要用它记当前任务的细节——那些对话里已经有了。
 用户纠正你的时候,先 forget 旧的再 remember 新的。
 
@@ -139,13 +152,24 @@ async def _main(argv: list[str] | None = None) -> int:
     session = Session.open(pick_session(args))
 
     found_skills = find_skills(root)
-    tools = file_tools(root) + memory_tools(root) + skill_tools(found_skills)
+
+    # Files are what nearly every task touches, so they are always in play.
+    # The rest wait to be asked for: a calendar is dead weight while sorting a
+    # download folder, and its schema is charged for every turn it sits there.
+    groups: dict[str, list] = {"memory": memory_tools(root)}
+
     # Opt-in, not opt-out. These are the tools that reach outside the root and
-    # ask macOS for permission, and forgetting a --no-mac should not be what
+    # ask macOS for permission, and forgetting a flag should not be what
     # decides whether Mail is reachable.
     on_mac = args.mac and platform.system() == "Darwin"
     if on_mac:
-        tools = tools + mac_tools()
+        mac = {t.name: t for t in mac_tools()}
+        groups["calendar"] = [mac["list_calendars"], mac["list_events"], mac["create_event"]]
+        groups["mail"] = [mac["draft_mail"], mac["send_mail"]]
+        groups["search"] = [mac["spotlight"]]
+
+    box = ToolBox(core=file_tools(root) + skill_tools(found_skills), groups=groups)
+    tools = box.active
 
     # Standing instructions are part of the system prompt, so they sit in the
     # cached prefix and cost nothing after the first turn.
@@ -153,6 +177,9 @@ async def _main(argv: list[str] | None = None) -> int:
     system = SYSTEM
     if found_skills:
         system += "\n\n" + catalogue(found_skills)
+    waiting = box.catalogue(GROUPS)
+    if waiting:
+        system += "\n\n" + waiting
     if instruction_files:
         system = SYSTEM + "\n\n以下是用户自己写下的长期指示,优先于上面的通用说明:\n\n" + read(
             instruction_files
@@ -178,10 +205,11 @@ async def _main(argv: list[str] | None = None) -> int:
             limit=limit,
             # What the provider counted for the last request, which is exact.
             # It is one turn stale, and the reserve is what covers the gap.
-            measure=lambda _msgs: model.usage.last_input,
+            measure=lambda _msgs: getattr(model.usage, "last_input", 0),
         )
 
-    print(DIM(f"aven · {root} · {len(tools)} 个工具{' (含日历/邮件)' if on_mac else ''} · {session.path.name}"))
+    waiting_note = f" + {len(box.dormant())} 组待加载" if box.dormant() else ""
+    print(DIM(f"aven · {root} · {len(box.active())} 个工具{waiting_note} · {session.path.name}"))
     for path in instruction_files:
         # Read from the user's disk into the prompt: say so, every time.
         print(DIM(f"  ↳ 已读取指示 {path}"))

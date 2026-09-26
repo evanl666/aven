@@ -19,7 +19,7 @@ import anthropic
 
 from aven.core.calling import ContextOverflow
 from aven.core.messages import AssistantMessage, LlmMessage, ToolCall
-from aven.core.tools import Tool
+from aven.core.toolbox import ToolSource, resolve
 
 # Opus 5. An assistant acting on someone's real files and real mail is the last
 # place to save a few cents on a weaker model.
@@ -117,7 +117,7 @@ class Claude:
     def __init__(
         self,
         *,
-        tools: tuple[Tool, ...] | list[Tool] = (),
+        tools: ToolSource = (),
         system: str | None = None,
         model: str = DEFAULT_MODEL,
         max_tokens: int = 8000,
@@ -132,10 +132,12 @@ class Claude:
         self.system = system
         self.cache = cache
 
-        # Order matters and must never vary: the request is assembled
-        # tools -> system -> messages, and caching is a prefix match, so one
-        # reordered tool invalidates every turn that follows.
-        self.tools = [t.for_model() for t in tools]
+        # Resolved per request, because the active set can change mid-run.
+        # Order matters and must never vary within a set: the request is
+        # assembled tools -> system -> messages and caching is a prefix match,
+        # so one reordered tool invalidates every turn that follows. Bringing a
+        # group in is a deliberate, one-off cache write for that reason.
+        self._tools = tools
         self.usage = Usage()
         self._window: int | None = None
 
@@ -160,8 +162,9 @@ class Claude:
         }
         if self.system:
             request["system"] = self.system
-        if self.tools:
-            request["tools"] = self.tools
+        schemas = [t.for_model() for t in resolve(self._tools)]
+        if schemas:
+            request["tools"] = schemas
         if self.cache:
             # Top-level caching marks the last cacheable block, which in an
             # agent loop is the end of the conversation so far. Next turn that
