@@ -114,6 +114,53 @@ class Session:
             key=lambda m: m.ts,
         )
 
+    def find(self, prefix: str) -> str:
+        """Resolve a shortened id to a full one.
+
+        Ids get read off a screen and typed back, so a prefix has to be enough.
+        An ambiguous one is an error rather than a guess: picking the first
+        match would silently check out the wrong branch, and the whole point of
+        the tree is that the other branch is still there.
+        """
+        if prefix in self._messages:
+            return prefix
+
+        matches = [i for i in self._messages if i.startswith(prefix)]
+        if not matches:
+            raise KeyError(f"no message starting with {prefix!r}")
+        if len(matches) > 1:
+            raise KeyError(
+                f"{prefix!r} matches {len(matches)}: {', '.join(i[:8] for i in matches[:4])}"
+            )
+        return matches[0]
+
+    def fork(self, path: str | Path, *, at: str | None = None) -> Session:
+        """Copy the path down to `at` into a new session file.
+
+        The alternative to branching in place. Checking out an older message
+        keeps both attempts in one file, which is right when they are versions
+        of the same thing; a fork is for when the detour has become its own
+        piece of work and should stop sharing a file - and a history - with
+        what it came from.
+
+        Ids are carried over rather than reissued. The copy is a prefix of this
+        session, so the parent links are already consistent, and keeping them
+        means an id quoted in a note still finds the same message in either
+        file. Nothing in this session changes; the fork only ever reads.
+        """
+        messages = self.history(self.find(at) if at else None)
+
+        path = Path(path).expanduser()
+        path.parent.mkdir(parents=True, exist_ok=True)
+        if path.exists():
+            raise FileExistsError(f"{path} already exists")
+
+        with path.open("w", encoding="utf-8") as f:
+            for msg in messages:
+                f.write(json.dumps(to_dict(msg), ensure_ascii=False) + "\n")
+
+        return Session.open(path)
+
     def leaves(self) -> list[Message]:
         """Messages with no children - one per branch tip."""
         parents = {m.parent_id for m in self._messages.values()}
