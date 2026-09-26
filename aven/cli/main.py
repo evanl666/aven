@@ -4,6 +4,9 @@
     aven                                     the full-screen app
     aven -c                                  the app, continuing the last session
     aven --plain                             keep talking, line by line
+    aven -p "今天有什么会"                    answer on stdout, then exit
+    aven --mode json "..." > events.jsonl    every event as one line of JSON
+    aven -c --tree                           show the session tree and exit
 
 A client of the loop and nothing more. It owns the terminal; the loop owns the
 work; the tray owns what actually takes effect.
@@ -21,6 +24,7 @@ from pathlib import Path
 
 from aven.cli.render import BOLD, DIM, RED, Renderer
 from aven.cli.review import review
+from aven.cli.stream import Final, Jsonl
 from aven.core.agent import run
 from aven.core.compact import Compactor, estimate_tokens
 from aven.core.context import find, read
@@ -28,12 +32,23 @@ from aven.core.skills import catalogue
 from aven.core.toolbox import ToolBox
 from aven.core.skills import find as find_skills
 from aven.core.session import Session
+from aven.core.tree import render as render_tree
 from aven.model import Claude
 from aven.actuators import mac_tools
 from aven.tools import file_tools, memory_tools, skill_tools
 from aven.tx import Tray, bulk, guard, protect
 
 SESSIONS = Path.home() / ".aven" / "sessions"
+
+
+def note(text: str) -> None:
+    """Commentary. Always stderr, so stdout can be the result and nothing else.
+
+    Which files were read and what it cost are diagnostics even when a person
+    is the one reading them - and when the caller is a script, a banner mixed
+    into its input is a bug it has to work around.
+    """
+    print(text, file=sys.stderr)
 
 # What each dormant group is for. The model reads this to decide whether a task
 # needs the group, so it says when, not only what.
@@ -94,6 +109,14 @@ def build_parser() -> argparse.ArgumentParser:
                         help="给回复和下一轮增长留出的 token 余量")
     parser.add_argument("--no-compact", dest="compact", action="store_false",
                         help="关掉自动压缩")
+    parser.add_argument("-p", "--print", dest="oneshot", action="store_true",
+                        help="跑完就退出,只把最后一句回答写到 stdout(给脚本用)")
+    parser.add_argument("--mode", choices=("text", "json"), default="text",
+                        help="text 给人看;json 把每个事件按 JSONL 写到 stdout")
+    parser.add_argument("--tree", action="store_true",
+                        help="打印这个会话的消息树然后退出")
+    parser.add_argument("--fork", metavar="id", nargs="?", const="",
+                        help="把会话另存为一个新文件,可以指定从哪个节点截断")
     parser.add_argument("-v", "--verbose", action="store_true", help="显示每个工具的结果")
     parser.add_argument("--plain", action="store_true",
                         help="不用全屏界面,一行一行地对话")
@@ -110,7 +133,7 @@ def pick_session(args: argparse.Namespace) -> Path:
         existing = sorted(SESSIONS.glob("*.jsonl"), key=lambda p: p.stat().st_mtime)
         if existing:
             return existing[-1]
-        print(DIM("没有找到历史会话,开一个新的"))
+        note(DIM("没有找到历史会话,开一个新的"))
     return SESSIONS / f"{time.strftime('%Y%m%d-%H%M%S')}.jsonl"
 
 
@@ -135,21 +158,67 @@ async def turn(*, session: Session, prompt: str, model: Claude, tools, compactor
         await review(tray, session)
 
 
+async def oneshot(*, session: Session, prompt: str, model: Claude, tools, compactor,
+                  policy, args) -> int:
+    """One prompt for a caller that is not watching the screen.
+
+    No review step: review asks a person a question, and there is no person
+    here. Staged work therefore stays staged unless --yes was passed, and the
+    sink reports it either way - silently discarding an unsent email because
+    nobody was around to confirm it would be the worse failure.
+    """
+    tray = Tray(policy=policy)
+    sink = Jsonl() if args.mode == "json" else Final()
+
+    async for event in run(
+        session=session, prompt=prompt, model=model, tools=tools,
+        tray=tray, compactor=compactor, max_turns=args.max_turns,
+    ):
+        sink.handle(event)
+
+    committed = len(await asyncio.to_thread(tray.commit)) if args.yes else 0
+    sink.close(tray, committed=committed)
+    note(DIM(f"  {model.usage}"))
+    return 0
+
+
 async def _main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-
-    if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
-        print(RED("需要先设置 ANTHROPIC_API_KEY"), file=sys.stderr)
-        return 1
 
     root = args.root.expanduser().resolve()
     if not root.is_dir():
         print(RED(f"不是一个目录:{root}"), file=sys.stderr)
         return 1
 
-    policy = guard(bulk(limit=args.bulk), protect(*args.protect))
-
     session = Session.open(pick_session(args))
+
+    # Reading and copying a session needs no model, so these run before the key
+    # check. Being locked out of your own transcript for want of an API key
+    # would be absurd.
+    if args.tree:
+        print(render_tree(session))
+        return 0
+
+    if args.fork is not None:
+        if not len(session):
+            print(RED("这个会话是空的,没有东西可以 fork"), file=sys.stderr)
+            return 1
+        SESSIONS.mkdir(parents=True, exist_ok=True)
+        destination = SESSIONS / f"{time.strftime('%Y%m%d-%H%M%S')}-fork.jsonl"
+        try:
+            forked = session.fork(destination, at=args.fork or None)
+        except (KeyError, FileExistsError) as problem:
+            print(RED(str(problem)), file=sys.stderr)
+            return 1
+        print(forked.path)
+        note(DIM(f"  {len(forked)} 条消息,原来的会话没有动过"))
+        return 0
+
+    if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
+        print(RED("需要先设置 ANTHROPIC_API_KEY"), file=sys.stderr)
+        return 1
+
+    policy = guard(bulk(limit=args.bulk), protect(*args.protect))
 
     found_skills = find_skills(root)
 
@@ -209,12 +278,20 @@ async def _main(argv: list[str] | None = None) -> int:
         )
 
     waiting_note = f" + {len(box.dormant())} 组待加载" if box.dormant() else ""
-    print(DIM(f"aven · {root} · {len(box.active())} 个工具{waiting_note} · {session.path.name}"))
+    note(DIM(f"aven · {root} · {len(box.active())} 个工具{waiting_note} · {session.path.name}"))
     for path in instruction_files:
         # Read from the user's disk into the prompt: say so, every time.
-        print(DIM(f"  ↳ 已读取指示 {path}"))
+        note(DIM(f"  ↳ 已读取指示 {path}"))
     if found_skills:
-        print(DIM(f"  ↳ {len(found_skills)} 个技能可用:{', '.join(s.name for s in found_skills)}"))
+        note(DIM(f"  ↳ {len(found_skills)} 个技能可用:{', '.join(s.name for s in found_skills)}"))
+
+    if args.oneshot or args.mode == "json":
+        prompt = piped(args.prompt)
+        if not prompt:
+            print(RED("-p / --mode json 需要一个 prompt(参数或管道)"), file=sys.stderr)
+            return 1
+        return await oneshot(session=session, prompt=prompt, model=model, tools=tools,
+                             compactor=compactor, policy=policy, args=args)
 
     if args.prompt:
         await turn(session=session, prompt=args.prompt, model=model, tools=tools,
@@ -231,7 +308,7 @@ async def _main(argv: list[str] | None = None) -> int:
         ).run_async()
         return 0
 
-    print(DIM("说点什么,Ctrl-D 退出\n"))
+    note(DIM("说点什么,Ctrl-D 退出\n"))
     while True:
         try:
             typed = await asyncio.to_thread(input, BOLD("› "))
@@ -241,6 +318,20 @@ async def _main(argv: list[str] | None = None) -> int:
         if typed.strip():
             await turn(session=session, prompt=typed.strip(), model=model, tools=tools,
                        compactor=compactor, policy=policy, args=args)
+
+
+def piped(prompt: str | None) -> str:
+    """The prompt, with anything piped in put before it.
+
+    `git diff | aven -p "看看这个改动"` should work: the pipe is the material
+    and the argument says what to do with it, so the material goes first.
+    """
+    if sys.stdin.isatty():
+        return prompt or ""
+    piped_in = sys.stdin.read().strip()
+    if not piped_in:
+        return prompt or ""
+    return f"{piped_in}\n\n{prompt}" if prompt else piped_in
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -123,3 +123,160 @@ def test_yes_skips_the_prompt_and_commits(box, monkeypatch):
     monkeypatch.setattr("sys.stdin", io.StringIO(""))  # no input available at all
 
     assert cli.main(["go", "--root", str(box), "--yes"]) == 0
+
+
+# --- being called by something that is not a person --------------------------
+
+
+def quiet_stdin(monkeypatch):
+    """No pipe. piped() reads stdin when it is not a tty, and StringIO never is."""
+    monkeypatch.setattr("sys.stdin", io.StringIO(""))
+
+
+def test_print_mode_puts_the_answer_on_stdout_and_the_banner_on_stderr(box, monkeypatch, capsys):
+    fake_claude(monkeypatch, AssistantMessage(text="今天没有会"))
+    quiet_stdin(monkeypatch)
+
+    assert cli.main(["-p", "今天有什么会", "--root", str(box)]) == 0
+
+    captured = capsys.readouterr()
+    assert captured.out == "今天没有会\n", "a caller can pipe this straight into something"
+    assert "aven ·" in captured.err, "the banner is commentary, not output"
+
+
+def test_json_mode_writes_events_a_caller_can_parse(box, monkeypatch, capsys):
+    call = ToolCall(name="list_dir", args={"path": "Downloads"})
+    fake_claude(
+        monkeypatch,
+        AssistantMessage(tool_calls=[call], stop_reason="tool_use"),
+        AssistantMessage(text="一个 pdf"),
+    )
+    quiet_stdin(monkeypatch)
+
+    assert cli.main(["--mode", "json", "列一下", "--root", str(box)]) == 0
+
+    import json
+
+    records = [json.loads(line) for line in capsys.readouterr().out.splitlines()]
+    kinds = [r["type"] for r in records]
+    assert kinds[0] == "agent_start"
+    assert "tool_end" in kinds
+    assert kinds[-1] == "tray", "so a caller knows whether anything is still waiting"
+
+
+def test_print_mode_needs_a_prompt(box, monkeypatch, capsys):
+    fake_claude(monkeypatch, AssistantMessage(text="hi"))
+    quiet_stdin(monkeypatch)
+
+    assert cli.main(["-p", "--root", str(box)]) == 1
+    assert "需要一个 prompt" in capsys.readouterr().err
+
+
+def test_a_piped_in_file_becomes_the_material_and_the_argument_says_what_to_do(
+    box, monkeypatch, capsys
+):
+    seen = []
+
+    class FakeClaude:
+        def __init__(self, **_):
+            self.usage = SimpleNamespace(last_input=0)
+
+        async def context_window(self):
+            return 200_000
+
+        async def __call__(self, messages):
+            seen.append(messages)
+            return AssistantMessage(text="看过了", id=new_id())
+
+    monkeypatch.setattr(cli, "Claude", FakeClaude)
+    monkeypatch.setattr("sys.stdin", io.StringIO("diff --git a/x b/x\n+一行"))
+
+    assert cli.main(["-p", "看看这个改动", "--root", str(box)]) == 0
+
+    asked = repr(seen[0])
+    assert "diff --git" in asked and "看看这个改动" in asked
+
+
+def test_print_mode_leaves_irreversible_work_staged_and_says_so(box, monkeypatch, capsys):
+    """Nobody is here to confirm it, and confirming on their behalf is not ours to do.
+
+    --protect is what makes the write irreversible here: the file tools are all
+    reversible on purpose, so a policy rule is the portable way to get a staged
+    entry without reaching for Mail.
+    """
+    fake_claude(
+        monkeypatch,
+        AssistantMessage(
+            tool_calls=[ToolCall(name="write_file", args={"path": "Downloads/新的.txt",
+                                                         "content": "x"})],
+            stop_reason="tool_use",
+        ),
+        AssistantMessage(text="等你确认"),
+    )
+    quiet_stdin(monkeypatch)
+
+    assert cli.main(["-p", "写个文件", "--root", str(box), "--protect", "Downloads"]) == 0
+
+    captured = capsys.readouterr()
+    assert "未执行" in captured.err
+    assert not (box / "Downloads" / "新的.txt").exists(), "it really did not happen"
+
+
+def test_yes_commits_what_print_mode_would_otherwise_leave_staged(box, monkeypatch, capsys):
+    fake_claude(
+        monkeypatch,
+        AssistantMessage(
+            tool_calls=[ToolCall(name="write_file", args={"path": "Downloads/新的.txt",
+                                                         "content": "x"})],
+            stop_reason="tool_use",
+        ),
+        AssistantMessage(text="写好了"),
+    )
+    quiet_stdin(monkeypatch)
+
+    assert cli.main(["-p", "写个文件", "--yes", "--root", str(box),
+                     "--protect", "Downloads"]) == 0
+
+    assert (box / "Downloads" / "新的.txt").read_text() == "x"
+
+
+# --- reading and copying a session, without a model --------------------------
+
+
+def test_the_tree_can_be_read_with_no_api_key_at_all(box, monkeypatch, capsys):
+    """Being locked out of your own transcript for want of a key would be absurd."""
+    fake_claude(monkeypatch, AssistantMessage(text="整理好了"))
+    keys(monkeypatch, "")
+    cli.main(["整理一下", "--root", str(box)])
+    capsys.readouterr()
+
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    assert cli.main(["-c", "--tree", "--root", str(box)]) == 0
+
+    out = capsys.readouterr().out
+    assert "整理一下" in out and "整理好了" in out
+    assert "▸" in out, "the head is marked"
+
+
+def test_fork_writes_a_new_file_and_prints_its_path(box, monkeypatch, capsys):
+    fake_claude(monkeypatch, AssistantMessage(text="整理好了"))
+    keys(monkeypatch, "")
+    cli.main(["整理一下", "--root", str(box)])
+    capsys.readouterr()
+
+    original = sorted((tmp := cli.SESSIONS).glob("*.jsonl"))
+    assert cli.main(["-c", "--fork", "--root", str(box)]) == 0
+
+    printed = capsys.readouterr().out.strip()
+    assert printed.endswith("-fork.jsonl")
+    from pathlib import Path
+
+    assert Path(printed).exists()
+    assert [p.read_text() for p in original] == [
+        p.read_text() for p in original
+    ], "the original is untouched"
+
+
+def test_forking_an_empty_session_is_refused(box, monkeypatch, capsys):
+    assert cli.main(["--fork", "--root", str(box)]) == 1
+    assert "空" in capsys.readouterr().err
