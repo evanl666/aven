@@ -334,3 +334,150 @@ async def test_a_caller_that_stops_listening_leaves_none_unanswered(tmp_path):
     await events.aclose()
 
     assert _unanswered(s) == []
+
+
+# --- a reply that was cut off mid-write --------------------------------------
+#
+# stop_reason max_tokens means the model stopped in the middle of writing. Two
+# things follow, and both used to be got wrong: the person was left holding half
+# a sentence, and the call it was halfway through writing was run anyway.
+
+
+def _ran(session):
+    """Which tools actually produced a result, in order."""
+    return [
+        m.tool_name for m in session.history()
+        if m.kind == "tool_result" and not m.is_error
+    ]
+
+
+async def test_a_truncated_reply_is_asked_to_finish(tmp_path):
+    session = Session.open(tmp_path / "s.jsonl")
+
+    events = await drive(
+        run(
+            session=session,
+            prompt="写点长的",
+            model=scripted(
+                AssistantMessage(text="说到一半就", stop_reason="max_tokens"),
+                AssistantMessage(text="接着说完了", stop_reason="end_turn"),
+            ),
+        )
+    )
+
+    assert events[-1] == AgentEnd(reason="end_turn"), "the run finishes properly"
+    assert [m.text for m in session.history() if m.kind == "assistant"] == [
+        "说到一半就",
+        "接着说完了",
+    ]
+
+
+async def test_the_nudge_to_finish_is_marked_as_the_loop_s_own(tmp_path):
+    """It is a user message on the wire, but no person typed it."""
+    session = Session.open(tmp_path / "s.jsonl")
+
+    await drive(
+        run(
+            session=session,
+            prompt="写点长的",
+            model=scripted(
+                AssistantMessage(text="说到一半就", stop_reason="max_tokens"),
+                AssistantMessage(text="写完了", stop_reason="end_turn"),
+            ),
+        )
+    )
+
+    sources = [m.source for m in session.history() if m.kind == "user"]
+    assert sources == ["chat", "resume"]
+
+
+async def test_a_reply_that_keeps_truncating_is_resumed_only_once(tmp_path):
+    """Otherwise an answer too big for max_tokens costs a context per round."""
+    session = Session.open(tmp_path / "s.jsonl")
+
+    events = await drive(
+        run(
+            session=session,
+            prompt="写点长的",
+            model=scripted(AssistantMessage(text="说到一半就", stop_reason="max_tokens")),
+        )
+    )
+
+    resumes = [m for m in session.history() if m.kind == "user" and m.source == "resume"]
+    assert len(resumes) == 1
+    assert events[-1] == AgentEnd(reason="truncated")
+
+
+async def test_the_call_a_truncated_reply_was_still_writing_is_not_run(tmp_path):
+    session = Session.open(tmp_path / "s.jsonl")
+
+    reply = AssistantMessage(
+        tool_calls=[
+            ToolCall(name="echo", args={"x": "finished"}),
+            ToolCall(name="echo", args={"x": "half-writ"}),
+        ],
+        stop_reason="max_tokens",
+    )
+    await drive(
+        run(
+            session=session,
+            prompt="做两件事",
+            model=scripted(reply, AssistantMessage(text="好了", stop_reason="end_turn")),
+            tools=[echo],
+        )
+    )
+
+    results = [m for m in session.history() if m.kind == "tool_result"]
+    assert [r.output for r in results][:1] == ["finished"]
+    assert results[1].is_error, "the call it never finished writing comes back failed"
+    assert "Issue it again" in results[1].output
+
+
+async def test_a_truncated_reply_still_answers_every_call_it_made(tmp_path):
+    """The invariant that outranks all of this: no tool_use without a result."""
+    session = Session.open(tmp_path / "s.jsonl")
+
+    await drive(
+        run(
+            session=session,
+            prompt="做两件事",
+            model=scripted(
+                AssistantMessage(
+                    tool_calls=[
+                        ToolCall(name="echo", args={"x": "a"}),
+                        ToolCall(name="echo", args={"x": "b"}),
+                    ],
+                    stop_reason="max_tokens",
+                ),
+                AssistantMessage(text="好了", stop_reason="end_turn"),
+            ),
+            tools=[echo],
+        )
+    )
+
+    assert _unanswered(session) == []
+
+
+async def test_a_finished_reply_runs_every_call_it_made(tmp_path):
+    """The control: only max_tokens holds a call back."""
+    session = Session.open(tmp_path / "s.jsonl")
+
+    await drive(
+        run(
+            session=session,
+            prompt="做两件事",
+            model=scripted(
+                AssistantMessage(
+                    tool_calls=[
+                        ToolCall(name="echo", args={"x": "a"}),
+                        ToolCall(name="echo", args={"x": "b"}),
+                    ],
+                    stop_reason="tool_use",
+                ),
+                AssistantMessage(text="好了", stop_reason="end_turn"),
+            ),
+            tools=[echo],
+        )
+    )
+
+    assert _ran(session) == ["echo", "echo"]

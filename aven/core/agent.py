@@ -50,6 +50,14 @@ from aven.tx import Tray
 # key, and a test must be able to script a model's replies exactly.
 __all__ = ["ModelFn", "run"]
 
+# What a truncated reply is asked, to get the rest of it. Phrased as an
+# instruction rather than "继续", which a model reads as a new request and
+# answers by starting over.
+RESUME = (
+    "你上一条回答因为长度上限被截断了。接着上次断掉的地方写完,"
+    "不要重述已经说过的部分。"
+)
+
 
 async def run(
     *,
@@ -72,6 +80,9 @@ async def run(
     # No tray passed still means no irreversible action: one is created here and
     # its pending entries are simply never committed. Safe by omission.
     tray = tray if tray is not None else Tray()
+
+    # One truncated reply per run gets a second go. See RESUME below.
+    resumed = False
 
     yield AgentStart(prompt=prompt)
     yield MessageEnd(message=session.append(UserMessage(text=prompt, source=source)))
@@ -127,29 +138,45 @@ async def run(
             yield TurnEnd(index=index, message=reply)
 
             if reply.stop_reason == "max_tokens":
-                # The reply ran out of room mid-sentence. Until now that ended
-                # the run looking like an ordinary finish, leaving the person
-                # with half a thought and no reason for it.
+                # The reply ran out of room mid-sentence.
                 #
                 # Compaction cannot undo the truncation - max_tokens is a cap
                 # we set on the output, not a full window. It is still worth
-                # doing: a context this long is why there was no room, and the
-                # next turn needs some.
+                # doing first: a context this long is why there was no room,
+                # and the turn that finishes the answer needs some.
                 if compactor is not None:
                     shortened = await compactor.maybe_compact(
                         session, to_llm(session.history())
                     )
                     if shortened is not None:
                         yield MessageEnd(message=shortened)
+
+                if not resumed:
+                    # Ask it to finish, once. Ending here leaves the person
+                    # holding half a sentence and no way to get the rest short
+                    # of retyping the request - and the expensive part, the
+                    # thinking and the tool calls, is already paid for.
+                    #
+                    # Once, because a request whose answer needs more room than
+                    # max_tokens allows would otherwise be truncated again and
+                    # again, each round costing a full context.
+                    resumed = True
+                    yield MessageEnd(
+                        message=session.append(UserMessage(text=RESUME, source="resume"))
+                    )
+                    continue
+
                 yield AgentEnd(reason="truncated")
                 return
 
             yield AgentEnd(reason="end_turn")
             return
 
+        runnable, cut_off = _split_truncated(reply)
+
         answered = 0
         try:
-            for call in reply.tool_calls:
+            for call in runnable:
                 yield ToolStart(call=call)
                 message, staged = await _execute(call, by_name, tray, origin=reply.id)
                 session.append(message)
@@ -161,8 +188,25 @@ async def run(
             # asking for events. Every tool_use in the reply still needs a
             # tool_result, or the next request is a malformed conversation,
             # so close the unanswered ones before letting the interruption on.
-            _close_unanswered(session, reply.tool_calls[answered:])
+            _close_unanswered(session, [*runnable[answered:], *cut_off])
             raise
+
+        for call in cut_off:
+            yield ToolStart(call=call)
+            message = session.append(
+                ToolResultMessage(
+                    tool_call_id=call.id,
+                    tool_name=call.name,
+                    output=(
+                        "not run: the reply was cut off before this call was "
+                        "finished, so its arguments may be incomplete. "
+                        "Issue it again."
+                    ),
+                    is_error=True,
+                )
+            )
+            yield MessageEnd(message=message)
+            yield ToolEnd(call=call, result=message, staged=False)
 
         yield TurnEnd(index=index, message=reply)
 
@@ -185,6 +229,26 @@ async def _ask(
             yield item
         else:
             yield MessageDelta(text=item)
+
+
+def _split_truncated(reply: AssistantMessage) -> tuple[list[ToolCall], list[ToolCall]]:
+    """Separate the calls that may be run from one that was cut off mid-write.
+
+    A reply that stopped at max_tokens stopped in the middle of writing
+    something, and if it was writing a tool call, that call is the last one in
+    the reply. Its arguments are whatever had been written by then.
+
+    Running it is the wrong move. A tool call is not a sentence that reads a
+    little short when it is truncated - `delete_file` with a path that stopped
+    early is a different call, not a smaller one, and the tray cannot tell the
+    difference because the arguments look well-formed. So the last call of a
+    truncated reply is never run. It comes back as a failed result, which the
+    model can read and reissue, and every call before it is untouched: those
+    were finished.
+    """
+    if reply.stop_reason != "max_tokens" or not reply.tool_calls:
+        return reply.tool_calls, []
+    return reply.tool_calls[:-1], reply.tool_calls[-1:]
 
 
 def _close_unanswered(session: Session, calls: Sequence[ToolCall]) -> None:
