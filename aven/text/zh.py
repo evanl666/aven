@@ -175,4 +175,12 @@ Esc 中断当前任务 · Ctrl+T 显示/隐藏暂存区 · Ctrl+Q 退出""",
     "order.arrives": "预计到货  —  {value}",
     "cli.ask_every_time": "这次运行忽略已保存的批准,每一项都问",
     "cli.standing": "  ↳ {n} 条已保存的批准生效中:",
+    # --- turns nobody typed -------------------------------------------------
+    "cli.watch": "按时钟触发,直到被中断",
+    "cli.every": "多久看一次,单位秒",
+    "cli.no_triggers": "没有可触发的任务。在 {path} 里写几条",
+    "cli.watching": "  ↳ 守着 {n} 条触发器,每 {every} 秒看一次:",
+    "cli.firing": "  ↳ 触发 {name}",
+    "cli.stopped_watching": "  ↳ 已停止守候",
+    "shell.fired": "⏰ 触发了 {name}",
 }

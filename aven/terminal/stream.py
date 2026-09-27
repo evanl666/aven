@@ -127,3 +127,10 @@ class Final:
             print(self.text)
         for entry in tray.pending():
             print(t("stream.staged", preview=entry.preview), file=sys.stderr)
+
+        # Flushed, because print to anything but a terminal is block-buffered and
+        # a --watch run does not exit between turns. Found the hard way: a
+        # triggered turn's answer sat in the buffer, and killing the watcher
+        # discarded it rather than writing it late.
+        sys.stdout.flush()
+        sys.stderr.flush()

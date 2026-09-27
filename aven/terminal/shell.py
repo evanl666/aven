@@ -42,6 +42,7 @@ from aven.harness.messages import (
     UserMessage,
 )
 from aven.harness.session import Session
+from aven.harness.triggers import Trigger, due, keep, remember
 from aven.harness.steering import Steering
 from aven.harness.toolbox import ToolSource, resolve
 from aven.harness.tree import render as render_tree
@@ -85,6 +86,7 @@ class Shell(App[None]):
         compactor: Compactor | None = None,
         policy: Policy | None = None,
         standing: Standing | None = None,
+        triggers: list[Trigger] | None = None,
         max_turns: int = 12,
     ) -> None:
         super().__init__()
@@ -98,6 +100,13 @@ class Shell(App[None]):
         self.compactor = compactor
         self.policy = policy
         self.standing = standing
+
+        # Triggers belong here rather than only in --watch: this process stays
+        # up, so the tray keeps what fired while you were away and you approve
+        # when you sit down. A headless run cannot do that - a staged call's
+        # apply is a closure and does not outlive its process.
+        self.triggers = list(triggers or [])
+        self.remembered = remember()
         self.max_turns = max_turns
         self.tray = Tray(policy=policy, standing=standing)
         self.steering = Steering()
@@ -114,6 +123,10 @@ class Shell(App[None]):
         yield Footer()
 
     def on_mount(self) -> None:
+        if self.triggers:
+            # A minute is plenty: the finest thing a trigger asks for is a time
+            # of day, and a folder that changed is still changed a minute later.
+            self.set_interval(60, self._check_triggers)
         self._update_subtitle()
         self._replay_history()
         self._refresh_tray()
@@ -144,6 +157,27 @@ class Shell(App[None]):
             self._run_turn(text), group="turn", exclusive=True, exit_on_error=False
         )
         self._refresh_tray()
+
+    def _check_triggers(self) -> None:
+        """Fire whatever is due, unless something is already running.
+
+        Skipped rather than queued while busy. A trigger is "look at this now",
+        and one that waited out a long task is asking about a moment that has
+        passed - it will come round again.
+        """
+        if self.busy:
+            return
+        ready = due(self.triggers, self.remembered)
+        keep(self.remembered)
+        if not ready:
+            return
+
+        trigger = ready[0]
+        self.run_worker(self._say(Note(t("shell.fired", name=trigger.name))))
+        self._turn = self.run_worker(
+            self._run_turn(trigger.prompt, source=trigger.source),
+            group="turn", exclusive=True, exit_on_error=False,
+        )
 
     async def _command(self, text: str) -> None:
         name = text.split()[0].lower()
@@ -182,7 +216,7 @@ class Shell(App[None]):
             WorkerState.RUNNING,
         )
 
-    async def _run_turn(self, prompt: str) -> None:
+    async def _run_turn(self, prompt: str, source: str = "chat") -> None:
         transcript = self.query_one("#transcript", VerticalScroll)
         thinking = Thinking()
         await transcript.mount(thinking)
@@ -206,6 +240,7 @@ class Shell(App[None]):
                 compactor=self.compactor,
                 steering=self.steering,
                 max_turns=self.max_turns,
+                source=source,
             ):
                 match event:
                     case TurnStart():

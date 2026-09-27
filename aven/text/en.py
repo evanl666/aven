@@ -186,4 +186,12 @@ Esc interrupts · Ctrl+T shows the staging panel · Ctrl+Q quits""",
     "order.arrives": "arrives  —  {value}",
     "cli.ask_every_time": "ignore the standing approvals for this run",
     "cli.standing": "  ↳ {n} standing approvals in force:",
+    # --- turns nobody typed -------------------------------------------------
+    "cli.watch": "fire the triggers on a clock until interrupted",
+    "cli.every": "how often to look, in seconds",
+    "cli.no_triggers": "no triggers to fire. Write some in {path}",
+    "cli.watching": "  ↳ watching {n} triggers, looking every {every}s:",
+    "cli.firing": "  ↳ firing {name}",
+    "cli.stopped_watching": "  ↳ stopped watching",
+    "shell.fired": "⏰ {name} fired",
 }

@@ -144,3 +144,27 @@ def test_print_mode_reports_staged_work_on_stderr(capsys):
     captured = capsys.readouterr()
     assert captured.out == "写好了\n", "stdout carries the answer alone"
     assert "发邮件给 a@b.c" in captured.err
+
+
+def test_print_mode_flushes_so_a_long_running_caller_sees_each_answer(monkeypatch):
+    """print to anything but a terminal is block-buffered, and --watch does not
+    exit between turns - so an unflushed answer waits, and a killed watcher loses
+    it entirely. Found by running one.
+    """
+    flushes = []
+
+    class Counting:
+        def write(self, text):
+            return len(text)
+
+        def flush(self):
+            flushes.append(True)
+
+    monkeypatch.setattr("sys.stdout", Counting())
+    monkeypatch.setattr("sys.stderr", Counting())
+
+    sink = Final()
+    sink.handle(MessageEnd(message=AssistantMessage(text="done", stop_reason="end_turn")))
+    sink.close(Tray())
+
+    assert flushes, "the answer has to leave the buffer when it is written"

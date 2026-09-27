@@ -36,6 +36,10 @@ from aven.harness.skills import catalogue as skill_catalogue
 from aven.harness.skills import find as find_skills
 from aven.harness.toolbox import ToolBox
 from aven.harness.tree import render as render_tree
+from aven.harness.triggers import due, keep
+from aven.harness.triggers import file_for as triggers_file
+from aven.harness.triggers import load as load_triggers
+from aven.harness.triggers import remember
 from aven.harness.tx import Standing, Tray, bulk, guard, protect, read_approvals
 from aven.model import Claude
 from aven.terminal.render import BOLD, DIM, RED, Renderer
@@ -141,6 +145,9 @@ def build_parser(blueprint: Blueprint) -> argparse.ArgumentParser:
     parser.add_argument("--yes", action="store_true", help=t("cli.yes"))
     parser.add_argument("--ask-every-time", action="store_true",
                         help=t("cli.ask_every_time"))
+    parser.add_argument("--watch", action="store_true", help=t("cli.watch"))
+    parser.add_argument("--every", type=int, default=60, metavar="seconds",
+                        help=t("cli.every"))
 
     if blueprint.arguments is not None:
         blueprint.arguments(parser)
@@ -255,6 +262,57 @@ async def oneshot(*, session, prompt, model, tools, compactor, policy, standing,
     sink.close(tray, committed=committed)
     note(DIM(f"  {model.usage}"))
     return 0
+
+
+async def watch(*, session, model, tools, compactor, policy, standing, args) -> int:
+    """Fire triggers on a clock until interrupted.
+
+    What it can do, and what it deliberately cannot:
+
+    Reversible work happens, and is undoable in the session as always. Anything
+    irreversible is staged - and then the run ends with it still staged, because
+    a staged call's `apply` is a closure over live objects and cannot outlive the
+    process. So it is reported and dropped, not silently committed.
+
+    That limitation is the honest one to state rather than work around: a queue
+    of purchases waiting on a person, persisted by serialising closures, is a
+    mechanism that decides things on their behalf when it goes wrong. The right
+    home for triggers is a long-running app where the tray stays in memory and
+    the person approves when they sit down. This is the headless half, for a
+    machine nobody is sitting at, and --yes is how somebody says they accept
+    what that means.
+    """
+    triggers = load_triggers()
+    if not triggers:
+        note(RED(t("cli.no_triggers", path=triggers_file())))
+        return 1
+
+    note(DIM(t("cli.watching", n=len(triggers), every=args.every)))
+    for trigger in triggers:
+        note(DIM(f"     {trigger.name}: {trigger.at or trigger.watch}"))
+
+    memory = remember()
+    try:
+        while True:
+            for trigger in due(triggers, memory):
+                note(DIM(t("cli.firing", name=trigger.name)))
+                tray = Tray(policy=policy, standing=standing)
+                sink = Final()
+                async for event in run(
+                    session=session, prompt=trigger.prompt, model=model, tools=tools,
+                    tray=tray, compactor=compactor, max_turns=args.max_turns,
+                    source=trigger.source,
+                ):
+                    sink.handle(event)
+
+                committed = len(await asyncio.to_thread(tray.commit)) if args.yes else 0
+                sink.close(tray, committed=committed)
+            keep(memory)
+            await asyncio.sleep(max(5, args.every))
+    except (KeyboardInterrupt, asyncio.CancelledError):
+        keep(memory)
+        note(DIM(t("cli.stopped_watching")))
+        return 0
 
 
 def piped(prompt: str | None) -> str:
@@ -382,6 +440,13 @@ async def launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
     running = dict(session=session, model=model, tools=tools, compactor=compactor,
                    policy=policy, standing=standing, args=args)
 
+    # Read for both runners: the shell fires them while it is up, and --watch is
+    # the headless half for a machine nobody is sitting at.
+    triggers = load_triggers()
+
+    if args.watch:
+        return await watch(**running)
+
     if args.oneshot or args.mode == "json":
         prompt = piped(args.prompt)
         if not prompt:
@@ -400,7 +465,7 @@ async def launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
         await Shell(
             session=session, model=model, tools=tools, root=root,
             compactor=compactor, policy=policy, standing=standing,
-            max_turns=args.max_turns,
+            triggers=triggers, max_turns=args.max_turns,
         ).run_async()
         return 0
 
