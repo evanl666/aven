@@ -122,7 +122,7 @@ aven/
 
 **循环是一个生成器。** `run()` 产出事件,调用方用 `for` 驱动它,每一步都当场看到,不想继续就不要下一个。没有订阅者列表,没有「渲染代码崩了把 agent 一起带走」,而一个测试读起来就是一串「发生了什么」的列表。
 
-**模型是注入的。** `core/` 里没有任何 provider import。106 个测试不用 key、不联网就能跑完,换 provider 也碰不到循环。
+**模型是注入的。** `harness/` 里没有任何 provider import。551 个测试不用 key、不联网就能跑完,换 provider 也碰不到循环。
 
 **工具在定义处声明四件事** —— JSON schema(从函数签名推导,不会和代码脱节)、风险等级、执行前怎么预览、执行后怎么撤销:
 
@@ -160,7 +160,7 @@ def move_file(
 
 ```bash
 .venv/bin/pip install -e ".[dev]"
-.venv/bin/python -m pytest -q       # 106 个测试,不用 key,不联网
+.venv/bin/python -m pytest -q       # 551 个测试,不用 key,不联网
 ```
 
 示例不需要 API key,每个演示一块:

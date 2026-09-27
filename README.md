@@ -174,7 +174,7 @@ tool decided.
 No subscriber list, no renderer that can take the agent down with it, and a test
 reads as a plain list of what happened.
 
-**The model is injected.** `harness/` has no provider import. 418 tests run with no
+**The model is injected.** `harness/` has no provider import. 551 tests run with no
 API key and no network, and swapping providers does not touch the loop.
 
 **Tools declare four things at the definition site** — the JSON schema (derived
@@ -229,7 +229,7 @@ Decided up front, because retrofitting any of them is painful.
 
 ```bash
 .venv/bin/pip install -e ".[dev]"
-.venv/bin/python -m pytest -q       # 106 tests, no key, no network
+.venv/bin/python -m pytest -q       # 551 tests, no key, no network
 ```
 
 The examples run without an API key and show one piece each:
@@ -238,6 +238,8 @@ The examples run without an API key and show one piece each:
 .venv/bin/python examples/06_tray.py     # staging, commit, undo
 .venv/bin/python examples/08_mac.py      # osascript with the calls faked out
 .venv/bin/python examples/09_stream.py   # streaming and the spinner
+.venv/bin/python examples/13_rpc.py      # a client driving aven over a pipe
+sh examples/14_modes.sh                  # the four interfaces, same task
 ```
 
 ## License
