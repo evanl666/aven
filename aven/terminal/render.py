@@ -11,6 +11,7 @@ anything else is written to the same line.
 
 from __future__ import annotations
 
+import difflib
 import itertools
 import os
 import sys
@@ -26,6 +27,7 @@ from aven.harness.events import (
 )
 from aven.harness.tx import Entry, Tray
 from aven.text import t
+from aven.harness.tools import Body, Detail, Diff, Moves, Order
 
 # One check for both colour and animation: piping to a file should produce
 # neither escape codes nor a spinner that redraws a line no one is watching.
@@ -129,6 +131,9 @@ class Renderer:
                     print(RED(f"      {_clip(event.result.output, 90)}"))
                 elif self.verbose and not event.staged:
                     print(DIM(f"      {_clip(event.result.output, 90)}"))
+                if self.verbose and event.detail is not None:
+                    for line in draw(event.detail):
+                        print(DIM(f"      {line}"))
 
             case AgentEnd():
                 self._quiet()
@@ -165,10 +170,81 @@ def render_tray(tray: Tray) -> None:
         print(BOLD(t("render.pending_header", n=len(pending))))
         for entry in pending:
             print(YELLOW(f"  ⏸  {entry.preview}"))
+            # Pending work is what a person is about to approve, so it gets the
+            # detail whether or not they asked for verbose. A line is enough to
+            # recognise a call and not enough to decide on one.
+            for line in draw(entry.detail):
+                print(DIM(f"      {line}"))
     if undoable:
         print(DIM(t("render.undoable_header", n=len(undoable))))
         for entry in undoable:
             print(DIM(f"  ✓  {entry.preview}"))
+
+
+# How much of a detail to show in a terminal. A window scrolls; a transcript
+# does not, and forty lines of diff between two tool calls loses the shape.
+DETAIL_LINES = 12
+
+
+def draw(detail: Detail | None) -> list[str]:
+    """A detail as terminal lines, or nothing.
+
+    The terminal is the poorest surface a detail will be drawn on, which is what
+    makes this worth having rather than leaving the shapes for a window that does
+    not exist yet: if it reads here, it will read anywhere.
+    """
+    match detail:
+        case None:
+            return []
+        case Diff():
+            return _clip_lines(_diff_lines(detail))
+        case Body():
+            head = [detail.title] if detail.title else []
+            return _clip_lines(head + detail.text.splitlines())
+        case Moves():
+            return _clip_lines([f"{src}  →  {dst}" for src, dst in detail.pairs])
+        case Order():
+            # A separator rather than padding: _clip_lines collapses runs of
+            # whitespace, so a column lined up here would not survive the trip.
+            lines = [f"{what}  —  {price}" for what, price in detail.items]
+            lines.append(t("order.total", total=detail.total))
+            for key, value in (
+                ("order.where", detail.where),
+                ("order.account", detail.account),
+                ("order.arrives", detail.arrives),
+            ):
+                if value:
+                    lines.append(t(key, value=value))
+            return _clip_lines(lines)
+    return []
+
+
+def _diff_lines(detail: Diff) -> list[str]:
+    """The change as -/+ lines.
+
+    difflib rather than printing both sides: what a person needs to see is the
+    few lines that differ, and for a whole-file write the two sides are almost
+    entirely the same text.
+    """
+    lines = list(
+        difflib.unified_diff(
+            detail.before.splitlines(),
+            detail.after.splitlines(),
+            fromfile=detail.path or "before",
+            tofile=detail.path or "after",
+            lineterm="",
+            n=1,
+        )
+    )
+    # The ---/+++ header repeats the path the preview already said.
+    return [line for line in lines if not line.startswith(("---", "+++"))]
+
+
+def _clip_lines(lines: list[str]) -> list[str]:
+    kept = [_clip(line, 100) for line in lines[:DETAIL_LINES]]
+    if len(lines) > DETAIL_LINES:
+        kept.append(f"... {len(lines) - DETAIL_LINES} more lines")
+    return kept
 
 
 def render_outcome(verb: str, entries: list[Entry]) -> None:

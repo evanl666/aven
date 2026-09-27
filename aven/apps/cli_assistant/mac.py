@@ -21,7 +21,7 @@ import subprocess
 from datetime import datetime
 from typing import Annotated
 
-from aven.harness.tools import Tool, ToolResult, tool
+from aven.harness.tools import Body, Tool, ToolResult, tool
 from aven.text import t
 
 
@@ -183,7 +183,9 @@ def mac_tools() -> list[Tool]:
         )
 
     @tool(risk="reversible",
-          preview=lambda to, subject, **_: t("mac.draft", to=to, subject=subject))
+          preview=lambda to, subject, **_: t("mac.draft", to=to, subject=subject),
+          detail=lambda to, subject, body, **_: Body(
+              title=f"{subject}  →  {to}", text=body))
     def draft_mail(
         to: Annotated[str, "Recipient address"],
         subject: Annotated[str, "Subject line"],
@@ -197,7 +199,12 @@ def mac_tools() -> list[Tool]:
         )
 
     @tool(risk="irreversible",
-          preview=lambda to, subject, **_: t("mac.send", to=to, subject=subject))
+          preview=lambda to, subject, **_: t("mac.send", to=to, subject=subject),
+          detail=lambda to, subject, body, **_: Body(
+              title=f"{subject}  →  {to}", text=body),
+          # A sent mail cannot be recalled, and "always allow mail to my
+          # accountant" is how the wrong draft goes out. Decided every time.
+          pre_approvable=False)
     def send_mail(
         to: Annotated[str, "Recipient address"],
         subject: Annotated[str, "Subject line"],

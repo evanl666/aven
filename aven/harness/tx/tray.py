@@ -22,7 +22,7 @@ from dataclasses import dataclass, field
 from typing import Any, Literal
 
 from aven.harness.messages import new_id
-from aven.harness.tools import Risk, Tool, ToolResult
+from aven.harness.tools import Detail, Risk, Tool, ToolResult
 from aven.harness.tx.policy import Policy
 from aven.text import t
 
@@ -47,6 +47,11 @@ class Entry:
     preview: str
     risk: Risk
     state: State
+
+    # The same thing said in a shape a window can draw, when the tool has one.
+    # Always optional: `preview` is the line every surface can rely on, and a
+    # renderer that needed `detail` would break on the tools that have none.
+    detail: Detail | None = None
 
     id: str = field(default_factory=new_id)
     ts: float = field(default_factory=time.time)
@@ -82,6 +87,7 @@ class Tray:
         around an effect that has not happened.
         """
         preview = tool.preview(args)
+        detail = tool.detail_for(args)
 
         # The tool's declaration is a floor. A policy sees what the tool cannot
         # - the arguments, and how much this run has already changed - and may
@@ -104,6 +110,7 @@ class Tray:
                     tool=tool.name,
                     args=dict(args),
                     preview=preview,
+                    detail=detail,
                     risk=risk,
                     state="pending",
                     apply=lambda: tool(**args),
@@ -118,6 +125,7 @@ class Tray:
                 tool=tool.name,
                 args=dict(args),
                 preview=preview,
+                detail=detail,
                 risk=risk,
                 state="applied",
                 output=result.output,

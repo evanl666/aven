@@ -37,6 +37,7 @@ from aven.harness.events import (
     TurnStart,
 )
 from aven.harness.messages import AssistantMessage, ToolCall, to_dict
+from aven.harness.tools import as_dict
 from aven.harness.tx import Tray
 from aven.text import t
 
@@ -65,6 +66,7 @@ def as_json(event: Event) -> dict[str, Any]:
                 "type": "tool_end",
                 "call": _call(event.call),
                 "result": to_dict(event.result),
+                "detail": as_dict(event.detail),
                 # True means it did not happen: the call is in the tray waiting
                 # for a decision nobody is here to make.
                 "staged": event.staged,
@@ -92,7 +94,8 @@ class Jsonl:
                 "type": "tray",
                 "committed": committed,
                 "pending": [
-                    {"preview": e.preview, "risk": e.risk} for e in tray.pending()
+                    {"preview": e.preview, "risk": e.risk, "detail": as_dict(e.detail)}
+                    for e in tray.pending()
                 ],
             }
         )

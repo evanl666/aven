@@ -179,4 +179,9 @@ Esc interrupts · Ctrl+T shows the staging panel · Ctrl+Q quits""",
     "code.run": "run: {command}",
     "code.grep": "search for {pattern!r}",
     "code.glob": "list files matching {pattern!r}",
+    # --- an order, the one preview a line is least adequate for -------------
+    "order.total": "total  —  {total}",
+    "order.where": "from  —  {value}",
+    "order.account": "as  —  {value}",
+    "order.arrives": "arrives  —  {value}",
 }

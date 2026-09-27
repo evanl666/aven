@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Annotated, Literal
 
 from aven.harness import memory
-from aven.harness.tools import Tool, ToolResult, tool
+from aven.harness.tools import Diff, Tool, ToolResult, tool
 from aven.text import t
 
 Scope = Literal["here", "global"]
@@ -45,7 +45,8 @@ def memory_tools(root: Path) -> list[Tool]:
 
     @tool(risk="reversible",
           preview=lambda fact, scope="here", **_: t(
-              "memory.remember", where=where(scope), fact=fact))
+              "memory.remember", where=where(scope), fact=fact),
+          detail=lambda fact, scope="here", **_: _added(file_for(scope), fact))
     def remember(
         fact: Annotated[str, "One fact, in the person's own words where possible"],
         scope: Annotated[
@@ -95,6 +96,18 @@ def memory_tools(root: Path) -> list[Tool]:
         )
 
     return [remember, forget]
+
+
+def _added(path: Path, fact: str) -> Diff:
+    """The file as it is, beside the file with the fact in it.
+
+    Remembering edits a file this person wrote by hand. Showing the line going in
+    is the difference between approving a change and approving a description of
+    one.
+    """
+    before = path.read_text(encoding="utf-8") if path.is_file() else ""
+    head, facts = memory.split(before)
+    return Diff(path=_show(path), before=before, after=memory.render(head, [*facts, fact]))
 
 
 def _show(path: Path) -> str:

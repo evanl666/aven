@@ -168,4 +168,9 @@ Esc 中断当前任务 · Ctrl+T 显示/隐藏暂存区 · Ctrl+Q 退出""",
     "code.run": "执行:{command}",
     "code.grep": "搜索「{pattern}」",
     "code.glob": "列出匹配「{pattern}」的文件",
+    # --- an order, the one preview a line is least adequate for -------------
+    "order.total": "合计  —  {total}",
+    "order.where": "商家  —  {value}",
+    "order.account": "账号  —  {value}",
+    "order.arrives": "预计到货  —  {value}",
 }

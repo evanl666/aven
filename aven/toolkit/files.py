@@ -21,7 +21,7 @@ import time
 from pathlib import Path
 from typing import Annotated
 
-from aven.harness.tools import Tool, ToolResult, tool
+from aven.harness.tools import Diff, Tool, ToolResult, tool
 from aven.text import t
 
 MAX_READ = 40_000  # characters; enough for source and notes, not for a video
@@ -37,6 +37,20 @@ class NotFound(Exception):
 
 class Ambiguous(Exception):
     """The passage to edit appears more than once."""
+
+
+def _current(path: Path | None) -> str:
+    """What is in a file now, for a diff against what would replace it.
+
+    Empty for a file that does not exist yet, which is the truthful "before" of
+    creating one.
+    """
+    if path is None or not path.is_file():
+        return ""
+    try:
+        return path.read_text(encoding="utf-8", errors="replace")[:MAX_READ]
+    except OSError:
+        return ""
 
 
 def _clip(text: str, width: int = 40) -> str:
@@ -75,6 +89,17 @@ def file_tools(*roots: Path) -> list[Tool]:
     root = allowed[0]
     named = names_for(allowed)
     trash = Path.home() / ".aven" / "trash"
+
+    def inside_quietly(raw: str) -> Path | None:
+        """`inside`, for a preview that must not raise.
+
+        A detail is drawn before anything runs, including for a path the tools
+        are about to refuse. Refusing is the call's job, not the preview's.
+        """
+        try:
+            return inside(raw)
+        except Outside:
+            return None
 
     def holder(path: Path) -> Path | None:
         """Which root contains this path, if any."""
@@ -183,7 +208,9 @@ def file_tools(*roots: Path) -> list[Tool]:
             return text[:MAX_READ] + f"\n... [truncated, {len(text)} chars total]"
         return text
 
-    @tool(risk="reversible", preview="write {path}")
+    @tool(risk="reversible", preview="write {path}",
+          detail=lambda path, content, **_: Diff(
+              path=path, before=_current(inside_quietly(path)), after=content))
     def write_file(
         path: Annotated[str, "File to write"],
         content: Annotated[str, "The full new contents of the file"],
@@ -207,7 +234,8 @@ def file_tools(*roots: Path) -> list[Tool]:
         return ToolResult(output=f"{verb} {show(target)} ({len(content)} chars)", undo=undo)
 
     @tool(risk="reversible",
-          preview=lambda path, old, **_: t("files.edit", path=path, old=_clip(old)))
+          preview=lambda path, old, **_: t("files.edit", path=path, old=_clip(old)),
+          detail=lambda path, old, new, **_: Diff(path=path, before=old, after=new))
     def edit_file(
         path: Annotated[str, "File to change"],
         old: Annotated[str, "The exact text to replace, copied from the file"],

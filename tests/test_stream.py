@@ -95,7 +95,9 @@ def test_json_mode_ends_with_what_is_still_waiting(capsys):
 
     record = json.loads(capsys.readouterr().out.strip())
     assert record["type"] == "tray"
-    assert record["pending"] == [{"preview": "发邮件给 a@b.c", "risk": "irreversible"}]
+    assert record["pending"] == [
+        {"preview": "发邮件给 a@b.c", "risk": "irreversible", "detail": None}
+    ]
     assert record["committed"] == 0
 
 

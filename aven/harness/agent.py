@@ -203,7 +203,13 @@ async def run(
                 session.append(message)
                 answered += 1
                 yield MessageEnd(message=message)
-                yield ToolEnd(call=call, result=message, staged=staged)
+                found = by_name.get(call.name)
+                yield ToolEnd(
+                    call=call,
+                    result=message,
+                    staged=staged,
+                    detail=found.detail_for(call.args) if found else None,
+                )
         except (asyncio.CancelledError, GeneratorExit):
             # Interrupted mid-batch - Esc in the UI, or a caller that stopped
             # asking for events. Every tool_use in the reply still needs a

@@ -14,6 +14,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 from aven.harness.messages import AssistantMessage, Message, ToolCall, ToolResultMessage
+from aven.harness.tools import Detail
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -53,6 +54,12 @@ class ToolStart:
 class ToolEnd:
     call: ToolCall
     result: ToolResultMessage
+
+    # What the call would do, in a shape richer than a line, when the tool has
+    # one. Carried on the event so every surface gets it from the same place -
+    # the terminal draws it under a staged entry, a window draws it as a card,
+    # and --mode json hands it to whoever is listening.
+    detail: Detail | None = None
 
     # True when risk was irreversible and the call was put in the tray instead
     # of being made. The undo itself belongs to the tray, not to an event - one
