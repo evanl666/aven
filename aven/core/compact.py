@@ -148,6 +148,22 @@ def split_within_turn(messages: list[Message]) -> tuple[list[Message], list[Mess
 # need to keep their bulk.
 BULKY_RESULT = 2_000
 
+LEAVING = """\
+The conversation below is one attempt at a task. It is being set aside for \
+another attempt, and you are writing down what the next one should know so the \
+work is not repeated.
+
+Write it for the assistant picking up the other attempt. Be specific about:
+
+- What was tried, and what it found out - especially anything that turned out \
+to be false, missing, or harder than it looked
+- Concrete values it would otherwise have to look up again: paths, names, \
+addresses, amounts
+- What was actually changed on disk, and what was only proposed
+
+Say what happened, not what should happen next - the other attempt has its own \
+plan. No preamble."""
+
 
 @dataclass
 class Compactor:
@@ -199,7 +215,7 @@ class Compactor:
 
         files = touched_files(old)
         instructions = INSTRUCTIONS
-        if any(isinstance(m, SummaryMessage) for m in old):
+        if any(isinstance(m, SummaryMessage) and m.scope == "earlier" for m in old):
             instructions += CARRIED
         if files:
             instructions += FILES_SEEN.format(files="\n".join(f"- {f}" for f in files))
@@ -216,6 +232,35 @@ class Compactor:
         )
         self._trim(session, keep)
         return summary
+
+    async def summarise_branch(
+        self, session: Session, leaving: str
+    ) -> SummaryMessage | None:
+        """Write down what a branch found out, on the branch being entered.
+
+        Moving between branches otherwise throws away everything the one you
+        leave learned. Twenty file reads and three dead ends are on a path the
+        next request no longer includes, so the new branch repeats them.
+
+        Appended after the checkout, so it lands on the branch being entered and
+        travels with it. It covers nothing and hides nothing - the messages it
+        describes were never in this projection to begin with, which is the
+        whole reason it is needed.
+        """
+        left = session.history(leaving)
+        if not any(isinstance(m, AssistantMessage) for m in left):
+            # Nothing was tried, so there is nothing to carry. A branch point
+            # someone stepped onto and straight off again is the common case.
+            return None
+
+        reply = await ask_model(
+            self.model,
+            to_llm(left) + [{"role": "user", "content": [{"type": "text", "text": LEAVING}]}],
+        )
+
+        return session.append(
+            SummaryMessage(text=reply.text, scope="branch", files=touched_files(left))
+        )
 
     def _divide(
         self, path: list[Message], *, insist: bool

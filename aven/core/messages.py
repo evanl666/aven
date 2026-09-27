@@ -103,12 +103,25 @@ class SummaryMessage(BaseMessage):
     file, still on the path, still readable. `covers` only decides what is left
     out of the projection sent to the model. Compaction is lossy for the model
     and lossless on disk.
+
+    Two things get summarised, and `scope` is the difference:
+
+    "earlier" is compaction. It stands in for messages that are on this path,
+    it hides them, and it leads the projection because it describes what came
+    before everything still in it.
+
+    "branch" is what was tried on a path that was left. Those messages are on
+    another branch and were never in this projection, so it hides nothing and
+    covers nothing - it only adds. It stays where it was appended, because that
+    is when it was learned: reading it first would claim the work came before a
+    conversation it actually came after.
     """
 
     kind: ClassVar[str] = "summary"
 
     text: str
     covers: list[str] = field(default_factory=list)
+    scope: Literal["earlier", "branch"] = "earlier"
 
     # Files the summarised stretch touched, carried forward so the list
     # survives being summarised again. Read out of the tool calls rather than
@@ -152,6 +165,21 @@ class NoteMessage(BaseMessage):
     level: Literal["info", "warn", "error"] = "info"
 
 
+@dataclass(kw_only=True)
+class MetaMessage(BaseMessage):
+    """Something true of the session rather than said in it.
+
+    A name, for now. It is an entry and not a sidecar file because that is how
+    everything else here works: the file only grows, the last one on the path
+    wins, and renaming is therefore undone by checking out an earlier point.
+    Invisible to the model - what you called this conversation is not part of it.
+    """
+
+    kind: ClassVar[str] = "meta"
+
+    name: str = ""
+
+
 Message = (
     UserMessage
     | AssistantMessage
@@ -159,6 +187,7 @@ Message = (
     | SummaryMessage
     | ContextEdit
     | NoteMessage
+    | MetaMessage
 )
 
 
@@ -167,10 +196,12 @@ def to_llm(messages: list[Message]) -> list[LlmMessage]:
 
     Five things happen here that are easy to get wrong:
 
-    1. NoteMessage disappears entirely.
-    2. A SummaryMessage hides every message it covers, and leads what is left.
-       It was appended after them, because the file only ever grows, but it
-       describes what came before and has to be read that way.
+    1. NoteMessage and MetaMessage disappear entirely.
+    2. A SummaryMessage of scope "earlier" hides every message it covers, and
+       leads what is left. It was appended after them, because the file only
+       ever grows, but it describes what came before and has to be read that
+       way. One of scope "branch" hides nothing and stays where it is: it
+       describes another branch, and was learned at the point it sits.
     3. A ContextEdit drops or rewrites the one message it targets. Later edits
        on the path win, so an edit can be taken back by another edit.
     4. Thinking blocks lead the assistant turn, in their original order.
@@ -187,11 +218,19 @@ def to_llm(messages: list[Message]) -> list[LlmMessage]:
 
     # A later summary may cover an earlier one, so at most one survives.
     out: list[LlmMessage] = [
-        _as_earlier_conversation(s) for s in summaries if s.id not in hidden
+        _as_earlier_conversation(s)
+        for s in summaries
+        if s.scope == "earlier" and s.id not in hidden
     ]
 
     for msg in messages:
-        if msg.id in hidden or isinstance(msg, (NoteMessage, SummaryMessage, ContextEdit)):
+        if msg.id in hidden or isinstance(msg, (NoteMessage, MetaMessage, ContextEdit)):
+            continue
+
+        if isinstance(msg, SummaryMessage):
+            # "earlier" already led the projection above.
+            if msg.scope == "branch":
+                out.append(_as_abandoned_branch(msg))
             continue
 
         stands_in = replaced.get(msg.id)
@@ -319,6 +358,34 @@ def _as_earlier_conversation(summary: SummaryMessage) -> LlmMessage:
     }
 
 
+def _as_abandoned_branch(summary: SummaryMessage) -> LlmMessage:
+    """Render what was tried on a branch that was left.
+
+    Told plainly that it is another attempt and not the current one. A summary
+    handed over without that framing reads as work already done here, and the
+    model reports a file as moved that is still sitting where it was.
+    """
+    text = summary.text
+    if summary.files:
+        listed = "\n".join(f"- {path}" for path in summary.files[-SUMMARY_FILES:])
+        text = f"{text}\n\nFiles it touched:\n{listed}"
+
+    return {
+        "role": "user",
+        "content": [
+            {
+                "type": "text",
+                "text": (
+                    "<abandoned_branch>\n"
+                    "这是你在另一条分支上试过的东西。那条分支已经被放下了,"
+                    "下面说的改动【不一定还在】——需要用到就先自己确认一遍。\n\n"
+                    f"{text}\n</abandoned_branch>"
+                ),
+            }
+        ],
+    }
+
+
 def _is_tool_result_batch(llm_msg: LlmMessage) -> bool:
     content = llm_msg.get("content")
     return bool(content) and all(b.get("type") == "tool_result" for b in content)
@@ -342,6 +409,7 @@ _KINDS: dict[str, type[BaseMessage]] = {
         SummaryMessage,
         ContextEdit,
         NoteMessage,
+        MetaMessage,
     )
 }
 

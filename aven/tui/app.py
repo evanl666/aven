@@ -36,6 +36,7 @@ from aven.core.events import (
 )
 from aven.core.messages import (
     AssistantMessage,
+    new_id,
     SummaryMessage,
     ToolResultMessage,
     UserMessage,
@@ -48,6 +49,8 @@ from aven.tui.widgets import Note, Reply, Thinking, ToolLine, TrayPanel, UserLin
 from aven.tx import Policy, Tray
 
 HELP = """\
+/session   这个会话的基本情况
+/name x    给这次会话起个名字,下次 -r 好找
 /tree      看这个会话的分支树;/tree <id> 回到某一处
 /fork      把当前分支另存成新会话;/fork <id> 从某处截断
 /undo      撤销已执行的改动(对话也一起回退)
@@ -157,6 +160,10 @@ class AvenApp(App[None]):
     async def _command(self, text: str) -> None:
         name = text.split()[0].lower()
         match name:
+            case "/session":
+                await self._say(Note(self._describe()))
+            case "/name":
+                await self._rename(text)
             case "/tree":
                 await self._tree(text)
             case "/fork":
@@ -300,6 +307,7 @@ class AvenApp(App[None]):
             await self._say(Note("任务还在跑,先按 Esc 中断"))
             return
 
+        leaving = self.session.head
         self.session.checkout(target)
         # The tray belongs to the branch that was left. Its undos point at work
         # done on a path we are no longer on, and firing one from here would
@@ -310,6 +318,55 @@ class AvenApp(App[None]):
         await self._say(Note(f"回到 {target[:6]}。接着说就会从这里分出一条新的分支。"))
         self._refresh_tray()
 
+        # What the branch we just left found out would otherwise be thrown away:
+        # it is on a path this one does not include, so the new branch would
+        # repeat every file read and every dead end.
+        if self.compactor is not None and leaving and leaving != target:
+            await self._carry(leaving)
+
+    async def _carry(self, leaving: str) -> None:
+        """Summarise the branch being left onto the one being entered."""
+        waiting = Note("⧗ 正在把刚才那条分支的结论带过来…")
+        await self._say(waiting)
+        try:
+            carried = await self.compactor.summarise_branch(self.session, leaving)
+        except Exception as problem:
+            # A failed summary is not a failed checkout. The branch move already
+            # happened and is still correct; this only means the new branch
+            # starts without what the old one learned.
+            await waiting.remove()
+            await self._say(Note(f"没能带过来({type(problem).__name__}),分支已经切好了"))
+            return
+
+        await waiting.remove()
+        if carried is not None:
+            await self._say(Note(f"↳ 已带过来:{carried.text.splitlines()[0][:60]}…"))
+
+    async def _rename(self, text: str) -> None:
+        # Not `_name`: Textual's DOMNode already owns that attribute, and an
+        # instance shadowing it with a method is a TypeError at the call site.
+        parts = text.split(maxsplit=1)
+        if len(parts) == 1:
+            await self._say(Note(self.session.name or "这个会话还没有名字"))
+            return
+        self.session.rename(parts[1])
+        self._update_subtitle()
+        await self._say(Note(f"这次会话叫「{self.session.name}」了"))
+
+    def _describe(self) -> str:
+        """What /session shows: enough to know which file you are in."""
+        session = self.session
+        lines = [
+            f"名字:{session.name or '(没起名)'}",
+            f"文件:{session.path}",
+            f"消息:{len(session)} 条 · {len(session.leaves())} 个分支",
+            f"当前:{(session.head or '')[:6]}",
+        ]
+        usage = getattr(self.model, "usage", None)
+        if usage is not None:
+            lines.append(f"用量:{usage}")
+        return "\n".join(lines)
+
     async def _fork(self, text: str) -> None:
         """Copy this branch into its own session file and continue there."""
         if self.busy:
@@ -318,8 +375,10 @@ class AvenApp(App[None]):
 
         parts = text.split()
         at = parts[1] if len(parts) > 1 else None
+        # The random tail is what keeps two forks in the same second apart;
+        # fork() refuses an existing file rather than merging into it.
         destination = self.session.path.with_name(
-            f"{time.strftime('%Y%m%d-%H%M%S')}-fork.jsonl"
+            f"{time.strftime('%Y%m%d-%H%M%S')}-{new_id()[:4]}-fork.jsonl"
         )
         try:
             forked = self.session.fork(destination, at=at)
@@ -408,7 +467,8 @@ class AvenApp(App[None]):
 
     def _update_subtitle(self) -> None:
         name = getattr(self.model, "model", "model")
-        parts = [str(self.root), name, f"{len(resolve(self.tools))} 个工具"]
+        parts = [self.session.name or str(self.root), name,
+                 f"{len(resolve(self.tools))} 个工具"]
         usage = getattr(self.model, "usage", None)
         if usage is not None and getattr(usage, "requests", 0):
             parts.append(str(usage))
