@@ -1,7 +1,7 @@
 """macOS actuators: Calendar, Mail and Spotlight, through osascript.
 
-This is the rung of the ladder that a cloud agent cannot reach. Muse runs in a
-VM somewhere and therefore needs your passwords to act as you; aven runs on your
+This is the rung of the ladder an agent running somewhere else cannot reach. An
+agent in a VM needs your passwords in order to act as you; aven runs on your own
 machine, so it asks macOS instead, and macOS asks you.
 
 Arguments never go into the script text. AppleScript concatenates and evaluates

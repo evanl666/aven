@@ -2,7 +2,7 @@
 
 <p align="center">
   <b>A local-first personal assistant that runs on your own machine.</b><br>
-  Your files, your keys, your calendar — nothing leaves the laptop except the prompt.
+  Your files and your calendar stay here. Nothing irreversible happens without you.
 </p>
 
 <p align="center">
@@ -45,23 +45,34 @@ One keystroke puts all of it back.
 
 ## Why
 
-A coding agent can be forgiven for acting first — a bad edit is a `git checkout`
-away. An assistant moving your files, booking your appointments and sending your
-mail cannot.
+An assistant that moves your files, books your appointments and sends your mail
+is holding things you cannot undo with a keystroke. So aven is built around one
+question: **what happens in the moment before something irreversible happens?**
 
-The cloud assistants answer this by running an agent in a VM somewhere, which
-means it cannot reach your machine, which means it needs your passwords to act
-as you. aven runs on your machine instead, so it asks macOS, and macOS asks you.
+Three answers. Everything else in the design follows from them.
 
-Everything else follows from that one choice.
+**It runs on your machine.** The file tools reach the folders you name and
+nothing else — `../`, `/etc/passwd`, `~/.ssh` and symlinks pointing out are
+refused at the tool boundary, not in the prompt. Calendar, Mail and Spotlight go
+through macOS, which asks you for access itself and lets you take it back in
+System Settings. aven stores no credentials for anything, because it needs none:
+the operating system already knows who you are.
 
-| | Cloud assistant | aven |
-|---|---|---|
-| Where it runs | A VM you don't own | Your laptop |
-| Your credentials | Vaulted, so the agent can log in as you | Never involved — the OS already knows who you are |
-| Your files | Uploaded, or unreachable | Read in place, inside one directory you name |
-| Permissions | Granted to the vendor | Granted by macOS, revocable in System Settings |
-| Who sees your data | The vendor | The model, and only what you send it |
+**Nothing irreversible happens without you.** Reversible work runs during the
+turn and keeps its undo — asking permission to move a file that can be moved
+back only teaches people to say yes without reading. Anything that cannot be
+taken back is *staged*: described and not done, waiting in a list you approve one
+line at a time, with the diff or the order or the draft under each line.
+
+**You can read everything it did.** Every message, every tool call and every
+argument is one line of JSON in a file you own. `aven --tree` walks the branches,
+`--mode json` hands a whole run to another program, and nothing is compacted away
+that you cannot go back and read in full.
+
+One thing said plainly rather than buried: **the text of your conversation goes
+to whichever model provider you configure.** Files are read locally and acted on
+locally; the conversation is not. That is the one thing that leaves, and it
+leaves only to the endpoint you chose.
 
 ## Quick start
 
@@ -84,11 +95,45 @@ out are refused at the tool boundary, not in the prompt.
 ```bash
 aven "one task"          # do it, show the batch, exit - pipes and redirects fine
 aven                     # the full-screen app: live staging tray, Esc to interrupt
-aven -c                  # the app, continuing the last session (~60% cheaper per turn)
-aven --plain             # line by line, no full screen
+aven -c                  # continuing the last session (~60% cheaper per turn)
+aven -r                  # pick a session from a list
+aven --root ~/Downloads --root ~/Documents      # more than one folder in play
 aven --mac "..."         # add Calendar, Mail and Spotlight (macOS will ask)
+aven -p "what is on today"        # the answer on stdout, then exit - for scripts
+aven --mode json "..."   # every event as one line of JSON
+aven --mode rpc          # read commands on stdin: what a window or a phone drives
+aven --watch             # fire the triggers in ~/.aven/triggers.toml on a clock
+aven -c --tree           # the branches of this session, then exit
 aven -v "..."            # show every tool result
 ```
+
+Two files are yours to write, and aven only ever reads them:
+
+```toml
+# ~/.aven/triggers.toml - turns nobody typed
+[[trigger]]
+name = "morning"
+at = "08:30"
+prompt = "Summarise today's calendar and anything that arrived overnight."
+
+[[trigger]]
+watch = "~/Downloads"
+prompt = "Something landed. File it if it is an invoice, leave it otherwise."
+```
+
+```toml
+# ~/.aven/approvals.toml - decisions you already made, so you are not asked twice
+[[approve]]
+tool = "move_file"
+when = "expenses/"
+note = "filing invoices is fine, every month"
+```
+
+An approval names one tool and a fragment of the preview you read when you
+decided. There is no wildcard, a tool can refuse to be pre-approved at all
+(sending mail does), a call your own `--protect` rule warned about is always
+asked, and every pre-approved run is marked in the transcript as not a fresh
+decision.
 
 Requires Python 3.11+ and macOS for the `--mac` tools. Everything else is
 cross-platform.
@@ -217,9 +262,10 @@ Decided up front, because retrofitting any of them is painful.
 4. **The model gets handles, not values.** Planned. Private data becomes
    `<<person:7>>` before the prompt leaves the machine, dereferenced only inside
    the tool executor. A hijacked model cannot leak what was never in its context.
-5. **Triggers first, not chat first.** Planned. A turn can be opened by cron, a
-   new mail, or a file landing in `~/Downloads`; `UserMessage.source` has carried
-   that from the first commit.
+5. **Triggers first, not chat first.** ✅ Shipped — a turn can be opened by a
+   time of day or a folder gaining a file, and `UserMessage.source` records which.
+   The full-screen app fires them while it is up, so the tray keeps what happened
+   while you were away; `--watch` is the headless half.
 6. **Repeated tasks crystallise into readable programs.** Planned. Memory does
    this for facts already - what is learned lands in Markdown the person owns. A task done
    twice becomes a routine you can read and edit, run deterministically with the
