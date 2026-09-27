@@ -7,7 +7,8 @@ from dataclasses import replace
 import pytest
 from textual.widgets import Button, Input
 
-from aven.core.messages import AssistantMessage, ToolCall, new_id
+from aven.core.compact import Compactor
+from aven.core.messages import AssistantMessage, SummaryMessage, ToolCall, new_id
 from aven.core.session import Session
 from aven.core.tools import ToolResult, tool
 from aven.tools import file_tools
@@ -29,6 +30,13 @@ def streaming(*turns):
             tool_calls=[replace(c, id=new_id()) for c in calls],
             stop_reason="tool_use" if calls else "end_turn",
         )
+
+    return model
+
+
+def branch_summariser(text="在另一条分支上读过 Downloads,里面只有一个 pdf。"):
+    async def model(_llm_messages):
+        return AssistantMessage(text=text, id=new_id())
 
     return model
 
@@ -242,3 +250,115 @@ async def test_continuing_a_session_shows_what_was_said(box):
         await pilot.pause()
         assert "› 上次的问题" in texts(app, UserLine)
         assert any("上次的回答" in r.source for r in app.query(Reply))
+
+
+# --- naming, describing, and moving between branches -------------------------
+
+
+async def test_name_is_stored_and_shown_in_the_title_bar(box):
+    app = app_for(box, streaming(("好。", [])))
+    async with app.run_test(size=(120, 40)) as pilot:
+        await ask(app, pilot, "/name 发票 7 月")
+
+        assert app.session.name == "发票 7 月"
+        assert "发票 7 月" in app.sub_title
+        assert any("发票 7 月" in n for n in texts(app, Note))
+
+
+async def test_name_with_no_argument_says_what_it_is_called(box):
+    app = app_for(box, streaming(("好。", [])))
+    async with app.run_test(size=(120, 40)) as pilot:
+        await ask(app, pilot, "/name")
+        assert any("还没有名字" in n for n in texts(app, Note))
+
+        await ask(app, pilot, "/name 甲")
+        await ask(app, pilot, "/name")
+        assert any(n == "甲" for n in texts(app, Note))
+
+
+async def test_session_shows_enough_to_know_which_file_you_are_in(box):
+    app = app_for(box, streaming(("好。", [])))
+    async with app.run_test(size=(120, 40)) as pilot:
+        await ask(app, pilot, "在吗")
+        await ask(app, pilot, "/session")
+
+        shown = "\n".join(texts(app, Note))
+        assert "s.jsonl" in shown
+        assert "个分支" in shown
+
+
+async def test_tree_shows_the_branches(box):
+    app = app_for(box, streaming(("好。", []), ("也好。", [])))
+    async with app.run_test(size=(120, 40)) as pilot:
+        await ask(app, pilot, "第一件")
+        await ask(app, pilot, "/tree")
+
+        assert any("▸" in n and "第一件" in n for n in texts(app, Note))
+
+
+async def test_going_back_carries_what_the_branch_learned(box):
+    """Otherwise the new branch repeats every file read the old one did."""
+    call = ToolCall(name="list_dir", args={"path": "Downloads"})
+    app = app_for(box, streaming(("我看看。", [call]), ("有一个 pdf。", [])))
+    app.compactor = Compactor(model=branch_summariser())
+
+    async with app.run_test(size=(120, 40)) as pilot:
+        await ask(app, pilot, "看看下载目录")
+        first = app.session.history()[0]
+
+        await ask(app, pilot, f"/tree {first.id[:6]}")
+        await pilot.pause()
+
+        carried = [
+            m for m in app.session.history()
+            if isinstance(m, SummaryMessage) and m.scope == "branch"
+        ]
+        assert len(carried) == 1
+        assert "另一条分支" in carried[0].text
+        assert any("已带过来" in n for n in texts(app, Note))
+
+
+async def test_going_back_with_compaction_off_still_moves(box):
+    """The carry is a bonus. Losing it must not cost the checkout."""
+    app = app_for(box, streaming(("好。", [])))
+    assert app.compactor is None
+
+    async with app.run_test(size=(120, 40)) as pilot:
+        await ask(app, pilot, "第一件")
+        first = app.session.history()[0]
+
+        await ask(app, pilot, f"/tree {first.id[:6]}")
+
+        assert app.session.head == first.id
+
+
+async def test_a_failed_carry_does_not_undo_the_checkout(box):
+    app = app_for(box, streaming(("好。", [])))
+
+    async def broken(_messages):
+        raise RuntimeError("summariser down")
+
+    app.compactor = Compactor(model=broken)
+
+    async with app.run_test(size=(120, 40)) as pilot:
+        await ask(app, pilot, "第一件")
+        first = app.session.history()[0]
+
+        await ask(app, pilot, f"/tree {first.id[:6]}")
+        await pilot.pause()
+
+        assert app.session.head == first.id, "the move already happened"
+        assert any("没能带过来" in n for n in texts(app, Note))
+
+
+async def test_forking_switches_the_app_to_the_new_file(box):
+    app = app_for(box, streaming(("好。", [])))
+    async with app.run_test(size=(120, 40)) as pilot:
+        await ask(app, pilot, "第一件")
+        original = app.session.path
+
+        await ask(app, pilot, "/fork")
+
+        assert app.session.path != original
+        assert app.session.path.name.endswith("-fork.jsonl")
+        assert "第一件" in original.read_text(), "the original is still there"

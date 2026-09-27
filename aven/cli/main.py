@@ -3,6 +3,7 @@
     aven "把下载目录里的发票整理一下"      one task, then review
     aven                                     the full-screen app
     aven -c                                  the app, continuing the last session
+    aven -r                                  pick a session from a list
     aven --plain                             keep talking, line by line
     aven -p "今天有什么会"                    answer on stdout, then exit
     aven --mode json "..." > events.jsonl    every event as one line of JSON
@@ -31,7 +32,10 @@ from aven.core.context import find, read
 from aven.core.skills import catalogue
 from aven.core.toolbox import ToolBox
 from aven.core.skills import find as find_skills
+from aven.core.messages import new_id
 from aven.core.session import Session
+from aven.core.sessions import Card, catalogue
+from aven.core.sessions import render as render_cards
 from aven.core.tree import render as render_tree
 from aven.model import Claude
 from aven.actuators import mac_tools
@@ -87,8 +91,11 @@ SYSTEM = """你是 aven,一个运行在用户自己电脑上的个人助理。
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="aven", description="本地优先的个人助理")
     parser.add_argument("prompt", nargs="?", help="要它做的事。省略则进入对话模式")
-    parser.add_argument("-c", "--continue", dest="resume", action="store_true",
+    parser.add_argument("-c", "--continue", dest="last", action="store_true",
                         help="接着最近一次会话")
+    parser.add_argument("-r", "--resume", action="store_true",
+                        help="列出会话让你挑一个")
+    parser.add_argument("-n", "--name", help="给这次会话起个名字,下次好找")
     parser.add_argument("--session", type=Path, help="指定会话文件")
     parser.add_argument("--root", type=Path, default=Path.cwd(),
                         help="文件工具允许操作的目录,默认是当前目录")
@@ -125,16 +132,63 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def pick_session(args: argparse.Namespace) -> Path:
+def fresh() -> Path:
+    """A new session file.
+
+    The timestamp leads so the directory sorts chronologically by name. The four
+    characters after it are not decoration: a second is not fine-grained enough
+    once `-p` exists, and a shell loop firing two one-shot runs inside the same
+    second would otherwise have them share a file - two unrelated tasks
+    branching one conversation.
+    """
+    return SESSIONS / f"{time.strftime('%Y%m%d-%H%M%S')}-{new_id()[:4]}.jsonl"
+
+
+def pick_session(args: argparse.Namespace) -> Path | None:
+    """Which file to talk to. None means they were asked and said no."""
     if args.session:
         return args.session
+
     SESSIONS.mkdir(parents=True, exist_ok=True)
+
     if args.resume:
+        return choose(catalogue(SESSIONS))
+
+    if args.last:
         existing = sorted(SESSIONS.glob("*.jsonl"), key=lambda p: p.stat().st_mtime)
         if existing:
             return existing[-1]
         note(DIM("没有找到历史会话,开一个新的"))
-    return SESSIONS / f"{time.strftime('%Y%m%d-%H%M%S')}.jsonl"
+
+    return fresh()
+
+
+def choose(cards: list[Card]) -> Path | None:
+    """Show the list and read a number.
+
+    On stderr and stdin, never stdout: the list is a question, not a result, and
+    a caller that redirected stdout is not the one being asked.
+    """
+    if not cards:
+        note(DIM("没有会话记录,开一个新的"))
+        return fresh()
+
+    note(render_cards(cards))
+    note(BOLD("挑一个(回车 = 最近的,q = 退出):"))
+    try:
+        typed = input().strip()
+    except (EOFError, KeyboardInterrupt):
+        return None
+
+    if typed.lower() in ("q", "quit", "exit"):
+        return None
+    if not typed:
+        return cards[0].path
+    if typed.isdigit() and 1 <= int(typed) <= len(cards):
+        return cards[int(typed) - 1].path
+
+    note(RED(f"没有第 {typed} 项,用最近的那个"))
+    return cards[0].path
 
 
 async def turn(*, session: Session, prompt: str, model: Claude, tools, compactor,
@@ -190,7 +244,13 @@ async def _main(argv: list[str] | None = None) -> int:
         print(RED(f"不是一个目录:{root}"), file=sys.stderr)
         return 1
 
-    session = Session.open(pick_session(args))
+    chosen = pick_session(args)
+    if chosen is None:
+        return 0
+    session = Session.open(chosen)
+
+    if args.name:
+        session.rename(args.name)
 
     # Reading and copying a session needs no model, so these run before the key
     # check. Being locked out of your own transcript for want of an API key
@@ -204,7 +264,7 @@ async def _main(argv: list[str] | None = None) -> int:
             print(RED("这个会话是空的,没有东西可以 fork"), file=sys.stderr)
             return 1
         SESSIONS.mkdir(parents=True, exist_ok=True)
-        destination = SESSIONS / f"{time.strftime('%Y%m%d-%H%M%S')}-fork.jsonl"
+        destination = SESSIONS / f"{time.strftime('%Y%m%d-%H%M%S')}-{new_id()[:4]}-fork.jsonl"
         try:
             forked = session.fork(destination, at=args.fork or None)
         except (KeyError, FileExistsError) as problem:

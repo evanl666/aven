@@ -280,3 +280,94 @@ def test_fork_writes_a_new_file_and_prints_its_path(box, monkeypatch, capsys):
 def test_forking_an_empty_session_is_refused(box, monkeypatch, capsys):
     assert cli.main(["--fork", "--root", str(box)]) == 1
     assert "空" in capsys.readouterr().err
+
+
+# --- picking a session out of a list -----------------------------------------
+
+
+def a_session(box, monkeypatch, prompt, name=None):
+    """Run one prompt so there is a session file to pick later."""
+    fake_claude(monkeypatch, AssistantMessage(text="好"))
+    keys(monkeypatch, "")
+    argv = [prompt, "--root", str(box)]
+    if name:
+        argv += ["--name", name]
+    cli.main(argv)
+
+
+def test_resume_lists_the_sessions_and_opens_the_one_picked(box, monkeypatch, capsys):
+    a_session(box, monkeypatch, "第一件事", name="甲")
+    a_session(box, monkeypatch, "第二件事", name="乙")
+    capsys.readouterr()
+
+    fake_claude(monkeypatch, AssistantMessage(text="接着做"))
+    # "2" picks the older one; the blank line answers the review prompt after.
+    keys(monkeypatch, "2", "")
+    assert cli.main(["继续", "-r", "--root", str(box)]) == 0
+
+    captured = capsys.readouterr()
+    assert "甲" in captured.err and "乙" in captured.err, "the list is a question, so stderr"
+    opened = [p for p in cli.SESSIONS.glob("*.jsonl") if "第一件事" in p.read_text()]
+    assert opened and "继续" in opened[0].read_text(), "it carried on in the one picked"
+
+
+def test_resume_takes_the_newest_on_a_bare_enter(box, monkeypatch, capsys):
+    a_session(box, monkeypatch, "旧的")
+    a_session(box, monkeypatch, "新的")
+    capsys.readouterr()
+
+    fake_claude(monkeypatch, AssistantMessage(text="接着做"))
+    keys(monkeypatch, "", "")
+    assert cli.main(["继续", "-r", "--root", str(box)]) == 0
+
+    newest = max(cli.SESSIONS.glob("*.jsonl"), key=lambda p: p.stat().st_mtime)
+    assert "新的" in newest.read_text()
+
+
+def test_q_at_the_picker_leaves_without_starting_anything(box, monkeypatch, capsys):
+    a_session(box, monkeypatch, "一件事")
+    before = sorted(p.name for p in cli.SESSIONS.glob("*.jsonl"))
+    capsys.readouterr()
+
+    keys(monkeypatch, "q")
+    assert cli.main(["-r", "--root", str(box)]) == 0
+
+    captured = capsys.readouterr()
+    assert sorted(p.name for p in cli.SESSIONS.glob("*.jsonl")) == before, "no new file"
+    assert "aven ·" not in captured.err, "and nothing was opened: no model, no banner"
+
+
+def test_resume_with_no_sessions_yet_just_starts_one(box, monkeypatch, capsys):
+    fake_claude(monkeypatch, AssistantMessage(text="好"))
+    keys(monkeypatch, "")
+
+    assert cli.main(["第一件事", "-r", "--root", str(box)]) == 0
+    assert "没有会话记录" in capsys.readouterr().err
+
+
+def test_name_is_stored_in_the_session_and_shown_by_the_picker(box, monkeypatch, capsys):
+    a_session(box, monkeypatch, "整理发票", name="发票 7 月")
+    capsys.readouterr()
+
+    from aven.core.session import Session
+
+    path = next(iter(cli.SESSIONS.glob("*.jsonl")))
+    assert Session.open(path).name == "发票 7 月"
+
+    keys(monkeypatch, "q")
+    cli.main(["-r", "--root", str(box)])
+    assert "发票 7 月" in capsys.readouterr().err
+
+
+def test_continue_still_means_the_most_recent(box, monkeypatch, capsys):
+    """-c changed dest under the hood; the flag must behave exactly as before."""
+    a_session(box, monkeypatch, "旧的")
+    a_session(box, monkeypatch, "新的")
+    capsys.readouterr()
+
+    fake_claude(monkeypatch, AssistantMessage(text="接着做"))
+    keys(monkeypatch, "")
+    assert cli.main(["继续", "-c", "--root", str(box)]) == 0
+
+    newest = max(cli.SESSIONS.glob("*.jsonl"), key=lambda p: p.stat().st_mtime)
+    assert "新的" in newest.read_text() and "继续" in newest.read_text()
