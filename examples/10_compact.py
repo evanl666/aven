@@ -3,15 +3,15 @@
 from dataclasses import replace
 from pathlib import Path
 
-from aven.core.agent import run
-from aven.core.compact import Compactor, estimate_tokens
-from aven.core.events import MessageEnd
-from aven.core.messages import (
+from aven.harness.agent import run
+from aven.harness.compact import Compactor, estimate_tokens
+from aven.harness.events import MessageEnd
+from aven.harness.messages import (
     AssistantMessage, SummaryMessage, ToolCall, ToolResultMessage, UserMessage,
     new_id, to_llm,
 )
-from aven.core.session import Session
-from aven.core.tools import tool
+from aven.harness.session import Session
+from aven.harness.tools import tool
 
 
 @tool()

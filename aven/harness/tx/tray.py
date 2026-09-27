@@ -21,9 +21,9 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
-from aven.core.messages import new_id
-from aven.core.tools import Risk, Tool, ToolResult
-from aven.tx.policy import Policy
+from aven.harness.messages import new_id
+from aven.harness.tools import Risk, Tool, ToolResult
+from aven.harness.tx.policy import Policy
 
 State = Literal["applied", "pending", "committed", "undone", "discarded", "failed"]
 

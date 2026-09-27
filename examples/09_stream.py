@@ -4,12 +4,12 @@ import time
 from dataclasses import replace
 from pathlib import Path
 
-from aven.cli.render import Renderer, render_tray
-from aven.core.agent import run
-from aven.core.messages import AssistantMessage as AM, ToolCall, new_id
-from aven.core.session import Session
-from aven.core.tools import ToolResult, tool
-from aven.tx import Tray
+from aven.terminal.render import Renderer, render_tray
+from aven.harness.agent import run
+from aven.harness.messages import AssistantMessage as AM, ToolCall, new_id
+from aven.harness.session import Session
+from aven.harness.tools import ToolResult, tool
+from aven.harness.tx import Tray
 
 
 @tool(risk="read")

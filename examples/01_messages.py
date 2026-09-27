@@ -2,7 +2,7 @@
 
 import json
 
-from aven.core.messages import (
+from aven.harness.messages import (
     AssistantMessage,
     NoteMessage,
     ToolCall,

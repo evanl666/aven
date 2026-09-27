@@ -16,7 +16,7 @@ import inspect
 from collections.abc import AsyncIterator, Callable
 from typing import Any
 
-from aven.core.messages import AssistantMessage, LlmMessage
+from aven.harness.messages import AssistantMessage, LlmMessage
 
 ModelFn = Callable[[list[LlmMessage]], Any]
 

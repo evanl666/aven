@@ -4,8 +4,8 @@ import json
 
 import pytest
 
-from aven.core.messages import AssistantMessage, NoteMessage, UserMessage
-from aven.core.session import Session
+from aven.harness.messages import AssistantMessage, NoteMessage, UserMessage
+from aven.harness.session import Session
 
 
 def test_opening_a_missing_file_is_not_an_error(tmp_path):

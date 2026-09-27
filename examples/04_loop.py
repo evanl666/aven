@@ -2,10 +2,10 @@
 
 from pathlib import Path
 
-from aven.core.agent import run
-from aven.core.events import AgentEnd, AgentStart, MessageEnd, ToolEnd, ToolStart, TurnStart
-from aven.core.messages import AssistantMessage, ToolCall
-from aven.core.session import Session
+from aven.harness.agent import run
+from aven.harness.events import AgentEnd, AgentStart, MessageEnd, ToolEnd, ToolStart, TurnStart
+from aven.harness.messages import AssistantMessage, ToolCall
+from aven.harness.session import Session
 
 # --- the tools -------------------------------------------------------------
 

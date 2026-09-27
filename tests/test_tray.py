@@ -4,12 +4,12 @@ from dataclasses import replace
 
 import pytest
 
-from aven.core.agent import run
-from aven.core.events import ToolEnd
-from aven.core.messages import AssistantMessage, ToolCall, new_id
-from aven.core.session import Session
-from aven.core.tools import ToolResult, tool
-from aven.tx import Tray
+from aven.harness.agent import run
+from aven.harness.events import ToolEnd
+from aven.harness.messages import AssistantMessage, ToolCall, new_id
+from aven.harness.session import Session
+from aven.harness.tools import ToolResult, tool
+from aven.harness.tx import Tray
 
 
 def recorder():

@@ -1,7 +1,7 @@
 """Tests for judging a call by its arguments."""
 
-from aven.core.tools import ToolResult, tool
-from aven.tx import Tray, Verdict, bulk, guard, protect
+from aven.harness.tools import ToolResult, tool
+from aven.harness.tx import Tray, Verdict, bulk, guard, protect
 
 
 @tool(risk="read", preview="看 {path}")

@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from aven.core import memory
-from aven.core.context import find, read
-from aven.tools import memory_tools
+from aven.harness import memory
+from aven.harness.context import find, read
+from aven.toolkit import memory_tools
 
 
 @pytest.fixture

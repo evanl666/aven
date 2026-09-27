@@ -5,11 +5,11 @@ import shutil
 from dataclasses import replace
 from pathlib import Path
 
-from aven.core.agent import run
-from aven.core.context import find, read
-from aven.core.messages import AssistantMessage, ToolCall, new_id
-from aven.core.session import Session
-from aven.tools import file_tools, memory_tools
+from aven.harness.agent import run
+from aven.harness.context import find, read
+from aven.harness.messages import AssistantMessage, ToolCall, new_id
+from aven.harness.session import Session
+from aven.toolkit import file_tools, memory_tools
 
 BOX = Path("/tmp/aven-demo/memory")
 shutil.rmtree(BOX, ignore_errors=True)

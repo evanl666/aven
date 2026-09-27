@@ -7,8 +7,8 @@ to recognise our banner in it.
 
 import json
 
-from aven.cli.stream import Final, Jsonl, as_json
-from aven.core.events import (
+from aven.terminal.stream import Final, Jsonl, as_json
+from aven.harness.events import (
     AgentEnd,
     AgentStart,
     MessageDelta,
@@ -18,9 +18,9 @@ from aven.core.events import (
     TurnEnd,
     TurnStart,
 )
-from aven.core.messages import AssistantMessage, ToolCall, ToolResultMessage, UserMessage
-from aven.tx import Tray
-from aven.tx.tray import Entry
+from aven.harness.messages import AssistantMessage, ToolCall, ToolResultMessage, UserMessage
+from aven.harness.tx import Tray
+from aven.harness.tx.tray import Entry
 
 
 def every_event():

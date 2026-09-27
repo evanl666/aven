@@ -17,7 +17,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from typing import Any, Protocol
 
-from aven.core.tools import Risk, Tool
+from aven.harness.tools import Risk, Tool
 
 # Least to most severe. A policy's verdict is taken only when it sits above
 # what the tool declared.

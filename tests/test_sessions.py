@@ -2,9 +2,9 @@
 
 from pathlib import Path
 
-from aven.core.messages import AssistantMessage, UserMessage
-from aven.core.session import Session
-from aven.core.sessions import card, catalogue, render
+from aven.harness.messages import AssistantMessage, UserMessage
+from aven.harness.session import Session
+from aven.harness.sessions import card, catalogue, render
 
 
 def talk(path, *texts, name=None):
@@ -50,7 +50,7 @@ def test_renaming_is_undone_by_going_back(tmp_path):
 
 
 def test_the_name_is_never_shown_to_the_model(tmp_path):
-    from aven.core.messages import to_llm
+    from aven.harness.messages import to_llm
 
     session = talk(tmp_path / "s.jsonl", "问题", name="发票整理")
 
@@ -179,7 +179,7 @@ def test_a_card_knows_which_file_it_came_from(tmp_path):
 
 
 def test_how_long_ago_is_rounded_to_something_readable():
-    from aven.core.sessions import ago
+    from aven.harness.sessions import ago
 
     now = 1_000_000.0
     assert ago(now - 30, now=now) == "30 秒前"
@@ -190,14 +190,14 @@ def test_how_long_ago_is_rounded_to_something_readable():
 
 def test_something_older_than_a_month_gets_a_date():
     """Past a month, "40 天前" stops meaning anything."""
-    from aven.core.sessions import ago
+    from aven.harness.sessions import ago
 
     now = 1_000_000_000.0
     assert ago(now - 86400 * 200, now=now).count("-") == 2
 
 
 def test_a_clock_that_went_backwards_does_not_print_a_negative(tmp_path):
-    from aven.core.sessions import ago
+    from aven.harness.sessions import ago
 
     assert ago(1_000_100.0, now=1_000_000.0) == "0 秒前"
 

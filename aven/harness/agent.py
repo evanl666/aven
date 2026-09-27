@@ -20,7 +20,7 @@ from __future__ import annotations
 import asyncio
 from collections.abc import AsyncIterator, Sequence
 
-from aven.core.events import (
+from aven.harness.events import (
     AgentEnd,
     AgentStart,
     Event,
@@ -31,9 +31,9 @@ from aven.core.events import (
     TurnEnd,
     TurnStart,
 )
-from aven.core.calling import ContextOverflow, ModelFn, stream_model
-from aven.core.compact import Compactor
-from aven.core.messages import (
+from aven.harness.calling import ContextOverflow, ModelFn, stream_model
+from aven.harness.compact import Compactor
+from aven.harness.messages import (
     AssistantMessage,
     LlmMessage,
     ToolCall,
@@ -41,11 +41,11 @@ from aven.core.messages import (
     UserMessage,
     to_llm,
 )
-from aven.core.session import Session
-from aven.core.steering import Steering
-from aven.core.tools import Tool
-from aven.core.toolbox import ToolSource, resolve
-from aven.tx import Tray
+from aven.harness.session import Session
+from aven.harness.steering import Steering
+from aven.harness.tools import Tool
+from aven.harness.toolbox import ToolSource, resolve
+from aven.harness.tx import Tray
 
 # ModelFn is injected, never imported: the loop must stay runnable with no API
 # key, and a test must be able to script a model's replies exactly.

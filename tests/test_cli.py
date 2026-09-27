@@ -6,8 +6,8 @@ from types import SimpleNamespace
 
 import pytest
 
-import aven.cli.main as cli
-from aven.core.messages import AssistantMessage, ToolCall, new_id
+import aven.apps.cli_assistant.main as cli
+from aven.harness.messages import AssistantMessage, ToolCall, new_id
 
 
 @pytest.fixture
@@ -349,7 +349,7 @@ def test_name_is_stored_in_the_session_and_shown_by_the_picker(box, monkeypatch,
     a_session(box, monkeypatch, "整理发票", name="发票 7 月")
     capsys.readouterr()
 
-    from aven.core.session import Session
+    from aven.harness.session import Session
 
     path = next(iter(cli.SESSIONS.glob("*.jsonl")))
     assert Session.open(path).name == "发票 7 月"

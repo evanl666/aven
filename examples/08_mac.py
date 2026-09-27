@@ -9,12 +9,12 @@ import sys
 from dataclasses import replace
 from pathlib import Path
 
-from aven.actuators import mac, mac_tools
-from aven.cli.render import Renderer, render_tray
-from aven.core.agent import run
-from aven.core.messages import AssistantMessage as AM, ToolCall, new_id
-from aven.core.session import Session
-from aven.tx import Tray
+from aven.apps.cli_assistant.mac import mac, mac_tools
+from aven.terminal.render import Renderer, render_tray
+from aven.harness.agent import run
+from aven.harness.messages import AssistantMessage as AM, ToolCall, new_id
+from aven.harness.session import Session
+from aven.harness.tx import Tray
 
 REAL = "--real" in sys.argv
 

@@ -125,20 +125,38 @@ calendar event shows `[u]` and nothing else.
 
 ```
 aven/
-  core/       messages · session · events · tools · the loop
-  tx/         the staging tray            ← where risk becomes behaviour
-  model/      the only file importing a provider SDK
-  tools/      file tools, scoped to one root
-  actuators/  Calendar, Mail, Spotlight via osascript
-  cli/        rendering, the review step, the command
+  harness/    what an agent is, with no opinion about what it is for
+    messages · session · sessions · tree      the record
+    agent · steering · events · calling       the loop
+    compact · context                         what fits in the window
+    tools · toolbox · skills                  what it can do
+    tx/                                       what takes effect  ← risk lives here
+  model/      the only files importing a provider SDK
+  toolkit/    tools more than one app wants: files, memory, skills
+  terminal/   foundation every terminal app shares: rendering, review,
+              the JSON and print sinks, widgets, the full-screen shell
+  apps/
+    cli_assistant/   the personal assistant  (aven)
+    cli_code/        the coding agent        (aven-code)
+    gui_assistant/   not built yet
 ```
+
+**The layering is one-directional, and tested.** An app may reach down to
+anything; the foundation may reach down to the harness; the harness may reach
+nowhere. `tests/test_architecture.py` reads the imports out of the source and
+fails on any edge that points the wrong way — because folders alone isolate
+nothing, and one convenient import undoes the arrangement without anybody
+noticing until a second app needs it.
+
+The harness also carries no text a person reads, in any language. What aven says
+belongs to the app, or to the catalogue the app chooses from.
 
 **The loop is a generator.** `run()` yields events; the caller drives it with a
 `for`, sees each step as it happens, and stops by not asking for the next one.
 No subscriber list, no renderer that can take the agent down with it, and a test
 reads as a plain list of what happened.
 
-**The model is injected.** `core/` has no provider import. 106 tests run with no
+**The model is injected.** `harness/` has no provider import. 334 tests run with no
 API key and no network, and swapping providers does not touch the loop.
 
 **Tools declare four things at the definition site** — the JSON schema (derived

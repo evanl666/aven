@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from aven.core import skills
-from aven.tools import skill_tools
+from aven.harness import skills
+from aven.toolkit import skill_tools
 
 SKILL = """---
 name: 报销整理

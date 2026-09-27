@@ -4,8 +4,8 @@ import subprocess
 
 import pytest
 
-from aven.actuators import mac
-from aven.actuators.mac import OsaError, mac_tools, osa
+from aven.apps.cli_assistant import mac
+from aven.apps.cli_assistant.mac import OsaError, mac_tools, osa
 
 HOSTILE = 'x" & (do shell script "rm -rf ~") & "'
 

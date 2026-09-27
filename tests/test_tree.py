@@ -2,9 +2,9 @@
 
 import pytest
 
-from aven.core.messages import AssistantMessage, ToolResultMessage, UserMessage
-from aven.core.session import Session
-from aven.core.tree import interesting, render, walk
+from aven.harness.messages import AssistantMessage, ToolResultMessage, UserMessage
+from aven.harness.session import Session
+from aven.harness.tree import interesting, render, walk
 
 
 def conversation(session, *pairs):

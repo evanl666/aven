@@ -8,8 +8,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from aven.core.messages import to_llm
-from aven.core.tools import tool
+from aven.harness.messages import to_llm
+from aven.harness.tools import tool
 from aven.model.claude import Claude, to_assistant
 
 
@@ -71,7 +71,7 @@ class FakeClient:
 
 async def drain(generator):
     """Run a model generator to the end. Returns (chunks, final message)."""
-    from aven.core.messages import AssistantMessage
+    from aven.harness.messages import AssistantMessage
 
     chunks, message = [], None
     async for item in generator:

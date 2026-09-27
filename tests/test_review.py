@@ -4,9 +4,9 @@ import io
 
 import pytest
 
-from aven.cli.review import menu, review
-from aven.core.tools import ToolResult, tool
-from aven.tx import Tray
+from aven.terminal.review import menu, review
+from aven.harness.tools import ToolResult, tool
+from aven.harness.tx import Tray
 
 
 @tool(risk="reversible", preview="日历「工作」新建:team event")

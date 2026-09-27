@@ -4,12 +4,12 @@ import shutil
 from dataclasses import replace
 from pathlib import Path
 
-from aven.core.agent import run
-from aven.core.events import MessageEnd, ToolEnd
-from aven.core.messages import AssistantMessage, AssistantMessage as AM, ToolCall, new_id
-from aven.core.session import Session
-from aven.core.tools import ToolResult, tool
-from aven.tx import Tray
+from aven.harness.agent import run
+from aven.harness.events import MessageEnd, ToolEnd
+from aven.harness.messages import AssistantMessage, AssistantMessage as AM, ToolCall, new_id
+from aven.harness.session import Session
+from aven.harness.tools import ToolResult, tool
+from aven.harness.tx import Tray
 
 BOX = Path("/tmp/aven-demo/tray")
 shutil.rmtree(BOX, ignore_errors=True)

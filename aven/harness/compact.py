@@ -15,8 +15,8 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
-from aven.core.calling import ModelFn, ask_model
-from aven.core.messages import (
+from aven.harness.calling import ModelFn, ask_model
+from aven.harness.messages import (
     AssistantMessage,
     ContextEdit,
     LlmMessage,
@@ -26,7 +26,7 @@ from aven.core.messages import (
     UserMessage,
     to_llm,
 )
-from aven.core.session import Session
+from aven.harness.session import Session
 
 INSTRUCTIONS = """\
 You are summarising the earlier part of a conversation between a person and \

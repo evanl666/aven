@@ -1,6 +1,6 @@
 """Tests for the stored-message / LLM-message split."""
 
-from aven.core.messages import (
+from aven.harness.messages import (
     AssistantMessage,
     NoteMessage,
     ToolCall,

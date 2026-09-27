@@ -9,8 +9,8 @@ branch summary describes messages on another path, hides nothing, and stays
 where it was appended - because that is when it was learned.
 """
 
-from aven.core.compact import Compactor
-from aven.core.messages import (
+from aven.harness.compact import Compactor
+from aven.harness.messages import (
     AssistantMessage,
     SummaryMessage,
     ToolCall,
@@ -18,7 +18,7 @@ from aven.core.messages import (
     UserMessage,
     to_llm,
 )
-from aven.core.session import Session
+from aven.harness.session import Session
 
 
 def summariser(text="试过了:发票在 Downloads/invoices/,PDF 是扫描件,读不出文字。"):
@@ -159,7 +159,7 @@ def test_a_branch_summary_hides_nothing(tmp_path):
 
 def test_a_session_written_before_scope_existed_still_reads(tmp_path):
     """Every file on disk says nothing about scope, and must mean "earlier"."""
-    from aven.core.messages import from_dict
+    from aven.harness.messages import from_dict
 
     restored = from_dict({"kind": "summary", "id": "a1", "text": "旧的摘要", "covers": []})
 
@@ -183,7 +183,7 @@ async def test_a_branch_summary_can_itself_be_compacted_away(tmp_path):
 
 async def test_compacting_a_branch_summary_does_not_claim_it_was_a_compaction(tmp_path):
     """The CARRIED instruction is about a previous compaction, not a branch."""
-    from aven.core.compact import CARRIED
+    from aven.harness.compact import CARRIED
 
     session = Session.open(tmp_path / "s.jsonl")
     session.append(UserMessage(text="第一轮"))

@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from aven.core import skills
-from aven.core.tools import Tool, tool
+from aven.harness import skills
+from aven.harness.tools import Tool, tool
 
 
 def skill_tools(available: list[skills.Skill]) -> list[Tool]:

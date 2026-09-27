@@ -24,9 +24,9 @@ from textual.containers import Horizontal, VerticalScroll
 from textual.widgets import Button, Footer, Header, Input
 from textual.worker import Worker, WorkerState
 
-from aven.core.agent import ModelFn, run
-from aven.core.compact import Compactor
-from aven.core.events import (
+from aven.harness.agent import ModelFn, run
+from aven.harness.compact import Compactor
+from aven.harness.events import (
     AgentEnd,
     MessageDelta,
     MessageEnd,
@@ -34,19 +34,19 @@ from aven.core.events import (
     ToolStart,
     TurnStart,
 )
-from aven.core.messages import (
+from aven.harness.messages import (
     AssistantMessage,
     new_id,
     SummaryMessage,
     ToolResultMessage,
     UserMessage,
 )
-from aven.core.session import Session
-from aven.core.steering import Steering
-from aven.core.toolbox import ToolSource, resolve
-from aven.core.tree import render as render_tree
-from aven.tui.widgets import Note, Reply, Thinking, ToolLine, TrayPanel, UserLine
-from aven.tx import Policy, Tray
+from aven.harness.session import Session
+from aven.harness.steering import Steering
+from aven.harness.toolbox import ToolSource, resolve
+from aven.harness.tree import render as render_tree
+from aven.terminal.widgets import Note, Reply, Thinking, ToolLine, TrayPanel, UserLine
+from aven.harness.tx import Policy, Tray
 
 HELP = """\
 /session   这个会话的基本情况
@@ -63,7 +63,7 @@ HELP = """\
 Esc 中断当前任务 · Ctrl+T 显示/隐藏暂存区 · Ctrl+Q 退出"""
 
 
-class AvenApp(App[None]):
+class Shell(App[None]):
     TITLE = "aven"
 
     CSS = """

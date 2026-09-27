@@ -2,8 +2,8 @@
 
 import pytest
 
-from aven.tools import file_tools
-from aven.tools.files import Outside
+from aven.toolkit import file_tools
+from aven.toolkit.files import Outside
 
 
 @pytest.fixture
@@ -144,7 +144,7 @@ def test_edit_undo_restores_the_whole_file(notes, tools):
 def test_a_passage_that_is_not_there_says_why_it_might_not_be(notes, tools):
     """The model is working from read_file's output, so a miss is usually
     whitespace. The message has to point at that."""
-    from aven.tools.files import NotFound
+    from aven.toolkit.files import NotFound
 
     with pytest.raises(NotFound, match="indentation"):
         tools["edit_file"](path="notes.md", old="-  美团 126.00", new="x")
@@ -152,14 +152,14 @@ def test_a_passage_that_is_not_there_says_why_it_might_not_be(notes, tools):
 
 def test_a_passage_that_appears_twice_is_refused(notes, tools):
     """Guessing which one was meant is worse than asking for a longer passage."""
-    from aven.tools.files import Ambiguous
+    from aven.toolkit.files import Ambiguous
 
     with pytest.raises(Ambiguous, match="appears 2 times"):
         tools["edit_file"](path="notes.md", old="- ", new="* ")
 
 
 def test_a_failed_edit_leaves_the_file_alone(notes, tools):
-    from aven.tools.files import NotFound
+    from aven.toolkit.files import NotFound
 
     before = notes.read_text()
     with pytest.raises(NotFound):

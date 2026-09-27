@@ -3,9 +3,9 @@
 import shutil
 from pathlib import Path
 
-from aven.core.compact import estimate_tokens
-from aven.core.skills import catalogue, find, read
-from aven.tools import skill_tools
+from aven.harness.compact import estimate_tokens
+from aven.harness.skills import catalogue, find, read
+from aven.toolkit import skill_tools
 
 BOX = Path("/tmp/aven-demo/skilldemo")
 shutil.rmtree(BOX, ignore_errors=True)

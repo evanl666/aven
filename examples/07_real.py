@@ -10,12 +10,12 @@ import sys
 from pathlib import Path
 from typing import Annotated
 
-from aven.core.agent import run
-from aven.core.events import AgentEnd, MessageEnd, ToolEnd, ToolStart
-from aven.core.session import Session
-from aven.core.tools import ToolResult, tool
+from aven.harness.agent import run
+from aven.harness.events import AgentEnd, MessageEnd, ToolEnd, ToolStart
+from aven.harness.session import Session
+from aven.harness.tools import ToolResult, tool
 from aven.model import Claude
-from aven.tx import Tray
+from aven.harness.tx import Tray
 
 if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
     sys.exit("需要先设置 ANTHROPIC_API_KEY,例如:\n  export ANTHROPIC_API_KEY=sk-ant-...")

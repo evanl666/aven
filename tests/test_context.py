@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from aven.core.context import find, read
+from aven.harness.context import find, read
 
 
 def test_files_are_ordered_outermost_first(tmp_path, monkeypatch):

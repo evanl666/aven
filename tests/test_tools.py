@@ -4,7 +4,7 @@ from typing import Annotated
 
 import pytest
 
-from aven.core.tools import Tool, ToolResult, schema_of, tool
+from aven.harness.tools import Tool, ToolResult, schema_of, tool
 
 
 def test_schema_comes_from_the_signature():

@@ -2,11 +2,11 @@
 
 from dataclasses import replace
 
-from aven.core.agent import run
-from aven.core.messages import AssistantMessage, ToolCall, new_id
-from aven.core.session import Session
-from aven.core.toolbox import ToolBox, resolve
-from aven.core.tools import tool
+from aven.harness.agent import run
+from aven.harness.messages import AssistantMessage, ToolCall, new_id
+from aven.harness.session import Session
+from aven.harness.toolbox import ToolBox, resolve
+from aven.harness.tools import tool
 
 
 @tool()

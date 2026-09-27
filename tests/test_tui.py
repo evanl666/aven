@@ -7,13 +7,13 @@ from dataclasses import replace
 import pytest
 from textual.widgets import Button, Input
 
-from aven.core.compact import Compactor
-from aven.core.messages import AssistantMessage, SummaryMessage, ToolCall, new_id
-from aven.core.session import Session
-from aven.core.tools import ToolResult, tool
-from aven.tools import file_tools
-from aven.tui import AvenApp
-from aven.tui.widgets import Note, Reply, ToolLine, UserLine
+from aven.harness.compact import Compactor
+from aven.harness.messages import AssistantMessage, SummaryMessage, ToolCall, new_id
+from aven.harness.session import Session
+from aven.harness.tools import ToolResult, tool
+from aven.toolkit import file_tools
+from aven.terminal.shell import Shell
+from aven.terminal.widgets import Note, Reply, ToolLine, UserLine
 
 
 def streaming(*turns):
@@ -49,7 +49,7 @@ def box(tmp_path):
 
 
 def app_for(box, model, extra_tools=()):
-    return AvenApp(
+    return Shell(
         session=Session.open(box / "s.jsonl"),
         model=model,
         tools=file_tools(box) + list(extra_tools),
@@ -239,12 +239,12 @@ async def test_help_and_unknown_commands_answer_in_the_transcript(box):
 
 async def test_continuing_a_session_shows_what_was_said(box):
     session = Session.open(box / "s.jsonl")
-    from aven.core.messages import UserMessage
+    from aven.harness.messages import UserMessage
 
     session.append(UserMessage(text="上次的问题"))
     session.append(AssistantMessage(text="上次的回答"))
 
-    app = AvenApp(session=Session.open(box / "s.jsonl"), model=streaming(),
+    app = Shell(session=Session.open(box / "s.jsonl"), model=streaming(),
                   tools=file_tools(box), root=box)
     async with app.run_test(size=(120, 40)) as pilot:
         await pilot.pause()

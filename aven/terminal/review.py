@@ -8,9 +8,9 @@ from __future__ import annotations
 
 import asyncio
 
-from aven.cli.render import DIM, YELLOW, render_outcome, render_tray
-from aven.core.session import Session
-from aven.tx import Tray
+from aven.terminal.render import DIM, YELLOW, render_outcome, render_tray
+from aven.harness.session import Session
+from aven.harness.tx import Tray
 
 
 def menu(tray: Tray) -> tuple[str, set[str]]:

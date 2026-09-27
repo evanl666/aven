@@ -6,9 +6,9 @@ from types import SimpleNamespace
 
 import pytest
 
-from aven.core.agent import run
-from aven.core.calling import ContextOverflow
-from aven.core.compact import (
+from aven.harness.agent import run
+from aven.harness.calling import ContextOverflow
+from aven.harness.compact import (
     CARRIED,
     Compactor,
     estimate_tokens,
@@ -16,8 +16,8 @@ from aven.core.compact import (
     split_within_turn,
     touched_files,
 )
-from aven.core.events import MessageEnd
-from aven.core.messages import (
+from aven.harness.events import MessageEnd
+from aven.harness.messages import (
     AssistantMessage,
     ContextEdit,
     SummaryMessage,
@@ -27,8 +27,8 @@ from aven.core.messages import (
     new_id,
     to_llm,
 )
-from aven.core.session import Session
-from aven.core.tools import tool
+from aven.harness.session import Session
+from aven.harness.tools import tool
 
 
 def summariser(text="早先:归档了 3 张发票到 报销/,财务是 finance@corp.com。"):
@@ -251,7 +251,7 @@ async def test_the_loop_compacts_before_asking_and_reports_it(tmp_path):
 
 def test_the_summariser_does_not_write_to_the_prompt_cache(tmp_path, monkeypatch):
     """Its prefix is the conversation being retired: read once, never again."""
-    import aven.cli.main as cli
+    import aven.apps.cli_assistant.main as cli
 
     monkeypatch.setenv("ANTHROPIC_API_KEY", "fake")
     monkeypatch.setattr(cli, "SESSIONS", tmp_path / "sessions")
@@ -568,7 +568,7 @@ async def test_the_paths_reach_the_model_even_if_the_prose_drops_them(tmp_path):
 
 def test_only_the_most_recent_paths_are_replayed(tmp_path):
     """The list grows without bound; the oldest are least likely to come up."""
-    from aven.core.messages import SUMMARY_FILES
+    from aven.harness.messages import SUMMARY_FILES
 
     session = Session.open(tmp_path / "s.jsonl")
     many = [f"文件{n}.pdf" for n in range(SUMMARY_FILES + 15)]
@@ -586,7 +586,7 @@ def test_only_the_most_recent_paths_are_replayed(tmp_path):
 async def test_compaction_also_trims_the_bulk_out_of_the_kept_turns(tmp_path):
     """A single file read in the recent turns can outweigh everything that was
     just summarised away."""
-    from aven.core.compact import BULKY_RESULT
+    from aven.harness.compact import BULKY_RESULT
 
     session = Session.open(tmp_path / "s.jsonl")
     for n in range(5):
@@ -616,7 +616,7 @@ async def test_compaction_also_trims_the_bulk_out_of_the_kept_turns(tmp_path):
 
 async def test_the_most_recent_result_is_left_whole(tmp_path):
     """It is the one the model is most likely still working from."""
-    from aven.core.compact import BULKY_RESULT
+    from aven.harness.compact import BULKY_RESULT
 
     session = Session.open(tmp_path / "s.jsonl")
     for n in range(4):

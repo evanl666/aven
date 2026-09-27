@@ -21,13 +21,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from aven.core.messages import (
+from aven.harness.messages import (
     AssistantMessage,
     Message,
     SummaryMessage,
     UserMessage,
 )
-from aven.core.session import Session
+from aven.harness.session import Session
 
 SHORT = 6
 

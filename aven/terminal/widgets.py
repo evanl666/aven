@@ -14,10 +14,10 @@ from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Button, Markdown, Static
 
-from aven.cli.render import format_arguments
-from aven.core.events import ToolEnd
-from aven.core.messages import ToolCall
-from aven.tx import Tray
+from aven.terminal.render import format_arguments
+from aven.harness.events import ToolEnd
+from aven.harness.messages import ToolCall
+from aven.harness.tx import Tray
 
 SPINNER = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
 

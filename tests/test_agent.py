@@ -2,8 +2,8 @@
 
 from dataclasses import replace
 
-from aven.core.agent import run
-from aven.core.events import (
+from aven.harness.agent import run
+from aven.harness.events import (
     AgentEnd,
     AgentStart,
     MessageDelta,
@@ -13,9 +13,9 @@ from aven.core.events import (
     TurnEnd,
     TurnStart,
 )
-from aven.core.messages import AssistantMessage, ToolCall, new_id
-from aven.core.session import Session
-from aven.core.tools import ToolResult, tool
+from aven.harness.messages import AssistantMessage, ToolCall, new_id
+from aven.harness.session import Session
+from aven.harness.tools import ToolResult, tool
 
 
 async def drive(events) -> list:

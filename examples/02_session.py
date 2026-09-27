@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from aven.core.messages import AssistantMessage, UserMessage
-from aven.core.session import Session
+from aven.harness.messages import AssistantMessage, UserMessage
+from aven.harness.session import Session
 
 path = Path("/tmp/aven-demo/demo.jsonl")
 path.unlink(missing_ok=True)

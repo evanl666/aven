@@ -25,7 +25,7 @@ import json
 import sys
 from typing import Any
 
-from aven.core.events import (
+from aven.harness.events import (
     AgentEnd,
     AgentStart,
     Event,
@@ -36,8 +36,8 @@ from aven.core.events import (
     TurnEnd,
     TurnStart,
 )
-from aven.core.messages import AssistantMessage, ToolCall, to_dict
-from aven.tx import Tray
+from aven.harness.messages import AssistantMessage, ToolCall, to_dict
+from aven.harness.tx import Tray
 
 
 def as_json(event: Event) -> dict[str, Any]:

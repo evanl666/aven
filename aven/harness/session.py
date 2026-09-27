@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from aven.core.messages import Message, MetaMessage, from_dict, to_dict
+from aven.harness.messages import Message, MetaMessage, from_dict, to_dict
 
 
 class Session:

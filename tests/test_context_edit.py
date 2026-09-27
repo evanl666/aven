@@ -1,6 +1,6 @@
 """Tests for append-only edits of what the model sees."""
 
-from aven.core.messages import (
+from aven.harness.messages import (
     AssistantMessage,
     ContextEdit,
     ToolCall,
@@ -8,7 +8,7 @@ from aven.core.messages import (
     UserMessage,
     to_llm,
 )
-from aven.core.session import Session
+from aven.harness.session import Session
 
 
 def said(messages) -> str:

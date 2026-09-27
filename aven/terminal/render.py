@@ -16,7 +16,7 @@ import os
 import sys
 import threading
 
-from aven.core.events import (
+from aven.harness.events import (
     AgentEnd,
     Event,
     MessageDelta,
@@ -24,7 +24,7 @@ from aven.core.events import (
     ToolEnd,
     ToolStart,
 )
-from aven.tx import Entry, Tray
+from aven.harness.tx import Entry, Tray
 
 # One check for both colour and animation: piping to a file should produce
 # neither escape codes nor a spinner that redraws a line no one is watching.

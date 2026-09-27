@@ -21,7 +21,7 @@ import subprocess
 from datetime import datetime
 from typing import Annotated
 
-from aven.core.tools import Tool, ToolResult, tool
+from aven.harness.tools import Tool, ToolResult, tool
 
 
 class OsaError(Exception):

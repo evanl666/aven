@@ -16,7 +16,7 @@ import time
 from pathlib import Path
 from typing import Annotated
 
-from aven.core.tools import Tool, ToolResult, tool
+from aven.harness.tools import Tool, ToolResult, tool
 
 MAX_READ = 40_000  # characters; enough for source and notes, not for a video
 

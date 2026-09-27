@@ -13,7 +13,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
-from aven.core.messages import AssistantMessage, Message, ToolCall, ToolResultMessage
+from aven.harness.messages import AssistantMessage, Message, ToolCall, ToolResultMessage
 
 
 @dataclass(frozen=True, kw_only=True)

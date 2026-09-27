@@ -14,8 +14,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Annotated, Literal
 
-from aven.core import memory
-from aven.core.tools import Tool, ToolResult, tool
+from aven.harness import memory
+from aven.harness.tools import Tool, ToolResult, tool
 
 Scope = Literal["here", "global"]
 

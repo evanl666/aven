@@ -20,7 +20,8 @@ Homepage = "https://github.com/evanl666/aven"
 Issues = "https://github.com/evanl666/aven/issues"
 
 [project.scripts]
-aven = "aven.cli.main:main"
+aven = "aven.apps.cli_assistant.main:main"
+aven-code = "aven.apps.cli_code.main:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "pytest-asyncio>=0.24"]

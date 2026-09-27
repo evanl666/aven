@@ -23,24 +23,24 @@ import sys
 import time
 from pathlib import Path
 
-from aven.cli.render import BOLD, DIM, RED, Renderer
-from aven.cli.review import review
-from aven.cli.stream import Final, Jsonl
-from aven.core.agent import run
-from aven.core.compact import Compactor, estimate_tokens
-from aven.core.context import find, read
-from aven.core.skills import catalogue
-from aven.core.toolbox import ToolBox
-from aven.core.skills import find as find_skills
-from aven.core.messages import new_id
-from aven.core.session import Session
-from aven.core.sessions import Card, catalogue
-from aven.core.sessions import render as render_cards
-from aven.core.tree import render as render_tree
+from aven.terminal.render import BOLD, DIM, RED, Renderer
+from aven.terminal.review import review
+from aven.terminal.stream import Final, Jsonl
+from aven.harness.agent import run
+from aven.harness.compact import Compactor, estimate_tokens
+from aven.harness.context import find, read
+from aven.harness.skills import catalogue
+from aven.harness.toolbox import ToolBox
+from aven.harness.skills import find as find_skills
+from aven.harness.messages import new_id
+from aven.harness.session import Session
+from aven.harness.sessions import Card, catalogue
+from aven.harness.sessions import render as render_cards
+from aven.harness.tree import render as render_tree
 from aven.model import Claude
-from aven.actuators import mac_tools
-from aven.tools import file_tools, memory_tools, skill_tools
-from aven.tx import Tray, bulk, guard, protect
+from aven.apps.cli_assistant.mac import mac_tools
+from aven.toolkit import file_tools, memory_tools, skill_tools
+from aven.harness.tx import Tray, bulk, guard, protect
 
 SESSIONS = Path.home() / ".aven" / "sessions"
 
@@ -360,9 +360,9 @@ async def _main(argv: list[str] | None = None) -> int:
 
     if not args.plain and sys.stdin.isatty() and sys.stdout.isatty():
         # Imported here so a one-shot `aven "..."` never pays for Textual.
-        from aven.tui import AvenApp
+        from aven.terminal.shell import Shell
 
-        await AvenApp(
+        await Shell(
             session=session, model=model, tools=tools, root=root,
             compactor=compactor, policy=policy, max_turns=args.max_turns,
         ).run_async()

@@ -17,9 +17,9 @@ from typing import Any
 
 import anthropic
 
-from aven.core.calling import ContextOverflow
-from aven.core.messages import AssistantMessage, LlmMessage, ToolCall
-from aven.core.toolbox import ToolSource, resolve
+from aven.harness.calling import ContextOverflow
+from aven.harness.messages import AssistantMessage, LlmMessage, ToolCall
+from aven.harness.toolbox import ToolSource, resolve
 
 # Opus 5. An assistant acting on someone's real files and real mail is the last
 # place to save a few cents on a weaker model.

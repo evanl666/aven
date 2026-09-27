@@ -9,12 +9,12 @@ test that holds it.
 
 from dataclasses import replace
 
-from aven.core.agent import run
-from aven.core.events import AgentEnd, ToolStart
-from aven.core.messages import AssistantMessage, ToolCall, new_id, to_llm
-from aven.core.session import Session
-from aven.core.steering import Steering
-from aven.core.tools import tool
+from aven.harness.agent import run
+from aven.harness.events import AgentEnd, ToolStart
+from aven.harness.messages import AssistantMessage, ToolCall, new_id, to_llm
+from aven.harness.session import Session
+from aven.harness.steering import Steering
+from aven.harness.tools import tool
 
 
 @tool()

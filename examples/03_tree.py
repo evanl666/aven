@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from aven.core.messages import AssistantMessage, ToolCall, ToolResultMessage, UserMessage, to_llm
-from aven.core.session import Session
+from aven.harness.messages import AssistantMessage, ToolCall, ToolResultMessage, UserMessage, to_llm
+from aven.harness.session import Session
 
 path = Path("/tmp/aven-demo/tree.jsonl")
 path.unlink(missing_ok=True)

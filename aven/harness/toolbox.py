@@ -19,7 +19,7 @@ from __future__ import annotations
 from collections.abc import Callable, Sequence
 from typing import Annotated
 
-from aven.core.tools import Tool, tool
+from aven.harness.tools import Tool, tool
 
 ToolSource = Sequence[Tool] | Callable[[], Sequence[Tool]]
 
