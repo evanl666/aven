@@ -46,7 +46,7 @@ from aven.harness.steering import Steering
 from aven.harness.toolbox import ToolSource, resolve
 from aven.harness.tree import render as render_tree
 from aven.terminal.widgets import Note, Reply, Thinking, ToolLine, TrayPanel, UserLine
-from aven.harness.tx import Policy, Tray
+from aven.harness.tx import Policy, Standing, Tray
 from aven.text import t
 
 class Shell(App[None]):
@@ -84,6 +84,7 @@ class Shell(App[None]):
         root: Path,
         compactor: Compactor | None = None,
         policy: Policy | None = None,
+        standing: Standing | None = None,
         max_turns: int = 12,
     ) -> None:
         super().__init__()
@@ -96,8 +97,9 @@ class Shell(App[None]):
         self.root = root
         self.compactor = compactor
         self.policy = policy
+        self.standing = standing
         self.max_turns = max_turns
-        self.tray = Tray(policy=policy)
+        self.tray = Tray(policy=policy, standing=standing)
         self.steering = Steering()
         self._turn: Worker[None] | None = None
 
@@ -298,7 +300,7 @@ class Shell(App[None]):
         # The tray belongs to the branch that was left. Its undos point at work
         # done on a path we are no longer on, and firing one from here would
         # roll back something this branch never did.
-        self.tray = Tray(policy=self.policy)
+        self.tray = Tray(policy=self.policy, standing=self.standing)
         self.action_clear()
         self._replay_history()
         await self._say(Note(t("shell.moved", id=target[:6])))
@@ -373,7 +375,7 @@ class Shell(App[None]):
             return
 
         self.session = forked
-        self.tray = Tray(policy=self.policy)
+        self.tray = Tray(policy=self.policy, standing=self.standing)
         self.action_clear()
         self._replay_history()
         await self._say(
@@ -426,7 +428,7 @@ class Shell(App[None]):
     def _settle(self) -> None:
         """Start a fresh tray once nothing in this one is waiting on a decision."""
         if not self.tray.pending() and not self.tray.undoable():
-            self.tray = Tray(policy=self.policy)
+            self.tray = Tray(policy=self.policy, standing=self.standing)
         self._refresh_tray()
 
     def _refresh_tray(self) -> None:

@@ -184,4 +184,6 @@ Esc interrupts · Ctrl+T shows the staging panel · Ctrl+Q quits""",
     "order.where": "from  —  {value}",
     "order.account": "as  —  {value}",
     "order.arrives": "arrives  —  {value}",
+    "cli.ask_every_time": "ignore the standing approvals for this run",
+    "cli.standing": "  ↳ {n} standing approvals in force:",
 }

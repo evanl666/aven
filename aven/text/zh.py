@@ -173,4 +173,6 @@ Esc 中断当前任务 · Ctrl+T 显示/隐藏暂存区 · Ctrl+Q 退出""",
     "order.where": "商家  —  {value}",
     "order.account": "账号  —  {value}",
     "order.arrives": "预计到货  —  {value}",
+    "cli.ask_every_time": "这次运行忽略已保存的批准,每一项都问",
+    "cli.standing": "  ↳ {n} 条已保存的批准生效中:",
 }

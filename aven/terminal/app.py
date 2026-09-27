@@ -36,7 +36,7 @@ from aven.harness.skills import catalogue as skill_catalogue
 from aven.harness.skills import find as find_skills
 from aven.harness.toolbox import ToolBox
 from aven.harness.tree import render as render_tree
-from aven.harness.tx import Tray, bulk, guard, protect
+from aven.harness.tx import Standing, Tray, bulk, guard, protect, read_approvals
 from aven.model import Claude
 from aven.terminal.render import BOLD, DIM, RED, Renderer
 from aven.terminal.review import review
@@ -139,6 +139,8 @@ def build_parser(blueprint: Blueprint) -> argparse.ArgumentParser:
     parser.add_argument("-v", "--verbose", action="store_true", help=t("cli.verbose"))
     parser.add_argument("--plain", action="store_true", help=t("cli.plain"))
     parser.add_argument("--yes", action="store_true", help=t("cli.yes"))
+    parser.add_argument("--ask-every-time", action="store_true",
+                        help=t("cli.ask_every_time"))
 
     if blueprint.arguments is not None:
         blueprint.arguments(parser)
@@ -210,9 +212,10 @@ def choose(cards: list[Card], sessions: Path) -> Path | None:
 # --- one prompt --------------------------------------------------------------
 
 
-async def turn(*, session, prompt, model, tools, compactor, policy, args) -> None:
+async def turn(*, session, prompt, model, tools, compactor, policy, standing,
+               args) -> None:
     """One prompt: run it, then decide what takes effect."""
-    tray = Tray(policy=policy)
+    tray = Tray(policy=policy, standing=standing)
     screen = Renderer(verbose=args.verbose)
     screen.waiting(t("render.waiting"))
 
@@ -230,7 +233,8 @@ async def turn(*, session, prompt, model, tools, compactor, policy, args) -> Non
         await review(tray, session)
 
 
-async def oneshot(*, session, prompt, model, tools, compactor, policy, args) -> int:
+async def oneshot(*, session, prompt, model, tools, compactor, policy, standing,
+                  args) -> int:
     """One prompt for a caller that is not watching the screen.
 
     No review step: review asks a person a question, and there is no person
@@ -238,7 +242,7 @@ async def oneshot(*, session, prompt, model, tools, compactor, policy, args) -> 
     sink reports it either way - silently discarding an unsent email because
     nobody was around to confirm it would be the worse failure.
     """
-    tray = Tray(policy=policy)
+    tray = Tray(policy=policy, standing=standing)
     sink = Jsonl() if args.mode == "json" else Final()
 
     async for event in run(
@@ -311,6 +315,11 @@ async def launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
 
     policy = guard(bulk(limit=args.bulk), protect(*args.protect))
 
+    # Decisions this person already made. Read once, and said out loud below:
+    # something that lets work happen unasked has to be visible every run, or it
+    # stops being a decision and becomes a setting nobody remembers.
+    standing = Standing() if args.ask_every_time else read_approvals()
+
     found_skills = find_skills(root)
     kit = blueprint.assemble(args, roots, found_skills)
     box = kit.box
@@ -365,9 +374,13 @@ async def launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
     if found_skills:
         note(DIM(t("cli.skills", n=len(found_skills),
                    names=", ".join(s.name for s in found_skills))))
+    if standing:
+        note(DIM(t("cli.standing", n=len(standing))))
+        for approval in standing.approvals:
+            note(DIM(f"     {approval}"))
 
-    running = dict(session=session, model=model, tools=tools,
-                   compactor=compactor, policy=policy, args=args)
+    running = dict(session=session, model=model, tools=tools, compactor=compactor,
+                   policy=policy, standing=standing, args=args)
 
     if args.oneshot or args.mode == "json":
         prompt = piped(args.prompt)
@@ -386,7 +399,8 @@ async def launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
 
         await Shell(
             session=session, model=model, tools=tools, root=root,
-            compactor=compactor, policy=policy, max_turns=args.max_turns,
+            compactor=compactor, policy=policy, standing=standing,
+            max_turns=args.max_turns,
         ).run_async()
         return 0
 
