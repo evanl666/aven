@@ -20,6 +20,7 @@ import anthropic
 from aven.harness.calling import ContextOverflow
 from aven.harness.messages import AssistantMessage, LlmMessage, ToolCall
 from aven.harness.toolbox import ToolSource, resolve
+from aven.text import t
 
 # Opus 5. An assistant acting on someone's real files and real mail is the last
 # place to save a few cents on a weaker model.
@@ -101,13 +102,15 @@ class Usage:
 
     def __str__(self) -> str:
         if self.total_input == 0:
-            cache = "无缓存"
+            cache = t("usage.nocache")
         else:
-            cache = f"缓存读 {self.cached_tokens} · 写 {self.written_tokens}"
-        return (
-            f"{self.requests} 次请求 · "
-            f"输入 {self.total_input}({cache}) · "
-            f"输出 {self.output_tokens}"
+            cache = t("usage.cache", read=self.cached_tokens, written=self.written_tokens)
+        return t(
+            "usage.line",
+            requests=self.requests,
+            input=self.total_input,
+            cache=cache,
+            output=self.output_tokens,
         )
 
 

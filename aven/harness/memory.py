@@ -8,10 +8,10 @@ cannot read.
 aven's own lines live below a marker, so the part a person wrote by hand is
 never touched and stays at the top where they left it:
 
-    - 邮件写短一点            <- theirs
+    - keep my emails short              <- theirs
 
     <!-- aven remembers -->
-    - 财务邮箱是 finance@corp.com    <- aven's
+    - finance is finance@corp.com       <- aven's
 
 The marker is an HTML comment, invisible wherever Markdown is rendered and
 trivial to find. Everything below it is aven's to edit; everything above is not.

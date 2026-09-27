@@ -82,7 +82,7 @@ def test_the_head_is_marked_and_nothing_else_is(tmp_path):
 
 
 def test_an_empty_session_says_so_rather_than_rendering_nothing(tmp_path):
-    assert "空" in render(Session.open(tmp_path / "s.jsonl"))
+    assert "empty" in render(Session.open(tmp_path / "s.jsonl"))
 
 
 def test_a_long_message_is_cut_so_the_shape_stays_visible(tmp_path):

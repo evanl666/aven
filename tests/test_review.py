@@ -36,7 +36,7 @@ def test_finished_work_alone_offers_only_undo():
 
     assert allowed == {"u"}
     assert "[c]" not in line and "[d]" not in line
-    assert "[u] 撤销已执行" in line
+    assert "[u] undo what ran" in line
 
 
 def test_staged_work_alone_offers_no_undo():
@@ -59,7 +59,7 @@ async def test_an_unoffered_key_is_refused_rather_than_ignored(monkeypatch, caps
     await review(tray)
 
     out = capsys.readouterr().out
-    assert "这里没有 [c] 这个选项" in out
+    assert "there is no [c] here" in out
     assert tray.undoable(), "nothing happened to the finished work"
 
 

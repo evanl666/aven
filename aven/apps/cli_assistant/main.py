@@ -1,11 +1,11 @@
 """The aven command.
 
-    aven "把下载目录里的发票整理一下"      one task, then review
+    aven "sort out the invoices in my downloads"   one task, then review
     aven                                     the full-screen app
     aven -c                                  the app, continuing the last session
     aven -r                                  pick a session from a list
     aven --plain                             keep talking, line by line
-    aven -p "今天有什么会"                    answer on stdout, then exit
+    aven -p "what meetings do I have today"       answer on stdout, then exit
     aven --mode json "..." > events.jsonl    every event as one line of JSON
     aven -c --tree                           show the session tree and exit
 
@@ -37,6 +37,8 @@ from aven.harness.session import Session
 from aven.harness.sessions import Card, catalogue
 from aven.harness.sessions import render as render_cards
 from aven.harness.tree import render as render_tree
+from aven import text as language
+from aven.text import t
 from aven.model import Claude
 from aven.apps.cli_assistant.mac import mac_tools
 from aven.toolkit import file_tools, memory_tools, skill_tools
@@ -56,79 +58,111 @@ def note(text: str) -> None:
 
 # What each dormant group is for. The model reads this to decide whether a task
 # needs the group, so it says when, not only what.
+# What each dormant group is for. The model reads this to decide whether a task
+# needs the group, so it says when, not only what. English, like every string
+# the model reads.
 GROUPS = {
-    "memory": "记住/忘掉关于用户的长期事实。用户说了下次还用得上的事时拿这组。",
-    "calendar": "看日程、建日程。用户提到会议、日程、几号几点时拿这组。",
-    "mail": "写草稿、发邮件。用户要发东西给别人时拿这组。",
-    "search": "Spotlight 全盘搜索。要找的文件不在当前目录里时拿这组。",
+    "memory": "Remember or forget lasting facts about this person. Take it when "
+              "they say something that will still matter next time.",
+    "calendar": "Read and create calendar events. Take it when they mention a "
+                "meeting, their schedule, or a date or time.",
+    "mail": "Draft and send mail. Take it when they want something sent to "
+            "somebody.",
+    "search": "Spotlight, across the whole disk. Take it when the file being "
+              "looked for is not under the working folder.",
 }
 
-SYSTEM = """你是 aven,一个运行在用户自己电脑上的个人助理。
+SYSTEM = """You are aven, a personal assistant running on this person's own computer.
 
-你只能在一个目录范围内操作,路径都相对于它。越界的请求会被工具拒绝。
+Answer in the language they write to you in.
 
-文件类工具的路径都相对于那个目录。日历、邮件和 Spotlight 由 macOS 管,
-不受它限制,但 macOS 会自己向用户要授权。
+You may only act inside one folder, and every path is relative to it. The tools
+refuse anything outside it.
 
-你的工具分三类:
-- 只读的,随时可以用
-- 可撤销的,直接做就行,用户随时能退回去
-- 不可逆的,不会立刻发生,会进入待确认队列
+That limit applies to the file tools. Calendar, Mail and Spotlight are managed by
+macOS, which asks this person for access itself.
 
-工具结果里出现 "staged" 就表示那件事【还没有发生】。不要当成已完成,
-也不要围着它继续推理,把剩下能做的做完,然后告诉用户有什么在等他确认。
+Your tools come in three kinds:
+- read-only, usable at any time
+- reversible, so go ahead: they can be rolled back whenever
+- irreversible, which do not happen now - they join a queue and wait to be
+  confirmed
 
-不是所有工具一开始就在。目录里列出的那些组,需要时用 use_tools 拿进来,
-一次拿一组,拿了就一直在。
+"staged" in a tool result means that thing HAS NOT HAPPENED. Do not treat it as
+done and do not keep reasoning as though it were. Finish whatever else you can,
+then tell them what is waiting on them.
 
-你有 remember / forget 两个工具(在 memory 组里),用来记住【下次还用得上】的事:人、地址、
-文件夹约定、用户的偏好。不要用它记当前任务的细节——那些对话里已经有了。
-用户纠正你的时候,先 forget 旧的再 remember 新的。
+Not every tool is loaded at the start. Bring in a listed group with use_tools
+when the task turns out to need it, one group at a time; a group stays once it is
+in.
 
-直接做事,不要反复请示。做完用一两句话说清楚你做了什么。"""
+The memory group has remember and forget, for facts that OUTLAST THE TASK:
+people, addresses, folder conventions, preferences. Not for details of what is
+happening right now - the conversation already holds those. When they correct
+you, forget the old fact before remembering the new one.
+
+Get on with it rather than asking permission repeatedly. When you are done, say
+what you did in a sentence or two."""
+
+
+def preferred_language(argv: list[str] | None) -> str | None:
+    """Read --lang out of argv before argparse gets a turn.
+
+    The help strings are built while the parser is, which is before anything has
+    been parsed - so a flag that picks the language of the help has to be found
+    by hand, or `aven --lang en --help` prints it in the wrong one.
+    """
+    words = list(sys.argv[1:] if argv is None else argv)
+    for n, word in enumerate(words):
+        if word == "--lang" and n + 1 < len(words):
+            return words[n + 1]
+        if word.startswith("--lang="):
+            return word.split("=", 1)[1]
+    return None
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="aven", description="本地优先的个人助理")
-    parser.add_argument("prompt", nargs="?", help="要它做的事。省略则进入对话模式")
+    parser = argparse.ArgumentParser(prog="aven", description=t("cli.description"))
+    parser.add_argument("prompt", nargs="?", help=t("cli.prompt"))
     parser.add_argument("-c", "--continue", dest="last", action="store_true",
-                        help="接着最近一次会话")
+                        help=t("cli.continue"))
     parser.add_argument("-r", "--resume", action="store_true",
-                        help="列出会话让你挑一个")
-    parser.add_argument("-n", "--name", help="给这次会话起个名字,下次好找")
-    parser.add_argument("--session", type=Path, help="指定会话文件")
+                        help=t("cli.resume"))
+    parser.add_argument("-n", "--name", help=t("cli.name"))
+    parser.add_argument("--session", type=Path, help=t("cli.session"))
     parser.add_argument("--root", type=Path, default=Path.cwd(),
-                        help="文件工具允许操作的目录,默认是当前目录")
+                        help=t("cli.root"))
     parser.add_argument("--mac", action="store_true",
-                        help="打开日历 / 邮件 / Spotlight(macOS 会向你申请权限)")
+                        help=t("cli.mac"))
     parser.add_argument("--model", default=os.environ.get("AVEN_MODEL"),
-                        help="模型 id,也可用 AVEN_MODEL 环境变量设定")
+                        help=t("cli.model"))
     parser.add_argument("--no-cache", dest="cache", action="store_false",
-                        help="关掉 prompt 缓存(调试用)")
+                        help=t("cli.nocache"))
     parser.add_argument("--no-instructions", dest="instructions", action="store_false",
-                        help="不加载 AVEN.md / AGENTS.md")
+                        help=t("cli.noinstructions"))
     parser.add_argument("--max-turns", type=int, default=12)
     parser.add_argument("--bulk", type=int, default=25,
-                        help="一次运行改动超过这么多处,就先让你看一眼")
-    parser.add_argument("--protect", action="append", default=[], metavar="片段",
-                        help="路径里含这个片段就要确认,可以重复给")
+                        help=t("cli.bulk"))
+    parser.add_argument("--protect", action="append", default=[], metavar=t("cli.protect_metavar"),
+                        help=t("cli.protect"))
     parser.add_argument("--reserve", type=int, default=24_000,
-                        help="给回复和下一轮增长留出的 token 余量")
+                        help=t("cli.reserve"))
     parser.add_argument("--no-compact", dest="compact", action="store_false",
-                        help="关掉自动压缩")
+                        help=t("cli.nocompact"))
     parser.add_argument("-p", "--print", dest="oneshot", action="store_true",
-                        help="跑完就退出,只把最后一句回答写到 stdout(给脚本用)")
+                        help=t("cli.print"))
     parser.add_argument("--mode", choices=("text", "json"), default="text",
-                        help="text 给人看;json 把每个事件按 JSONL 写到 stdout")
+                        help=t("cli.mode"))
     parser.add_argument("--tree", action="store_true",
-                        help="打印这个会话的消息树然后退出")
+                        help=t("cli.tree"))
     parser.add_argument("--fork", metavar="id", nargs="?", const="",
-                        help="把会话另存为一个新文件,可以指定从哪个节点截断")
-    parser.add_argument("-v", "--verbose", action="store_true", help="显示每个工具的结果")
+                        help=t("cli.fork"))
+    parser.add_argument("--lang", help=t("cli.lang"))
+    parser.add_argument("-v", "--verbose", action="store_true", help=t("cli.verbose"))
     parser.add_argument("--plain", action="store_true",
-                        help="不用全屏界面,一行一行地对话")
+                        help=t("cli.plain"))
     parser.add_argument("--yes", action="store_true",
-                        help="跳过确认,直接提交(自动化用,慎用)")
+                        help=t("cli.yes"))
     return parser
 
 
@@ -158,7 +192,7 @@ def pick_session(args: argparse.Namespace) -> Path | None:
         existing = sorted(SESSIONS.glob("*.jsonl"), key=lambda p: p.stat().st_mtime)
         if existing:
             return existing[-1]
-        note(DIM("没有找到历史会话,开一个新的"))
+        note(DIM(t("cli.no_sessions")))
 
     return fresh()
 
@@ -170,11 +204,11 @@ def choose(cards: list[Card]) -> Path | None:
     a caller that redirected stdout is not the one being asked.
     """
     if not cards:
-        note(DIM("没有会话记录,开一个新的"))
+        note(DIM(t("cli.no_catalogue")))
         return fresh()
 
     note(render_cards(cards))
-    note(BOLD("挑一个(回车 = 最近的,q = 退出):"))
+    note(BOLD(t("cli.pick")))
     try:
         typed = input().strip()
     except (EOFError, KeyboardInterrupt):
@@ -187,7 +221,7 @@ def choose(cards: list[Card]) -> Path | None:
     if typed.isdigit() and 1 <= int(typed) <= len(cards):
         return cards[int(typed) - 1].path
 
-    note(RED(f"没有第 {typed} 项,用最近的那个"))
+    note(RED(t("cli.no_such", typed=typed)))
     return cards[0].path
 
 
@@ -196,7 +230,7 @@ async def turn(*, session: Session, prompt: str, model: Claude, tools, compactor
     """One prompt: run it, then decide what takes effect."""
     tray = Tray(policy=policy)
     screen = Renderer(verbose=args.verbose)
-    screen.waiting("思考中")
+    screen.waiting(t("render.waiting"))
 
     async for event in run(
         session=session, prompt=prompt, model=model, tools=tools,
@@ -237,11 +271,14 @@ async def oneshot(*, session: Session, prompt: str, model: Claude, tools, compac
 
 
 async def _main(argv: list[str] | None = None) -> int:
+    # Before the parser, because the parser's own help is text a person reads.
+    language.use(preferred_language(argv))
+
     args = build_parser().parse_args(argv)
 
     root = args.root.expanduser().resolve()
     if not root.is_dir():
-        print(RED(f"不是一个目录:{root}"), file=sys.stderr)
+        print(RED(t("cli.not_a_dir", path=root)), file=sys.stderr)
         return 1
 
     chosen = pick_session(args)
@@ -261,7 +298,7 @@ async def _main(argv: list[str] | None = None) -> int:
 
     if args.fork is not None:
         if not len(session):
-            print(RED("这个会话是空的,没有东西可以 fork"), file=sys.stderr)
+            print(RED(t("cli.empty_fork")), file=sys.stderr)
             return 1
         SESSIONS.mkdir(parents=True, exist_ok=True)
         destination = SESSIONS / f"{time.strftime('%Y%m%d-%H%M%S')}-{new_id()[:4]}-fork.jsonl"
@@ -271,11 +308,11 @@ async def _main(argv: list[str] | None = None) -> int:
             print(RED(str(problem)), file=sys.stderr)
             return 1
         print(forked.path)
-        note(DIM(f"  {len(forked)} 条消息,原来的会话没有动过"))
+        note(DIM(t("cli.forked", n=len(forked))))
         return 0
 
     if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
-        print(RED("需要先设置 ANTHROPIC_API_KEY"), file=sys.stderr)
+        print(RED(t("cli.no_key")), file=sys.stderr)
         return 1
 
     policy = guard(bulk(limit=args.bulk), protect(*args.protect))
@@ -310,7 +347,7 @@ async def _main(argv: list[str] | None = None) -> int:
     if waiting:
         system += "\n\n" + waiting
     if instruction_files:
-        system = SYSTEM + "\n\n以下是用户自己写下的长期指示,优先于上面的通用说明:\n\n" + read(
+        system = SYSTEM + "\n\n" + t("cli.instructions_header") + "\n\n" + read(
             instruction_files
         )
 
@@ -337,18 +374,20 @@ async def _main(argv: list[str] | None = None) -> int:
             measure=lambda _msgs: getattr(model.usage, "last_input", 0),
         )
 
-    waiting_note = f" + {len(box.dormant())} 组待加载" if box.dormant() else ""
-    note(DIM(f"aven · {root} · {len(box.active())} 个工具{waiting_note} · {session.path.name}"))
+    waiting_note = t("cli.waiting_groups", n=len(box.dormant())) if box.dormant() else ""
+    note(DIM(t("cli.banner", root=root, tools=len(box.active()),
+                   waiting=waiting_note, session=session.path.name)))
     for path in instruction_files:
         # Read from the user's disk into the prompt: say so, every time.
-        note(DIM(f"  ↳ 已读取指示 {path}"))
+        note(DIM(t("cli.read_instructions", path=path)))
     if found_skills:
-        note(DIM(f"  ↳ {len(found_skills)} 个技能可用:{', '.join(s.name for s in found_skills)}"))
+        note(DIM(t("cli.skills", n=len(found_skills),
+                   names=", ".join(s.name for s in found_skills))))
 
     if args.oneshot or args.mode == "json":
         prompt = piped(args.prompt)
         if not prompt:
-            print(RED("-p / --mode json 需要一个 prompt(参数或管道)"), file=sys.stderr)
+            print(RED(t("cli.needs_prompt")), file=sys.stderr)
             return 1
         return await oneshot(session=session, prompt=prompt, model=model, tools=tools,
                              compactor=compactor, policy=policy, args=args)
@@ -368,7 +407,7 @@ async def _main(argv: list[str] | None = None) -> int:
         ).run_async()
         return 0
 
-    note(DIM("说点什么,Ctrl-D 退出\n"))
+    note(DIM(t("cli.talk")))
     while True:
         try:
             typed = await asyncio.to_thread(input, BOLD("› "))
@@ -383,7 +422,7 @@ async def _main(argv: list[str] | None = None) -> int:
 def piped(prompt: str | None) -> str:
     """The prompt, with anything piped in put before it.
 
-    `git diff | aven -p "看看这个改动"` should work: the pipe is the material
+    `git diff | aven -p "review this change"` should work: the pipe is the material
     and the argument says what to do with it, so the material goes first.
     """
     if sys.stdin.isatty():

@@ -52,11 +52,15 @@ from aven.harness.tx import Tray
 __all__ = ["ModelFn", "run"]
 
 # What a truncated reply is asked, to get the rest of it. Phrased as an
-# instruction rather than "继续", which a model reads as a new request and
-# answers by starting over.
+# instruction rather than as the word "continue", which a model reads as a fresh
+# request and answers by starting the whole thing over.
+#
+# English, like every string the model reads: instructions to a model are code,
+# and they belong next to the logic they steer. A model answers in the language
+# it was addressed in, whatever language it was instructed in.
 RESUME = (
-    "你上一条回答因为长度上限被截断了。接着上次断掉的地方写完,"
-    "不要重述已经说过的部分。"
+    "Your last reply was cut off by a length limit. Carry on from exactly where "
+    "it stopped. Do not repeat any part of what you already said."
 )
 
 

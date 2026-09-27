@@ -10,6 +10,7 @@ from typing import Annotated
 
 from aven.harness import skills
 from aven.harness.tools import Tool, tool
+from aven.text import t
 
 
 def skill_tools(available: list[skills.Skill]) -> list[Tool]:
@@ -19,7 +20,7 @@ def skill_tools(available: list[skills.Skill]) -> list[Tool]:
 
     by_name = {s.name: s for s in available}
 
-    @tool(risk="read", preview="读技能 {name}")
+    @tool(risk="read", preview=lambda name, **_: t("skills.read", name=name))
     def load_skill(
         name: Annotated[str, "The skill's name, as the catalogue spells it"],
         file: Annotated[

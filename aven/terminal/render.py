@@ -25,6 +25,7 @@ from aven.harness.events import (
     ToolStart,
 )
 from aven.harness.tx import Entry, Tray
+from aven.text import t
 
 # One check for both colour and animation: piping to a file should produce
 # neither escape codes nor a spinner that redraws a line no one is watching.
@@ -105,7 +106,7 @@ class Renderer:
 
             case MessageEnd() if event.message.kind == "summary":
                 self._quiet()
-                print(DIM("\n  ⧗ 对话太长了,早先的部分已压缩成摘要(原文都还在会话文件里)"))
+                print(DIM("\n  ⧗ " + t("render.compacted")))
 
             case MessageEnd() if event.message.kind == "assistant":
                 self._quiet()
@@ -132,9 +133,9 @@ class Renderer:
             case AgentEnd():
                 self._quiet()
                 if event.reason == "max_turns":
-                    print(RED("\n■ 达到轮次上限,任务没有做完"))
+                    print(RED("\n■ " + t("render.max_turns")))
                 elif event.reason == "truncated":
-                    print(RED("\n■ 回复太长被截断了。让它接着说,或者把任务拆小一点"))
+                    print(RED("\n■ " + t("render.truncated")))
 
     def waiting(self, label: str) -> None:
         """Show that something is happening before the first event arrives."""
@@ -149,7 +150,7 @@ class Renderer:
     @staticmethod
     def _mark(event: ToolEnd) -> str:
         if event.staged:
-            return YELLOW("⏸ 已暂存")
+            return YELLOW("⏸ " + t("tray.staged"))
         return RED("✗") if event.result.is_error else GREEN("✓")
 
 
@@ -161,17 +162,21 @@ def render_tray(tray: Tray) -> None:
 
     print()
     if pending:
-        print(BOLD(f"{len(pending)} 项等待确认"))
+        print(BOLD(t("render.pending_header", n=len(pending))))
         for entry in pending:
             print(YELLOW(f"  ⏸  {entry.preview}"))
     if undoable:
-        print(DIM(f"{len(undoable)} 项已执行(可撤销)"))
+        print(DIM(t("render.undoable_header", n=len(undoable))))
         for entry in undoable:
             print(DIM(f"  ✓  {entry.preview}"))
 
 
 def render_outcome(verb: str, entries: list[Entry]) -> None:
-    print(GREEN(f"  {verb} {len(entries)} 项") if entries else DIM("  没有变化"))
+    print(
+        GREEN(t("render.outcome", verb=verb, n=len(entries)))
+        if entries
+        else DIM(t("render.no_change"))
+    )
     for entry in entries:
         if entry.state == "failed":
             print(RED(f"  ! {entry.preview} — {entry.output}"))
@@ -185,7 +190,8 @@ def format_arguments(args: dict[str, object]) -> str:
     """
     parts = []
     for key, value in args.items():
-        shown = f"<{len(value)} 字符>" if isinstance(value, str) and len(value) > 40 else repr(value)
+        long = isinstance(value, str) and len(value) > 40
+        shown = t("render.clipped", n=len(value)) if long else repr(value)
         parts.append(f"{key}={shown}")
     return _clip(", ".join(parts), 70)
 

@@ -18,6 +18,7 @@ from dataclasses import dataclass
 from typing import Any, Protocol
 
 from aven.harness.tools import Risk, Tool
+from aven.text import t
 
 # Least to most severe. A policy's verdict is taken only when it sits above
 # what the tool declared.
@@ -81,7 +82,7 @@ def bulk(limit: int = 25) -> Rule:
             return None
         return Verdict(
             risk="irreversible",
-            reason=f"这次运行已经改了 {len(done)} 处,再往下建议你先看一眼",
+            reason=t("policy.bulk", n=len(done)),
         )
 
     return rule
@@ -91,7 +92,8 @@ def protect(*patterns: str) -> Rule:
     """Ask before writing to anything whose path matches one of these.
 
     Matched against the arguments as the model wrote them, which is where a
-    name like ".ssh" or "合同" appears. A tool that only reads is left alone.
+    name like ".ssh" or "contracts" appears. A tool that only reads is left
+    alone.
     """
     wanted = tuple(p.lower() for p in patterns)
 
@@ -106,7 +108,7 @@ def protect(*patterns: str) -> Rule:
                 if pattern in low:
                     return Verdict(
                         risk="irreversible",
-                        reason=f"路径里有「{pattern}」,这类东西改之前想一下",
+                        reason=t("policy.protect", pattern=pattern),
                     )
         return None
 

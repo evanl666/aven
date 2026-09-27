@@ -242,4 +242,4 @@ async def test_usage_reads_and_writes_are_shown_apart():
     model = Claude(client=client)
     await drain(model([]))
 
-    assert "缓存读 900 · 写 100" in str(model.usage)
+    assert "cache read 900 · wrote 100" in str(model.usage)

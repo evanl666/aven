@@ -47,21 +47,7 @@ from aven.harness.toolbox import ToolSource, resolve
 from aven.harness.tree import render as render_tree
 from aven.terminal.widgets import Note, Reply, Thinking, ToolLine, TrayPanel, UserLine
 from aven.harness.tx import Policy, Tray
-
-HELP = """\
-/session   这个会话的基本情况
-/name x    给这次会话起个名字,下次 -r 好找
-/tree      看这个会话的分支树;/tree <id> 回到某一处
-/fork      把当前分支另存成新会话;/fork <id> 从某处截断
-/undo      撤销已执行的改动(对话也一起回退)
-/commit    执行等待确认的操作
-/discard   丢弃等待确认的操作
-/cost      这次会话用了多少 token
-/clear     清屏(不影响会话记录)
-/quit      退出
-
-Esc 中断当前任务 · Ctrl+T 显示/隐藏暂存区 · Ctrl+Q 退出"""
-
+from aven.text import t
 
 class Shell(App[None]):
     TITLE = "aven"
@@ -83,10 +69,10 @@ class Shell(App[None]):
     """
 
     BINDINGS = [
-        Binding("escape", "interrupt", "中断"),
-        Binding("ctrl+t", "toggle_tray", "暂存区"),
-        Binding("ctrl+l", "clear", "清屏"),
-        Binding("ctrl+q", "quit", "退出"),
+        Binding("escape", "interrupt", t("shell.bind.interrupt")),
+        Binding("ctrl+t", "toggle_tray", t("shell.bind.tray")),
+        Binding("ctrl+l", "clear", t("shell.bind.clear")),
+        Binding("ctrl+q", "quit", t("shell.bind.quit")),
     ]
 
     def __init__(
@@ -122,7 +108,7 @@ class Shell(App[None]):
         with Horizontal(id="main"):
             yield VerticalScroll(id="transcript")
             yield TrayPanel(id="tray")
-        yield Input(placeholder="说点什么 · /help 看命令", id="prompt")
+        yield Input(placeholder=t("shell.placeholder"), id="prompt")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -148,7 +134,7 @@ class Shell(App[None]):
             # conversation.
             self.steering.add(text)
             await self._say(UserLine(text))
-            await self._say(Note(f"↳ 排队中({self.steering.waiting()} 条),这一轮结束就送进去"))
+            await self._say(Note("↳ " + t("shell.queued", n=self.steering.waiting())))
             return
 
         await self._say(UserLine(text))
@@ -175,15 +161,15 @@ class Shell(App[None]):
             case "/discard":
                 self._discard()
             case "/cost":
-                await self._say(Note(str(getattr(self.model, "usage", "没有用量信息"))))
+                await self._say(Note(str(getattr(self.model, "usage", None) or t("shell.no_usage"))))
             case "/clear":
                 self.action_clear()
             case "/help":
-                await self._say(Note(HELP))
+                await self._say(Note(t("shell.help")))
             case "/quit" | "/exit":
                 self.exit()
             case _:
-                await self._say(Note(f"没有 {name} 这个命令,/help 看看有哪些"))
+                await self._say(Note(t("shell.unknown_command", name=name)))
 
     # -- a turn --------------------------------------------------------------
 
@@ -233,7 +219,7 @@ class Shell(App[None]):
                         transcript.scroll_end(animate=False)
 
                     case MessageEnd() if isinstance(event.message, SummaryMessage):
-                        await place(Note("⧗ 对话太长了,早先的部分已压缩成摘要(原文都还在会话文件里)"))
+                        await place(Note("⧗ " + t("render.compacted")))
 
                     case MessageEnd() if isinstance(event.message, AssistantMessage):
                         if stream is not None:
@@ -253,10 +239,10 @@ class Shell(App[None]):
                         thinking.display = True
 
                     case AgentEnd() if event.reason == "max_turns":
-                        await place(Note("达到轮次上限,任务没有做完"))
+                        await place(Note(t("render.max_turns")))
 
                     case AgentEnd() if event.reason == "truncated":
-                        await place(Note("回复太长被截断了。让它接着说,或者把任务拆小一点"))
+                        await place(Note(t("render.truncated")))
         finally:
             # Runs on success, on error and on Esc alike. Awaiting here is
             # fine even while cancelling: the cancellation has already been
@@ -276,10 +262,10 @@ class Shell(App[None]):
             returned = self.steering.drain()
             if returned:
                 self.query_one("#prompt", Input).value = returned[0]
-            self.run_worker(self._say(Note("已中断。已做的可撤销改动还在暂存区里。")))
+            self.run_worker(self._say(Note(t("shell.interrupted"))))
         elif event.state == WorkerState.ERROR:
             error = event.worker.error
-            self.run_worker(self._say(Note(f"出错了:{type(error).__name__}: {error}")))
+            self.run_worker(self._say(Note(t("shell.error", kind=type(error).__name__, problem=error))))
         if event.state in (WorkerState.SUCCESS, WorkerState.CANCELLED, WorkerState.ERROR):
             self._refresh_tray()
 
@@ -304,7 +290,7 @@ class Shell(App[None]):
             return
 
         if self.busy:
-            await self._say(Note("任务还在跑,先按 Esc 中断"))
+            await self._say(Note(t("shell.busy")))
             return
 
         leaving = self.session.head
@@ -315,7 +301,7 @@ class Shell(App[None]):
         self.tray = Tray(policy=self.policy)
         self.action_clear()
         self._replay_history()
-        await self._say(Note(f"回到 {target[:6]}。接着说就会从这里分出一条新的分支。"))
+        await self._say(Note(t("shell.moved", id=target[:6])))
         self._refresh_tray()
 
         # What the branch we just left found out would otherwise be thrown away:
@@ -326,7 +312,7 @@ class Shell(App[None]):
 
     async def _carry(self, leaving: str) -> None:
         """Summarise the branch being left onto the one being entered."""
-        waiting = Note("⧗ 正在把刚才那条分支的结论带过来…")
+        waiting = Note("⧗ " + t("shell.carrying"))
         await self._say(waiting)
         try:
             carried = await self.compactor.summarise_branch(self.session, leaving)
@@ -335,42 +321,42 @@ class Shell(App[None]):
             # happened and is still correct; this only means the new branch
             # starts without what the old one learned.
             await waiting.remove()
-            await self._say(Note(f"没能带过来({type(problem).__name__}),分支已经切好了"))
+            await self._say(Note(t("shell.carry_failed", kind=type(problem).__name__)))
             return
 
         await waiting.remove()
         if carried is not None:
-            await self._say(Note(f"↳ 已带过来:{carried.text.splitlines()[0][:60]}…"))
+            await self._say(Note("↳ " + t("shell.carried", gist=carried.text.splitlines()[0][:60] + "…")))
 
     async def _rename(self, text: str) -> None:
         # Not `_name`: Textual's DOMNode already owns that attribute, and an
         # instance shadowing it with a method is a TypeError at the call site.
         parts = text.split(maxsplit=1)
         if len(parts) == 1:
-            await self._say(Note(self.session.name or "这个会话还没有名字"))
+            await self._say(Note(self.session.name or t("shell.unnamed")))
             return
         self.session.rename(parts[1])
         self._update_subtitle()
-        await self._say(Note(f"这次会话叫「{self.session.name}」了"))
+        await self._say(Note(t("shell.named", name=self.session.name)))
 
     def _describe(self) -> str:
         """What /session shows: enough to know which file you are in."""
         session = self.session
         lines = [
-            f"名字:{session.name or '(没起名)'}",
-            f"文件:{session.path}",
-            f"消息:{len(session)} 条 · {len(session.leaves())} 个分支",
-            f"当前:{(session.head or '')[:6]}",
+            t("shell.describe.name", name=session.name or t("shell.describe.none")),
+            t("shell.describe.file", path=session.path),
+            t("shell.describe.messages", n=len(session), branches=len(session.leaves())),
+            t("shell.describe.head", id=(session.head or "")[:6]),
         ]
         usage = getattr(self.model, "usage", None)
         if usage is not None:
-            lines.append(f"用量:{usage}")
+            lines.append(t("shell.describe.usage", usage=usage))
         return "\n".join(lines)
 
     async def _fork(self, text: str) -> None:
         """Copy this branch into its own session file and continue there."""
         if self.busy:
-            await self._say(Note("任务还在跑,先按 Esc 中断"))
+            await self._say(Note(t("shell.busy")))
             return
 
         parts = text.split()
@@ -391,7 +377,7 @@ class Shell(App[None]):
         self.action_clear()
         self._replay_history()
         await self._say(
-            Note(f"已分出新会话 {forked.path.name}({len(forked)} 条)。原来那个一个字没动。")
+            Note(t("shell.forked", file=forked.path.name, n=len(forked)))
         )
         self._update_subtitle()
         self._refresh_tray()
@@ -412,9 +398,9 @@ class Shell(App[None]):
             return
         done = await asyncio.to_thread(self.tray.commit)
         failed = [e for e in self.tray.entries if e.state == "failed"]
-        message = f"提交了 {len(done)} 项"
+        message = t("shell.committed", n=len(done))
         if failed:
-            message += f",{failed[0].preview} 失败:{failed[0].output}"
+            message += t("shell.commit_failed", preview=failed[0].preview, output=failed[0].output)
         await self._say(Note(message))
         self._settle()
 
@@ -422,7 +408,7 @@ class Shell(App[None]):
         if self.busy or not self.tray.pending():
             return
         dropped = self.tray.discard()
-        self.run_worker(self._say(Note(f"丢弃了 {len(dropped)} 项,它们没有发生过")))
+        self.run_worker(self._say(Note(t("shell.discarded", n=len(dropped)))))
         self._settle()
 
     async def _undo(self) -> None:
@@ -434,7 +420,7 @@ class Shell(App[None]):
         # the model carries on believing the work still stands.
         if rolled and point:
             self.session.checkout(point)
-        await self._say(Note(f"撤销了 {len(rolled)} 项,对话也回到了改动之前"))
+        await self._say(Note(t("shell.undone", n=len(rolled))))
         self._settle()
 
     def _settle(self) -> None:
@@ -468,7 +454,7 @@ class Shell(App[None]):
     def _update_subtitle(self) -> None:
         name = getattr(self.model, "model", "model")
         parts = [self.session.name or str(self.root), name,
-                 f"{len(resolve(self.tools))} 个工具"]
+                 t("shell.tools", n=len(resolve(self.tools)))]
         usage = getattr(self.model, "usage", None)
         if usage is not None and getattr(usage, "requests", 0):
             parts.append(str(usage))

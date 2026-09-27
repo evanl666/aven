@@ -69,7 +69,7 @@ def test_bulk_asks_once_the_run_has_changed_enough_things():
     assert rule.judge(change, {"path": "a"}, done=[1, 2]) is None
     verdict = rule.judge(change, {"path": "a"}, done=[1, 2, 3])
     assert verdict.risk == "irreversible"
-    assert "3 处" in verdict.reason
+    assert "3 changes" in verdict.reason
 
 
 def test_bulk_leaves_reading_alone_however_much_of_it_there_is():

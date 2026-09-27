@@ -95,8 +95,9 @@ def catalogue(skills: list[Skill]) -> str:
 
     listed = "\n".join(f"- {s.name}:{s.description}" for s in skills)
     return (
-        "你有这些技能可以调用。只有名字和说明在这里,觉得用得上时"
-        "用 load_skill 取完整内容:\n\n" + listed
+        "You have these skills. Only the name and description are here; when "
+        "one looks like it applies, use load_skill to read the whole thing:"
+        "\n\n" + listed
     )
 
 

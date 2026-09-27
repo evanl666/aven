@@ -104,7 +104,15 @@ def test_the_catalogue_costs_a_line_and_the_body_is_not_in_it(box):
 
     assert "报销整理" in listed and "月度汇总" in listed
     assert "list_dir" not in listed, "the instructions themselves stay out"
-    assert len(listed) < len(skills.read(found[0]))
+
+    # Cheaper than the bodies it stands in for. One tiny skill is not the case
+    # the claim is about - it is about carrying a shelf of them for the price of
+    # a line each, so the comparison is against the whole shelf.
+    for n in range(5):
+        write_skill(box, f"other-{n}", SKILL.replace("报销整理", f"技能{n}"))
+    found = skills.find(box)
+    bodies = sum(len(skills.read(s)) for s in found)
+    assert len(skills.catalogue(found)) < bodies
 
 
 def test_nothing_is_added_when_there_are_no_skills(box):

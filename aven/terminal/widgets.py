@@ -18,6 +18,7 @@ from aven.terminal.render import format_arguments
 from aven.harness.events import ToolEnd
 from aven.harness.messages import ToolCall
 from aven.harness.tx import Tray
+from aven.text import t
 
 SPINNER = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
 
@@ -47,7 +48,8 @@ class Thinking(Static):
     loop is never blocked, so there is always a moment to redraw.
     """
 
-    def __init__(self, label: str = "思考中") -> None:
+    def __init__(self, label: str | None = None) -> None:
+        label = t("render.waiting") if label is None else label
         super().__init__()
         self.label = label
         self._step = 0
@@ -70,7 +72,7 @@ class ToolLine(Static):
 
     def finish(self, event: ToolEnd) -> None:
         if event.staged:
-            mark, style = "⏸ 已暂存,等你确认", "yellow"
+            mark, style = "⏸ " + t("tray.staged.long"), "yellow"
         elif event.result.is_error:
             mark, style = "✗", "red"
         else:
@@ -90,27 +92,27 @@ class TrayPanel(Vertical):
     """
 
     def compose(self) -> ComposeResult:
-        yield Static(Text("暂存区", style="bold"), classes="title")
+        yield Static(Text(t("tray.title"), style="bold"), classes="title")
         yield Static(id="tray-body")
         with Horizontal(id="tray-actions"):
-            yield Button("提交待确认", id="commit", variant="success")
-            yield Button("丢弃", id="discard", variant="warning")
-            yield Button("撤销已执行", id="undo", variant="error")
+            yield Button(t("tray.button.commit"), id="commit", variant="success")
+            yield Button(t("tray.button.discard"), id="discard", variant="warning")
+            yield Button(t("tray.button.undo"), id="undo", variant="error")
 
     def show(self, tray: Tray, *, busy: bool) -> None:
         pending, undoable = tray.pending(), tray.undoable()
 
         body = Text()
         if not pending and not undoable:
-            body.append("还没有改动", style="dim")
+            body.append(t("tray.none_yet"), style="dim")
         if pending:
-            body.append(f"{len(pending)} 项等待确认\n", style="bold")
+            body.append(t("tray.pending_count", n=len(pending)), style="bold")
             for entry in pending:
                 body.append(f"⏸ {entry.preview}\n", style="yellow")
         if undoable:
             if pending:
                 body.append("\n")
-            body.append(f"{len(undoable)} 项已执行(可撤销)\n", style="dim")
+            body.append(t("tray.undoable_count", n=len(undoable)), style="dim")
             for entry in undoable:
                 body.append(f"✓ {entry.preview}\n", style="dim")
         self.query_one("#tray-body", Static).update(body)

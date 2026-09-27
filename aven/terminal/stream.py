@@ -38,6 +38,7 @@ from aven.harness.events import (
 )
 from aven.harness.messages import AssistantMessage, ToolCall, to_dict
 from aven.harness.tx import Tray
+from aven.text import t
 
 
 def as_json(event: Event) -> dict[str, Any]:
@@ -122,4 +123,4 @@ class Final:
         if self.text:
             print(self.text)
         for entry in tray.pending():
-            print(f"未执行(等待确认):{entry.preview}", file=sys.stderr)
+            print(t("stream.staged", preview=entry.preview), file=sys.stderr)

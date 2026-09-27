@@ -26,12 +26,16 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent / "aven"
 # What each layer is allowed to import from, beyond the standard library and
 # third-party packages. `harness` is deliberately not in its own list: nothing
 # above it may be reached, and nothing beside it either.
+# `text` sits below the harness rather than beside it: every layer has something
+# to tell somebody, so every layer may reach the catalogue, and the catalogue
+# reaches nothing.
 ALLOWED = {
-    "harness": {"harness"},
-    "model": {"harness", "model"},
-    "toolkit": {"harness", "model", "toolkit"},
-    "terminal": {"harness", "model", "toolkit", "terminal"},
-    "apps": {"harness", "model", "toolkit", "terminal", "apps"},
+    "text": {"text"},
+    "harness": {"harness", "text"},
+    "model": {"harness", "model", "text"},
+    "toolkit": {"harness", "model", "toolkit", "text"},
+    "terminal": {"harness", "model", "toolkit", "terminal", "text"},
+    "apps": {"harness", "model", "toolkit", "terminal", "apps", "text"},
 }
 
 CJK = re.compile(r"[一-鿿]")
@@ -93,7 +97,7 @@ def test_the_harness_knows_nothing_about_any_app():
     """
     reached = {w for p in modules() if layer(p) == "harness" for w in imports(p)}
 
-    assert reached <= {"harness"}
+    assert reached <= {"harness", "text"}
 
 
 def test_the_apps_do_not_reach_into_each_other():
@@ -110,3 +114,22 @@ def test_the_apps_do_not_reach_into_each_other():
         ]
         for other in others:
             assert f"aven.apps.{other}" not in source, f"{path.name} reaches into {other}"
+def test_no_text_for_a_person_below_the_apps():
+    """The harness and the foundation must not assume the reader's language.
+
+    Anything with a CJK character in it is text somebody reads, and text
+    somebody reads belongs to an app - or to the catalogue an app chooses from.
+    An English string is not proof of the opposite, so this catches one
+    direction only; it is the direction that actually goes wrong.
+    """
+    offenders = []
+    for path in modules():
+        if layer(path) not in ("harness", "model", "toolkit", "terminal"):
+            continue
+        if path.parts[-2:] == ("text", "zh.py"):
+            continue
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if CJK.search(line):
+                offenders.append(f"{path.relative_to(ROOT)}:{number}  {line.strip()[:60]}")
+
+    assert offenders == [], "\n".join(offenders[:40])

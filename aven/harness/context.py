@@ -1,7 +1,7 @@
 """Standing instructions the person leaves for aven.
 
 A system prompt compiled into the program can say how an assistant behaves in
-general. It cannot know that invoices belong in 報銷/YYYY-MM, that finance is
+general. It cannot know that invoices belong in expenses/YYYY-MM, that finance is
 finance@corp.com, or that this person wants short emails. Those are facts about
 one person and one folder, and asking for them again every session is the
 difference between a tool and an assistant.

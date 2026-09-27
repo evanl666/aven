@@ -116,7 +116,7 @@ def test_a_branch_summary_is_told_it_is_another_attempt(tmp_path):
     projected = repr(to_llm(session.history()))
 
     assert "abandoned_branch" in projected
-    assert "不一定还在" in projected, "and that its changes may not stand"
+    assert "MAY NO LONGER BE IN PLACE" in projected, "and its changes may not stand"
 
 
 def test_a_branch_summary_stays_where_it_was_appended(tmp_path):

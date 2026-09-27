@@ -377,8 +377,10 @@ def _as_abandoned_branch(summary: SummaryMessage) -> LlmMessage:
                 "type": "text",
                 "text": (
                     "<abandoned_branch>\n"
-                    "这是你在另一条分支上试过的东西。那条分支已经被放下了,"
-                    "下面说的改动【不一定还在】——需要用到就先自己确认一遍。\n\n"
+                    "This is what you tried on a different branch of this "
+                    "conversation. That branch was set aside, so any change "
+                    "described below MAY NO LONGER BE IN PLACE - check before "
+                    "relying on one.\n\n"
                     f"{text}\n</abandoned_branch>"
                 ),
             }

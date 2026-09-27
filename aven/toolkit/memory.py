@@ -16,10 +16,12 @@ from typing import Annotated, Literal
 
 from aven.harness import memory
 from aven.harness.tools import Tool, ToolResult, tool
+from aven.text import t
 
 Scope = Literal["here", "global"]
 
-WHERE = {"global": "(所有地方)", "here": "(这个目录)"}
+def where(scope: str) -> str:
+    return t(f"memory.where.{scope}" if scope in ("global", "here") else "memory.where.here")
 
 HERE = "AVEN.md"
 GLOBAL = (".aven", "AVEN.md")
@@ -42,7 +44,8 @@ def memory_tools(root: Path) -> list[Tool]:
         return root / HERE
 
     @tool(risk="reversible",
-          preview=lambda fact, scope="here", **_: f"记住{WHERE.get(scope, WHERE['here'])}:{fact}")
+          preview=lambda fact, scope="here", **_: t(
+              "memory.remember", where=where(scope), fact=fact))
     def remember(
         fact: Annotated[str, "One fact, in the person's own words where possible"],
         scope: Annotated[
@@ -72,7 +75,8 @@ def memory_tools(root: Path) -> list[Tool]:
         )
 
     @tool(risk="reversible",
-          preview=lambda fact, scope="here", **_: f"忘掉{WHERE.get(scope, WHERE['here'])}:{fact}")
+          preview=lambda fact, scope="here", **_: t(
+              "memory.forget", where=where(scope), fact=fact))
     def forget(
         fact: Annotated[str, "The fact to remove; close wording is enough"],
         scope: Annotated[str, "Which file it was remembered in"] = "here",

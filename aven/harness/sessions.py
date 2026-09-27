@@ -19,6 +19,8 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 
+from aven.text import t
+
 # Enough of the opening line to recognise which conversation this was.
 OPENING = 46
 
@@ -36,7 +38,7 @@ class Card:
     @property
     def title(self) -> str:
         """What to call it: its name if it has one, else how it started."""
-        return self.name or self.opening or "(空会话)"
+        return self.name or self.opening or t("sessions.untitled")
 
 
 def card(path: Path) -> Card:
@@ -96,28 +98,37 @@ def catalogue(directory: Path, *, limit: int = 20) -> list[Card]:
 def render(cards: list[Card]) -> str:
     """The numbered list to show. Numbers because they are what gets typed."""
     if not cards:
-        return "没有会话记录"
+        return t("sessions.none")
 
     lines = []
     for n, entry in enumerate(cards, 1):
         lines.append(f"{n:>3}. {entry.title}")
-        lines.append(f"     {ago(entry.when)} · {entry.messages} 条 · {entry.path.name}")
+        lines.append(
+            "     "
+            + t(
+                "sessions.line",
+                when=ago(entry.when),
+                messages=entry.messages,
+                file=entry.path.name,
+            )
+        )
     return "\n".join(lines)
 
 
 def ago(when: float, *, now: float | None = None) -> str:
     """How long ago, roughly.
 
-    Roughly on purpose. "3 天前" is what tells you whether this is the thing you
-    were doing before lunch; a timestamp makes you do the subtraction yourself.
+    Roughly on purpose. "3 days ago" is what tells you whether this is the thing
+    you were doing before lunch; a timestamp makes you do the subtraction
+    yourself.
     """
     seconds = max(0.0, (time.time() if now is None else now) - when)
     for limit, size, unit in (
-        (60, 1, "秒"),
-        (3600, 60, "分钟"),
-        (86400, 3600, "小时"),
-        (86400 * 30, 86400, "天"),
+        (60, 1, "second"),
+        (3600, 60, "minute"),
+        (86400, 3600, "hour"),
+        (86400 * 30, 86400, "day"),
     ):
         if seconds < limit:
-            return f"{int(seconds // size)} {unit}前"
+            return t(f"ago.{unit}", n=int(seconds // size))
     return time.strftime("%Y-%m-%d", time.localtime(when))

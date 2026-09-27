@@ -49,7 +49,7 @@ def test_a_missing_key_fails_before_doing_anything(tmp_path, monkeypatch, capsys
 
 def test_a_root_that_is_not_a_directory_is_refused(box, monkeypatch, capsys):
     assert cli.main(["hi", "--root", str(box / "Downloads" / "a.pdf")]) == 1
-    assert "不是一个目录" in capsys.readouterr().err
+    assert "not a directory" in capsys.readouterr().err
 
 
 def test_one_prompt_runs_and_then_offers_the_batch(box, monkeypatch, capsys):
@@ -70,7 +70,7 @@ def test_one_prompt_runs_and_then_offers_the_batch(box, monkeypatch, capsys):
 
     out = capsys.readouterr().out
     assert "做完了" in out
-    assert "1 项已执行(可撤销)" in out
+    assert "1 done (undoable)" in out
     assert (box / "archive" / "a.pdf").exists(), "reversible work runs during the turn"
 
 
@@ -91,7 +91,7 @@ def test_pressing_u_rolls_the_files_back(box, monkeypatch, capsys):
 
     assert (box / "Downloads" / "a.pdf").exists()
     assert not (box / "archive" / "a.pdf").exists()
-    assert "撤销了 1 项" in capsys.readouterr().out
+    assert "undone 1" in capsys.readouterr().out
 
 
 def test_the_session_file_survives_the_run(box, monkeypatch):
@@ -169,7 +169,7 @@ def test_print_mode_needs_a_prompt(box, monkeypatch, capsys):
     quiet_stdin(monkeypatch)
 
     assert cli.main(["-p", "--root", str(box)]) == 1
-    assert "需要一个 prompt" in capsys.readouterr().err
+    assert "needs a prompt" in capsys.readouterr().err
 
 
 def test_a_piped_in_file_becomes_the_material_and_the_argument_says_what_to_do(
@@ -218,7 +218,7 @@ def test_print_mode_leaves_irreversible_work_staged_and_says_so(box, monkeypatch
     assert cli.main(["-p", "写个文件", "--root", str(box), "--protect", "Downloads"]) == 0
 
     captured = capsys.readouterr()
-    assert "未执行" in captured.err
+    assert "not run" in captured.err
     assert not (box / "Downloads" / "新的.txt").exists(), "it really did not happen"
 
 
@@ -279,7 +279,7 @@ def test_fork_writes_a_new_file_and_prints_its_path(box, monkeypatch, capsys):
 
 def test_forking_an_empty_session_is_refused(box, monkeypatch, capsys):
     assert cli.main(["--fork", "--root", str(box)]) == 1
-    assert "空" in capsys.readouterr().err
+    assert "is empty" in capsys.readouterr().err
 
 
 # --- picking a session out of a list -----------------------------------------
@@ -342,7 +342,7 @@ def test_resume_with_no_sessions_yet_just_starts_one(box, monkeypatch, capsys):
     keys(monkeypatch, "")
 
     assert cli.main(["第一件事", "-r", "--root", str(box)]) == 0
-    assert "没有会话记录" in capsys.readouterr().err
+    assert "no sessions on record" in capsys.readouterr().err
 
 
 def test_name_is_stored_in_the_session_and_shown_by_the_picker(box, monkeypatch, capsys):

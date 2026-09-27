@@ -141,14 +141,14 @@ def test_the_rendered_list_is_numbered_because_numbers_get_typed(tmp_path):
 
 
 def test_an_empty_directory_says_so(tmp_path):
-    assert "没有会话" in render(catalogue(tmp_path))
+    assert "no sessions" in render(catalogue(tmp_path))
 
 
 def test_an_empty_session_is_still_listed(tmp_path):
     """Otherwise a file you just made vanishes from the picker."""
     Session.open(tmp_path / "s.jsonl").path.write_text("")
 
-    assert catalogue(tmp_path)[0].title == "(空会话)"
+    assert catalogue(tmp_path)[0].title == "(empty session)"
 
 
 def test_listing_does_not_build_messages_it_will_not_use(tmp_path):
@@ -182,10 +182,10 @@ def test_how_long_ago_is_rounded_to_something_readable():
     from aven.harness.sessions import ago
 
     now = 1_000_000.0
-    assert ago(now - 30, now=now) == "30 秒前"
-    assert ago(now - 300, now=now) == "5 分钟前"
-    assert ago(now - 7200, now=now) == "2 小时前"
-    assert ago(now - 86400 * 3, now=now) == "3 天前"
+    assert ago(now - 30, now=now) == "30s ago"
+    assert ago(now - 300, now=now) == "5m ago"
+    assert ago(now - 7200, now=now) == "2h ago"
+    assert ago(now - 86400 * 3, now=now) == "3d ago"
 
 
 def test_something_older_than_a_month_gets_a_date():
@@ -199,10 +199,10 @@ def test_something_older_than_a_month_gets_a_date():
 def test_a_clock_that_went_backwards_does_not_print_a_negative(tmp_path):
     from aven.harness.sessions import ago
 
-    assert ago(1_000_100.0, now=1_000_000.0) == "0 秒前"
+    assert ago(1_000_100.0, now=1_000_000.0) == "0s ago"
 
 
 def test_the_listing_says_when_each_one_was_last_touched(tmp_path):
     talk(tmp_path / "s.jsonl", "问题", name="甲")
 
-    assert "秒前" in render(catalogue(tmp_path))
+    assert "s ago" in render(catalogue(tmp_path))

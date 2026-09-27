@@ -22,6 +22,7 @@ from datetime import datetime
 from typing import Annotated
 
 from aven.harness.tools import Tool, ToolResult, tool
+from aven.text import t
 
 
 class OsaError(Exception):
@@ -160,7 +161,8 @@ def mac_tools() -> list[Tool]:
         """List upcoming calendar events."""
         return osa(EVENTS, days) or f"nothing in the next {days} days"
 
-    @tool(risk="reversible", preview="日历「{calendar}」新建:{title} @ {start}")
+    @tool(risk="reversible", preview=lambda calendar, title, start, **_: t(
+        "mac.event", calendar=calendar, title=title, start=start))
     def create_event(
         calendar: Annotated[str, "Which calendar, as list_calendars spells it"],
         title: Annotated[str, "Event title"],
@@ -180,7 +182,8 @@ def mac_tools() -> list[Tool]:
             undo=lambda: osa(DROP_EVENT, calendar, uid) and None,
         )
 
-    @tool(risk="reversible", preview="写草稿给 {to}:{subject}")
+    @tool(risk="reversible",
+          preview=lambda to, subject, **_: t("mac.draft", to=to, subject=subject))
     def draft_mail(
         to: Annotated[str, "Recipient address"],
         subject: Annotated[str, "Subject line"],
@@ -193,7 +196,8 @@ def mac_tools() -> list[Tool]:
             undo=lambda: osa(DROP_DRAFT, message_id) and None,
         )
 
-    @tool(risk="irreversible", preview="发送邮件给 {to}:{subject}")
+    @tool(risk="irreversible",
+          preview=lambda to, subject, **_: t("mac.send", to=to, subject=subject))
     def send_mail(
         to: Annotated[str, "Recipient address"],
         subject: Annotated[str, "Subject line"],

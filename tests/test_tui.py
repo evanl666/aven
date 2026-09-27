@@ -106,7 +106,7 @@ async def test_irreversible_work_waits_and_offers_commit(box):
         await ask(app, pilot, "发给老板")
 
         assert sent == [], "nothing leaves before the person decides"
-        assert any("已暂存" in t for t in texts(app, ToolLine))
+        assert any("staged" in t for t in texts(app, ToolLine))
         assert app.query_one("#commit", Button).display
 
         app.query_one("#commit", Button).press()
@@ -127,7 +127,7 @@ async def test_undo_puts_the_files_back_and_rewinds_the_conversation(box):
         assert (box / "Downloads" / "a.pdf").exists()
         assert not (box / "报销").exists()
         assert len(app.session.history()) < before, "the conversation went back too"
-        assert any("撤销了 1 项" in t for t in texts(app, Note))
+        assert any("undid 1" in t for t in texts(app, Note))
 
 
 async def test_escape_interrupts_without_leaving_the_app(box):
@@ -151,7 +151,7 @@ async def test_escape_interrupts_without_leaving_the_app(box):
 
         assert not app.busy
         assert app.is_running, "Esc stops the task, not the program"
-        assert any("已中断" in t for t in texts(app, Note))
+        assert any("interrupted" in t for t in texts(app, Note))
 
         answered = {m.tool_call_id for m in app.session.history() if m.kind == "tool_result"}
         asked = [c.id for m in app.session.history() if m.kind == "assistant" for c in m.tool_calls]
@@ -185,7 +185,7 @@ async def test_a_second_prompt_while_busy_is_queued_not_refused(box):
         await pilot.pause()
 
         assert texts(app, UserLine) == ["› 第一件", "› 等等,还有第二件"]
-        assert any("排队" in n for n in texts(app, Note))
+        assert any("queued" in n for n in texts(app, Note))
         assert [(m.source, m.text) for m in app.session.history() if m.kind == "user"] == [
             ("chat", "第一件"),
             ("steering", "等等,还有第二件"),
@@ -234,7 +234,7 @@ async def test_help_and_unknown_commands_answer_in_the_transcript(box):
 
         notes = texts(app, Note)
         assert any("/undo" in n for n in notes)
-        assert any("没有 /nope" in n for n in notes)
+        assert any("no /nope command" in n for n in notes)
 
 
 async def test_continuing_a_session_shows_what_was_said(box):
@@ -269,7 +269,7 @@ async def test_name_with_no_argument_says_what_it_is_called(box):
     app = app_for(box, streaming(("好。", [])))
     async with app.run_test(size=(120, 40)) as pilot:
         await ask(app, pilot, "/name")
-        assert any("还没有名字" in n for n in texts(app, Note))
+        assert any("no name" in n for n in texts(app, Note))
 
         await ask(app, pilot, "/name 甲")
         await ask(app, pilot, "/name")
@@ -284,7 +284,7 @@ async def test_session_shows_enough_to_know_which_file_you_are_in(box):
 
         shown = "\n".join(texts(app, Note))
         assert "s.jsonl" in shown
-        assert "个分支" in shown
+        assert "branches" in shown
 
 
 async def test_tree_shows_the_branches(box):
@@ -315,7 +315,7 @@ async def test_going_back_carries_what_the_branch_learned(box):
         ]
         assert len(carried) == 1
         assert "另一条分支" in carried[0].text
-        assert any("已带过来" in n for n in texts(app, Note))
+        assert any("carried over" in n for n in texts(app, Note))
 
 
 async def test_going_back_with_compaction_off_still_moves(box):
@@ -348,7 +348,7 @@ async def test_a_failed_carry_does_not_undo_the_checkout(box):
         await pilot.pause()
 
         assert app.session.head == first.id, "the move already happened"
-        assert any("没能带过来" in n for n in texts(app, Note))
+        assert any("could not carry it over" in n for n in texts(app, Note))
 
 
 async def test_forking_switches_the_app_to_the_new_file(box):

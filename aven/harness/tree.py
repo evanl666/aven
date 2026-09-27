@@ -28,6 +28,7 @@ from aven.harness.messages import (
     UserMessage,
 )
 from aven.harness.session import Session
+from aven.text import t
 
 SHORT = 6
 
@@ -88,18 +89,20 @@ def render(session: Session) -> str:
     """The tree as lines to print, head marked."""
     nodes = walk(session)
     if not nodes:
-        return "这个会话还是空的"
+        return t("tree.empty")
 
     lines = [_line(node) for node in nodes]
     branches = len(session.leaves())
-    tail = f"\n\n{len(nodes)} 个节点,{branches} 个分支。/tree <id> 回到某一处,/fork <id> 另存为新会话"
-    return "\n".join(lines) + tail
+    tail = t("tree.footer", nodes=len(nodes), branches=branches)
+    return "\n".join(lines) + "\n\n" + tail
 
 
 def _line(node: Node) -> str:
     message = node.message
     mark = "▸" if node.is_head else ("│" if node.on_path else " ")
-    who = {"user": "你", "assistant": "aven", "summary": "摘要"}.get(message.kind, message.kind)
+    who = t(f"tree.who.{message.kind}") if message.kind in (
+        "user", "assistant", "summary"
+    ) else message.kind
 
     text = getattr(message, "text", "").replace("\n", " ").strip()
     if len(text) > BLURB:
@@ -112,8 +115,9 @@ def _line(node: Node) -> str:
 def _pad(text: str, width: int) -> str:
     """Pad to a column width in terminal cells, not in characters.
 
-    "你" is one character and two cells wide, so str.ljust lines the column up
-    in the source and not on the screen - which is the only place it matters.
+    A CJK character is one character and two cells wide, so str.ljust lines the
+    column up in the source and not on the screen - which is the only place it
+    matters.
     """
     cells = sum(2 if ord(c) > 0x2E80 else 1 for c in text)
     return text + " " * max(1, width - cells)

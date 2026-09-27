@@ -20,6 +20,7 @@ from collections.abc import Callable, Sequence
 from typing import Annotated
 
 from aven.harness.tools import Tool, tool
+from aven.text import t
 
 ToolSource = Sequence[Tool] | Callable[[], Sequence[Tool]]
 
@@ -65,12 +66,13 @@ class ToolBox:
             return ""
         listed = "\n".join(f"- {name}:{describe.get(name, '')}" for name in waiting)
         return (
-            "还有这些工具没有加载。需要的时候用 use_tools 把整组拿进来,"
-            "一次拿一组:\n\n" + listed
+            "These tools are not loaded yet. When the task turns out to need "
+            "one, use use_tools to bring in its whole group, one group at a "
+            "time:\n\n" + listed
         )
 
     def _opener(self) -> Tool:
-        @tool(risk="read", preview="加载 {group} 这组工具")
+        @tool(risk="read", preview=lambda group, **_: t("toolbox.load", group=group))
         def use_tools(
             group: Annotated[str, "The group to bring in, as the catalogue names it"],
         ) -> str:

@@ -24,6 +24,7 @@ from typing import Any, Literal
 from aven.harness.messages import new_id
 from aven.harness.tools import Risk, Tool, ToolResult
 from aven.harness.tx.policy import Policy
+from aven.text import t
 
 State = Literal["applied", "pending", "committed", "undone", "discarded", "failed"]
 
@@ -183,12 +184,14 @@ class Tray:
     def diff(self) -> str:
         """The batch as a person should see it before deciding."""
         if not self.entries:
-            return "没有任何改动"
+            return t("tray.empty")
 
         pending, applied = self.pending(), self.undoable()
-        lines = [f"待处理:{len(pending)} 项需批准 / {len(applied)} 项已执行可撤销"]
+        lines = [t("tray.summary", pending=len(pending), applied=len(applied))]
         for entry in self.entries:
-            note = {"pending": "需要批准", "applied": "可撤销"}.get(entry.state, entry.state)
+            note = t(f"tray.state.{entry.state}") if entry.state in (
+                "pending", "applied"
+            ) else entry.state
             lines.append(f"  {_MARKS[entry.state]}  {entry.preview}   [{note}]")
         return "\n".join(lines)
 

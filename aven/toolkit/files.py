@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Annotated
 
 from aven.harness.tools import Tool, ToolResult, tool
+from aven.text import t
 
 MAX_READ = 40_000  # characters; enough for source and notes, not for a video
 
@@ -137,7 +138,8 @@ def file_tools(root: Path) -> list[Tool]:
         verb = "replaced" if existed else "created"
         return ToolResult(output=f"{verb} {show(target)} ({len(content)} chars)", undo=undo)
 
-    @tool(risk="reversible", preview=lambda path, old, **_: f"改 {path}:{_clip(old)}")
+    @tool(risk="reversible",
+          preview=lambda path, old, **_: t("files.edit", path=path, old=_clip(old)))
     def edit_file(
         path: Annotated[str, "File to change, relative to the root"],
         old: Annotated[str, "The exact text to replace, copied from the file"],
@@ -192,7 +194,7 @@ def file_tools(root: Path) -> list[Tool]:
 
         return ToolResult(output=f"moved {show(source)} → {show(target)}", undo=undo)
 
-    @tool(risk="reversible", preview="删除 {path}")
+    @tool(risk="reversible", preview=lambda path, **_: t("files.delete", path=path))
     def delete_file(
         path: Annotated[str, "File or folder to delete, relative to the root"],
     ) -> ToolResult:
