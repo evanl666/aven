@@ -160,6 +160,21 @@ def test_every_key_the_code_asks_for_exists_in_english():
     assert missing == [], "\n".join(missing)
 
 
+def literals() -> set[str]:
+    """Every string constant anywhere in aven.
+
+    Wider than keys_used on purpose. A key can reach `t` as data rather than as
+    an argument - a Blueprint carries "cli.banner" and the foundation looks it up
+    later - and that is still a key the code asks for.
+    """
+    found: set[str] = set()
+    for path in sorted(ROOT.rglob("*.py")):
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+            if isinstance(node, ast.Constant) and isinstance(node.value, str):
+                found.add(node.value)
+    return found
+
+
 def test_the_keys_are_asked_for_somewhere():
     """A catalogue only grows otherwise, and nobody can tell what is dead.
 
@@ -167,7 +182,7 @@ def test_the_keys_are_asked_for_somewhere():
     listed here by their prefix, because no literal for them appears anywhere.
     """
     built = ("tray.state.", "ago.", "tree.who.", "memory.where.", "shell.describe.")
-    asked = set(keys_used())
+    asked = literals()
 
     unused = [
         key

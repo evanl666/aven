@@ -7,6 +7,7 @@ from types import SimpleNamespace
 import pytest
 
 import aven.apps.cli_assistant.main as cli
+import aven.terminal.app as foundation
 from aven.harness.messages import AssistantMessage, ToolCall, new_id
 
 
@@ -32,7 +33,7 @@ def fake_claude(monkeypatch, *replies):
         async def __call__(self, messages):
             return replace(queue.pop(0) if len(queue) > 1 else queue[0], id=new_id())
 
-    monkeypatch.setattr(cli, "Claude", FakeClaude)
+    monkeypatch.setattr(foundation, "Claude", FakeClaude)
 
 
 def keys(monkeypatch, *presses):
@@ -188,7 +189,7 @@ def test_a_piped_in_file_becomes_the_material_and_the_argument_says_what_to_do(
             seen.append(messages)
             return AssistantMessage(text="看过了", id=new_id())
 
-    monkeypatch.setattr(cli, "Claude", FakeClaude)
+    monkeypatch.setattr(foundation, "Claude", FakeClaude)
     monkeypatch.setattr("sys.stdin", io.StringIO("diff --git a/x b/x\n+一行"))
 
     assert cli.main(["-p", "看看这个改动", "--root", str(box)]) == 0

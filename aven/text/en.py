@@ -170,4 +170,13 @@ Esc interrupts · Ctrl+T shows the staging panel · Ctrl+Q quits""",
     "cli.skills": "  ↳ {n} skills available: {names}",
     "cli.needs_prompt": "-p / --mode json needs a prompt (an argument or a pipe)",
     "cli.talk": "say something; Ctrl-D to leave\n",
+    # --- the coding app ----------------------------------------------------
+    "code.description": "a coding agent on the same harness",
+    "code.banner": "aven-code · {root} · {tools} tools{waiting} · {session}",
+    "code.allow": (
+        "treat this command as read-only, so it runs without asking; repeatable"
+    ),
+    "code.run": "run: {command}",
+    "code.grep": "search for {pattern!r}",
+    "code.glob": "list files matching {pattern!r}",
 }

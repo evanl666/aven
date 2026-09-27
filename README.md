@@ -135,11 +135,17 @@ aven/
   toolkit/    tools more than one app wants: files, memory, skills
   terminal/   foundation every terminal app shares: rendering, review,
               the JSON and print sinks, widgets, the full-screen shell
+  text/       what aven says, keyed; en is the source of truth, zh alongside
   apps/
     cli_assistant/   the personal assistant  (aven)
     cli_code/        the coding agent        (aven-code)
     gui_assistant/   not built yet
 ```
+
+Each app is about a hundred lines: its system prompt, its tools, and any flag of
+its own. Picking a session, building the compactor, printing the banner and
+dispatching to one of six interfaces — the tree, a fork, print mode, JSON mode,
+the full-screen shell, a line-by-line loop — is `terminal/app.py`, shared.
 
 **The layering is one-directional, and tested.** An app may reach down to
 anything; the foundation may reach down to the harness; the harness may reach
@@ -148,15 +154,27 @@ fails on any edge that points the wrong way — because folders alone isolate
 nothing, and one convenient import undoes the arrangement without anybody
 noticing until a second app needs it.
 
-The harness also carries no text a person reads, in any language. What aven says
-belongs to the app, or to the catalogue the app chooses from.
+The harness also carries no text a person reads, in any language — enforced the
+same way. What aven says lives in `text/`, keyed, with English as the source of
+truth and the fallback, chosen by `AVEN_LANG`, the locale or `--lang`. What the
+*model* reads is English in the source, next to the logic it steers: instructions
+to a model are code, and a model answers in the language it was addressed in
+whatever language it was instructed in.
+
+**A tool may decide its risk from its own arguments.** Nearly all of them are one
+risk always — `write_file` writes, `list_dir` reads. A shell is not: declaring it
+irreversible makes `ls` wait for a keypress, and declaring it read is a lie the
+tray cannot catch. So `run_command` judges each command, and a command the
+allowlist does not recognise is staged like any other irreversible act. The
+policy layer keeps its invariant either way — it may still only *raise* what the
+tool decided.
 
 **The loop is a generator.** `run()` yields events; the caller drives it with a
 `for`, sees each step as it happens, and stops by not asking for the next one.
 No subscriber list, no renderer that can take the agent down with it, and a test
 reads as a plain list of what happened.
 
-**The model is injected.** `harness/` has no provider import. 334 tests run with no
+**The model is injected.** `harness/` has no provider import. 418 tests run with no
 API key and no network, and swapping providers does not touch the loop.
 
 **Tools declare four things at the definition site** — the JSON schema (derived

@@ -25,6 +25,10 @@ from typing import Annotated, Any, Literal, get_args, get_origin, get_type_hints
 # irreversible  sent, paid, deleted - Step 5 will require an explicit commit
 Risk = Literal["read", "reversible", "irreversible"]
 
+# A tool may work its risk out from its own arguments instead of declaring one
+# constant. See Tool.risk_for for when that is the honest thing to do.
+RiskFn = Callable[..., Risk]
+
 _JSON_TYPES: dict[type, str] = {
     str: "string",
     int: "integer",
@@ -53,9 +57,26 @@ class Tool:
     name: str
     description: str
     schema: dict[str, Any]
-    risk: Risk
+    risk: Risk | RiskFn
     fn: Callable[..., ToolResult | object]
     preview_with: str | Callable[..., str] | None = None
+
+    def risk_for(self, args: dict[str, Any]) -> Risk:
+        """How risky this particular call is.
+
+        Nearly every tool is one risk always: write_file writes, list_dir reads.
+        A tool that runs whatever it is handed has no such answer. Declaring a
+        shell irreversible makes `ls` wait for a keypress; declaring it read is a
+        lie the tray has no way to catch.
+
+        So a tool may decide from its own arguments. This is not the policy
+        layer and does not weaken it: policy is the person's overlay and may
+        still only raise what comes out of here. A tool lowering its own risk is
+        a tool describing itself, which is the one place that judgement belongs.
+        """
+        if callable(self.risk):
+            return self.risk(**args)
+        return self.risk
 
     def preview(self, args: dict[str, Any]) -> str:
         """What this call would do, in the user's words, before it runs."""
@@ -82,7 +103,7 @@ class Tool:
 
 def tool(
     *,
-    risk: Risk = "read",
+    risk: Risk | RiskFn = "read",
     preview: str | Callable[..., str] | None = None,
     name: str | None = None,
     description: str | None = None,

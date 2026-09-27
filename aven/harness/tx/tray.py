@@ -86,7 +86,9 @@ class Tray:
         # The tool's declaration is a floor. A policy sees what the tool cannot
         # - the arguments, and how much this run has already changed - and may
         # raise the call above it, never below.
-        risk = tool.risk
+        # Asked of the tool rather than read off it: a tool that runs whatever
+        # it is handed decides per call. See Tool.risk_for.
+        risk = tool.risk_for(args)
         verdict = self.policy.judge(tool, args, self.entries) if self.policy else None
         if verdict is not None:
             risk = verdict.risk

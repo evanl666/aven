@@ -60,7 +60,11 @@ class Policy:
             verdict = rule(tool, args, done)
             if verdict is None:
                 continue
-            if ORDER.index(verdict.risk) <= ORDER.index(tool.risk):
+            # Against what the tool says about THIS call, not a constant: a
+            # tool may decide its risk from its arguments, and comparing to the
+            # declaration would let a rule "raise" a shell that had already
+            # resolved to irreversible, or fail to raise one that read `read`.
+            if ORDER.index(verdict.risk) <= ORDER.index(tool.risk_for(args)):
                 continue  # the tool already says at least this much
             if worst is None or ORDER.index(verdict.risk) > ORDER.index(worst.risk):
                 worst = verdict
@@ -76,7 +80,7 @@ def bulk(limit: int = 25) -> Rule:
     """
 
     def rule(tool: Tool, args: dict[str, Any], done: Sequence[Any]) -> Verdict | None:
-        if tool.risk == "read":
+        if tool.risk_for(args) == "read":
             return None
         if len(done) < limit:
             return None
@@ -98,7 +102,7 @@ def protect(*patterns: str) -> Rule:
     wanted = tuple(p.lower() for p in patterns)
 
     def rule(tool: Tool, args: dict[str, Any], done: Sequence[Any]) -> Verdict | None:
-        if tool.risk == "read":
+        if tool.risk_for(args) == "read":
             return None
         for value in args.values():
             if not isinstance(value, str):

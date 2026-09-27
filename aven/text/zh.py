@@ -161,4 +161,11 @@ Esc 中断当前任务 · Ctrl+T 显示/隐藏暂存区 · Ctrl+Q 退出""",
     "cli.skills": "  ↳ {n} 个技能可用:{names}",
     "cli.needs_prompt": "-p / --mode json 需要一个 prompt(参数或管道)",
     "cli.talk": "说点什么,Ctrl-D 退出\n",
+    # --- the coding app ----------------------------------------------------
+    "code.description": "同一个 harness 上的写代码 agent",
+    "code.banner": "aven-code · {root} · {tools} 个工具{waiting} · {session}",
+    "code.allow": "把这个命令当成只读的,不必确认就能跑,可以重复给",
+    "code.run": "执行:{command}",
+    "code.grep": "搜索「{pattern}」",
+    "code.glob": "列出匹配「{pattern}」的文件",
 }

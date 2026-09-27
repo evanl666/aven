@@ -252,6 +252,7 @@ async def test_the_loop_compacts_before_asking_and_reports_it(tmp_path):
 def test_the_summariser_does_not_write_to_the_prompt_cache(tmp_path, monkeypatch):
     """Its prefix is the conversation being retired: read once, never again."""
     import aven.apps.cli_assistant.main as cli
+    import aven.terminal.app as foundation
 
     monkeypatch.setenv("ANTHROPIC_API_KEY", "fake")
     monkeypatch.setattr(cli, "SESSIONS", tmp_path / "sessions")
@@ -269,7 +270,7 @@ def test_the_summariser_does_not_write_to_the_prompt_cache(tmp_path, monkeypatch
         async def __call__(self, messages):
             return AssistantMessage(text="hi")
 
-    monkeypatch.setattr(cli, "Claude", FakeClaude)
+    monkeypatch.setattr(foundation, "Claude", FakeClaude)
     monkeypatch.setattr("sys.stdin", __import__("io").StringIO("\n"))
     cli.main(["hi", "--root", str(tmp_path)])
 
