@@ -14,7 +14,8 @@ import json
 
 import pytest
 
-from aven.harness.tools import Body, Diff, Moves, Order, ToolResult, as_dict, tool
+from aven.harness.tools import Body, Diff, Moves, Order, ToolResult, tool
+from aven.wire.protocol import detail_as_dict as as_dict
 from aven.harness.tx import Tray
 from aven.terminal.render import draw
 

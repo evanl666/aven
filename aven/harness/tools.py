@@ -176,30 +176,6 @@ class Tool:
         }
 
 
-def as_dict(detail: Detail | None) -> dict[str, Any] | None:
-    """A detail as plain json, tagged with which shape it is.
-
-    Written by hand for the same reason the event stream is: this crosses a
-    process boundary, so the names are a decision rather than whatever the
-    dataclasses happen to be called today.
-    """
-    match detail:
-        case None:
-            return None
-        case Diff():
-            return {"kind": "diff", "path": detail.path,
-                    "before": detail.before, "after": detail.after}
-        case Body():
-            return {"kind": "body", "title": detail.title, "text": detail.text}
-        case Moves():
-            return {"kind": "moves", "pairs": [list(p) for p in detail.pairs]}
-        case Order():
-            return {"kind": "order", "items": [list(i) for i in detail.items],
-                    "total": detail.total, "where": detail.where,
-                    "account": detail.account, "arrives": detail.arrives}
-    raise TypeError(f"no json form for {type(detail).__name__}")
-
-
 def tool(
     *,
     risk: Risk | RiskFn = "read",

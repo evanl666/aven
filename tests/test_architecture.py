@@ -29,13 +29,23 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent / "aven"
 # `text` sits below the harness rather than beside it: every layer has something
 # to tell somebody, so every layer may reach the catalogue, and the catalogue
 # reaches nothing.
+# `text` sits below the harness rather than beside it: every layer has something
+# to tell somebody, so every layer may reach the catalogue, and the catalogue
+# reaches nothing.
+#
+# `wire` sits below `terminal` rather than beside it. Conceptually they are
+# siblings - one interface for a person, one for a program - but the dependency
+# points one way: the CLI is what launches --mode rpc, and the terminal's JSON
+# sink reuses the wire shapes so there is one definition of what aven looks like
+# from outside. This table is about dependencies, not about concepts.
 ALLOWED = {
     "text": {"text"},
     "harness": {"harness", "text"},
     "model": {"harness", "model", "text"},
     "toolkit": {"harness", "model", "toolkit", "text"},
-    "terminal": {"harness", "model", "toolkit", "terminal", "text"},
-    "apps": {"harness", "model", "toolkit", "terminal", "apps", "text"},
+    "wire": {"harness", "model", "toolkit", "wire", "text"},
+    "terminal": {"harness", "model", "toolkit", "wire", "terminal", "text"},
+    "apps": {"harness", "model", "toolkit", "wire", "terminal", "apps", "text"},
 }
 
 CJK = re.compile(r"[一-鿿]")

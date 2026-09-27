@@ -25,61 +25,12 @@ import json
 import sys
 from typing import Any
 
-from aven.harness.events import (
-    AgentEnd,
-    AgentStart,
-    Event,
-    MessageDelta,
-    MessageEnd,
-    ToolEnd,
-    ToolStart,
-    TurnEnd,
-    TurnStart,
-)
-from aven.harness.messages import AssistantMessage, ToolCall, to_dict
-from aven.harness.tools import as_dict
+from aven.harness.events import Event, MessageEnd
+from aven.harness.messages import AssistantMessage
+from aven.wire.protocol import detail_as_dict, entry_as_dict
+from aven.wire.protocol import event_as_dict as as_json
 from aven.harness.tx import Tray
 from aven.text import t
-
-
-def as_json(event: Event) -> dict[str, Any]:
-    """One event as a plain JSON object.
-
-    Written out by hand rather than with dataclasses.asdict: this is a wire
-    format other people's scripts will match on, so the names have to be a
-    decision and not a by-product of how the dataclasses happen to be spelled
-    today.
-    """
-    match event:
-        case AgentStart():
-            return {"type": "agent_start", "prompt": event.prompt}
-        case TurnStart():
-            return {"type": "turn_start", "turn": event.index}
-        case MessageDelta():
-            return {"type": "message_delta", "text": event.text}
-        case MessageEnd():
-            return {"type": "message_end", "message": to_dict(event.message)}
-        case ToolStart():
-            return {"type": "tool_start", "call": _call(event.call)}
-        case ToolEnd():
-            return {
-                "type": "tool_end",
-                "call": _call(event.call),
-                "result": to_dict(event.result),
-                "detail": as_dict(event.detail),
-                # True means it did not happen: the call is in the tray waiting
-                # for a decision nobody is here to make.
-                "staged": event.staged,
-            }
-        case TurnEnd():
-            return {"type": "turn_end", "turn": event.index, "message": to_dict(event.message)}
-        case AgentEnd():
-            return {"type": "agent_end", "reason": event.reason}
-    raise TypeError(f"no json form for {type(event).__name__}")
-
-
-def _call(call: ToolCall) -> dict[str, Any]:
-    return {"id": call.id, "name": call.name, "args": call.args}
 
 
 class Jsonl:
@@ -94,8 +45,7 @@ class Jsonl:
                 "type": "tray",
                 "committed": committed,
                 "pending": [
-                    {"preview": e.preview, "risk": e.risk, "detail": as_dict(e.detail)}
-                    for e in tray.pending()
+                    entry_as_dict(e) for e in tray.pending()
                 ],
             }
         )

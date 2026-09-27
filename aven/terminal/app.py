@@ -45,6 +45,7 @@ from aven.model import Claude
 from aven.terminal.render import BOLD, DIM, RED, Renderer
 from aven.terminal.review import review
 from aven.terminal.stream import Final, Jsonl
+from aven.wire.rpc import Conversation, serve_stdio, write
 from aven import text as language
 from aven.text import t
 
@@ -135,7 +136,7 @@ def build_parser(blueprint: Blueprint) -> argparse.ArgumentParser:
                         help=t("cli.nocompact"))
     parser.add_argument("-p", "--print", dest="oneshot", action="store_true",
                         help=t("cli.print"))
-    parser.add_argument("--mode", choices=("text", "json"), default="text",
+    parser.add_argument("--mode", choices=("text", "json", "rpc"), default="text",
                         help=t("cli.mode"))
     parser.add_argument("--tree", action="store_true", help=t("cli.tree"))
     parser.add_argument("--fork", metavar="id", nargs="?", const="", help=t("cli.fork"))
@@ -315,6 +316,22 @@ async def watch(*, session, model, tools, compactor, policy, standing, args) -> 
         return 0
 
 
+async def serve_rpc(*, session, model, tools, compactor, policy, standing, args,
+                    box, describe, sessions_dir) -> int:
+    """Hand the session to another program.
+
+    `tools` is ignored here and `box` taken instead: the RPC client can connect a
+    service mid-conversation, and doing that means bringing a group into the box.
+    A resolved tool list would not have a `bring_in`.
+    """
+    conversation = Conversation(
+        session=session, model=model, box=box, describe=describe,
+        policy=policy, standing=standing, compactor=compactor,
+        sessions_dir=sessions_dir, max_turns=args.max_turns, emit=write,
+    )
+    return await serve_stdio(conversation)
+
+
 def piped(prompt: str | None) -> str:
     """The prompt, with anything piped in put before it.
 
@@ -443,6 +460,13 @@ async def launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
     # Read for both runners: the shell fires them while it is up, and --watch is
     # the headless half for a machine nobody is sitting at.
     triggers = load_triggers()
+
+    if args.mode == "rpc":
+        # Before the interfaces a person drives, because rpc must not print a
+        # banner - stdout carries protocol records and nothing else. The banner
+        # above already went to stderr, which is where it belongs.
+        return await serve_rpc(box=box, describe=kit.describe,
+                               sessions_dir=blueprint.sessions, **running)
 
     if args.watch:
         return await watch(**running)
