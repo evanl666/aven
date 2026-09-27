@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from aven.core.messages import Message, from_dict, to_dict
+from aven.core.messages import Message, MetaMessage, from_dict, to_dict
 
 
 class Session:
@@ -113,6 +113,22 @@ class Session:
             (m for m in self._messages.values() if m.parent_id == msg_id),
             key=lambda m: m.ts,
         )
+
+    @property
+    def name(self) -> str | None:
+        """What this conversation was called, if anyone said.
+
+        The last one on the current path wins, so renaming is an append and
+        undoing a rename is a checkout. Branch-relative for free, like every
+        other entry.
+        """
+        for msg in reversed(self.history()):
+            if isinstance(msg, MetaMessage) and msg.name:
+                return msg.name
+        return None
+
+    def rename(self, name: str) -> Message:
+        return self.append(MetaMessage(name=name.strip()))
 
     def find(self, prefix: str) -> str:
         """Resolve a shortened id to a full one.
