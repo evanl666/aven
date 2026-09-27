@@ -24,6 +24,7 @@ from aven.apps.cli_assistant.mac import mac_tools
 from aven.harness.toolbox import ToolBox
 from aven.terminal.app import Blueprint, Kit, launch
 from aven.toolkit import file_tools, memory_tools, skill_tools
+from aven.toolkit.files import names_for
 
 SESSIONS = Path.home() / ".aven" / "sessions"
 
@@ -45,8 +46,8 @@ SYSTEM = """You are aven, a personal assistant running on this person's own comp
 
 Answer in the language they write to you in.
 
-You may only act inside one folder, and every path is relative to it. The tools
-refuse anything outside it.
+You may only act inside the folders listed below, and the tools refuse any path
+outside them. Bare paths resolve against the first one.
 
 That limit applies to the file tools. Calendar, Mail and Spotlight are managed by
 macOS, which asks this person for access itself.
@@ -80,14 +81,18 @@ def arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--mac", action="store_true", help=t("cli.mac"))
 
 
-def assemble(args: argparse.Namespace, root: Path, found_skills: list) -> Kit:
+def assemble(args: argparse.Namespace, roots: list[Path], found_skills: list) -> Kit:
     """The assistant's tools.
 
-    Files are what nearly every task touches, so they are always in play. The
-    rest wait to be asked for: a calendar is dead weight while sorting a download
-    folder, and its schema is charged for every turn it sits there.
+    Files are what nearly every task touches, so they are always in play, across
+    every root. The rest wait to be asked for: a calendar is dead weight while
+    sorting a download folder, and its schema is charged for every turn it sits
+    there.
     """
-    groups: dict[str, list] = {"memory": memory_tools(root)}
+    # Memory is written relative to the working folder, not to all of them: a
+    # fact belongs to one place or everywhere, and "everywhere" is the global
+    # file rather than a second root.
+    groups: dict[str, list] = {"memory": memory_tools(roots[0])}
 
     # Opt-in, not opt-out. These are the tools that reach outside the root and
     # ask macOS for permission, and forgetting a flag should not be what decides
@@ -99,8 +104,30 @@ def assemble(args: argparse.Namespace, root: Path, found_skills: list) -> Kit:
         groups["search"] = [mac["spotlight"]]
 
     return Kit(
-        box=ToolBox(core=file_tools(root) + skill_tools(found_skills), groups=groups),
+        box=ToolBox(core=file_tools(*roots) + skill_tools(found_skills), groups=groups),
         describe=GROUPS,
+        instructions=folders(roots),
+    )
+
+
+def folders(roots: list[Path]) -> str:
+    """The folders, named, for the system prompt.
+
+    The model cannot guess what a root is called, and with more than one the name
+    is how it reaches the others. So the names come from the same function the
+    tools use, rather than being written out twice and drifting apart.
+    """
+    named = names_for([Path(r).expanduser().resolve() for r in roots])
+    lines = [
+        f"- {name}  ({path})" + ("   <- the working folder" if n == 0 else "")
+        for n, (name, path) in enumerate(named.items())
+    ]
+    if len(lines) == 1:
+        return "The folder you may act in:\n\n" + lines[0]
+    return (
+        "The folders you may act in. A bare path means the working folder; reach "
+        "another by putting its name first, as in "
+        f"{list(named)[1]}/some/file.\n\n" + "\n".join(lines)
     )
 
 

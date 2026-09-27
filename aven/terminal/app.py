@@ -67,6 +67,11 @@ class Kit:
     box: ToolBox
     describe: dict[str, str] = field(default_factory=dict)
 
+    # What the tools oblige the system prompt to say. Which folders are in play
+    # and what they are called is not something a fixed prompt can know, and
+    # neither is which services this person connected.
+    instructions: str = ""
+
 
 @dataclass(frozen=True, kw_only=True)
 class Blueprint:
@@ -77,7 +82,7 @@ class Blueprint:
     banner: str  # a text key
     system: str
     sessions: Path
-    assemble: Callable[[argparse.Namespace, Path, list], Kit]
+    assemble: Callable[[argparse.Namespace, list[Path], list], Kit]
     arguments: Callable[[argparse.ArgumentParser], None] | None = None
 
 
@@ -110,7 +115,7 @@ def build_parser(blueprint: Blueprint) -> argparse.ArgumentParser:
     parser.add_argument("-r", "--resume", action="store_true", help=t("cli.resume"))
     parser.add_argument("-n", "--name", help=t("cli.name"))
     parser.add_argument("--session", type=Path, help=t("cli.session"))
-    parser.add_argument("--root", type=Path, default=Path.cwd(), help=t("cli.root"))
+    parser.add_argument("--root", type=Path, action="append", help=t("cli.root"))
     parser.add_argument("--model", default=os.environ.get("AVEN_MODEL"),
                         help=t("cli.model"))
     parser.add_argument("--no-cache", dest="cache", action="store_false",
@@ -272,10 +277,15 @@ async def launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
 
     args = build_parser(blueprint).parse_args(argv)
 
-    root = args.root.expanduser().resolve()
-    if not root.is_dir():
-        print(RED(t("cli.not_a_dir", path=root)), file=sys.stderr)
-        return 1
+    # Repeatable, because one sentence can span Downloads and Documents. The
+    # first is the working folder: bare paths resolve against it, and it is what
+    # skills and instructions are discovered from.
+    roots = [p.expanduser().resolve() for p in (args.root or [Path.cwd()])]
+    for candidate in roots:
+        if not candidate.is_dir():
+            print(RED(t("cli.not_a_dir", path=candidate)), file=sys.stderr)
+            return 1
+    root = roots[0]
 
     chosen = pick_session(args, blueprint.sessions)
     if chosen is None:
@@ -302,7 +312,7 @@ async def launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
     policy = guard(bulk(limit=args.bulk), protect(*args.protect))
 
     found_skills = find_skills(root)
-    kit = blueprint.assemble(args, root, found_skills)
+    kit = blueprint.assemble(args, roots, found_skills)
     box = kit.box
     tools = box.active
 
@@ -310,6 +320,8 @@ async def launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
     # cached prefix and cost nothing after the first turn.
     instruction_files = find_instructions(root) if args.instructions else []
     system = blueprint.system
+    if kit.instructions:
+        system += "\n\n" + kit.instructions
     if found_skills:
         system += "\n\n" + skill_catalogue(found_skills)
     waiting = box.catalogue(kit.describe)
@@ -344,7 +356,8 @@ async def launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
         )
 
     waiting_note = t("cli.waiting_groups", n=len(box.dormant())) if box.dormant() else ""
-    note(DIM(t(blueprint.banner, root=root, tools=len(box.active()),
+    shown = str(root) if len(roots) == 1 else f"{root} +{len(roots) - 1}"
+    note(DIM(t(blueprint.banner, root=shown, tools=len(box.active()),
                 waiting=waiting_note, session=session.path.name)))
     for path in instruction_files:
         # Read from the user's disk into the prompt: say so, every time.

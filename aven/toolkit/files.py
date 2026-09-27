@@ -1,9 +1,14 @@
-"""File tools, scoped to one root.
+"""File tools, scoped to one or more roots.
 
-Every path the model supplies is resolved and checked against the root before
+Every path the model supplies is resolved and checked against the roots before
 anything happens. A model that has read a hostile web page will eventually ask
 for ../../.ssh/id_rsa; the answer has to be no at the tool boundary, not in the
 prompt, because the prompt is exactly what the attacker got to write.
+
+Several roots, because a desktop assistant works across Downloads, Documents and
+Desktop in one sentence - "file these invoices" spans two of them. The only way
+to do that with a single root was to make the root the home directory, at which
+point the sandbox stopped meaning anything.
 
 Deletion moves to an aven-owned trash directory rather than unlinking, which is
 what makes it reversible - and reversible work needs no approval.
@@ -23,7 +28,7 @@ MAX_READ = 40_000  # characters; enough for source and notes, not for a video
 
 
 class Outside(Exception):
-    """A path resolved to somewhere outside the root."""
+    """A path resolved to somewhere outside every root."""
 
 
 class NotFound(Exception):
@@ -39,27 +44,89 @@ def _clip(text: str, width: int = 40) -> str:
     return flat if len(flat) <= width else flat[: width - 1] + "…"
 
 
-def file_tools(root: Path) -> list[Tool]:
-    """Build the file toolset bound to one directory."""
-    root = Path(root).expanduser().resolve()
+def names_for(roots: list[Path]) -> dict[str, Path]:
+    """A short name per root, unique among them.
+
+    The basename nearly always does. Two roots with the same basename get the
+    parent folded in, because a name the model cannot tell apart is worse than a
+    long one.
+    """
+    named: dict[str, Path] = {}
+    for root in roots:
+        name = root.name or str(root)
+        if name in named:
+            name = f"{root.parent.name}-{name}"
+        while name in named:
+            name = f"{name}-2"
+        named[name] = root
+    return named
+
+
+def file_tools(*roots: Path) -> list[Tool]:
+    """Build the file toolset bound to one or more directories.
+
+    The first root is the working one. A bare relative path resolves against it,
+    which is what a single-root run has always done and still does exactly.
+    """
+    if not roots:
+        raise ValueError("file_tools needs at least one root")
+
+    allowed = [Path(r).expanduser().resolve() for r in roots]
+    root = allowed[0]
+    named = names_for(allowed)
     trash = Path.home() / ".aven" / "trash"
 
-    def inside(raw: str) -> Path:
-        # "~/..." means the home directory to whoever wrote it. Joining it onto
-        # the root instead would quietly look for a folder literally named "~"
-        # and fail with a confusing FileNotFoundError, so say no plainly.
-        if raw.startswith("~"):
-            raise Outside(f"{raw!r} is outside {root}")
+    def holder(path: Path) -> Path | None:
+        """Which root contains this path, if any."""
+        for candidate in allowed:
+            if path == candidate or candidate in path.parents:
+                return candidate
+        return None
 
-        # resolve() collapses "..", symlinks and all, so the comparison below is
-        # against the real destination rather than the string the model wrote.
-        target = (root / raw).resolve()
-        if target != root and root not in target.parents:
-            raise Outside(f"{raw!r} is outside {root}")
+    def inside(raw: str) -> Path:
+        """Resolve a path the model wrote, or refuse it.
+
+        Three ways in, tried in this order:
+
+        1. absolute, or starting with "~" - expanded, then checked against every
+           root. This is how a model refers back to a path it saw in a listing.
+        2. led by a root's name, and only when there is more than one root. With
+           Downloads and Documents both in play, "Documents/invoices" is
+           unambiguous where "invoices" is not.
+        3. relative to the first root.
+
+        Rule 2 is skipped for a single root deliberately. There the first segment
+        has never named a root, and a path that meant one thing yesterday must
+        not quietly mean another today.
+        """
+        if raw.startswith("~") or raw.startswith("/"):
+            target = Path(raw).expanduser().resolve()
+        else:
+            first, _, rest = raw.partition("/")
+            if len(allowed) > 1 and first in named:
+                target = (named[first] / rest).resolve()
+            else:
+                target = (root / raw).resolve()
+
+        if holder(target) is None:
+            where = ", ".join(str(r) for r in allowed)
+            raise Outside(f"{raw!r} is outside {where}")
         return target
 
     def show(path: Path) -> str:
-        return str(path.relative_to(root)) if path != root else "."
+        """The path as the person will read it in a preview.
+
+        Named when there is more than one root, bare when there is one - so a
+        single-root preview reads exactly as it always has.
+        """
+        owner = holder(path)
+        if owner is None:
+            return str(path)
+        if len(allowed) == 1:
+            return str(path.relative_to(owner)) if path != owner else "."
+
+        name = next(n for n, r in named.items() if r == owner)
+        return name if path == owner else f"{name}/{path.relative_to(owner)}"
 
     def make_parents(path: Path) -> list[Path]:
         """Create the missing parents of `path`, returning them deepest first.
@@ -68,9 +135,10 @@ def file_tools(root: Path) -> list[Tool]:
         the way in is part of that. They come back deepest first so removing
         them in order is safe.
         """
+        stop = holder(path) or root
         invented: list[Path] = []
         cursor = path.parent
-        while cursor != root and not cursor.exists():
+        while cursor != stop and not cursor.exists():
             invented.append(cursor)
             cursor = cursor.parent
 
@@ -91,7 +159,7 @@ def file_tools(root: Path) -> list[Tool]:
 
     @tool(risk="read")
     def list_dir(
-        path: Annotated[str, "Folder to list, relative to the root. Use '.' for the root"] = ".",
+        path: Annotated[str, "Folder to list. '.' is the working folder"] = ".",
     ) -> str:
         """List the files and folders in one directory."""
         target = inside(path)
@@ -106,7 +174,7 @@ def file_tools(root: Path) -> list[Tool]:
 
     @tool(risk="read")
     def read_file(
-        path: Annotated[str, "File to read, relative to the root"],
+        path: Annotated[str, "File to read"],
     ) -> str:
         """Read a text file."""
         target = inside(path)
@@ -117,7 +185,7 @@ def file_tools(root: Path) -> list[Tool]:
 
     @tool(risk="reversible", preview="write {path}")
     def write_file(
-        path: Annotated[str, "File to write, relative to the root"],
+        path: Annotated[str, "File to write"],
         content: Annotated[str, "The full new contents of the file"],
     ) -> ToolResult:
         """Write a text file, creating or replacing it."""
@@ -141,7 +209,7 @@ def file_tools(root: Path) -> list[Tool]:
     @tool(risk="reversible",
           preview=lambda path, old, **_: t("files.edit", path=path, old=_clip(old)))
     def edit_file(
-        path: Annotated[str, "File to change, relative to the root"],
+        path: Annotated[str, "File to change"],
         old: Annotated[str, "The exact text to replace, copied from the file"],
         new: Annotated[str, "What to put in its place"],
     ) -> ToolResult:
@@ -175,8 +243,8 @@ def file_tools(root: Path) -> list[Tool]:
 
     @tool(risk="reversible", preview="{src} → {dst}")
     def move_file(
-        src: Annotated[str, "Current path, relative to the root"],
-        dst: Annotated[str, "New path, relative to the root"],
+        src: Annotated[str, "Current path"],
+        dst: Annotated[str, "New path"],
     ) -> ToolResult:
         """Move or rename a file."""
         source, target = inside(src), inside(dst)
@@ -196,7 +264,7 @@ def file_tools(root: Path) -> list[Tool]:
 
     @tool(risk="reversible", preview=lambda path, **_: t("files.delete", path=path))
     def delete_file(
-        path: Annotated[str, "File or folder to delete, relative to the root"],
+        path: Annotated[str, "File or folder to delete"],
     ) -> ToolResult:
         """Move a file to aven's trash. Recoverable until you empty it."""
         source = inside(path)

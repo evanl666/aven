@@ -64,7 +64,7 @@ def arguments(parser: argparse.ArgumentParser) -> None:
                         help=t("code.allow"))
 
 
-def assemble(args: argparse.Namespace, root: Path, found_skills: list) -> Kit:
+def assemble(args: argparse.Namespace, roots: list[Path], found_skills: list) -> Kit:
     """The coding tools, all of them core.
 
     Nothing is held back here. A coding agent reaches for the shell, the search
@@ -75,8 +75,10 @@ def assemble(args: argparse.Namespace, root: Path, found_skills: list) -> Kit:
     return Kit(
         box=ToolBox(
             core=(
-                file_tools(root)
-                + code_tools(root, allow=frozenset(args.allow))
+                file_tools(*roots)
+                # The shell has one working directory, so it gets the first root.
+                # A second root is somewhere to read and write, not a second cwd.
+                + code_tools(roots[0], allow=frozenset(args.allow))
                 + skill_tools(found_skills)
             ),
             groups={},

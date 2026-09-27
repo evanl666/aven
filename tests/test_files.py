@@ -180,3 +180,122 @@ def test_the_preview_shows_what_is_being_replaced_without_touching_the_file(note
 
     assert "notes.md" in shown and "合计 164.50" in shown
     assert notes.read_text().endswith("合计 164.50\n"), "preview read nothing and wrote nothing"
+
+
+# --- more than one root ------------------------------------------------------
+#
+# A desktop assistant is asked to file the invoices from Downloads into
+# Documents, which is two folders in one sentence. Doing that with a single root
+# meant making the root the home directory, at which point the sandbox stopped
+# meaning anything.
+
+
+@pytest.fixture
+def desk(tmp_path):
+    """Two roots, the way a desktop run has them."""
+    for name in ("Downloads", "Documents"):
+        (tmp_path / name).mkdir()
+    (tmp_path / "Downloads" / "invoice.pdf").write_text("38.00")
+    (tmp_path / "Documents" / "notes.md").write_text("mine")
+    (tmp_path / "Private").mkdir()
+    (tmp_path / "Private" / "secret.txt").write_text("not yours")
+    return tmp_path
+
+
+@pytest.fixture
+def spanning(desk):
+    return {t.name: t for t in file_tools(desk / "Downloads", desk / "Documents")}
+
+
+def test_a_bare_path_still_means_the_first_root(spanning):
+    """The working folder, unchanged - that is what a single root always was."""
+    assert spanning["read_file"](path="invoice.pdf").output == "38.00"
+
+
+def test_a_second_root_is_reached_by_its_name(spanning):
+    assert spanning["read_file"](path="Documents/notes.md").output == "mine"
+
+
+def test_a_folder_that_is_not_a_root_is_still_refused(spanning):
+    """Adding roots widens the boundary to exactly the roots, and no further."""
+    with pytest.raises(Outside):
+        spanning["read_file"](path="../Private/secret.txt")
+
+
+def test_an_absolute_path_into_a_root_is_accepted(desk, spanning):
+    """How a model refers back to a path it saw in a listing."""
+    full = str(desk / "Documents" / "notes.md")
+
+    assert spanning["read_file"](path=full).output == "mine"
+
+
+def test_an_absolute_path_outside_every_root_is_refused(desk, spanning):
+    with pytest.raises(Outside):
+        spanning["read_file"](path=str(desk / "Private" / "secret.txt"))
+
+
+def test_moving_between_roots_is_the_whole_point(desk, spanning):
+    result = spanning["move_file"](src="invoice.pdf", dst="Documents/invoices/38.pdf")
+
+    assert (desk / "Documents" / "invoices" / "38.pdf").read_text() == "38.00"
+    assert not (desk / "Downloads" / "invoice.pdf").exists()
+    assert "Documents/invoices/38.pdf" in result.output
+
+
+def test_undoing_a_move_between_roots_puts_it_back(desk, spanning):
+    """Including the folder invented in the other root on the way in."""
+    result = spanning["move_file"](src="invoice.pdf", dst="Documents/invoices/38.pdf")
+
+    result.undo()
+
+    assert (desk / "Downloads" / "invoice.pdf").read_text() == "38.00"
+    assert not (desk / "Documents" / "invoices").exists(), "the folder went too"
+
+
+def test_a_preview_says_which_root_when_there_is_more_than_one(desk, spanning):
+    """Otherwise "notes.md → notes.md" is all the person gets to read."""
+    moved = spanning["move_file"](src="invoice.pdf", dst="Documents/paid.pdf").output
+
+    assert "Downloads/invoice.pdf" in moved
+    assert "Documents/paid.pdf" in moved
+
+
+def test_a_single_root_preview_stays_bare(box, tools):
+    """One root reads exactly as it always did - no name in front of anything."""
+    (box / "Downloads" / "b.pdf").write_text("x")
+
+    moved = tools["move_file"](src="Downloads/b.pdf", dst="Downloads/c.pdf").output
+
+    assert "Downloads/b.pdf → Downloads/c.pdf" in moved
+
+
+def test_a_root_name_is_not_read_as_one_when_there_is_only_one(box, tools):
+    """The first segment has never named a root, and must not start to.
+
+    With Downloads as the only root, "Downloads/a.pdf" has always meant
+    Downloads/Downloads/a.pdf and code written against that must not change
+    meaning underneath it.
+    """
+    with pytest.raises(FileNotFoundError):
+        tools["read_file"](path="Downloads/Downloads/a.pdf")
+
+    assert tools["read_file"](path="Downloads/a.pdf").output == "hello"
+
+
+def test_two_roots_with_the_same_name_are_told_apart(tmp_path):
+    for parent in ("work", "home"):
+        (tmp_path / parent / "notes").mkdir(parents=True)
+        (tmp_path / parent / "notes" / "a.md").write_text(parent)
+
+    built = {
+        t.name: t
+        for t in file_tools(tmp_path / "work" / "notes", tmp_path / "home" / "notes")
+    }
+
+    assert built["read_file"](path="a.md").output == "work"
+    assert built["read_file"](path="home-notes/a.md").output == "home"
+
+
+def test_no_roots_at_all_is_a_mistake_worth_refusing():
+    with pytest.raises(ValueError):
+        file_tools()

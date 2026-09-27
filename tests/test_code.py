@@ -234,7 +234,7 @@ def test_searching_needs_nobody_s_approval(project):
 
 def test_the_coding_app_holds_nothing_back(project):
     """It reaches for all of these in the first turn of almost every task."""
-    kit = assemble(argparse.Namespace(allow=[]), project, [])
+    kit = assemble(argparse.Namespace(allow=[]), [project], [])
 
     names = {tool.name for tool in kit.box.active()}
 
@@ -244,7 +244,7 @@ def test_the_coding_app_holds_nothing_back(project):
 
 
 def test_allow_reaches_the_shell(project):
-    kit = assemble(argparse.Namespace(allow=["pytest"]), project, [])
+    kit = assemble(argparse.Namespace(allow=["pytest"]), [project], [])
     run = next(tool for tool in kit.box.active() if tool.name == "run_command")
 
     assert run.risk_for({"command": "pytest -q"}) == "read"

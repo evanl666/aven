@@ -372,3 +372,62 @@ def test_continue_still_means_the_most_recent(box, monkeypatch, capsys):
 
     newest = max(cli.SESSIONS.glob("*.jsonl"), key=lambda p: p.stat().st_mtime)
     assert "新的" in newest.read_text() and "继续" in newest.read_text()
+
+
+# --- several folders ---------------------------------------------------------
+
+
+def test_the_prompt_is_told_which_folders_exist_and_what_they_are_called(box):
+    """The model cannot guess a root's name, and the name is how it reaches one."""
+    from aven.apps.cli_assistant.main import folders
+
+    said = folders([box / "Downloads", box / "Documents"])
+
+    assert "Downloads" in said and "Documents" in said
+    assert "working folder" in said
+    assert "Documents/some/file" in said, "and how to use the name"
+
+
+def test_one_folder_is_described_without_the_naming_ceremony(box):
+    from aven.apps.cli_assistant.main import folders
+
+    said = folders([box / "Downloads"])
+
+    assert "The folder you may act in" in said
+    assert "putting its name first" not in said
+
+
+def test_the_names_in_the_prompt_are_the_names_the_tools_answer_to(box):
+    """Written out twice, they would drift; the second one would be a lie."""
+    from aven.apps.cli_assistant.main import folders
+    from aven.toolkit import file_tools
+
+    (box / "Documents").mkdir(exist_ok=True)
+    (box / "Documents" / "x.md").write_text("found")
+    said = folders([box / "Downloads", box / "Documents"])
+    built = {tool.name: tool for tool in file_tools(box / "Downloads", box / "Documents")}
+
+    listed = [line for line in said.splitlines() if line.startswith("- ")]
+    name = next(line.split()[1] for line in listed if "Documents" in line)
+
+    assert built["read_file"](path=f"{name}/x.md").output == "found"
+
+
+def test_several_roots_reach_the_tools(box, monkeypatch):
+    import argparse
+
+    from aven.apps.cli_assistant.main import assemble
+
+    (box / "Documents").mkdir(exist_ok=True)
+    kit = assemble(
+        argparse.Namespace(mac=False), [box / "Downloads", box / "Documents"], []
+    )
+    read = next(tool for tool in kit.box.active() if tool.name == "read_file")
+
+    (box / "Documents" / "y.md").write_text("reachable")
+    assert read(path="Documents/y.md").output == "reachable"
+
+
+def test_a_root_that_is_not_a_directory_is_refused_whichever_one_it_is(box, capsys):
+    assert cli.main(["hi", "--root", str(box), "--root", str(box / "Downloads" / "a.pdf")]) == 1
+    assert "not a directory" in capsys.readouterr().err
