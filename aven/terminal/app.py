@@ -342,6 +342,8 @@ async def serve_rpc(*, session, model, tools, compactor, policy, standing, args,
         session=session, model=model, box=box, describe=describe,
         policy=policy, standing=standing, compactor=compactor,
         sessions_dir=sessions_dir, connections=connections,
+        has_key=key_is_available, keep_key=keep_key,
+        keeps=vault_for().about(),
         max_turns=args.max_turns, emit=write,
     )
     return await serve_stdio(conversation)
@@ -388,6 +390,17 @@ def key_is_available() -> bool:
         os.environ["ANTHROPIC_API_KEY"] = str(held["key"])
         return True
     return False
+
+
+def keep_key(key: str) -> None:
+    """Store one and make it usable straight away.
+
+    Both halves matter. The vault is so it survives the process; the
+    environment is so the very next request works, without anybody having to
+    restart the window they just typed it into.
+    """
+    vault_for().put(KEY, {"key": key})
+    os.environ["ANTHROPIC_API_KEY"] = key
 
 
 def store_key() -> int:
@@ -465,7 +478,10 @@ async def _launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
     if args.fork is not None:
         return _fork(session, args, blueprint.sessions)
 
-    if not key_is_available():
+    # A client can ask for one; a terminal cannot. Refusing to start would
+    # leave the window with nothing to show and no way to fix it, since the
+    # only thing that knows where credentials live is this process.
+    if not key_is_available() and args.mode != "rpc":
         print(RED(t("cli.no_key")), file=sys.stderr)
         return 1
 

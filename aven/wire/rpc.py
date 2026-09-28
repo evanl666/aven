@@ -68,6 +68,9 @@ class Conversation:
         compactor: Any = None,
         sessions_dir: Any = None,
         connections: Connections | None = None,
+        has_key: Callable[[], bool] | None = None,
+        keep_key: Callable[[str], None] | None = None,
+        keeps: str = "",
         max_turns: int = 12,
         emit: Emit,
     ) -> None:
@@ -83,6 +86,14 @@ class Conversation:
         # any. A run with no configured services still has connectors - the
         # local ones - they simply have nothing to sign in to.
         self.connections = connections if connections is not None else Connections()
+        # Injected rather than reached for, so the dispatcher has no opinion
+        # about where this machine keeps secrets - and a test can drive the
+        # whole flow without touching a keychain.
+        self.has_key = has_key or (lambda: True)
+        self.keep_key = keep_key
+        # Where a key would be kept, in words. A screen that asks for a secret
+        # has to say where it is about to put it.
+        self.keeps = keeps
         self.max_turns = max_turns
         self.emit = emit
 
@@ -119,6 +130,11 @@ class Conversation:
             "tray": protocol.tray_as_dict(self.tray),
             "standing": [str(a) for a in (self.standing.approvals if self.standing else [])],
             "usage": protocol.usage_as_dict(getattr(self.model, "usage", None)),
+            # Whether anything can actually be asked. A client may start before
+            # there is a key and put up its own way of supplying one, which is
+            # the only option a window has - it has no shell to export from.
+            "key": self.has_key(),
+            "keeps": self.keeps,
         }
 
     # -- the dispatcher ------------------------------------------------------
@@ -379,6 +395,21 @@ class Conversation:
 
     async def _do_state(self, command: dict[str, Any]) -> dict[str, Any]:
         return self.state()
+
+    async def _do_set_key(self, command: dict[str, Any]) -> dict[str, Any]:
+        """Keep an API key where this machine keeps credentials.
+
+        The key never reaches the session file or an event. It goes to the
+        vault and into this process's environment, which is where the SDK
+        reads it - and the response says only that it worked.
+        """
+        key = str(command.get("key", "")).strip()
+        if not key:
+            raise ValueError("a key is needed")
+        if self.keep_key is None:
+            raise RuntimeError("this conversation has nowhere to keep a key")
+        self.keep_key(key)
+        return {"key": self.has_key()}
 
     async def _do_transcript(self, command: dict[str, Any]) -> dict[str, Any]:
         return {"messages": protocol.transcript_as_dict(self.session.history())}

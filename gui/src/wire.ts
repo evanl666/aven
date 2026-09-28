@@ -96,6 +96,10 @@ export interface State {
   tray: Tray;
   standing: string[];
   usage: Usage;
+  /** Whether anything can actually be asked yet. False means: no API key. */
+  key: boolean;
+  /** Where a key would be kept, in words, for the screen that asks for one. */
+  keeps: string;
 }
 
 export interface StoredMessage {

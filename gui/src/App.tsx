@@ -17,6 +17,7 @@ import { Approvals } from "./Approvals";
 import { Chat, type Bubble, type Unstamped } from "./Chat";
 import { Connections } from "./Connections";
 import { FirstRun } from "./Folders";
+import { NeedsKey } from "./Key";
 import { ChatIcon, ConnectionsIcon, WaitingIcon } from "./Icons";
 import * as agent from "./agent";
 import { pickFolders, readRoots, writeRoots } from "./roots";
@@ -57,6 +58,14 @@ export default function App() {
   const [trouble, setTrouble] = useState<string | null>(null);
 
   /**
+   * Whether the agent has a key. `null` while nobody has asked yet, so the
+   * window does not flash the setup screen on every launch - the same reason
+   * `roots` starts null.
+   */
+  const [keyed, setKeyed] = useState<boolean | null>(null);
+  const [keeps, setKeeps] = useState("");
+
+  /**
    * The folders aven may act in. `null` means "not read yet" and `[]` means
    * "read, and there are none" - which is a first run and a different screen.
    * Collapsing the two would flash the setup screen on every launch.
@@ -94,6 +103,8 @@ export default function App() {
     setBusy(state.busy);
     setQueued(state.queued);
     setUsage(state.usage);
+    setKeyed(state.key);
+    setKeeps(state.keeps);
   }, []);
 
   // --- wire up once --------------------------------------------------------
@@ -408,6 +419,14 @@ export default function App() {
     await applyRoots(next);
   };
 
+  const onKey = async (key: string) => {
+    await agent.send({ type: "set_key", key });
+    // Asked again rather than assumed: the agent is what decides whether a key
+    // counts, and it has just been handed one.
+    const reply = await agent.send({ type: "state" });
+    absorb(reply.data as State);
+  };
+
   const onConnect = (name: string) =>
     attempt(async () => {
       const reply = await agent.send({ type: "connect", group: name });
@@ -442,6 +461,20 @@ export default function App() {
       <div className="shell">
         <nav className="rail" />
         <FirstRun onAdd={onAddFolders} />
+      </div>
+    );
+  }
+
+  // After the folders, because that question is about what aven may touch and
+  // this one is only about whether it can run at all.
+  if (keyed === false) {
+    return (
+      <div className="shell">
+        <nav className="rail" />
+        <div className="main">
+          {trouble && <div className="notice bad">{trouble}</div>}
+          <NeedsKey keeps={keeps} onSave={onKey} />
+        </div>
       </div>
     );
   }

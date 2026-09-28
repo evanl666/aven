@@ -15,6 +15,7 @@ import { createRoot } from "react-dom/client";
 import { Chat, type Bubble } from "./Chat";
 import { Approvals } from "./Approvals";
 import { Connections } from "./Connections";
+import { NeedsKey } from "./Key";
 import { ChatIcon, ConnectionsIcon, WaitingIcon } from "./Icons";
 import "./styles.css";
 
@@ -189,6 +190,8 @@ createRoot(document.getElementById("root")!).render(
         onSay={() => {}}
         onInterrupt={() => {}}
       />
+    ) : which === "key" ? (
+      <NeedsKey keeps="the macOS login keychain" onSave={async () => {}} />
     ) : which === "connections" ? (
       <Connections
         connectors={connectors}

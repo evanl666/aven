@@ -860,3 +860,86 @@ async def test_disconnecting_something_unknown_is_a_refusal_not_a_crash(tmp_path
     reply = await conversation.handle({"type": "disconnect", "group": "nope"})
 
     assert reply["ok"] is False
+
+
+# --- starting without a key ---------------------------------------------------
+
+
+def keyless(tmp_path):
+    """A conversation that has no key yet and somewhere to put one."""
+    kept: dict[str, str] = {}
+    sent: list[dict] = []
+    conversation = Conversation(
+        session=Session.open(tmp_path / "s.jsonl"),
+        model=scripted(done()),
+        box=ToolBox(core=[look], groups={}),
+        sessions_dir=tmp_path,
+        has_key=lambda: "key" in kept,
+        keep_key=lambda key: kept.__setitem__("key", key),
+        keeps="the macOS login keychain",
+        emit=sent.append,
+    )
+    return conversation, kept
+
+
+async def test_a_client_can_see_that_there_is_no_key_yet(tmp_path):
+    """A window launched from the dock has no shell, so it cannot be told to
+    export one. It has to be able to ask, which means starting first."""
+    conversation, _ = keyless(tmp_path)
+
+    state = (await conversation.handle({"type": "state"}))["data"]
+
+    assert state["key"] is False
+    assert state["keeps"] == "the macOS login keychain", (
+        "a screen that asks for a secret has to say where it is about to put it"
+    )
+
+
+async def test_supplying_a_key_stores_it_and_the_state_says_so(tmp_path):
+    conversation, kept = keyless(tmp_path)
+
+    reply = await conversation.handle({"type": "set_key", "key": "sk-ant-abc"})
+
+    assert reply["ok"] is True
+    assert reply["data"]["key"] is True
+    assert kept["key"] == "sk-ant-abc"
+    assert (await conversation.handle({"type": "state"}))["data"]["key"] is True
+
+
+async def test_an_empty_key_is_refused_rather_than_stored(tmp_path):
+    """Otherwise the window would go to its main screen and every prompt would
+    fail with something far less clear than this."""
+    conversation, kept = keyless(tmp_path)
+
+    reply = await conversation.handle({"type": "set_key", "key": "   "})
+
+    assert reply["ok"] is False
+    assert kept == {}
+
+
+async def test_the_key_never_appears_in_an_event_or_the_response(tmp_path):
+    """It is a secret. The response says it worked, and nothing repeats it."""
+    conversation, _ = keyless(tmp_path)
+
+    reply = await conversation.handle({"type": "set_key", "key": "sk-ant-secret"})
+    state = (await conversation.handle({"type": "state"}))["data"]
+
+    assert "sk-ant-secret" not in json.dumps(reply)
+    assert "sk-ant-secret" not in json.dumps(state)
+
+
+async def test_a_conversation_with_nowhere_to_put_a_key_says_so(tmp_path):
+    """Rather than reporting success and losing it."""
+    conversation = Conversation(
+        session=Session.open(tmp_path / "s.jsonl"),
+        model=scripted(done()),
+        box=ToolBox(core=[look], groups={}),
+        sessions_dir=tmp_path,
+        has_key=lambda: False,
+        emit=lambda _: None,
+    )
+
+    reply = await conversation.handle({"type": "set_key", "key": "sk-ant-abc"})
+
+    assert reply["ok"] is False
+    assert "nowhere" in reply["error"]

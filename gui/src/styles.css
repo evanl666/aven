@@ -371,6 +371,25 @@ body {
   color: var(--danger);
 }
 
+/* A field for something that must not be shown back. Monospace because a key
+   is a string somebody checks character by character when it does not work. */
+.secret {
+  width: 100%;
+  margin: 4px 0 2px;
+  padding: 12px 15px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-inner);
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.secret:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
 /* --- the composer -------------------------------------------------------- */
 /*
  * One container holding everything, rather than a field with a button next to
