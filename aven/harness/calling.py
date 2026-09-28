@@ -30,6 +30,17 @@ class ContextOverflow(Exception):
     """
 
 
+class Unreachable(Exception):
+    """The provider could not be asked, and trying again would not help.
+
+    A bad key, an exhausted account, no network. Separate from every other
+    failure because it is not a bug and there is nothing for a traceback to
+    tell anybody - the reader needs one sentence and the thing to go and fix.
+    It is also the most likely way a first run ends, which is the worst moment
+    to print a stack trace.
+    """
+
+
 
 async def stream_model(
     model: ModelFn, llm_messages: list[LlmMessage]

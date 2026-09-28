@@ -17,7 +17,7 @@ from typing import Any
 
 import anthropic
 
-from aven.harness.calling import ContextOverflow
+from aven.harness.calling import ContextOverflow, Unreachable
 from aven.harness.messages import AssistantMessage, LlmMessage, ToolCall
 from aven.harness.toolbox import ToolSource, resolve
 from aven.text import t
@@ -187,6 +187,16 @@ class Claude:
             if any(hint in str(refusal).lower() for hint in _TOO_LONG):
                 raise ContextOverflow(str(refusal)) from refusal
             raise
+        # Translated, because these are read by a person rather than by the
+        # loop. The loop only needs to know that asking again will not help.
+        except anthropic.AuthenticationError as refused:
+            raise Unreachable(t("model.bad_key")) from refused
+        except anthropic.PermissionDeniedError as refused:
+            raise Unreachable(t("model.no_access", model=self.model)) from refused
+        except anthropic.RateLimitError as refused:
+            raise Unreachable(t("model.rate_limited")) from refused
+        except anthropic.APIConnectionError as unreachable:
+            raise Unreachable(t("model.unreachable", why=unreachable)) from unreachable
 
         self.usage.add(complete.usage)
         yield to_assistant(complete)

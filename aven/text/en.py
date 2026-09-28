@@ -48,6 +48,16 @@ TEXT: dict[str, str] = {
     "usage.nocache": "no cache",
     "usage.cache": "cache read {read} · wrote {written}",
     "usage.line": "{requests} requests · in {input} ({cache}) · out {output}",
+
+    # The provider saying no. The most likely way a first run ends, so each one
+    # names the thing to go and fix rather than describing the failure.
+    "model.bad_key": "Anthropic rejected the API key. Check ANTHROPIC_API_KEY — "
+                     "a key that has been rotated or revoked fails exactly like this.",
+    "model.no_access": "Anthropic refused this key for this model. It may not "
+                       "have access to {model}.",
+    "model.rate_limited": "Anthropic is rate limiting this key, or the account "
+                          "is out of credit. Both say 429.",
+    "model.unreachable": "Could not reach Anthropic: {why}",
     # --- tool previews -----------------------------------------------------
     "files.edit": "edit {path}: {old}",
     "files.delete": "delete {path}",

@@ -25,6 +25,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from aven.harness.agent import run
+from aven.harness.calling import Unreachable
 from aven.harness.compact import Compactor
 from aven.harness.connect import Connections
 from aven.harness.context import find as find_instructions
@@ -363,6 +364,24 @@ def piped(prompt: str | None) -> str:
 
 
 async def launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
+    """Run one app, and turn the provider saying no into a sentence.
+
+    A rejected key is the most likely way a first run ends, and a traceback is
+    the worst possible thing to print at that moment: it reads as a bug in aven
+    and buries the one line that says what to go and fix.
+
+    Only out here. Inside a run the loop already reports failures through its
+    own event stream - a client on the other end of --mode rpc gets a `failed`
+    record, not this.
+    """
+    try:
+        return await _launch(blueprint, argv)
+    except Unreachable as stopped:
+        print(RED(str(stopped)), file=sys.stderr)
+        return 1
+
+
+async def _launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
     # Before the parser, because the parser's own help is text a person reads.
     language.use(preferred_language(argv))
 

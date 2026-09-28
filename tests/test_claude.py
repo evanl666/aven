@@ -243,3 +243,70 @@ async def test_usage_reads_and_writes_are_shown_apart():
     await drain(model([]))
 
     assert "cache read 900 · wrote 100" in str(model.usage)
+
+
+# --- the provider saying no --------------------------------------------------
+
+
+def refusal(kind):
+    """An SDK error, built without its constructor.
+
+    That constructor wants a real response object from whichever HTTP library
+    the SDK happens to be built on this month - it is `httpx2` today. What is
+    being tested is that we catch the class and translate it, and the response
+    is no part of that, so depending on it would be coupling a test of ours to
+    somebody else's packaging.
+    """
+    made = kind.__new__(kind)
+    Exception.__init__(made, "refused")
+    return made
+
+
+def refusing(problem):
+    """A Claude whose every request comes back as `problem`."""
+
+    class Messages:
+        def stream(self, **_):
+            raise problem
+
+    return Claude(client=SimpleNamespace(messages=Messages()))
+
+
+async def test_a_rejected_key_is_a_sentence_rather_than_a_traceback():
+    """The most likely way a first run ends. A stack trace at that moment reads
+    as a bug in aven and buries the one line saying what to go and fix."""
+    import anthropic
+
+    from aven.harness.calling import Unreachable
+
+    model = refusing(refusal(anthropic.AuthenticationError))
+
+    with pytest.raises(Unreachable, match="ANTHROPIC_API_KEY"):
+        async for _ in model([{"role": "user", "content": "hi"}]):
+            pass
+
+
+async def test_being_out_of_credit_says_so_rather_than_saying_429():
+    """429 is what the wire says. It is not what a person needs to read."""
+    import anthropic
+
+    from aven.harness.calling import Unreachable
+
+    model = refusing(refusal(anthropic.RateLimitError))
+
+    with pytest.raises(Unreachable, match="credit"):
+        async for _ in model([{"role": "user", "content": "hi"}]):
+            pass
+
+
+async def test_a_refusal_we_have_no_words_for_is_not_swallowed():
+    """Only the four that have something useful to say are translated. Anything
+    else must keep its traceback, because that one really is a bug."""
+    from aven.harness.calling import Unreachable
+
+    model = refusing(ValueError("something else entirely"))
+
+    with pytest.raises(ValueError):
+        async for _ in model([{"role": "user", "content": "hi"}]):
+            pass
+    assert not issubclass(ValueError, Unreachable)

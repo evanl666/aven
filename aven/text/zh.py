@@ -45,6 +45,14 @@ TEXT: dict[str, str] = {
     "usage.nocache": "无缓存",
     "usage.cache": "缓存读 {read} · 写 {written}",
     "usage.line": "{requests} 次请求 · 输入 {input}({cache}) · 输出 {output}",
+
+    "model.bad_key": "Anthropic 拒绝了这个 API key。检查 ANTHROPIC_API_KEY —— "
+                     "已经轮换或吊销的 key 就是这个表现。",
+    "model.no_access": "Anthropic 拒绝了这个 key 对该模型的访问,它可能没有 "
+                       "{model} 的权限。",
+    "model.rate_limited": "Anthropic 在限流这个 key,或者账户余额用尽了 —— "
+                          "两种情况都返回 429。",
+    "model.unreachable": "连不上 Anthropic:{why}",
     # --- tool previews -----------------------------------------------------
     "files.edit": "改 {path}:{old}",
     "files.delete": "删除 {path}",
