@@ -21,6 +21,81 @@ use tauri_plugin_shell::ShellExt;
 /// The running agent, or nothing yet.
 struct Agent(Mutex<Option<CommandChild>>);
 
+/// Where the folder list lives, beside the other two files a person edits.
+///
+/// Read and written here rather than from the webview, on purpose. The window's
+/// capability is spawning one named sidecar and nothing else; handing it
+/// `fs:allow-write` on the home directory to save a list of two paths would
+/// undo that for a convenience. Rust touches one known file instead.
+///
+/// TOML because `approvals.toml` and `triggers.toml` already are, and the point
+/// of all three is that they can be read and edited without this window.
+const CONFIG: &str = "desktop.toml";
+
+fn config_path(app: &AppHandle) -> Result<std::path::PathBuf, String> {
+    let home = app
+        .path()
+        .home_dir()
+        .map_err(|problem| problem.to_string())?;
+    Ok(home.join(".aven").join(CONFIG))
+}
+
+#[tauri::command]
+fn roots_read(app: AppHandle) -> Result<Vec<String>, String> {
+    let path = config_path(&app)?;
+    let text = match std::fs::read_to_string(&path) {
+        Ok(text) => text,
+        // No file yet is not an error - it is a first run, and the window asks.
+        Err(problem) if problem.kind() == std::io::ErrorKind::NotFound => {
+            return Ok(vec![])
+        }
+        Err(problem) => return Err(problem.to_string()),
+    };
+
+    // A hand-edited file with a typo in it should not stop the window opening.
+    // Nothing configured is the safe reading: it asks again rather than guessing.
+    let parsed: toml::Value = match text.parse() {
+        Ok(value) => value,
+        Err(_) => return Ok(vec![]),
+    };
+    Ok(parsed
+        .get("roots")
+        .and_then(|roots| roots.as_array())
+        .map(|roots| {
+            roots
+                .iter()
+                .filter_map(|root| root.as_str().map(str::to_owned))
+                .collect()
+        })
+        .unwrap_or_default())
+}
+
+#[tauri::command]
+fn roots_write(app: AppHandle, roots: Vec<String>) -> Result<(), String> {
+    let path = config_path(&app)?;
+    if let Some(parent) = path.parent() {
+        std::fs::create_dir_all(parent).map_err(|problem| problem.to_string())?;
+    }
+
+    // Written by hand rather than serialised, so the comment survives. Somebody
+    // opening this file should be told what it is for and that they may edit it.
+    let listed = roots
+        .iter()
+        .map(|root| format!("  {},\n", toml::Value::String(root.clone())))
+        .collect::<String>();
+
+    std::fs::write(
+        &path,
+        format!(
+            "# Folders aven may act in, from the desktop window.\n\
+             # The first one is the working folder: a bare path resolves against it.\n\
+             # Yours to edit - the window reads this file and never argues with it.\n\
+             roots = [\n{listed}]\n"
+        ),
+    )
+    .map_err(|problem| problem.to_string())
+}
+
 #[tauri::command]
 async fn agent_start(app: AppHandle, roots: Vec<String>) -> Result<(), String> {
     if app.state::<Agent>().0.lock().unwrap().is_some() {
@@ -108,12 +183,15 @@ fn agent_stop(agent: State<Agent>) -> Result<(), String> {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .manage(Agent(Mutex::new(None)))
         .invoke_handler(tauri::generate_handler![
             agent_start,
             agent_write,
-            agent_stop
+            agent_stop,
+            roots_read,
+            roots_write
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

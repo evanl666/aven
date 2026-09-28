@@ -16,18 +16,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Approvals } from "./Approvals";
 import { Chat, type Bubble } from "./Chat";
 import { Connections } from "./Connections";
+import { FirstRun } from "./Folders";
 import * as agent from "./agent";
+import { pickFolders, readRoots, writeRoots } from "./roots";
 import { EXPECTS_VERSION, type Connector, type State, type Tray } from "./wire";
 import "./styles.css";
 
 type Pane = "chat" | "waiting" | "connections";
-
-/**
- * Where the agent may act. Hard-coded for now, and wrong to leave that way - a
- * folder picker belongs here, and until there is one this is the only thing in
- * the window a person cannot change without editing the source.
- */
-const ROOTS = ["~/Downloads", "~/Documents"];
 
 export default function App() {
   const [pane, setPane] = useState<Pane>("chat");
@@ -39,6 +34,13 @@ export default function App() {
   const [queued, setQueued] = useState(0);
   const [usage, setUsage] = useState("");
   const [trouble, setTrouble] = useState<string | null>(null);
+
+  /**
+   * The folders aven may act in. `null` means "not read yet" and `[]` means
+   * "read, and there are none" - which is a first run and a different screen.
+   * Collapsing the two would flash the setup screen on every launch.
+   */
+  const [roots, setRoots] = useState<string[] | null>(null);
 
   // Whether the assistant is mid-sentence. A streamed reply arrives as many
   // deltas and one final message, so the deltas append to a bubble that has to
@@ -176,7 +178,15 @@ export default function App() {
     (async () => {
       try {
         await agent.attach();
-        await agent.start(ROOTS);
+        const configured = await readRoots();
+        if (!alive) return;
+        setRoots(configured);
+        // Nothing configured is a first run. Starting the agent with no folders
+        // would default it to the current directory, which for a bundled app is
+        // wherever the launcher happened to be - never what anybody meant.
+        if (configured.length === 0) return;
+
+        await agent.start(configured);
         const reply = await agent.send({ type: "state" });
         if (alive) absorb(reply.data as State);
       } catch (problem) {
@@ -245,10 +255,71 @@ export default function App() {
     });
   };
 
+  /**
+   * Save the folders and (re)start the agent on them.
+   *
+   * `--root` is a startup argument, so a change means a new process - and a new
+   * process means a new tray. The caller checks for pending work first; this is
+   * the plumbing, not the guard.
+   */
+  const applyRoots = async (next: string[]) => {
+    try {
+      await writeRoots(next);
+      setRoots(next);
+
+      const running = roots !== null && roots.length > 0;
+      if (running) {
+        await agent.stop();
+        // The tray, the connectors and the transcript all belonged to the
+        // process that just left. Saying so beats letting stale panes sit there.
+        setTray({ pending: [], undoable: [] });
+        setBubbles([]);
+        say({
+          kind: "notice",
+          text: "Folders changed, so the agent restarted. This conversation starts fresh.",
+        });
+      }
+
+      await agent.start(next);
+      const reply = await agent.send({ type: "state" });
+      absorb(reply.data as State);
+      setTrouble(null);
+    } catch (problem) {
+      setTrouble(problem instanceof Error ? problem.message : String(problem));
+    }
+  };
+
+  const onAddFolders = async () => {
+    const chosen = await pickFolders(roots ?? []);
+    if (chosen.length === 0) return;
+    await applyRoots([...(roots ?? []), ...chosen]);
+  };
+
+  const onRemoveFolder = async (root: string) => {
+    const next = (roots ?? []).filter((kept) => kept !== root);
+    if (next.length === 0) return; // at least one, always
+    await applyRoots(next);
+  };
+
   const onConnect = async (name: string) => {
     const reply = await agent.send({ type: "connect", group: name });
     setConnectors(reply.data.connectors);
   };
+
+  // Still reading the config. A flash of the wrong screen is worse than a beat
+  // of nothing.
+  if (roots === null) return <div className="shell" />;
+
+  if (roots.length === 0) {
+    return (
+      <div className="shell">
+        <nav className="rail">
+          <h1>aven</h1>
+        </nav>
+        <FirstRun onAdd={onAddFolders} />
+      </div>
+    );
+  }
 
   return (
     <div className="shell">
@@ -304,6 +375,10 @@ export default function App() {
           standing={standing}
           busy={busy}
           onConnect={onConnect}
+          roots={roots}
+          pending={tray.pending.length}
+          onAddFolders={onAddFolders}
+          onRemoveFolder={onRemoveFolder}
         />
       )}
     </div>

@@ -51,8 +51,8 @@ steering queue carries a run past `agent_end`.
 
 ## Not done yet
 
-- **A folder picker.** `ROOTS` in `App.tsx` is hard-coded, and it is the only
-  thing here a person cannot change without editing the source.
+- ~~A folder picker.~~ Done. It asks on a first run, and the list lives in
+  `~/.aven/desktop.toml` beside the other two files you edit.
 - **A real sidecar build.** The wrapper above is fine for development and cannot
   ship; a distributable needs a single-file build of aven (PyInstaller or
   similar) at `src-tauri/binaries/aven-<target-triple>`.

@@ -18,6 +18,7 @@
  * nothing.
  */
 
+import { Folders } from "./Folders";
 import type { Connector } from "./wire";
 
 interface Props {
@@ -25,6 +26,10 @@ interface Props {
   standing: string[];
   busy: boolean;
   onConnect: (name: string) => void;
+  roots: string[];
+  pending: number;
+  onAddFolders: () => void;
+  onRemoveFolder: (root: string) => void;
 }
 
 export function Connections({
@@ -32,6 +37,10 @@ export function Connections({
   standing,
   busy,
   onConnect,
+  roots,
+  pending,
+  onAddFolders,
+  onRemoveFolder,
 }: Props) {
   const on = connectors.filter((connector) => connector.connected).length;
 
@@ -40,13 +49,20 @@ export function Connections({
       <header>
         <h2>Connections</h2>
         <p>
-          {connectors.length === 0
-            ? "nothing to connect"
-            : `${on} of ${connectors.length} connected`}
+          {roots.length} folder{roots.length === 1 ? "" : "s"}
+          {connectors.length > 0 && ` · ${on} of ${connectors.length} connected`}
         </p>
       </header>
 
       <div className="scroll">
+        <Folders
+          roots={roots}
+          pending={pending}
+          busy={busy}
+          onAdd={onAddFolders}
+          onRemove={onRemoveFolder}
+        />
+
         {connectors.length === 0 && (
           <div className="card empty">
             No connectors in this session. Start aven with <code>--mac</code> to

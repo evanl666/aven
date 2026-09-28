@@ -592,3 +592,45 @@ table.order tr.about td {
   font-size: 11px;
   overflow-wrap: anywhere;
 }
+
+/* --- the first run ------------------------------------------------------- */
+/*
+ * The whole window, once, because asking what it may touch is the product's
+ * first sentence rather than a step to click past.
+ */
+
+.firstrun {
+  max-width: 460px;
+  margin: auto;
+  padding: 24px;
+  text-align: center;
+}
+
+.firstrun h2 {
+  margin: 0 0 12px;
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.firstrun p {
+  margin: 0 0 12px;
+  color: var(--ink-soft);
+  text-align: left;
+}
+
+.firstrun p.quiet {
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+.firstrun code {
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: var(--card);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.firstrun button {
+  margin-top: 8px;
+}
