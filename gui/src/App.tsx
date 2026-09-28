@@ -219,9 +219,16 @@ export default function App() {
       }
     });
 
-    const stopWatchingForDeath = agent.onGone((code) => {
+    const stopWatchingForDeath = agent.onGone(({ code, said }) => {
       setBusy(false);
-      setTrouble(`aven stopped (exit ${code ?? "?"}). Restart the window.`);
+      // What it said, if it said anything. A process that refuses to start has
+      // exactly one useful thing to tell you and it is not the exit code.
+      const why = said?.trim();
+      setTrouble(
+        why
+          ? `aven stopped: ${why}`
+          : `aven stopped (exit ${code ?? "?"}). Restart the window.`,
+      );
     });
 
     (async () => {

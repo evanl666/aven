@@ -164,6 +164,17 @@ async fn agent_start(app: AppHandle, roots: Vec<String>) -> Result<(), String> {
         // transcript in Chinese is exactly where those turn up.
         let mut spare: Vec<u8> = Vec::new();
 
+        // The last thing aven said on stderr before it went. When it exits
+        // during startup - no API key, a folder that disappeared - that line is
+        // the only explanation there is, and it used to go to whatever terminal
+        // launched the window, which for a packaged app is nowhere at all. The
+        // window then reported "the agent is not running", which is a symptom
+        // rather than a reason.
+        //
+        // Bounded, because a crash can be preceded by a great deal of noise and
+        // none of it belongs in a dialog.
+        let mut said = String::new();
+
         while let Some(event) = events.recv().await {
             match event {
                 CommandEvent::Stdout(bytes) => {
@@ -182,7 +193,14 @@ async fn agent_start(app: AppHandle, roots: Vec<String>) -> Result<(), String> {
                 // stderr is commentary, never protocol. Worth seeing in a
                 // terminal, never worth parsing.
                 CommandEvent::Stderr(bytes) => {
-                    eprint!("{}", String::from_utf8_lossy(&bytes));
+                    let text = String::from_utf8_lossy(&bytes);
+                    eprint!("{text}");
+                    said.push_str(&text);
+                    if said.len() > 4096 {
+                        // Keep the end: whatever it said last is what it said
+                        // about leaving.
+                        said = said.split_off(said.len() - 2048);
+                    }
                 }
                 CommandEvent::Terminated(status) => {
                     // Only if this is still the agent in charge. A stop bumps
@@ -191,7 +209,13 @@ async fn agent_start(app: AppHandle, roots: Vec<String>) -> Result<(), String> {
                     // that replaced it.
                     if mine == current() {
                         *forwarding.state::<Agent>().child.lock().unwrap() = None;
-                        let _ = forwarding.emit("aven-gone", status.code);
+                        let _ = forwarding.emit(
+                            "aven-gone",
+                            serde_json::json!({
+                                "code": status.code,
+                                "said": said.trim(),
+                            }),
+                        );
                     }
                     break;
                 }

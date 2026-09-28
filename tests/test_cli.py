@@ -1,6 +1,7 @@
 """Tests for the aven command, with no key and no network."""
 
 import io
+import os
 from dataclasses import replace
 from types import SimpleNamespace
 
@@ -431,3 +432,81 @@ def test_several_roots_reach_the_tools(box, monkeypatch):
 def test_a_root_that_is_not_a_directory_is_refused_whichever_one_it_is(box, capsys):
     assert cli.main(["hi", "--root", str(box), "--root", str(box / "Downloads" / "a.pdf")]) == 1
     assert "not a directory" in capsys.readouterr().err
+
+
+# --- finding an API key ------------------------------------------------------
+
+
+def test_an_exported_key_wins_over_a_stored_one(monkeypatch, tmp_path):
+    """Somebody who exported one meant that one. A stored key silently
+    overriding it would be the worst kind of surprise - the wrong account
+    billed, with nothing on screen to say why."""
+    from aven.harness.vault import Locked
+    from aven.terminal import app
+
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "from-the-shell")
+    monkeypatch.setattr(app, "vault_for", lambda *a, **k: _holding(tmp_path, "from-the-vault"))
+
+    assert app.key_is_available() is True
+    assert os.environ["ANTHROPIC_API_KEY"] == "from-the-shell"
+
+
+def test_a_stored_key_is_found_when_the_shell_has_none(monkeypatch, tmp_path):
+    """A window launched from the dock has no shell and therefore no exported
+    variable. Telling somebody to edit their login profile so a desktop app can
+    start is not an answer."""
+    from aven.terminal import app
+
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("ANTHROPIC_AUTH_TOKEN", raising=False)
+    monkeypatch.setattr(app, "vault_for", lambda *a, **k: _holding(tmp_path, "from-the-vault"))
+
+    assert app.key_is_available() is True
+    assert os.environ["ANTHROPIC_API_KEY"] == "from-the-vault", (
+        "and it reaches the SDK, which reads the environment"
+    )
+
+
+def test_no_key_anywhere_is_reported_rather_than_guessed_at(monkeypatch, tmp_path):
+    from aven.harness.vault import Locked
+    from aven.terminal import app
+
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("ANTHROPIC_AUTH_TOKEN", raising=False)
+    monkeypatch.setattr(app, "vault_for", lambda *a, **k: Locked(tmp_path / "empty.json"))
+
+    assert app.key_is_available() is False
+
+
+def test_storing_a_key_reads_it_from_stdin_not_from_the_command_line(monkeypatch, tmp_path):
+    """Anything on a command line is visible in `ps` to every process on the
+    machine, and lands in the shell history besides."""
+    from aven.harness.vault import Locked
+    from aven.terminal import app
+
+    vault = Locked(tmp_path / "creds.json")
+    monkeypatch.setattr(app, "vault_for", lambda *a, **k: vault)
+    monkeypatch.setattr("sys.stdin", io.StringIO("sk-ant-pasted\n"))
+
+    assert app.store_key() == 0
+    assert vault.get("anthropic") == {"key": "sk-ant-pasted"}
+
+
+def test_pasting_nothing_stores_nothing(monkeypatch, tmp_path):
+    from aven.harness.vault import Locked
+    from aven.terminal import app
+
+    vault = Locked(tmp_path / "creds.json")
+    monkeypatch.setattr(app, "vault_for", lambda *a, **k: vault)
+    monkeypatch.setattr("sys.stdin", io.StringIO("\n"))
+
+    assert app.store_key() == 1
+    assert vault.get("anthropic") is None
+
+
+def _holding(tmp_path, key):
+    from aven.harness.vault import Locked
+
+    vault = Locked(tmp_path / "creds.json")
+    vault.put("anthropic", {"key": key})
+    return vault

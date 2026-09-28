@@ -32,6 +32,7 @@ from aven.harness.context import find as find_instructions
 from aven.harness.context import read as read_instructions
 from aven.harness.messages import new_id
 from aven.harness.session import Session
+from aven.harness.vault import vault_for
 from aven.harness.sessions import Card, catalogue
 from aven.harness.sessions import render as render_cards
 from aven.harness.skills import catalogue as skill_catalogue
@@ -135,6 +136,7 @@ def build_parser(blueprint: Blueprint) -> argparse.ArgumentParser:
     parser.add_argument("--root", type=Path, action="append", help=t("cli.root"))
     parser.add_argument("--model", default=os.environ.get("AVEN_MODEL"),
                         help=t("cli.model"))
+    parser.add_argument("--set-key", action="store_true", help=t("cli.set_key"))
     parser.add_argument("--no-cache", dest="cache", action="store_false",
                         help=t("cli.nocache"))
     parser.add_argument("--no-instructions", dest="instructions", action="store_false",
@@ -363,6 +365,50 @@ def piped(prompt: str | None) -> str:
 # --- the whole thing ---------------------------------------------------------
 
 
+# The name the API key is kept under, when it is kept rather than exported.
+KEY = "anthropic"
+
+
+def key_is_available() -> bool:
+    """Whether a key can be found, looking in the keychain if the shell has none.
+
+    The environment wins, because somebody who exported one meant that one - a
+    stored key silently overriding it would be the worst kind of surprise.
+
+    The keychain is why this is not simply a check. A window launched from the
+    dock has no shell and therefore no exported variable, and telling somebody
+    to edit their login profile so a desktop app can start is not an answer.
+    Found here and put into the environment, which is where the SDK reads it.
+    """
+    if os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN"):
+        return True
+
+    held = vault_for().get(KEY)
+    if held and held.get("key"):
+        os.environ["ANTHROPIC_API_KEY"] = str(held["key"])
+        return True
+    return False
+
+
+def store_key() -> int:
+    """Read a key from stdin and keep it in the keychain.
+
+    From stdin rather than an argument, because anything on a command line is
+    visible in `ps` to every process on the machine and lands in the shell
+    history besides.
+    """
+    print(t("cli.set_key_prompt"), file=sys.stderr)
+    key = sys.stdin.readline().strip()
+    if not key:
+        print(RED(t("cli.set_key_empty")), file=sys.stderr)
+        return 1
+
+    vault = vault_for()
+    vault.put(KEY, {"key": key})
+    print(t("cli.set_key_done", where=vault.about()), file=sys.stderr)
+    return 0
+
+
 async def launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
     """Run one app, and turn the provider saying no into a sentence.
 
@@ -386,6 +432,10 @@ async def _launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
     language.use(preferred_language(argv))
 
     args = build_parser(blueprint).parse_args(argv)
+
+    # Before anything that needs a key, since this is how you get one.
+    if args.set_key:
+        return store_key()
 
     # Repeatable, because one sentence can span Downloads and Documents. The
     # first is the working folder: bare paths resolve against it, and it is what
@@ -415,7 +465,7 @@ async def _launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
     if args.fork is not None:
         return _fork(session, args, blueprint.sessions)
 
-    if not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
+    if not key_is_available():
         print(RED(t("cli.no_key")), file=sys.stderr)
         return 1
 

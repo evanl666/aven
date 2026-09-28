@@ -22,7 +22,13 @@ type Waiting = { resolve: (r: Response) => void; reject: (e: Error) => void };
 
 const waiting = new Map<string, Waiting>();
 const listeners = new Set<(event: Event) => void>();
-const goneListeners = new Set<(code: number | null) => void>();
+/** How aven left, and the last thing it said on its way out. */
+export interface Gone {
+  code: number | null;
+  said: string;
+}
+
+const goneListeners = new Set<(gone: Gone) => void>();
 
 let sequence = 0;
 let wired = false;
@@ -57,10 +63,16 @@ export async function attach(): Promise<void> {
     for (const listener of listeners) listener(record);
   });
 
-  await listen<number | null>("aven-gone", ({ payload }) => {
+  await listen<Gone>("aven-gone", ({ payload }) => {
     // Everything still waiting will never be answered. Failing them is the
     // honest move: a spinner that never stops is worse than an error.
-    for (const [, held] of waiting) held.reject(new Error("the agent stopped"));
+    //
+    // Rejected with what aven actually said, where it said anything. "The
+    // agent stopped" is a symptom; "set ANTHROPIC_API_KEY first" is the reason,
+    // and it is no use in a terminal nobody is looking at.
+    const why = payload?.said?.trim();
+    for (const [, held] of waiting)
+      held.reject(new Error(why || "the agent stopped"));
     waiting.clear();
     for (const listener of goneListeners) listener(payload);
   });
@@ -95,7 +107,7 @@ export function onEvent(listener: (event: Event) => void): () => void {
   return () => listeners.delete(listener);
 }
 
-export function onGone(listener: (code: number | null) => void): () => void {
+export function onGone(listener: (gone: Gone) => void): () => void {
   goneListeners.add(listener);
   return () => goneListeners.delete(listener);
 }
