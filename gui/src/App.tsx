@@ -547,6 +547,8 @@ export default function App() {
             busy={busy}
             onConnect={onConnect}
             onDisconnect={onDisconnect}
+            keeps={keeps}
+            onKey={onKey}
             roots={roots}
             pending={tray.pending.length}
             onAddFolders={onAddFolders}

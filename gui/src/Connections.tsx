@@ -26,6 +26,7 @@
  */
 
 import { Folders } from "./Folders";
+import { KeyRow } from "./Key";
 import type { Connector } from "./wire";
 
 interface Props {
@@ -34,6 +35,9 @@ interface Props {
   busy: boolean;
   onConnect: (name: string) => void;
   onDisconnect: (name: string) => void;
+  /** Where the API key is kept, and how to replace it. */
+  keeps: string;
+  onKey: (key: string) => Promise<void>;
   roots: string[];
   pending: number;
   onAddFolders: () => void;
@@ -46,6 +50,8 @@ export function Connections({
   busy,
   onConnect,
   onDisconnect,
+  keeps,
+  onKey,
   roots,
   pending,
   onAddFolders,
@@ -73,6 +79,8 @@ export function Connections({
             onAdd={onAddFolders}
             onRemove={onRemoveFolder}
           />
+
+          <KeyRow keeps={keeps} onSave={onKey} />
 
           {connectors.length === 0 && (
             <div className="card empty">

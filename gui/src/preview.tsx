@@ -199,6 +199,8 @@ createRoot(document.getElementById("root")!).render(
         busy={false}
         onConnect={() => {}}
         onDisconnect={() => {}}
+        keeps="the macOS login keychain"
+        onKey={async () => {}}
         roots={["/Users/evan/Downloads"]}
         pending={2}
         onAddFolders={() => {}}

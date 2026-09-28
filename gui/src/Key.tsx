@@ -89,3 +89,102 @@ export function NeedsKey({ keeps, onSave }: Props) {
     </div>
   );
 }
+
+/**
+ * The same thing as a row in Connections, for a key that is already set.
+ *
+ * The first-run screen is not enough on its own. A key gets rotated, revoked,
+ * or pasted with a character missing, and a setup screen that only ever appears
+ * once leaves no way to find out or put it right - the only remedy would be
+ * editing a keychain by hand.
+ *
+ * Never shows the key back, not even masked. A row of dots proves nothing about
+ * which key is there, and the honest thing to report is where it is kept, which
+ * is something the person can go and check for themselves.
+ */
+export function KeyRow({
+  keeps,
+  onSave,
+}: {
+  keeps: string;
+  onSave: (key: string) => Promise<void>;
+}) {
+  const [open, setOpen] = useState(false);
+  const [key, setKey] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [trouble, setTrouble] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
+
+  const save = async () => {
+    const trimmed = key.trim();
+    if (!trimmed || saving) return;
+    setSaving(true);
+    setTrouble(null);
+    try {
+      await onSave(trimmed);
+      setKey("");
+      setOpen(false);
+      setDone(true);
+    } catch (problem) {
+      setTrouble(problem instanceof Error ? problem.message : String(problem));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="card">
+      <div className="connector">
+        <div className="body">
+          <div className="name">
+            Anthropic API key
+            <span className="tag standing">set</span>
+          </div>
+          <div className="about">
+            What aven talks to the models with. {keeps && `Kept in ${keeps}.`}{" "}
+            It is never shown back and never reaches the conversation.
+          </div>
+          {done && (
+            <div className="meta">Replaced. The next message uses it.</div>
+          )}
+          {trouble && <div className="meta warn">⚠ {trouble}</div>}
+        </div>
+        <button
+          className="pill quiet"
+          onClick={() => {
+            setOpen(!open);
+            setDone(false);
+          }}
+        >
+          {open ? "Cancel" : "Replace"}
+        </button>
+      </div>
+
+      {open && (
+        <div className="connector">
+          <div className="body">
+            <input
+              className="secret"
+              type="password"
+              value={key}
+              autoFocus
+              spellCheck={false}
+              placeholder="sk-ant-..."
+              onChange={(event) => setKey(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") save();
+              }}
+            />
+          </div>
+          <button
+            className="pill go"
+            onClick={save}
+            disabled={!key.trim() || saving}
+          >
+            {saving ? "Saving…" : "Save"}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
