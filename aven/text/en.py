@@ -51,8 +51,9 @@ TEXT: dict[str, str] = {
 
     # The provider saying no. The most likely way a first run ends, so each one
     # names the thing to go and fix rather than describing the failure.
-    "model.bad_key": "Anthropic rejected the API key. Check ANTHROPIC_API_KEY — "
-                     "a key that has been rotated or revoked fails exactly like this.",
+    "model.bad_key": "Anthropic rejected the API key. One that has been rotated "
+                     "or revoked fails exactly like this — replace it in "
+                     "Connections, or export a new ANTHROPIC_API_KEY.",
     "model.no_access": "Anthropic refused this key for this model. It may not "
                        "have access to {model}.",
     "model.rate_limited": "Anthropic is rate limiting this key, or the account "

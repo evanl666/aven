@@ -943,3 +943,52 @@ async def test_a_conversation_with_nowhere_to_put_a_key_says_so(tmp_path):
 
     assert reply["ok"] is False
     assert "nowhere" in reply["error"]
+
+
+async def test_a_provider_refusal_reaches_the_client_as_a_sentence(tmp_path):
+    """Not "Unreachable: ..." — the class name in front of a finished sentence
+    reads as a crash rather than as an answer, and this is the one failure a
+    person can actually do something about."""
+    from aven.harness.calling import Unreachable
+
+    sent: list[dict] = []
+
+    def refusing(_messages):
+        raise Unreachable("Anthropic rejected the API key. Replace it.")
+
+    conversation = Conversation(
+        session=Session.open(tmp_path / "s.jsonl"),
+        model=refusing,
+        box=ToolBox(core=[look], groups={}),
+        sessions_dir=tmp_path,
+        emit=sent.append,
+    )
+
+    await conversation.handle({"type": "prompt", "message": "hello"})
+    await settled(conversation)
+
+    failed = [record for record in sent if record["type"] == "failed"]
+    assert failed, "the client has to be told"
+    assert failed[0]["error"] == "Anthropic rejected the API key. Replace it."
+
+
+async def test_an_actual_bug_keeps_its_class_name(tmp_path):
+    """That one is a report, not advice, and the type is part of it."""
+    sent: list[dict] = []
+
+    def broken(_messages):
+        raise ZeroDivisionError("division by zero")
+
+    conversation = Conversation(
+        session=Session.open(tmp_path / "s.jsonl"),
+        model=broken,
+        box=ToolBox(core=[look], groups={}),
+        sessions_dir=tmp_path,
+        emit=sent.append,
+    )
+
+    await conversation.handle({"type": "prompt", "message": "hello"})
+    await settled(conversation)
+
+    failed = [record for record in sent if record["type"] == "failed"]
+    assert failed[0]["error"].startswith("ZeroDivisionError:")

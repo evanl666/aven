@@ -46,8 +46,9 @@ TEXT: dict[str, str] = {
     "usage.cache": "缓存读 {read} · 写 {written}",
     "usage.line": "{requests} 次请求 · 输入 {input}({cache}) · 输出 {output}",
 
-    "model.bad_key": "Anthropic 拒绝了这个 API key。检查 ANTHROPIC_API_KEY —— "
-                     "已经轮换或吊销的 key 就是这个表现。",
+    "model.bad_key": "Anthropic 拒绝了这个 API key。已经轮换或吊销的 key 就是"
+                     "这个表现 —— 去 Connections 里换一个,或者 export 一个新的 "
+                     "ANTHROPIC_API_KEY。",
     "model.no_access": "Anthropic 拒绝了这个 key 对该模型的访问,它可能没有 "
                        "{model} 的权限。",
     "model.rate_limited": "Anthropic 在限流这个 key,或者账户余额用尽了 —— "

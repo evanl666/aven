@@ -39,6 +39,7 @@ from collections.abc import Callable
 from typing import Any
 
 from aven.harness.agent import run
+from aven.harness.calling import Unreachable
 from aven.harness.connect import Connections
 from aven.harness.messages import Message
 from aven.harness.session import Session
@@ -230,7 +231,13 @@ class Conversation:
         except asyncio.CancelledError:
             self.emit({"type": "interrupted"})
             raise
+        except Unreachable as stopped:
+            # Its message is the whole explanation and was written to be read.
+            # Prefixing the class name would put "Unreachable:" in front of a
+            # finished sentence, which reads as a crash rather than an answer.
+            self.emit({"type": "failed", "error": str(stopped)})
         except Exception as problem:
+            # Anything else is a bug, and the class name is part of the report.
             self.emit({
                 "type": "failed",
                 "error": f"{type(problem).__name__}: {problem}",
