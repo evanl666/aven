@@ -228,18 +228,41 @@ class Tray:
         Order matters: moving a into b then b into c has to come apart in the
         opposite order, or the second undo looks for a file that is no longer
         where it was left.
+
+        A failure stops the batch and is recorded on the entry, the same way
+        commit() handles one. Raising instead would leave the caller holding an
+        exception and no way to tell which half of the rollback had already
+        happened - and the surface showing it would have nothing to draw.
         """
         rolled: list[Entry] = []
         for entry in reversed(self.undoable()):
-            entry.undo()
+            try:
+                entry.undo()
+            except Exception as problem:
+                entry.state = "failed"
+                entry.output = f"{type(problem).__name__}: {problem}"
+                break
             entry.state = "undone"
             rolled.append(entry)
         return rolled
 
-    def rewind_point(self) -> str | None:
-        """The message to check out to put the conversation back too."""
-        touched = [e for e in self.entries if e.origin_message_id]
-        return touched[0].origin_message_id if touched else None
+    def rewind_point(self, among: Sequence[Entry] | None = None) -> str | None:
+        """The message to check out to put the conversation back to.
+
+        Read off the entries actually rolled back, not off the whole tray. A
+        tray outlives the turn that filled it - it is replaced only once nothing
+        in it waits or can be undone - so it can still be holding a discarded
+        entry from several turns ago. Rewinding to that one would throw away
+        turns whose work was never undone.
+        """
+        chosen = None if among is None else {entry.id for entry in among}
+        # In tray order, so the oldest of them wins however `among` was sorted.
+        for entry in self.entries:
+            if chosen is not None and entry.id not in chosen:
+                continue
+            if entry.origin_message_id:
+                return entry.origin_message_id
+        return None
 
     # -- showing it to a person --------------------------------------------
 

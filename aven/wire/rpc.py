@@ -256,15 +256,24 @@ class Conversation:
         return {"discarded": len(dropped), "tray": protocol.tray_as_dict(self.tray)}
 
     async def _do_undo(self, command: dict[str, Any]) -> dict[str, Any]:
-        point = self.tray.rewind_point()
+        if self.busy:
+            # Same rule as checkout, and for the same reason: this moves the
+            # session head, and moving it under a run in flight rewrites the
+            # history that run is still appending to.
+            raise RuntimeError("interrupt the run first")
+
         rolled = await asyncio.to_thread(self.tray.undo)
-        # The world went back; the conversation has to go back with it, or the
-        # model carries on believing the work still stands.
+        # Asked after the rollback, of the entries that actually came back. The
+        # world went back this far and the conversation goes back with it - no
+        # further, or turns whose work still stands get thrown away too.
+        point = self.tray.rewind_point(rolled)
         if rolled and point:
             self.session.checkout(point)
         self._settle()
         return {
             "undone": len(rolled),
+            "failed": [protocol.entry_as_dict(e) for e in self.tray.entries
+                       if e.state == "failed"],
             "head": self.session.head,
             "tray": protocol.tray_as_dict(self.tray),
         }

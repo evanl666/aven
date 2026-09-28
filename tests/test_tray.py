@@ -105,6 +105,51 @@ def test_undo_runs_newest_first():
     assert [e.state for e in tray.entries] == ["undone"] * 3
 
 
+def test_a_failing_undo_stops_the_batch_and_is_recorded_not_raised():
+    """A raise here would leave the caller holding an exception and no way to
+    tell how much of the rollback had already happened - and the surface showing
+    it would have nothing to draw, so the click looks like it did nothing."""
+
+    @tool(risk="reversible")
+    def step(n: str) -> ToolResult:
+        def back() -> None:
+            if n == "b":
+                raise OSError("the file is gone")
+
+        return ToolResult(output=n, undo=back)
+
+    tray = Tray()
+    for n in ("a", "b"):
+        tray.execute(step, {"n": n})
+
+    rolled = tray.undo()
+
+    assert rolled == [], "b is newest, so it fails before a is reached"
+    states = {e.args["n"]: e.state for e in tray.entries}
+    assert states["b"] == "failed"
+    assert "the file is gone" in [e for e in tray.entries if e.state == "failed"][0].output
+    assert states["a"] == "applied", "still undoable, so it can be tried again"
+
+
+def test_undo_rewinds_the_conversation_only_as_far_as_it_rolled_back():
+    """The tray outlives the turn that filled it, so it can still hold a
+    discarded entry from several turns ago. Rewinding to that one would throw
+    away turns whose work was never undone."""
+    log, _, add, send = recorder()
+    tray = Tray()
+
+    tray.execute(send, {"item": "kettle"}, origin_message_id="turn-1")
+    tray.discard()  # never happened, but the entry stays in the tray
+    tray.execute(add, {"item": "notes"}, origin_message_id="turn-2")
+
+    rolled = tray.undo()
+
+    assert [e.origin_message_id for e in rolled] == ["turn-2"]
+    assert tray.rewind_point(rolled) == "turn-2", (
+        "turn-1 was discarded, not undone - the conversation must not go back to it"
+    )
+
+
 def test_a_committed_irreversible_action_stays_done():
     log, _, add, send = recorder()
     tray = Tray()

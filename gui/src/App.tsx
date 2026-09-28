@@ -240,61 +240,105 @@ export default function App() {
 
   // --- what the panes ask for ---------------------------------------------
 
-  const onSay = async (text: string) => {
-    try {
+  /**
+   * Run something that talks to the agent, and say so when it does not work.
+   *
+   * `agent.send` rejects on two different bad days: aven answered `ok: false`,
+   * or the process is gone and nothing will ever answer. Both reach a click
+   * handler as a rejected promise, and a rejection nobody catches is a button
+   * that silently does nothing - which on the approvals pane means a person
+   * cannot tell "it refused" from "I missed the button".
+   */
+  const attempt = useCallback(
+    async (work: () => Promise<void>) => {
+      try {
+        await work();
+      } catch (problem) {
+        say({
+          kind: "notice",
+          text: problem instanceof Error ? problem.message : String(problem),
+          bad: true,
+        });
+      }
+    },
+    [say],
+  );
+
+  const onSay = (text: string) =>
+    attempt(async () => {
+      // Echoed before the round trip, not after. aven starts the run before it
+      // answers, so its first events can arrive ahead of this response - and a
+      // reply that lands above the message asking for it reads as a bug. It
+      // also means the window stays responsive against a slow agent.
+      //
+      // Held by reference rather than by position, because whether this one was
+      // queued is only known after the round trip, and by then the run already
+      // in flight has very likely appended a reply of its own underneath it.
+      const echoed: Bubble = { kind: "mine", text, at: Date.now() };
+      setBubbles((before) => [...before, echoed]);
+
       const reply = await agent.send({ type: "prompt", message: text });
-      const disposition = reply.data?.disposition;
-      say({ kind: "mine", text, queued: disposition === "queued" });
-      if (disposition === "queued") setQueued(reply.data.queued ?? queued + 1);
-      else setBusy(true);
-    } catch (problem) {
+      if (reply.data?.disposition === "queued") {
+        setQueued(reply.data.queued ?? queued + 1);
+        setBubbles((before) =>
+          before.map((bubble) =>
+            bubble === echoed ? { ...bubble, queued: true } : bubble,
+          ),
+        );
+      } else setBusy(true);
+    });
+
+  const onInterrupt = () =>
+    attempt(async () => {
+      const reply = await agent.send({ type: "interrupt" });
+      // What was queued was never read, so it comes back rather than vanishing
+      // with the run that would have read it.
+      for (const text of (reply.data?.returned ?? []) as string[])
+        say({ kind: "notice", text: `Not sent: ${text}` });
+      setQueued(0);
+    });
+
+  const onApprove = (ids: string[]) =>
+    attempt(async () => {
+      const reply = await agent.send({ type: "approve", ids });
+      setTray(reply.data.tray);
+      const done = reply.data.committed?.length ?? 0;
+      say({ kind: "notice", text: `Approved ${done}.` });
+      for (const entry of reply.data.failed ?? [])
+        say({
+          kind: "notice",
+          text: `${entry.preview} failed: ${entry.output}`,
+          bad: true,
+        });
+    });
+
+  const onDiscard = () =>
+    attempt(async () => {
+      const reply = await agent.send({ type: "discard" });
+      setTray(reply.data.tray);
       say({
         kind: "notice",
-        text: problem instanceof Error ? problem.message : String(problem),
-        bad: true,
+        text: `Discarded ${reply.data.discarded}; they never happened.`,
       });
-    }
-  };
+    });
 
-  const onInterrupt = async () => {
-    const reply = await agent.send({ type: "interrupt" });
-    // What was queued was never read, so it comes back rather than vanishing
-    // with the run that would have read it.
-    for (const text of (reply.data?.returned ?? []) as string[])
-      say({ kind: "notice", text: `Not sent: ${text}` });
-    setQueued(0);
-  };
-
-  const onApprove = async (ids: string[]) => {
-    const reply = await agent.send({ type: "approve", ids });
-    setTray(reply.data.tray);
-    const done = reply.data.committed?.length ?? 0;
-    say({ kind: "notice", text: `Approved ${done}.` });
-    for (const entry of reply.data.failed ?? [])
+  const onUndo = () =>
+    attempt(async () => {
+      const reply = await agent.send({ type: "undo" });
+      setTray(reply.data.tray);
       say({
         kind: "notice",
-        text: `${entry.preview} failed: ${entry.output}`,
-        bad: true,
+        text: `Undid ${reply.data.undone}, and the conversation went back with it.`,
       });
-  };
-
-  const onDiscard = async () => {
-    const reply = await agent.send({ type: "discard" });
-    setTray(reply.data.tray);
-    say({
-      kind: "notice",
-      text: `Discarded ${reply.data.discarded}; they never happened.`,
+      // An undo that could not be carried out stops the batch where it is. That
+      // has to be said out loud: the rest is still sitting there undone.
+      for (const entry of reply.data.failed ?? [])
+        say({
+          kind: "notice",
+          text: `Could not undo ${entry.preview}: ${entry.output}`,
+          bad: true,
+        });
     });
-  };
-
-  const onUndo = async () => {
-    const reply = await agent.send({ type: "undo" });
-    setTray(reply.data.tray);
-    say({
-      kind: "notice",
-      text: `Undid ${reply.data.undone}, and the conversation went back with it.`,
-    });
-  };
 
   /**
    * Save the folders and (re)start the agent on them.
@@ -342,10 +386,11 @@ export default function App() {
     await applyRoots(next);
   };
 
-  const onConnect = async (name: string) => {
-    const reply = await agent.send({ type: "connect", group: name });
-    setConnectors(reply.data.connectors);
-  };
+  const onConnect = (name: string) =>
+    attempt(async () => {
+      const reply = await agent.send({ type: "connect", group: name });
+      setConnectors(reply.data.connectors);
+    });
 
   // Still reading the config. A flash of the wrong screen is worse than a beat
   // of nothing.
@@ -394,38 +439,46 @@ export default function App() {
         )}
       </nav>
 
-      {trouble && <div className="notice bad">{trouble}</div>}
+      {/*
+       * One cell, however many children. The shell is a two column grid, so a
+       * banner rendered as its own child of it pushes the pane onto a second
+       * row - into the rail's column, 68px wide. That is the layout breaking
+       * precisely when something has gone wrong and there is something to read.
+       */}
+      <div className="main">
+        {trouble && <div className="notice bad">{trouble}</div>}
 
-      {pane === "chat" && (
-        <Chat
-          bubbles={bubbles}
-          busy={busy}
-          queued={queued}
-          onSay={onSay}
-          onInterrupt={onInterrupt}
-        />
-      )}
-      {pane === "waiting" && (
-        <Approvals
-          tray={tray}
-          busy={busy}
-          onApprove={onApprove}
-          onDiscard={onDiscard}
-          onUndo={onUndo}
-        />
-      )}
-      {pane === "connections" && (
-        <Connections
-          connectors={connectors}
-          standing={standing}
-          busy={busy}
-          onConnect={onConnect}
-          roots={roots}
-          pending={tray.pending.length}
-          onAddFolders={onAddFolders}
-          onRemoveFolder={onRemoveFolder}
-        />
-      )}
+        {pane === "chat" && (
+          <Chat
+            bubbles={bubbles}
+            busy={busy}
+            queued={queued}
+            onSay={onSay}
+            onInterrupt={onInterrupt}
+          />
+        )}
+        {pane === "waiting" && (
+          <Approvals
+            tray={tray}
+            busy={busy}
+            onApprove={onApprove}
+            onDiscard={onDiscard}
+            onUndo={onUndo}
+          />
+        )}
+        {pane === "connections" && (
+          <Connections
+            connectors={connectors}
+            standing={standing}
+            busy={busy}
+            onConnect={onConnect}
+            roots={roots}
+            pending={tray.pending.length}
+            onAddFolders={onAddFolders}
+            onRemoveFolder={onRemoveFolder}
+          />
+        )}
+      </div>
     </div>
   );
 }

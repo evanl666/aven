@@ -196,11 +196,33 @@ body {
 
 /* --- panes --------------------------------------------------------------- */
 
-.pane {
+/* Column two of the shell, whatever is in it: a pane, and above it a banner
+   when there is something wrong worth saying. */
+.main {
   display: flex;
   flex-direction: column;
   min-width: 0;
   height: 100%;
+}
+
+.main > .notice {
+  flex: none;
+  margin: 12px 28px 0;
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+  height: 100%;
+}
+
+/* Sharing the column with a banner, so it takes what is left rather than the
+   whole height. */
+.main > .pane {
+  height: auto;
 }
 
 /* On the same measure as the content below it, so the two share a left edge. */
