@@ -457,6 +457,40 @@ async def test_state_is_enough_to_draw_a_fresh_client(talking):
     }
 
 
+def test_usage_travels_as_numbers_and_not_only_as_a_sentence():
+    """A client with a narrow place to put this must not have to parse prose.
+
+    The sentence is translated, so a window that pulled the numbers back out of
+    it with a regex would break the first time the wording or the language
+    changed. Both forms go on the wire and the client picks.
+    """
+
+    class Counted:
+        requests = 3
+        total_input = 12_400
+        output_tokens = 900
+        cached_tokens = 8_000
+
+        def __str__(self) -> str:
+            return "3 requests · in 12400 · out 900"
+
+    sent = protocol.usage_as_dict(Counted())
+
+    assert sent["input"] == 12_400
+    assert sent["output"] == 900
+    assert sent["cached"] == 8_000
+    assert sent["requests"] == 3
+    assert sent["line"] == "3 requests · in 12400 · out 900"
+
+
+def test_usage_before_the_first_request_is_zeroed_not_the_word_none():
+    """A model that has not run yet has no usage object. `str(None)` would put
+    the literal text "None" in a client's status line."""
+    sent = protocol.usage_as_dict(None)
+
+    assert sent == {"requests": 0, "input": 0, "output": 0, "cached": 0, "line": ""}
+
+
 async def test_the_standing_approvals_are_visible_to_a_client(talking):
     """Something that lets work happen unasked has to be visible on every
     surface, not only in the terminal banner."""

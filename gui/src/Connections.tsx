@@ -50,71 +50,74 @@ export function Connections({
         <h2>Connections</h2>
         <p>
           {roots.length} folder{roots.length === 1 ? "" : "s"}
-          {connectors.length > 0 && ` · ${on} of ${connectors.length} connected`}
+          {connectors.length > 0 &&
+            ` · ${on} of ${connectors.length} connected`}
         </p>
       </header>
 
       <div className="scroll">
-        <Folders
-          roots={roots}
-          pending={pending}
-          busy={busy}
-          onAdd={onAddFolders}
-          onRemove={onRemoveFolder}
-        />
+        <div className="column">
+          <Folders
+            roots={roots}
+            pending={pending}
+            busy={busy}
+            onAdd={onAddFolders}
+            onRemove={onRemoveFolder}
+          />
 
-        {connectors.length === 0 && (
-          <div className="card empty">
-            No connectors in this session. Start aven with <code>--mac</code> to
-            offer Calendar, Mail and Spotlight.
-          </div>
-        )}
+          {connectors.length === 0 && (
+            <div className="card empty">
+              No connectors in this session. Start aven with <code>--mac</code>{" "}
+              to offer Calendar, Mail and Spotlight.
+            </div>
+          )}
 
-        {connectors.length > 0 && (
-          <div className="card">
-            {connectors.map((connector) => (
-              <div className="connector" key={connector.name}>
-                <div className="body">
-                  <div className="name">{connector.name}</div>
-                  <div className="about">{connector.about}</div>
-                  <div className="tools">{connector.tools.join(" · ")}</div>
-                </div>
-                <button
-                  className={`pill${connector.connected ? "" : " go"}`}
-                  disabled={connector.connected || busy}
-                  onClick={() => onConnect(connector.name)}
-                  title={
-                    connector.connected
-                      ? "connected for this session"
-                      : "brings these tools into play"
-                  }
-                >
-                  {connector.connected ? "Connected" : "Connect"}
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {standing.length > 0 && (
-          <div className="card">
-            <div className="entry">
-              <div className="body">
-                <div className="name">Standing approvals</div>
-                <div className="about">
-                  These let work happen without being asked. Edit{" "}
-                  <code>~/.aven/approvals.toml</code> to change them; delete a
-                  line to take one back.
-                </div>
-                {standing.map((approval, at) => (
-                  <div className="tools" key={at}>
-                    {approval}
+          {connectors.length > 0 && (
+            <div className="card">
+              {connectors.map((connector) => (
+                <div className="connector" key={connector.name}>
+                  <div className="body">
+                    <div className="name">{connector.name}</div>
+                    <div className="about">{connector.about}</div>
+                    <div className="tools">{connector.tools.join(" · ")}</div>
                   </div>
-                ))}
+                  <button
+                    className={`pill${connector.connected ? "" : " go"}`}
+                    disabled={connector.connected || busy}
+                    onClick={() => onConnect(connector.name)}
+                    title={
+                      connector.connected
+                        ? "connected for this session"
+                        : "brings these tools into play"
+                    }
+                  >
+                    {connector.connected ? "Connected" : "Connect"}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {standing.length > 0 && (
+            <div className="card">
+              <div className="entry">
+                <div className="body">
+                  <div className="name">Standing approvals</div>
+                  <div className="about">
+                    These let work happen without being asked. Edit{" "}
+                    <code>~/.aven/approvals.toml</code> to change them; delete a
+                    line to take one back.
+                  </div>
+                  {standing.map((approval, at) => (
+                    <div className="tools" key={at}>
+                      {approval}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

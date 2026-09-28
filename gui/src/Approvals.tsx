@@ -58,73 +58,87 @@ export function Approvals({ tray, busy, onApprove, onDiscard, onUndo }: Props) {
       </header>
 
       <div className="scroll">
-        {waiting.length === 0 && tray.undoable.length === 0 && (
-          <div className="card empty">
-            Nothing is waiting, and nothing has run that could be taken back.
-          </div>
-        )}
+        <div className="column">
+          {waiting.length === 0 && tray.undoable.length === 0 && (
+            <div className="card empty">
+              Nothing is waiting, and nothing has run that could be taken back.
+            </div>
+          )}
 
-        {waiting.length > 0 && (
-          <div className="card waiting-card">
-            {waiting.map((entry) => (
-              <label className="entry" key={entry.id}>
-                <input
-                  type="checkbox"
-                  checked={live.has(entry.id)}
-                  onChange={() => toggle(entry.id)}
-                />
-                <div className="body">
-                  <Line entry={entry} />
+          {waiting.length > 0 && (
+            <div className="card waiting-card">
+              {waiting.map((entry) => (
+                <div className="entry" key={entry.id}>
+                  {/*
+                   * Only the line is a label. The detail sits outside it, because
+                   * a diff inside a label toggles the box when you click a line of
+                   * it to read or select it - which here means silently changing
+                   * what you are about to approve.
+                   */}
+                  <label className="pick">
+                    <input
+                      type="checkbox"
+                      checked={live.has(entry.id)}
+                      onChange={() => toggle(entry.id)}
+                    />
+                    <div className="body">
+                      <Line entry={entry} />
+                    </div>
+                  </label>
                   {entry.detail && (
                     <div className="detail-wrap">
                       <DetailCard detail={entry.detail} />
                     </div>
                   )}
                 </div>
-              </label>
-            ))}
+              ))}
 
-            <div className="actions">
-              <button className="pill quiet" onClick={all}>
-                {live.size === waiting.length ? "Untick all" : "Tick all"}
-              </button>
-              <span className="spacer" />
-              <button className="pill quiet" onClick={onDiscard} disabled={busy}>
-                Discard all
-              </button>
-              <button
-                className="pill go"
-                disabled={busy || live.size === 0}
-                onClick={() => onApprove([...live])}
-              >
-                {live.size === 0
-                  ? "Approve"
-                  : `Approve ${live.size} of ${waiting.length}`}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {tray.undoable.length > 0 && (
-          <div className="card">
-            {tray.undoable.map((entry) => (
-              <div className="entry" key={entry.id}>
-                <span className="mark" aria-hidden>
-                  ✓
-                </span>
-                <div className="body">
-                  <Line entry={entry} />
-                </div>
+              <div className="actions">
+                <button className="pill quiet" onClick={all}>
+                  {live.size === waiting.length ? "Untick all" : "Tick all"}
+                </button>
+                <span className="spacer" />
+                <button
+                  className="pill quiet"
+                  onClick={onDiscard}
+                  disabled={busy}
+                >
+                  Discard all
+                </button>
+                <button
+                  className="pill go"
+                  disabled={busy || live.size === 0}
+                  onClick={() => onApprove([...live])}
+                >
+                  {live.size === 0
+                    ? "Approve"
+                    : `Approve ${live.size} of ${waiting.length}`}
+                </button>
               </div>
-            ))}
-            <div className="actions">
-              <span className="spacer" />
-              <button className="pill" onClick={onUndo} disabled={busy}>
-                Undo {tray.undoable.length} · rewinds the conversation too
-              </button>
             </div>
-          </div>
-        )}
+          )}
+
+          {tray.undoable.length > 0 && (
+            <div className="card">
+              {tray.undoable.map((entry) => (
+                <div className="entry" key={entry.id}>
+                  <span className="mark" aria-hidden>
+                    ✓
+                  </span>
+                  <div className="body">
+                    <Line entry={entry} />
+                  </div>
+                </div>
+              ))}
+              <div className="actions">
+                <span className="spacer" />
+                <button className="pill" onClick={onUndo} disabled={busy}>
+                  Undo {tray.undoable.length} · rewinds the conversation too
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -145,7 +159,9 @@ function Line({ entry }: { entry: Entry }) {
       <div className="line">
         {line}
         <span className={`tag ${entry.risk}`}>{entry.risk}</span>
-        {entry.approved_by && <span className="tag standing">pre-approved</span>}
+        {entry.approved_by && (
+          <span className="tag standing">pre-approved</span>
+        )}
       </div>
       {warning && <div className="meta warn">⚠ {warning}</div>}
       {entry.approved_by && <div className="meta">by {entry.approved_by}</div>}

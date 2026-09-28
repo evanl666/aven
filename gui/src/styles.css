@@ -1,111 +1,100 @@
 /*
- * White cards on a soft grey page, generous rounding, one accent colour.
+ * A messaging app, not a dashboard.
  *
- * That much is the going house style for this kind of app and there is no point
- * being different for its own sake. Three deliberate departures:
+ * The house style this borrows from is a white page with soft grey bubbles, a
+ * narrow icon-only rail, a lot of rounding, and one composer that holds
+ * everything rather than an input with a button beside it. All of that is craft
+ * worth taking: it is what makes the thing read as somewhere you talk rather
+ * than somewhere you administer.
  *
- *   No mascot. The product's claim is that nothing irreversible happens without
- *   you, and a cartoon face asking for your calendar undercuts it.
+ * Two departures, both deliberate:
  *
- *   The accent is a slate blue, not anybody's brand blue. Borrowing a known
- *   product's exact colour reads as imitation at best.
+ *   No mascot. The claim this product makes is that nothing irreversible
+ *   happens without you, and a cartoon face asking for your calendar undercuts
+ *   it. The rail is the brand here, and it is quiet.
  *
- *   Risk has a colour and it is the only place amber and red appear. If they
- *   show up in decoration they stop meaning anything where they matter.
+ *   Amber and red appear only on risk. Not on a badge, not on a hover, not for
+ *   emphasis. Somewhere that uses a warning colour for decoration has no warning
+ *   colour left.
  *
- * Every colour is a token here and redefined once for dark mode, so there is no
+ * Every colour is a token and dark mode redefines the same names, so there is no
  * hard-coded hex below this block.
  */
 
 :root {
-  --page: #f4f4f5;
+  --page: #ffffff;
+  --rail: #fbfbfc;
   --card: #ffffff;
-  --sunken: #fafafa;
-  --line: #e7e7e9;
-  --line-strong: #d9d9dd;
+  --sunken: #f6f6f7;
+  --line: #ebebee;
+  --line-strong: #dcdce1;
 
-  --ink: #18181b;
-  --ink-soft: #52525b;
-  --ink-faint: #8b8b95;
+  --ink: #17171a;
+  --ink-soft: #5b5b66;
+  --ink-faint: #9494a0;
 
-  --accent: #3d5a9e;
-  --accent-soft: #eef1f8;
+  /* The bubbles. Filled, not bordered - a border makes them cards. */
+  --them: #f0f0f2;
+  --me: #d9e6fd;
+  --me-ink: #16233d;
+
+  --accent: #3f6fd8;
+  --accent-soft: #eaf1fe;
   --accent-ink: #ffffff;
 
   /* Risk, and nothing else. */
-  --waiting: #a16207;
-  --waiting-soft: #fefce8;
-  --waiting-line: #fde68a;
+  --waiting: #9a6207;
+  --waiting-soft: #fdf8ec;
+  --waiting-line: #f0dcae;
   --danger: #b42318;
-  --danger-soft: #fef3f2;
-
+  --danger-soft: #fdf3f2;
   --done: #15803d;
-  --done-soft: #f0fdf4;
 
+  --radius-bubble: 20px;
   --radius-card: 16px;
   --radius-inner: 10px;
   --radius-pill: 999px;
 
-  --gap: 12px;
-  --pad: 16px;
+  --column: 720px;
+  --rail-width: 68px;
 
-  --shadow: 0 1px 2px rgb(24 24 27 / 6%), 0 1px 3px rgb(24 24 27 / 4%);
-  --shadow-lift: 0 4px 12px rgb(24 24 27 / 8%);
+  --shadow: 0 1px 2px rgb(20 20 26 / 5%);
+  --shadow-lift: 0 6px 20px rgb(20 20 26 / 10%);
 
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --page: #18181b;
-    --card: #232327;
-    --sunken: #1d1d20;
-    --line: #34343a;
-    --line-strong: #46464e;
+    --page: #171719;
+    --rail: #131315;
+    --card: #202024;
+    --sunken: #1b1b1e;
+    --line: #2e2e34;
+    --line-strong: #41414a;
 
-    --ink: #f4f4f5;
-    --ink-soft: #a8a8b3;
-    --ink-faint: #75757f;
+    --ink: #f2f2f4;
+    --ink-soft: #a6a6b2;
+    --ink-faint: #74747f;
 
-    --accent: #8aa4e0;
-    --accent-soft: #262b38;
-    --accent-ink: #14192a;
+    --them: #26262b;
+    --me: #2b3b5c;
+    --me-ink: #e8eefb;
 
-    --waiting: #fbbf24;
-    --waiting-soft: #2a2410;
-    --waiting-line: #5c4a14;
-    --danger: #fca5a5;
-    --danger-soft: #2c1615;
+    --accent: #7ea1ec;
+    --accent-soft: #232b3c;
+    --accent-ink: #101728;
 
+    --waiting: #f0b429;
+    --waiting-soft: #2a2310;
+    --waiting-line: #57471a;
+    --danger: #f5a3a3;
+    --danger-soft: #2b1615;
     --done: #86efac;
-    --done-soft: #10241a;
 
-    --shadow: 0 1px 2px rgb(0 0 0 / 30%);
-    --shadow-lift: 0 4px 14px rgb(0 0 0 / 40%);
+    --shadow: 0 1px 2px rgb(0 0 0 / 35%);
+    --shadow-lift: 0 6px 22px rgb(0 0 0 / 45%);
   }
-}
-
-:root[data-theme="dark"] {
-  --page: #18181b;
-  --card: #232327;
-  --sunken: #1d1d20;
-  --line: #34343a;
-  --line-strong: #46464e;
-  --ink: #f4f4f5;
-  --ink-soft: #a8a8b3;
-  --ink-faint: #75757f;
-  --accent: #8aa4e0;
-  --accent-soft: #262b38;
-  --accent-ink: #14192a;
-  --waiting: #fbbf24;
-  --waiting-soft: #2a2410;
-  --waiting-line: #5c4a14;
-  --danger: #fca5a5;
-  --danger-soft: #2c1615;
-  --done: #86efac;
-  --done-soft: #10241a;
-  --shadow: 0 1px 2px rgb(0 0 0 / 30%);
-  --shadow-lift: 0 4px 14px rgb(0 0 0 / 40%);
 }
 
 * {
@@ -122,80 +111,90 @@ body,
 body {
   background: var(--page);
   color: var(--ink);
-  font: 14px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+  /* 15px, because the reference reads at that size and 14 felt cramped beside
+     it. Chinese in particular needs the extra pixel and the looser line. */
+  font:
+    15px/1.62 -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    system-ui,
     sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* --- the shell ----------------------------------------------------------- */
+/* --- the rail ------------------------------------------------------------ */
+/*
+ * Icon only. Labels in a sidebar this narrow are a second navigation competing
+ * with the first, and three destinations do not need naming twice - the pane
+ * says where you are.
+ */
 
 .shell {
   display: grid;
-  grid-template-columns: 216px 1fr;
+  grid-template-columns: var(--rail-width) 1fr;
   height: 100%;
 }
 
 .rail {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  /* Room for the traffic lights, since the title bar is transparent. */
-  padding: 40px 10px 10px;
+  align-items: center;
+  gap: 4px;
+  /* Room above for the traffic lights, since the title bar is transparent. */
+  padding: 52px 0 14px;
   border-right: 1px solid var(--line);
-}
-
-.rail h1 {
-  margin: 0 0 14px 8px;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--ink-faint);
+  background: var(--rail);
 }
 
 .rail button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 10px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
   border: 0;
-  border-radius: var(--radius-inner);
+  border-radius: 14px;
   background: transparent;
-  color: var(--ink-soft);
-  font: inherit;
-  text-align: left;
+  color: var(--ink-faint);
   cursor: pointer;
 }
 
 .rail button:hover {
-  background: var(--card);
+  background: var(--sunken);
+  color: var(--ink-soft);
 }
 
 .rail button[aria-current="true"] {
-  background: var(--card);
-  color: var(--ink);
-  font-weight: 550;
-  box-shadow: var(--shadow);
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 .rail .count {
-  margin-left: auto;
-  padding: 1px 7px;
+  position: absolute;
+  top: 3px;
+  right: 1px;
+  min-width: 17px;
+  padding: 0 4px;
+  border: 2px solid var(--rail);
   border-radius: var(--radius-pill);
-  background: var(--waiting-soft);
-  color: var(--waiting);
-  font-size: 11px;
+  background: var(--waiting);
+  color: var(--page);
+  font-size: 10px;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
-  font-weight: 600;
+  line-height: 15px;
 }
 
+/* Tokens so far, rounded to an order of magnitude. Hover for the full line. */
 .rail .foot {
   margin-top: auto;
-  padding: 10px 10px 0;
-  border-top: 1px solid var(--line);
+  padding-top: 10px;
   color: var(--ink-faint);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
+
+/* --- panes --------------------------------------------------------------- */
 
 .pane {
   display: flex;
@@ -204,99 +203,124 @@ body {
   height: 100%;
 }
 
+/* On the same measure as the content below it, so the two share a left edge. */
 .pane > header {
   display: flex;
   align-items: baseline;
   gap: 10px;
-  padding: 40px var(--pad) 10px;
+  width: 100%;
+  max-width: var(--column);
+  margin: 0 auto;
+  padding: 46px 28px 8px;
 }
 
 .pane > header h2 {
   margin: 0;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .pane > header p {
   margin: 0;
   color: var(--ink-faint);
-  font-size: 12px;
+  font-size: 13px;
 }
 
+/* The top pad clears the traffic lights: the title bar is transparent, so
+   without it the first message sits underneath them. */
 .scroll {
   flex: 1;
   overflow-y: auto;
-  padding: 6px var(--pad) var(--pad);
+  padding: 46px 0 20px;
 }
 
-/* --- cards --------------------------------------------------------------- */
-
-.card {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  background: var(--card);
-  box-shadow: var(--shadow);
+/* A pane with its own header has already left that room. */
+.pane > header + .scroll {
+  padding-top: 8px;
 }
 
-.card + .card {
-  margin-top: var(--gap);
+/* A measure, centred. Full-width paragraphs are hard to read and harder to
+   scan, and the reference keeps a column for the same reason. */
+.column {
+  max-width: var(--column);
+  margin: 0 auto;
+  padding: 0 28px;
 }
 
-.empty {
-  padding: 28px 16px;
-  color: var(--ink-faint);
-  text-align: center;
-}
-
-/* --- chat ---------------------------------------------------------------- */
+/* --- the conversation ---------------------------------------------------- */
 
 .turn {
-  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
 }
 
 .said {
-  display: inline-block;
-  max-width: 78%;
-  padding: 8px 13px;
-  border-radius: var(--radius-card);
-  background: var(--accent);
-  color: var(--accent-ink);
+  max-width: 82%;
+  padding: 11px 16px;
+  border-radius: var(--radius-bubble);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
-.said.mine {
-  float: right;
-  clear: both;
-}
-
 .said.theirs {
-  float: none;
-  background: var(--card);
-  border: 1px solid var(--line);
+  align-self: flex-start;
+  background: var(--them);
   color: var(--ink);
-  max-width: 100%;
+  border-bottom-left-radius: 7px;
 }
 
+.said.mine {
+  align-self: flex-end;
+  background: var(--me);
+  color: var(--me-ink);
+  border-bottom-right-radius: 7px;
+}
+
+/* Queued: sent, but waiting for the current turn to finish. It reads as a
+   message rather than a warning, because nothing is wrong. */
 .said.queued {
   background: var(--waiting-soft);
-  border: 1px solid var(--waiting-line);
   color: var(--waiting);
 }
 
+.queued-note.under {
+  align-self: auto;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.queued-note {
+  align-self: flex-end;
+  margin-top: 3px;
+  color: var(--ink-faint);
+  font-size: 11px;
+}
+
+.when {
+  margin: 20px 0 16px;
+  color: var(--ink-faint);
+  font-size: 12px;
+  text-align: center;
+}
+
 .toolrow {
+  align-self: flex-start;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
-  clear: both;
-  padding: 3px 2px;
+  max-width: 82%;
+  padding: 4px 6px;
   color: var(--ink-faint);
   font-family: var(--mono);
   font-size: 12px;
+  overflow-wrap: anywhere;
 }
 
 .toolrow .mark {
-  width: 14px;
+  width: 13px;
+  flex: none;
   text-align: center;
 }
 
@@ -309,13 +333,15 @@ body {
 }
 
 .notice {
-  clear: both;
-  margin: 10px 0;
-  padding: 9px 12px;
-  border-radius: var(--radius-inner);
+  align-self: center;
+  max-width: 82%;
+  margin: 8px 0;
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
   background: var(--sunken);
   color: var(--ink-soft);
-  font-size: 12px;
+  font-size: 12.5px;
+  text-align: center;
 }
 
 .notice.bad {
@@ -323,32 +349,99 @@ body {
   color: var(--danger);
 }
 
+/* --- the composer -------------------------------------------------------- */
+/*
+ * One container holding everything, rather than a field with a button next to
+ * it. It is the difference between a form and somewhere to talk.
+ */
+
+.composer-wrap {
+  padding: 4px 0 18px;
+}
+
 .composer {
   display: flex;
-  gap: 8px;
-  padding: 10px var(--pad) var(--pad);
-  border-top: 1px solid var(--line);
+  align-items: flex-end;
+  gap: 4px;
+  padding: 7px 8px 7px 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: 26px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.composer:focus-within {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-lift);
 }
 
 .composer textarea {
   flex: 1;
-  min-height: 40px;
-  max-height: 160px;
-  padding: 10px 13px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-card);
-  background: var(--card);
+  min-height: 34px;
+  max-height: 180px;
+  padding: 6px 4px;
+  border: 0;
+  background: none;
   color: var(--ink);
   font: inherit;
   resize: none;
-}
-
-.composer textarea:focus {
-  border-color: var(--accent);
   outline: none;
 }
 
-/* --- buttons ------------------------------------------------------------- */
+.composer textarea::placeholder {
+  color: var(--ink-faint);
+}
+
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-faint);
+  cursor: pointer;
+}
+
+.icon-button:hover:not(:disabled) {
+  background: var(--sunken);
+  color: var(--ink-soft);
+}
+
+.icon-button.send {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.icon-button.send:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.icon-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* --- cards, for the panes that are lists --------------------------------- */
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--card);
+}
+
+.card + .card {
+  margin-top: 12px;
+}
+
+.empty {
+  padding: 34px 18px;
+  color: var(--ink-faint);
+  text-align: center;
+}
 
 button.pill {
   padding: 8px 16px;
@@ -357,6 +450,7 @@ button.pill {
   background: var(--card);
   color: var(--ink);
   font: inherit;
+  font-size: 14px;
   font-weight: 550;
   cursor: pointer;
   white-space: nowrap;
@@ -383,28 +477,56 @@ button.pill:disabled {
   cursor: default;
 }
 
-/* --- the approvals pane -------------------------------------------------- */
+/* --- waiting for you ----------------------------------------------------- */
 
 .waiting-card {
   border-color: var(--waiting-line);
+  background: var(--waiting-soft);
 }
 
 .entry {
   display: flex;
-  gap: 11px;
-  padding: 13px var(--pad);
+  gap: 12px;
+  padding: 14px 18px;
 }
 
 .entry + .entry {
   border-top: 1px solid var(--line);
 }
 
+.waiting-card .entry + .entry {
+  border-top-color: var(--waiting-line);
+}
+
+/*
+ * A waiting row stacks: the tickable line, then its detail underneath. Only the
+ * top half is the label, so the detail can be read and selected without the box
+ * moving under the pointer.
+ */
+.waiting-card .entry {
+  flex-direction: column;
+  gap: 0;
+}
+
+.pick {
+  display: flex;
+  gap: 12px;
+  cursor: pointer;
+}
+
 .entry input[type="checkbox"] {
-  width: 17px;
-  height: 17px;
-  margin-top: 1px;
-  accent-color: var(--accent);
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
   flex: none;
+  accent-color: var(--accent);
+}
+
+.entry .mark {
+  width: 18px;
+  flex: none;
+  color: var(--done);
+  text-align: center;
 }
 
 .entry .body {
@@ -419,7 +541,7 @@ button.pill:disabled {
 .entry .meta {
   margin-top: 3px;
   color: var(--ink-faint);
-  font-size: 12px;
+  font-size: 12.5px;
 }
 
 .entry .warn {
@@ -428,8 +550,8 @@ button.pill:disabled {
 
 .tag {
   display: inline-block;
-  margin-left: 6px;
-  padding: 0 7px;
+  margin-left: 7px;
+  padding: 1px 8px;
   border-radius: var(--radius-pill);
   font-size: 11px;
   font-weight: 600;
@@ -437,8 +559,8 @@ button.pill:disabled {
 }
 
 .tag.irreversible {
-  background: var(--waiting-soft);
-  color: var(--waiting);
+  background: var(--waiting);
+  color: var(--page);
 }
 
 .tag.reversible,
@@ -456,8 +578,12 @@ button.pill:disabled {
   display: flex;
   gap: 8px;
   align-items: center;
-  padding: 11px var(--pad);
+  padding: 12px 18px;
   border-top: 1px solid var(--line);
+}
+
+.waiting-card .actions {
+  border-top-color: var(--waiting-line);
 }
 
 .actions .spacer {
@@ -466,14 +592,18 @@ button.pill:disabled {
 
 /* --- details ------------------------------------------------------------- */
 
+.detail-wrap {
+  margin-top: 10px;
+}
+
 details.detail {
-  margin-top: 9px;
+  margin-top: 10px;
 }
 
 details.detail > summary {
   color: var(--accent);
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
   list-style: none;
 }
 
@@ -482,19 +612,19 @@ details.detail > summary::-webkit-details-marker {
 }
 
 .detail-body {
-  margin-top: 8px;
+  margin-top: 9px;
   border: 1px solid var(--line);
   border-radius: var(--radius-inner);
-  background: var(--sunken);
+  background: var(--card);
   overflow: hidden;
 }
 
 .diff {
   margin: 0;
-  padding: 9px 11px;
+  padding: 10px 13px;
   font-family: var(--mono);
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.55;
   overflow-x: auto;
   white-space: pre;
 }
@@ -513,29 +643,28 @@ details.detail > summary::-webkit-details-marker {
 
 .body-text {
   margin: 0;
-  padding: 11px;
+  padding: 13px;
   font: inherit;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
 .body-title {
-  padding: 8px 11px;
+  padding: 9px 13px;
   border-bottom: 1px solid var(--line);
   color: var(--ink-soft);
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 600;
 }
 
-/* The one place money is laid out as money. */
 table.order {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 table.order td {
-  padding: 7px 11px;
+  padding: 8px 13px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -554,16 +683,16 @@ table.order tr.about td {
   border-bottom: 0;
   padding-top: 0;
   color: var(--ink-faint);
-  font-size: 12px;
+  font-size: 12.5px;
 }
 
-/* --- connectors ---------------------------------------------------------- */
+/* --- connections --------------------------------------------------------- */
 
 .connector {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 14px var(--pad);
+  gap: 14px;
+  padding: 15px 18px;
 }
 
 .connector + .connector {
@@ -582,55 +711,50 @@ table.order tr.about td {
 .connector .about {
   margin-top: 2px;
   color: var(--ink-soft);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .connector .tools {
   margin-top: 6px;
   color: var(--ink-faint);
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 11.5px;
   overflow-wrap: anywhere;
 }
 
 /* --- the first run ------------------------------------------------------- */
-/*
- * The whole window, once, because asking what it may touch is the product's
- * first sentence rather than a step to click past.
- */
 
 .firstrun {
-  max-width: 460px;
+  max-width: 480px;
   margin: auto;
-  padding: 24px;
-  text-align: center;
+  padding: 28px;
 }
 
 .firstrun h2 {
-  margin: 0 0 12px;
-  font-size: 19px;
+  margin: 0 0 14px;
+  font-size: 21px;
   font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .firstrun p {
-  margin: 0 0 12px;
+  margin: 0 0 14px;
   color: var(--ink-soft);
-  text-align: left;
 }
 
 .firstrun p.quiet {
   color: var(--ink-faint);
-  font-size: 13px;
+  font-size: 13.5px;
 }
 
 .firstrun code {
-  padding: 1px 5px;
-  border-radius: 5px;
-  background: var(--card);
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--sunken);
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 12.5px;
 }
 
 .firstrun button {
-  margin-top: 8px;
+  margin-top: 6px;
 }

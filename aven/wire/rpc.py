@@ -108,7 +108,7 @@ class Conversation:
             "connectors": protocol.connectors_as_dict(self.box, self.describe),
             "tray": protocol.tray_as_dict(self.tray),
             "standing": [str(a) for a in (self.standing.approvals if self.standing else [])],
-            "usage": str(getattr(self.model, "usage", "")),
+            "usage": protocol.usage_as_dict(getattr(self.model, "usage", None)),
         }
 
     # -- the dispatcher ------------------------------------------------------

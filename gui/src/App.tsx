@@ -14,15 +14,36 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Approvals } from "./Approvals";
-import { Chat, type Bubble } from "./Chat";
+import { Chat, type Bubble, type Unstamped } from "./Chat";
 import { Connections } from "./Connections";
 import { FirstRun } from "./Folders";
+import { ChatIcon, ConnectionsIcon, WaitingIcon } from "./Icons";
 import * as agent from "./agent";
 import { pickFolders, readRoots, writeRoots } from "./roots";
-import { EXPECTS_VERSION, type Connector, type State, type Tray } from "./wire";
+import {
+  EXPECTS_VERSION,
+  type Connector,
+  type State,
+  type Tray,
+  type Usage,
+} from "./wire";
 import "./styles.css";
 
 type Pane = "chat" | "waiting" | "connections";
+
+/**
+ * A token count at sidebar width.
+ *
+ * Rounded hard on purpose. The exact figure is a hover away in the tooltip; what
+ * belongs in the corner of the eye is the order of magnitude, which is the part
+ * that tells you a conversation has got expensive.
+ */
+function brief(tokens: number): string {
+  if (tokens < 1000) return String(tokens);
+  if (tokens < 1_000_000)
+    return `${(tokens / 1000).toFixed(tokens < 10_000 ? 1 : 0)}k`;
+  return `${(tokens / 1_000_000).toFixed(1)}M`;
+}
 
 export default function App() {
   const [pane, setPane] = useState<Pane>("chat");
@@ -32,7 +53,7 @@ export default function App() {
   const [standing, setStanding] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const [queued, setQueued] = useState(0);
-  const [usage, setUsage] = useState("");
+  const [usage, setUsage] = useState<Usage | null>(null);
   const [trouble, setTrouble] = useState<string | null>(null);
 
   /**
@@ -47,27 +68,33 @@ export default function App() {
   // already be there.
   const streaming = useRef(false);
 
-  const say = useCallback((bubble: Bubble) => {
-    setBubbles((before) => [...before, bubble]);
+  /**
+   * Add a bubble, stamped with when it arrived.
+   *
+   * Stamped here rather than carried on the wire: this is when the window saw
+   * it, which is what a reader of the transcript is actually asking about.
+   */
+  const say = useCallback((bubble: Unstamped) => {
+    setBubbles((before) => [
+      ...before,
+      { ...bubble, at: Date.now() } as Bubble,
+    ]);
   }, []);
 
-  const absorb = useCallback(
-    (state: State) => {
-      if (state.version !== EXPECTS_VERSION) {
-        setTrouble(
-          `This window speaks protocol ${EXPECTS_VERSION} and aven speaks ` +
-            `${state.version}. One of them needs updating.`,
-        );
-      }
-      setTray(state.tray);
-      setConnectors(state.connectors);
-      setStanding(state.standing);
-      setBusy(state.busy);
-      setQueued(state.queued);
-      setUsage(state.usage);
-    },
-    [],
-  );
+  const absorb = useCallback((state: State) => {
+    if (state.version !== EXPECTS_VERSION) {
+      setTrouble(
+        `This window speaks protocol ${EXPECTS_VERSION} and aven speaks ` +
+          `${state.version}. One of them needs updating.`,
+      );
+    }
+    setTray(state.tray);
+    setConnectors(state.connectors);
+    setStanding(state.standing);
+    setBusy(state.busy);
+    setQueued(state.queued);
+    setUsage(state.usage);
+  }, []);
 
   // --- wire up once --------------------------------------------------------
 
@@ -83,11 +110,14 @@ export default function App() {
               if (last?.kind === "theirs")
                 return [
                   ...before.slice(0, -1),
-                  { kind: "theirs", text: last.text + event.text },
+                  { kind: "theirs", text: last.text + event.text, at: last.at },
                 ];
             }
             streaming.current = true;
-            return [...before, { kind: "theirs", text: event.text }];
+            return [
+              ...before,
+              { kind: "theirs", text: event.text, at: Date.now() },
+            ];
           });
           break;
 
@@ -129,6 +159,7 @@ export default function App() {
             next[at] = {
               kind: "tool",
               call: event.call,
+              at: before[at].at,
               done: true,
               staged: event.staged,
               failed: Boolean(event.result.is_error),
@@ -154,7 +185,10 @@ export default function App() {
           break;
 
         case "interrupted":
-          say({ kind: "notice", text: "Stopped. Anything undoable is still in Waiting for you." });
+          say({
+            kind: "notice",
+            text: "Stopped. Anything undoable is still in Waiting for you.",
+          });
           break;
 
         case "failed":
@@ -237,13 +271,20 @@ export default function App() {
     const done = reply.data.committed?.length ?? 0;
     say({ kind: "notice", text: `Approved ${done}.` });
     for (const entry of reply.data.failed ?? [])
-      say({ kind: "notice", text: `${entry.preview} failed: ${entry.output}`, bad: true });
+      say({
+        kind: "notice",
+        text: `${entry.preview} failed: ${entry.output}`,
+        bad: true,
+      });
   };
 
   const onDiscard = async () => {
     const reply = await agent.send({ type: "discard" });
     setTray(reply.data.tray);
-    say({ kind: "notice", text: `Discarded ${reply.data.discarded}; they never happened.` });
+    say({
+      kind: "notice",
+      text: `Discarded ${reply.data.discarded}; they never happened.`,
+    });
   };
 
   const onUndo = async () => {
@@ -313,9 +354,7 @@ export default function App() {
   if (roots.length === 0) {
     return (
       <div className="shell">
-        <nav className="rail">
-          <h1>aven</h1>
-        </nav>
+        <nav className="rail" />
         <FirstRun onAdd={onAddFolders} />
       </div>
     );
@@ -324,18 +363,19 @@ export default function App() {
   return (
     <div className="shell">
       <nav className="rail">
-        <h1>aven</h1>
         <button
           aria-current={pane === "chat"}
           onClick={() => setPane("chat")}
+          title="Chat"
         >
-          Chat
+          <ChatIcon />
         </button>
         <button
           aria-current={pane === "waiting"}
           onClick={() => setPane("waiting")}
+          title="Waiting for you"
         >
-          Waiting for you
+          <WaitingIcon />
           {tray.pending.length > 0 && (
             <span className="count">{tray.pending.length}</span>
           )}
@@ -343,10 +383,15 @@ export default function App() {
         <button
           aria-current={pane === "connections"}
           onClick={() => setPane("connections")}
+          title="Connections"
         >
-          Connections
+          <ConnectionsIcon />
         </button>
-        <div className="foot">{usage || "—"}</div>
+        {usage !== null && usage.requests > 0 && (
+          <div className="foot" title={usage.line}>
+            {brief(usage.input + usage.output)}
+          </div>
+        )}
       </nav>
 
       {trouble && <div className="notice bad">{trouble}</div>}

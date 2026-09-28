@@ -25,11 +25,7 @@ export type Detail =
 
 export type Risk = "read" | "reversible" | "irreversible";
 export type EntryState =
-  | "pending"
-  | "applied"
-  | "committed"
-  | "discarded"
-  | "failed";
+  "pending" | "applied" | "committed" | "discarded" | "failed";
 
 /** One thing that changed the world, or wants to. */
 export interface Entry {
@@ -67,6 +63,15 @@ export interface SessionInfo {
   head: string | null;
 }
 
+/** What the run has cost so far: numbers to draw, and the sentence to print. */
+export interface Usage {
+  requests: number;
+  input: number;
+  output: number;
+  cached: number;
+  line: string;
+}
+
 export interface State {
   version: number;
   session: SessionInfo;
@@ -76,7 +81,7 @@ export interface State {
   connectors: Connector[];
   tray: Tray;
   standing: string[];
-  usage: string;
+  usage: Usage;
 }
 
 export interface StoredMessage {

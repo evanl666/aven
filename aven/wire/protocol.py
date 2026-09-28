@@ -143,6 +143,25 @@ def call_as_dict(call: ToolCall) -> dict[str, Any]:
     return {"id": call.id, "name": call.name, "args": call.args}
 
 
+def usage_as_dict(usage: Any) -> dict[str, Any]:
+    """What a turn cost, as numbers and as a sentence.
+
+    Both, because they are read in different places. `line` is the sentence the
+    terminal prints, already translated. The numbers are for a client that has
+    to fit the same information somewhere narrow, or wants to draw it rather
+    than print it - a 68px sidebar cannot take a sentence, and a window that
+    regexed the numbers back out of a translated string would break the first
+    time the wording changed.
+    """
+    return {
+        "requests": getattr(usage, "requests", 0),
+        "input": getattr(usage, "total_input", 0),
+        "output": getattr(usage, "output_tokens", 0),
+        "cached": getattr(usage, "cached_tokens", 0),
+        "line": str(usage) if usage is not None else "",
+    }
+
+
 # --- what a client needs to draw itself --------------------------------------
 
 
