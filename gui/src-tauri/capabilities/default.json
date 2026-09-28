@@ -1,0 +1,23 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "The main window may talk to the aven sidecar and nothing else.",
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "core:default",
+    "opener:default",
+    {
+      "identifier": "shell:allow-spawn",
+      "allow": [
+        {
+          "name": "binaries/aven",
+          "sidecar": true,
+          "args": true
+        }
+      ]
+    },
+    "shell:allow-stdin-write"
+  ]
+}

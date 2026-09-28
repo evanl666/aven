@@ -1,32 +1,22 @@
-# gui_assistant — not built
+# gui_assistant
 
-A window rather than a terminal. Nothing here yet, and this file is what it
-would take, so the folder is a decision rather than an empty gesture.
+The desktop window lives at [`gui/`](../../../gui) in the repository root, not
+here. It is a Tauri app — React, TypeScript and a Rust shell — so it is not a
+Python package and has no business inside one.
 
-## What it already has
+There is no Python code in this folder and there may never need to be. The window
+does not import aven; it spawns `aven --mode rpc` as a sidecar and speaks the
+protocol in `aven/wire/`. That is the whole coupling, and it is the same coupling
+a phone client will have.
 
-Everything below `apps/`. The loop yields events and has no opinion about who
-draws them; the session tree, the staging tray, compaction, steering, skills,
-memory and the policy layer are all reached the same way `cli_assistant` reaches
-them. `terminal/app.py` is the shape of the wiring to copy — the same
-Blueprint, a different presentation.
+If a GUI-specific app ever does need a Python side — its own system prompt, its
+own session directory, its own tool selection — it goes here as a `Blueprint`,
+exactly like `cli_assistant` and `cli_code`. Until then this folder is a signpost.
 
-## What it needs
+## The constraint that matters
 
-- **An event renderer that is not a terminal.** `terminal/render.py` and
-  `terminal/shell.py` both consume the same `Event` stream; a third consumer is
-  the whole of the port. Nothing in `harness/` has to change.
-- **A tray surface.** The staging tray is the one part of aven a GUI would
-  present better than a terminal does: a list with a checkbox per entry beats
-  `[c] commit pending`. `TrayPanel` in `terminal/widgets.py` is the model to
-  follow.
-- **A toolkit choice.** Tauri or a local web view keeps the local-first promise.
-  Electron does too, at a cost. Anything that renders remotely does not.
-- **Nothing in the harness.** If building this needs a change below `apps/`,
-  that change is a bug in the layering, not a requirement of the GUI — and
-  `tests/test_architecture.py` will say so.
-
-## What it does not need
-
-A second agent, a second session format, or a second way of deciding what may
-take effect. Those exist and are shared.
+If building the window needs a change below `apps/`, that change is a bug in the
+layering rather than a requirement of the window — and `tests/test_architecture.py`
+will say so. So far it has needed none: multiple roots, structured previews,
+standing approvals, triggers and the RPC protocol were all built in the harness
+and are all used by the terminal too.

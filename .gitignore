@@ -6,3 +6,11 @@ build/
 *.egg-info/
 .pytest_cache/
 .DS_Store
+
+# the desktop app's build output and dependencies
+gui/node_modules/
+gui/dist/
+gui/src-tauri/target/
+gui/src-tauri/gen/
+# the dev sidecar is a machine-specific wrapper, not source
+gui/src-tauri/binaries/
