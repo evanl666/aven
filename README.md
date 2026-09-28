@@ -166,6 +166,78 @@ otherwise the model still believes the work stands.
 The menu only offers keys that would do something. A tray holding one finished
 calendar event shows `[u]` and nothing else.
 
+## Connecting a service
+
+A connector is a group of tools that stays out of the way until it is asked for.
+Every tool's schema rides in every request, so holding the unused ones back is
+worth about 40% of the per-turn cost — and it turns out to be the right shape
+for permission too. A service that is off is not a greyed-out button; it is a
+set of tools the model cannot see and therefore cannot call.
+
+Services go in `~/.aven/connectors.toml`:
+
+```toml
+[google]
+client_id = "....apps.googleusercontent.com"
+client_secret = "...."
+
+[mcp.notes]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-filesystem", "/Users/me/Notes"]
+about = "Read and write the notes folder"
+
+[mcp.notes.risk]
+read_text_file = "read"      # your judgement, not the server's
+```
+
+**Tokens go in the macOS login keychain**, through `security`, the same place
+Safari keeps its own. On a platform with no keychain they go in a file only your
+user can read, and the Connections panel says which — a product that quietly did
+the weaker thing on one platform would be lying by omission. Nothing is
+encrypted by aven itself: encryption needs a key, the key needs somewhere to
+live, and somewhere to live is the problem being solved.
+
+### Google Calendar
+
+You need your own OAuth client, because a client id shipped in a public repo is
+a client id everybody shares. Once, at
+[console.cloud.google.com](https://console.cloud.google.com): enable the Google
+Calendar API, then **Credentials → Create credentials → OAuth client ID →
+Desktop app**. Paste the two values above.
+
+Signing in opens your own browser. aven never sees your password — it listens on
+`127.0.0.1` for the redirect, and the code that comes back is bound to a
+one-time secret only this process knows (PKCE), so intercepting it is not enough
+to spend it.
+
+Then note which risk each tool carries:
+
+| | |
+|---|---|
+| read the calendar | `read` — runs, never asks |
+| add an event you alone see | `reversible` — runs, and undo deletes it again |
+| add an event that invites somebody | `irreversible` — **waits for you** |
+
+Same tool, different answer per call. Deleting an event puts your calendar back
+exactly as it was; it does not unsend the mail that told four people to be
+somewhere.
+
+### Any MCP server
+
+One server is one connector. This is the answer to "connect anything": writing a
+connector by hand costs an OAuth flow and an API wrapper per service, and
+pointing at an MCP server costs four lines.
+
+**Every MCP tool is `irreversible` until you say otherwise**, so it is staged and
+waits. That is deliberate. MCP lets a server describe its own tools as read-only
+— a hint from the very party whose behaviour is in question, and a server that
+deletes your files can claim to be harmless. The two ways out are both your own
+words: `trust = true` honours the server's hints, or name a tool in `[…risk]`
+and give it a risk yourself. What you write always wins.
+
+Tool names are prefixed with the server's (`notes_read_file`), so an MCP tool can
+never shadow aven's own — the ones with the folder sandbox around them.
+
 ## How it works
 
 ```

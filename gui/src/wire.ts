@@ -7,7 +7,7 @@
  * announces itself rather than turning into `undefined` three panes deep.
  */
 
-export const EXPECTS_VERSION = 1;
+export const EXPECTS_VERSION = 2;
 
 /** What a call would do, in a shape richer than one line. */
 export type Detail =
@@ -48,11 +48,25 @@ export interface Tray {
 }
 
 /** A tool group. Connecting a service is bringing one in. */
+/**
+ * Whether a service could work at all.
+ *
+ * Not the same question as `connected`, which is whether its tools are in front
+ * of the model right now. A service can be signed in and not connected: the
+ * credential is in the keychain and this conversation has not needed it.
+ */
+export type ConnectorState = "ready" | "needs_sign_in" | "signing_in";
+
 export interface Connector {
   name: string;
   about: string;
+  state: ConnectorState;
   connected: boolean;
   tools: string[];
+  /** Where this one's credential is kept, in one line. Empty if it has none. */
+  keeps: string;
+  /** Why the last sign-in did not work, if it did not. */
+  trouble: string | null;
 }
 
 export interface SessionInfo {
@@ -127,6 +141,16 @@ export type Event =
   | { type: "tray"; pending: Entry[]; undoable: Entry[] }
   | { type: "interrupted" }
   | { type: "failed"; error: string }
+  // Sent when a sign-in finishes, however it finished. A browser consent screen
+  // is not a round trip, so `connect` answers `signing_in` and this says how it
+  // turned out.
+  | {
+      type: "connector";
+      name: string;
+      state: ConnectorState;
+      connectors: Connector[];
+      error?: string;
+    }
   | { type: "settled"; busy: false };
 
 export interface Response {

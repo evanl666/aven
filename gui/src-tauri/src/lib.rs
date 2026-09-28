@@ -124,6 +124,17 @@ async fn agent_start(app: AppHandle, roots: Vec<String>) -> Result<(), String> {
         + 1;
 
     let mut args: Vec<String> = vec!["--mode".into(), "rpc".into()];
+
+    // In the terminal this flag is opt-in because there it decides whether
+    // Calendar and Mail exist at all, and forgetting it should not be what
+    // silently removes them. Here the Connections panel is the opt-in: passing
+    // it only makes those services *appear* in the list, dormant, and nothing
+    // reaches macOS until somebody connects one. Leaving it off would make the
+    // window strictly less capable than the terminal for no one's benefit.
+    if cfg!(target_os = "macos") {
+        args.push("--mac".into());
+    }
+
     for root in roots {
         args.push("--root".into());
         args.push(root);

@@ -195,6 +195,21 @@ export default function App() {
           say({ kind: "notice", text: event.error, bad: true });
           break;
 
+        // A sign-in finished. It was never a round trip - somebody had a
+        // browser open - so the answer arrives here rather than as a reply.
+        case "connector":
+          setConnectors(event.connectors);
+          say(
+            event.error
+              ? {
+                  kind: "notice",
+                  text: `Could not connect ${event.name}: ${event.error}`,
+                  bad: true,
+                }
+              : { kind: "notice", text: `Connected ${event.name}.` },
+          );
+          break;
+
         // Not agent_end. A follow-up carries a run past that.
         case "settled":
           streaming.current = false;
@@ -390,6 +405,25 @@ export default function App() {
     attempt(async () => {
       const reply = await agent.send({ type: "connect", group: name });
       setConnectors(reply.data.connectors);
+      // Not an error, and not finished either: the row now says a browser is
+      // open, and the `connector` event above says how it turned out.
+      if (reply.data.state === "signing_in")
+        say({
+          kind: "notice",
+          text: `Opened your browser to sign in to ${name}.`,
+        });
+    });
+
+  const onDisconnect = (name: string) =>
+    attempt(async () => {
+      const reply = await agent.send({ type: "disconnect", group: name });
+      setConnectors(reply.data.connectors);
+      say({
+        kind: "notice",
+        text: reply.data.forgotten
+          ? `Signed out of ${name}; the credential is gone.`
+          : `${name} is no longer in play.`,
+      });
     });
 
   // Still reading the config. A flash of the wrong screen is worse than a beat
@@ -472,6 +506,7 @@ export default function App() {
             standing={standing}
             busy={busy}
             onConnect={onConnect}
+            onDisconnect={onDisconnect}
             roots={roots}
             pending={tray.pending.length}
             onAddFolders={onAddFolders}

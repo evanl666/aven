@@ -106,6 +106,62 @@ aven -v "..."          # 显示每个工具的返回值
 
 菜单只显示当下真能做的键。一个只剩已完成日历事件的清单,只会给你 `[u]`。
 
+## 连接一个服务
+
+一个 connector 就是一组工具,在被需要之前不占位置。每个工具的 schema 每轮都要随请求发出,把用不到的收起来能省下大约 40% 的每轮开销 —— 而这个形状恰好也适合做权限。关掉的服务不是一个变灰的按钮,而是模型根本看不见、因此叫不动的一组工具。
+
+服务写在 `~/.aven/connectors.toml`:
+
+```toml
+[google]
+client_id = "....apps.googleusercontent.com"
+client_secret = "...."
+
+[mcp.notes]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-filesystem", "/Users/me/Notes"]
+about = "读写笔记文件夹"
+
+[mcp.notes.risk]
+read_text_file = "read"      # 你的判断,不是服务器的
+```
+
+**令牌存在 macOS 登录钥匙串里**,走 `security`,和 Safari 存自己那些的是同一个地方。没有钥匙串的平台上存成只有你本人可读的文件,并且 Connections 面板会写明是哪一种 —— 在某个平台上悄悄用更弱的方案,就是在用沉默撒谎。aven 自己不加密:加密需要密钥,密钥需要一个存放的地方,而"存放的地方"正是这里要解决的问题。
+
+### Google Calendar
+
+你需要自己的 OAuth client,因为公开仓库里附带的 client id 等于所有人共用一个。去
+[console.cloud.google.com](https://console.cloud.google.com) 做一次:启用 Google
+Calendar API,然后 **凭据 → 创建凭据 → OAuth 客户端 ID → 桌面应用**,把两个值填进上面。
+
+登录会打开你自己的浏览器。aven 全程看不到你的密码 —— 它只在 `127.0.0.1` 上等那个
+回调,而回调里的 code 绑定了只有本进程知道的一次性密钥(PKCE),所以光截获它也花不掉。
+
+然后注意每个工具带的风险等级:
+
+| | |
+|---|---|
+| 读日历 | `read` —— 直接执行,从不询问 |
+| 加一个只有你看得见的日程 | `reversible` —— 直接执行,撤销就是删掉它 |
+| 加一个会发邀请的日程 | `irreversible` —— **等你确认** |
+
+同一个工具,每次调用的答案不同。删掉日程能让你的日历回到原样,但收不回那封通知
+四个人到场的邮件。
+
+### 任何 MCP server
+
+一个 server 就是一个 connector。这是"想连什么就连什么"的答案:手写一个 connector
+要为每个服务做一遍 OAuth 和 API 封装,而指向一个 MCP server 只要四行。
+
+**每个 MCP 工具在你开口之前一律按 `irreversible` 处理**,也就是暂存等待确认。这是
+故意的。MCP 允许 server 声明自己的工具是只读的 —— 这个提示恰恰来自行为本身存疑的
+那一方,一个会删你文件的 server 完全可以自称人畜无害。两个出口都得是你自己的话:
+`trust = true` 表示采信这个 server 的声明,或者在 `[…risk]` 里点名某个工具、自己
+给它定级。**你写的永远赢。**
+
+工具名前面会加上 server 名(`notes_read_file`),所以 MCP 工具永远不可能顶替掉
+aven 自己那些 —— 外面套着文件夹沙箱的那些。
+
 ## 它是怎么工作的
 
 ```

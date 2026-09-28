@@ -33,19 +33,48 @@ def resolve(source: ToolSource | None) -> list[Tool]:
 
 
 class ToolBox:
-    """Tools that are always there, plus groups that can be brought in."""
+    """Tools that are always there, plus groups that can be brought in.
 
-    def __init__(self, core: Sequence[Tool], groups: dict[str, Sequence[Tool]]) -> None:
+    A group may be a function rather than a list. That is what lets a connector
+    whose tools need a token build them at the moment it is brought in: holding
+    them from startup would mean either building tools against a credential that
+    does not exist yet, or asking for the credential before anybody said they
+    wanted the service.
+
+    `gate` is how something outside gets a veto. The box knows which groups
+    exist; it does not know that one of them needs signing in to first, and it
+    should not have to. A gate returning a sentence refuses the group and says
+    why, in words meant for the model to act on.
+    """
+
+    def __init__(
+        self,
+        core: Sequence[Tool],
+        groups: dict[str, ToolSource],
+        gate: Callable[[str], str | None] | None = None,
+    ) -> None:
         self.core = list(core)
-        self.groups = {name: list(tools) for name, tools in groups.items() if tools}
+        # An empty list is a group with nothing in it and is dropped. A function
+        # is kept unasked - calling it here to find out whether it is empty is
+        # exactly the work being deferred.
+        self.groups = {
+            name: tools
+            for name, tools in groups.items()
+            if callable(tools) or len(tools) > 0
+        }
+        self.gate = gate
         self.brought_in: set[str] = set()
+
+    def tools_in(self, name: str) -> list[Tool]:
+        """One group's tools, built now if they were waiting to be."""
+        return resolve(self.groups.get(name))
 
     def active(self) -> list[Tool]:
         """What the model may call this turn."""
         tools = list(self.core)
         for name in self.groups:
             if name in self.brought_in:
-                tools += self.groups[name]
+                tools += self.tools_in(name)
         if self.dormant():
             tools.append(self._opener())
         return tools
@@ -53,10 +82,29 @@ class ToolBox:
     def dormant(self) -> list[str]:
         return [name for name in self.groups if name not in self.brought_in]
 
+    def refused(self, name: str) -> str | None:
+        """Why this group may not be brought in, if it may not."""
+        return self.gate(name) if self.gate else None
+
     def bring_in(self, name: str) -> bool:
         if name not in self.groups or name in self.brought_in:
             return False
+        if self.refused(name):
+            return False
         self.brought_in.add(name)
+        return True
+
+    def put_away(self, name: str) -> bool:
+        """Take a group back out of play.
+
+        The conversation keeps whatever was already said with those tools. It
+        has to: the transcript is a record of what happened, and editing out the
+        calls would make the model's own earlier reasoning refer to nothing.
+        What changes is only what it may call from here.
+        """
+        if name not in self.brought_in:
+            return False
+        self.brought_in.discard(name)
         return True
 
     def catalogue(self, describe: dict[str, str]) -> str:
@@ -77,8 +125,15 @@ class ToolBox:
             group: Annotated[str, "The group to bring in, as the catalogue names it"],
         ) -> str:
             """Bring a group of tools into play, when the task turns out to need it."""
+            # Asked before the attempt, so a refusal can explain itself. Without
+            # this the model gets "already loaded" for a group that is actually
+            # locked, and spends its next turn calling tools that are not there.
+            refused = self.refused(group) if group in self.groups else None
+            if refused:
+                return refused
+
             if self.bring_in(group):
-                names = ", ".join(t.name for t in self.groups[group])
+                names = ", ".join(t.name for t in self.tools_in(group))
                 return f"loaded {group}: {names}"
 
             if group in self.groups:

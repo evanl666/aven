@@ -21,12 +21,16 @@ import platform
 from pathlib import Path
 
 from aven.apps.cli_assistant.mac import mac_tools
+from aven.harness.connect import Connections, Connector
 from aven.harness.toolbox import ToolBox
+from aven.harness.vault import vault_for
 from aven.terminal.app import Blueprint, Kit, launch
 from aven.toolkit import file_tools, memory_tools, skill_tools
+from aven.toolkit.connectors import build
 from aven.toolkit.files import names_for
 
-SESSIONS = Path.home() / ".aven" / "sessions"
+HOME = Path.home() / ".aven"
+SESSIONS = HOME / "sessions"
 
 # What each dormant group is for. The model reads this to decide whether a task
 # needs the group, so it says when, not only what. English, like every string
@@ -82,31 +86,54 @@ def arguments(parser: argparse.ArgumentParser) -> None:
 
 
 def assemble(args: argparse.Namespace, roots: list[Path], found_skills: list) -> Kit:
-    """The assistant's tools.
+    """The assistant's tools and the services it could reach.
 
     Files are what nearly every task touches, so they are always in play, across
     every root. The rest wait to be asked for: a calendar is dead weight while
     sorting a download folder, and its schema is charged for every turn it sits
     there.
+
+    Two kinds of connector end up in the same list, which is the point of having
+    one list. The local ones are built here and have nothing to sign in to. The
+    rest come out of `connectors.toml` and may need a browser. A person looking
+    at the Connections panel should not have to know which is which - only
+    whether it works and what it can do.
     """
     # Memory is written relative to the working folder, not to all of them: a
     # fact belongs to one place or everywhere, and "everywhere" is the global
     # file rather than a second root.
-    groups: dict[str, list] = {"memory": memory_tools(roots[0])}
+    local: list[Connector] = [
+        Connector(name="memory", about=GROUPS["memory"], tools=memory_tools(roots[0]))
+    ]
 
     # Opt-in, not opt-out. These are the tools that reach outside the root and
     # ask macOS for permission, and forgetting a flag should not be what decides
     # whether Mail is reachable.
     if args.mac and platform.system() == "Darwin":
         mac = {tool.name: tool for tool in mac_tools()}
-        groups["calendar"] = [mac["list_calendars"], mac["list_events"], mac["create_event"]]
-        groups["mail"] = [mac["draft_mail"], mac["send_mail"]]
-        groups["search"] = [mac["spotlight"]]
+        local += [
+            Connector(name="calendar", about=GROUPS["calendar"], tools=[
+                mac["list_calendars"], mac["list_events"], mac["create_event"]]),
+            Connector(name="mail", about=GROUPS["mail"], tools=[
+                mac["draft_mail"], mac["send_mail"]]),
+            Connector(name="search", about=GROUPS["search"], tools=[mac["spotlight"]]),
+        ]
+
+    configured, trouble = build(HOME, vault_for(HOME), extra=local)
+    connections = Connections(configured)
 
     return Kit(
-        box=ToolBox(core=file_tools(*roots) + skill_tools(found_skills), groups=groups),
-        describe=GROUPS,
+        box=ToolBox(
+            core=file_tools(*roots) + skill_tools(found_skills),
+            groups=connections.groups(),
+            # So `use_tools` on a service nobody has signed in to comes back
+            # with a sentence, rather than loading tools that fail on every call.
+            gate=connections.gate,
+        ),
+        describe=connections.describe(),
+        connections=connections,
         instructions=folders(roots),
+        trouble=trouble,
     )
 
 

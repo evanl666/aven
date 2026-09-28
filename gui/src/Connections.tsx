@@ -8,14 +8,21 @@
  * service that is off is not a greyed-out button, it is a set of tools the model
  * cannot see and therefore cannot call.
  *
+ * Two different questions are drawn here, and conflating them is the thing to
+ * avoid. `state` is whether a service could work at all - signed in, or with
+ * nothing to sign in to - and it outlives the conversation. `connected` is
+ * whether its tools are in front of the model right now, which is per
+ * conversation. A row can say "signed in" and still offer Connect.
+ *
+ * Signing in is not a round trip. Somebody has to read a consent screen in a
+ * browser, so the row goes to "Opening your browser…" and waits for an event
+ * rather than for a reply.
+ *
  * The tool names are listed under each one on purpose. Somebody deciding whether
  * to connect something is entitled to know what it would then be able to do, and
- * "Connect Calendar" without that is a request to trust a word.
- *
- * Connecting is one-way within a session: a group comes in and stays. The tool
- * list heads the cached prompt prefix, so bringing one in costs a cache miss for
- * that turn, and letting it be toggled off and on would pay that repeatedly for
- * nothing.
+ * "Connect Calendar" without that is a request to trust a word. A service that
+ * runs its tools out of process cannot be asked until it is started, so that one
+ * says so instead of pretending to a list.
  */
 
 import { Folders } from "./Folders";
@@ -26,6 +33,7 @@ interface Props {
   standing: string[];
   busy: boolean;
   onConnect: (name: string) => void;
+  onDisconnect: (name: string) => void;
   roots: string[];
   pending: number;
   onAddFolders: () => void;
@@ -37,6 +45,7 @@ export function Connections({
   standing,
   busy,
   onConnect,
+  onDisconnect,
   roots,
   pending,
   onAddFolders,
@@ -67,33 +76,22 @@ export function Connections({
 
           {connectors.length === 0 && (
             <div className="card empty">
-              No connectors in this session. Start aven with <code>--mac</code>{" "}
-              to offer Calendar, Mail and Spotlight.
+              Nothing to connect yet. Services go in{" "}
+              <code>~/.aven/connectors.toml</code> — a Google account, or any
+              MCP server.
             </div>
           )}
 
           {connectors.length > 0 && (
             <div className="card">
               {connectors.map((connector) => (
-                <div className="connector" key={connector.name}>
-                  <div className="body">
-                    <div className="name">{connector.name}</div>
-                    <div className="about">{connector.about}</div>
-                    <div className="tools">{connector.tools.join(" · ")}</div>
-                  </div>
-                  <button
-                    className={`pill${connector.connected ? "" : " go"}`}
-                    disabled={connector.connected || busy}
-                    onClick={() => onConnect(connector.name)}
-                    title={
-                      connector.connected
-                        ? "connected for this session"
-                        : "brings these tools into play"
-                    }
-                  >
-                    {connector.connected ? "Connected" : "Connect"}
-                  </button>
-                </div>
+                <Row
+                  key={connector.name}
+                  connector={connector}
+                  busy={busy}
+                  onConnect={onConnect}
+                  onDisconnect={onDisconnect}
+                />
               ))}
             </div>
           )}
@@ -118,6 +116,94 @@ export function Connections({
             </div>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function Row({
+  connector,
+  busy,
+  onConnect,
+  onDisconnect,
+}: {
+  connector: Connector;
+  busy: boolean;
+  onConnect: (name: string) => void;
+  onDisconnect: (name: string) => void;
+}) {
+  const signing = connector.state === "signing_in";
+  const needs = connector.state === "needs_sign_in";
+
+  return (
+    <div className="connector">
+      <div className="body">
+        <div className="name">
+          {connector.name}
+          {connector.connected && (
+            <span className="tag reversible">in play</span>
+          )}
+          {connector.state === "ready" && connector.keeps && (
+            <span className="tag standing">signed in</span>
+          )}
+        </div>
+        <div className="about">{connector.about}</div>
+
+        {connector.tools.length > 0 ? (
+          <div className="tools">{connector.tools.join(" · ")}</div>
+        ) : (
+          !needs && (
+            <div className="tools">
+              its tools are listed once it is connected
+            </div>
+          )
+        )}
+
+        {/* Where the token goes, on the screen that asks for it rather than in
+            the documentation. */}
+        {needs && connector.keeps && (
+          <div className="meta">
+            Signing in keeps a token in {connector.keeps}.
+          </div>
+        )}
+        {connector.trouble && (
+          <div className="meta warn">⚠ {connector.trouble}</div>
+        )}
+      </div>
+
+      <div className="choices">
+        <button
+          className={`pill${connector.connected || signing ? "" : " go"}`}
+          disabled={connector.connected || signing || busy}
+          onClick={() => onConnect(connector.name)}
+          title={
+            needs
+              ? "opens your browser to sign in"
+              : "brings these tools into play"
+          }
+        >
+          {signing
+            ? "Opening your browser…"
+            : connector.connected
+              ? "Connected"
+              : needs
+                ? "Sign in"
+                : "Connect"}
+        </button>
+
+        {/* Only where there is a credential to throw away right now. A local
+            service has none, and one still opening a browser has not got one
+            yet. */}
+        {connector.keeps && connector.state === "ready" && (
+          <button
+            className="pill quiet"
+            disabled={busy || signing}
+            onClick={() => onDisconnect(connector.name)}
+            title="forgets the credential and takes the tools out of play"
+          >
+            Sign out
+          </button>
+        )}
       </div>
     </div>
   );

@@ -405,8 +405,12 @@ async def test_the_connectors_are_listed_with_what_they_would_be_able_to_do(talk
         {
             "name": "calendar",
             "about": "Read and create calendar events.",
+            # Nothing to sign in to, so it is usable the moment it is asked for.
+            "state": "ready",
             "connected": False,
             "tools": ["list_events"],
+            "keeps": "",
+            "trouble": None,
         }
     ]
 
@@ -417,7 +421,8 @@ async def test_connecting_brings_the_tools_into_play(talking):
 
     reply = await conversation.handle({"type": "connect", "group": "calendar"})
 
-    assert reply["data"]["connected"] == "calendar"
+    assert reply["data"]["name"] == "calendar"
+    assert reply["data"]["state"] == "ready"
     assert "list_events" in conversation.state()["tools"]
     assert reply["data"]["connectors"][0]["connected"] is True
 
@@ -705,3 +710,153 @@ def test_every_record_is_flushed_as_it_is_written(monkeypatch):
     write({"type": "state"})
 
     assert flushes
+
+
+# --- connecting a service that needs signing in -------------------------------
+
+
+class Slowly:
+    """An auth that blocks, the way a browser consent screen does."""
+
+    def __init__(self, fails=None):
+        self.gate = asyncio.Event()
+        self.held = False
+        self.fails = fails
+
+    def ready(self):
+        return self.held
+
+    def sign_in(self):
+        # Blocks until the test lets it through, which is what a person reading
+        # a consent screen looks like from here.
+        while not self.gate.is_set():
+            import time
+            time.sleep(0.005)
+        if self.fails:
+            raise RuntimeError(self.fails)
+        self.held = True
+
+    def forget(self):
+        was, self.held = self.held, False
+        return was
+
+    def about(self):
+        return "a keychain"
+
+
+def signing(tmp_path, auth):
+    from aven.harness.connect import Connections, Connector
+
+    sent = []
+    connections = Connections([
+        Connector(name="g", about="A service.", tools=[list_events], auth=auth)
+    ])
+    box = ToolBox(core=[look], groups=connections.groups(), gate=connections.gate)
+    return Conversation(
+        session=Session.open(tmp_path / "s.jsonl"),
+        model=scripted(done()),
+        box=box,
+        connections=connections,
+        sessions_dir=tmp_path,
+        emit=sent.append,
+    ), sent
+
+
+async def test_connecting_something_that_needs_a_browser_answers_at_once(tmp_path):
+    """Somebody has to read a consent screen, and thirty seconds is not a round
+    trip. A client left waiting on the reply would look frozen."""
+    auth = Slowly()
+    conversation, sent = signing(tmp_path, auth)
+
+    reply = await conversation.handle({"type": "connect", "group": "g"})
+
+    assert reply["ok"] is True
+    assert reply["data"]["state"] == "signing_in"
+    assert "list_events" not in conversation.state()["tools"], "not yet, either"
+
+    auth.gate.set()
+    await conversation.signing["g"]
+
+
+async def test_the_client_is_told_when_the_sign_in_finishes(tmp_path):
+    auth = Slowly()
+    conversation, sent = signing(tmp_path, auth)
+    await conversation.handle({"type": "connect", "group": "g"})
+
+    auth.gate.set()
+    await conversation.signing["g"]
+
+    told = [record for record in sent if record["type"] == "connector"]
+    assert told and told[-1]["state"] == "ready"
+    assert "list_events" in conversation.state()["tools"], "and the tools are in play"
+
+
+async def test_a_refused_sign_in_comes_back_as_an_event_with_the_reason(tmp_path):
+    auth = Slowly(fails="you said no")
+    conversation, sent = signing(tmp_path, auth)
+    await conversation.handle({"type": "connect", "group": "g"})
+
+    auth.gate.set()
+    await conversation.signing["g"]
+
+    told = [record for record in sent if record["type"] == "connector"][-1]
+    assert told["state"] == "needs_sign_in"
+    assert "you said no" in told["error"]
+    assert "list_events" not in conversation.state()["tools"]
+
+
+async def test_the_agent_keeps_answering_while_a_sign_in_is_in_flight(tmp_path):
+    """`sign_in` blocks on a socket waiting for a redirect. On the event loop it
+    would freeze every other command - including the interrupt somebody would
+    reach for when they changed their mind about connecting."""
+    auth = Slowly()
+    conversation, _ = signing(tmp_path, auth)
+    await conversation.handle({"type": "connect", "group": "g"})
+
+    answered = await asyncio.wait_for(
+        conversation.handle({"type": "state"}), timeout=2
+    )
+
+    assert answered["ok"] is True
+    auth.gate.set()
+    await conversation.signing["g"]
+
+
+async def test_asking_twice_does_not_open_a_second_browser(tmp_path):
+    auth = Slowly()
+    conversation, _ = signing(tmp_path, auth)
+    await conversation.handle({"type": "connect", "group": "g"})
+
+    again = await conversation.handle({"type": "connect", "group": "g"})
+
+    assert again["data"]["state"] == "signing_in"
+    assert len(conversation.signing) == 1
+    auth.gate.set()
+    await conversation.signing["g"]
+
+
+async def test_disconnecting_forgets_the_credential_and_takes_the_tools_away(tmp_path):
+    """Either half on its own is a lie: tools without a token give the model
+    things to call that now fail, and a token without tools means somebody who
+    clicked disconnect still has a credential in their keychain."""
+    auth = Slowly()
+    auth.gate.set()
+    conversation, _ = signing(tmp_path, auth)
+    await conversation.handle({"type": "connect", "group": "g"})
+    await conversation.signing["g"]
+    assert "list_events" in conversation.state()["tools"]
+
+    reply = await conversation.handle({"type": "disconnect", "group": "g"})
+
+    assert reply["data"]["forgotten"] is True
+    assert reply["data"]["state"] == "needs_sign_in"
+    assert auth.held is False
+    assert "list_events" not in conversation.state()["tools"]
+
+
+async def test_disconnecting_something_unknown_is_a_refusal_not_a_crash(tmp_path):
+    conversation, _ = signing(tmp_path, Slowly())
+
+    reply = await conversation.handle({"type": "disconnect", "group": "nope"})
+
+    assert reply["ok"] is False

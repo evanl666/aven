@@ -14,6 +14,7 @@
 import { createRoot } from "react-dom/client";
 import { Chat, type Bubble } from "./Chat";
 import { Approvals } from "./Approvals";
+import { Connections } from "./Connections";
 import { ChatIcon, ConnectionsIcon, WaitingIcon } from "./Icons";
 import "./styles.css";
 
@@ -94,6 +95,74 @@ const tray = {
   ],
 } as any;
 
+const connectors = [
+  {
+    name: "memory",
+    about: "Remember or forget lasting facts about this person.",
+    state: "ready",
+    connected: true,
+    tools: ["remember", "forget"],
+    keeps: "",
+    trouble: null,
+  },
+  {
+    name: "calendar",
+    about: "Read and create calendar events on this Mac.",
+    state: "ready",
+    connected: false,
+    tools: ["list_calendars", "list_events", "create_event"],
+    keeps: "",
+    trouble: null,
+  },
+  {
+    name: "google",
+    about: "Google Calendar: read what is scheduled and add events.",
+    state: "needs_sign_in",
+    connected: false,
+    tools: [],
+    keeps: "the macOS login keychain",
+    trouble: null,
+  },
+  {
+    name: "drive",
+    about: "Google Drive, via an MCP server.",
+    state: "signing_in",
+    connected: false,
+    tools: [],
+    keeps: "the macOS login keychain",
+    trouble: null,
+  },
+  {
+    name: "notes",
+    about: "Tools from the notes MCP server.",
+    state: "ready",
+    connected: false,
+    tools: [],
+    keeps: "",
+    trouble: null,
+  },
+  // Signed in, but this conversation has not needed it: the case the two
+  // separate fields exist for.
+  {
+    name: "dropbox",
+    about: "Files in Dropbox.",
+    state: "ready",
+    connected: false,
+    tools: [],
+    keeps: "the macOS login keychain",
+    trouble: null,
+  },
+  {
+    name: "robinhood",
+    about: "Positions and orders.",
+    state: "needs_sign_in",
+    connected: false,
+    tools: [],
+    keeps: "the macOS login keychain",
+    trouble: "you said no",
+  },
+] as any;
+
 const which = new URLSearchParams(location.search).get("pane") ?? "chat";
 createRoot(document.getElementById("root")!).render(
   <div className="shell">
@@ -119,6 +188,18 @@ createRoot(document.getElementById("root")!).render(
         queued={1}
         onSay={() => {}}
         onInterrupt={() => {}}
+      />
+    ) : which === "connections" ? (
+      <Connections
+        connectors={connectors}
+        standing={["write where the preview contains 'notes/'"]}
+        busy={false}
+        onConnect={() => {}}
+        onDisconnect={() => {}}
+        roots={["/Users/evan/Downloads"]}
+        pending={2}
+        onAddFolders={() => {}}
+        onRemoveFolder={() => {}}
       />
     ) : (
       <Approvals

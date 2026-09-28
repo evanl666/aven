@@ -17,6 +17,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from aven.harness.connect import Connections
 from aven.harness.events import (
     AgentEnd,
     AgentStart,
@@ -37,7 +38,11 @@ from aven.harness.tx import Entry, Tray
 
 # Bumped when a client that understood the old shape would misread the new one.
 # Adding a field is not that; renaming or removing one is.
-VERSION = 1
+#
+# 2: `connect` answers with `name` where it used to say `connected`. The word
+#    was doing two jobs - naming the group, and saying whether a group is in
+#    play - and a client reading the old one would now get a boolean.
+VERSION = 2
 
 
 # --- what a call would do ----------------------------------------------------
@@ -165,23 +170,54 @@ def usage_as_dict(usage: Any) -> dict[str, Any]:
 # --- what a client needs to draw itself --------------------------------------
 
 
-def connectors_as_dict(box: ToolBox, describe: dict[str, str]) -> list[dict[str, Any]]:
+def connectors_as_dict(
+    box: ToolBox,
+    describe: dict[str, str],
+    connections: Connections | None = None,
+) -> list[dict[str, Any]]:
     """The tool groups, as the connections pane draws them.
 
-    This is the whole of "choose what to connect": a group brought in is a
-    service connected, and the mechanism was already there for the token saving.
-    `tools` is listed because a person deciding whether to connect something is
-    entitled to see what it would then be able to do.
+    Two things are being reported and they are not the same, which is why there
+    are two fields rather than one flag:
+
+        state       whether it *could* work - signed in, or with nothing to sign
+                    in to. This outlives the conversation.
+        connected   whether its tools are in front of the model right now. This
+                    is per conversation, and is what the token saving was always
+                    about.
+
+    A service can be signed in and not connected: the credential is in the
+    keychain, and this particular conversation has not needed it.
+
+    `tools` is listed so somebody deciding whether to connect something can see
+    what it would then be able to do. A group that is a plain list costs nothing
+    to ask, so it is asked whether or not it is in play. A group that is a
+    function is only asked once it is already in play: resolving it is what
+    starts an MCP server process, and six configured servers would otherwise
+    mean six processes launched by opening a settings pane.
     """
-    return [
-        {
+    listed = []
+    for name in box.groups:
+        connector = connections.get(name) if connections else None
+        here = name in box.brought_in
+        cheap = not callable(box.groups[name])
+        listed.append({
             "name": name,
-            "about": describe.get(name, ""),
-            "connected": name in box.brought_in,
-            "tools": [tool.name for tool in tools],
-        }
-        for name, tools in box.groups.items()
-    ]
+            "about": describe.get(name, "") or (connector.about if connector else ""),
+            "state": connections.state(name) if connections else "ready",
+            "connected": here,
+            "tools": [tool.name for tool in box.tools_in(name)] if (here or cheap) else [],
+            # Where the credential for this would be kept, so the answer to
+            # "where does my token go" is on the screen that asks for it rather
+            # than in the documentation.
+            "keeps": (
+                connector.auth.about()
+                if connector is not None and connector.auth is not None
+                else ""
+            ),
+            "trouble": connector.trouble if connector else None,
+        })
+    return listed
 
 
 def card_as_dict(card: Card) -> dict[str, Any]:

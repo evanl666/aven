@@ -726,6 +726,16 @@ table.order tr.about td {
   min-width: 0;
 }
 
+/* Connect and Sign out, stacked so a narrow window does not squeeze the row's
+   text into a column. */
+.connector .choices {
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  gap: 6px;
+  align-items: stretch;
+}
+
 .connector .name {
   font-weight: 600;
 }

@@ -39,6 +39,7 @@ from collections.abc import Callable
 from typing import Any
 
 from aven.harness.agent import run
+from aven.harness.connect import Connections
 from aven.harness.messages import Message
 from aven.harness.session import Session
 from aven.harness.sessions import catalogue
@@ -66,6 +67,7 @@ class Conversation:
         standing: Standing | None = None,
         compactor: Any = None,
         sessions_dir: Any = None,
+        connections: Connections | None = None,
         max_turns: int = 12,
         emit: Emit,
     ) -> None:
@@ -77,12 +79,18 @@ class Conversation:
         self.standing = standing
         self.compactor = compactor
         self.sessions_dir = sessions_dir
+        # Empty rather than None, so nothing below has to ask whether there are
+        # any. A run with no configured services still has connectors - the
+        # local ones - they simply have nothing to sign in to.
+        self.connections = connections if connections is not None else Connections()
         self.max_turns = max_turns
         self.emit = emit
 
         self.tray = Tray(policy=policy, standing=standing)
         self.steering = Steering()
         self.task: asyncio.Task[None] | None = None
+        # Sign-ins in flight, held so the tasks are not collected mid-browser.
+        self.signing: dict[str, asyncio.Task[None]] = {}
         self.stopped = False
 
     # -- state ---------------------------------------------------------------
@@ -105,7 +113,9 @@ class Conversation:
             "busy": self.busy,
             "queued": self.steering.waiting(),
             "tools": [tool.name for tool in resolve(self.box.active)],
-            "connectors": protocol.connectors_as_dict(self.box, self.describe),
+            "connectors": protocol.connectors_as_dict(
+                self.box, self.describe, self.connections
+            ),
             "tray": protocol.tray_as_dict(self.tray),
             "standing": [str(a) for a in (self.standing.approvals if self.standing else [])],
             "usage": protocol.usage_as_dict(getattr(self.model, "usage", None)),
@@ -286,15 +296,79 @@ class Conversation:
     # -- connecting ----------------------------------------------------------
 
     async def _do_connect(self, command: dict[str, Any]) -> dict[str, Any]:
-        """Bring a tool group in - which is what "connect a service" means here."""
+        """Connect a service: sign in if it needs that, then bring its tools in.
+
+        Two shapes of answer, because there are two shapes of connector. One
+        with nothing to sign in to is connected by the time this returns. One
+        that needs a browser cannot be: somebody has to read a consent screen,
+        and thirty seconds is not a round trip. That one answers `signing_in`
+        straight away and emits a `connector` event when it is settled, so the
+        client can draw a pending row instead of freezing on a reply.
+        """
         group = str(command.get("group", ""))
-        brought = self.box.bring_in(group)
-        if not brought and group not in self.box.groups:
+        if group not in self.box.groups:
             raise KeyError(f"no connector called {group!r}")
+
+        if self.connections.state(group) == "signing_in":
+            return self._connector_state(group, "signing_in")
+
+        connector = self.connections.get(group)
+        if connector is not None and connector.auth is not None and not connector.auth.ready():
+            # Kept on `self` so it is not collected mid-flight. A task nobody
+            # holds a reference to can be garbage collected while it runs.
+            self.signing[group] = asyncio.create_task(self._sign_in(group))
+            await asyncio.sleep(0)  # let it mark itself working before we answer
+            return self._connector_state(group, "signing_in")
+
+        brought = self.box.bring_in(group)
+        return {**self._connector_state(group, "ready"), "already": not brought}
+
+    async def _sign_in(self, group: str) -> None:
+        """The browser half, off the event loop.
+
+        `sign_in` blocks on a socket waiting for a redirect, so on the loop it
+        would freeze every other command - including the interrupt somebody
+        would reach for when they changed their mind about connecting.
+        """
+        try:
+            await asyncio.to_thread(self.connections.sign_in, group)
+        except Exception as problem:
+            self.emit({
+                "type": "connector",
+                **self._connector_state(group, self.connections.state(group)),
+                "error": f"{type(problem).__name__}: {problem}",
+            })
+            return
+        finally:
+            self.signing.pop(group, None)
+
+        self.box.bring_in(group)
+        self.emit({"type": "connector", **self._connector_state(group, "ready")})
+
+    async def _do_disconnect(self, command: dict[str, Any]) -> dict[str, Any]:
+        """Sign out, and take the tools back out of play.
+
+        Both halves, because either on its own is a lie. Forgetting the token
+        while leaving the tools in front of the model gives it things to call
+        that now fail; taking the tools away while keeping the token means a
+        person who clicked "disconnect" still has a credential in their
+        keychain.
+        """
+        group = str(command.get("group", ""))
+        if group not in self.box.groups:
+            raise KeyError(f"no connector called {group!r}")
+        forgotten = self.connections.forget(group)
+        self.box.put_away(group)
+        return {**self._connector_state(group, self.connections.state(group)),
+                "forgotten": forgotten}
+
+    def _connector_state(self, group: str, state: str) -> dict[str, Any]:
         return {
-            "connected": group,
-            "already": not brought,
-            "connectors": protocol.connectors_as_dict(self.box, self.describe),
+            "name": group,
+            "state": state,
+            "connectors": protocol.connectors_as_dict(
+                self.box, self.describe, self.connections
+            ),
         }
 
     # -- reading -------------------------------------------------------------

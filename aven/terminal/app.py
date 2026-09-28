@@ -26,6 +26,7 @@ from pathlib import Path
 
 from aven.harness.agent import run
 from aven.harness.compact import Compactor
+from aven.harness.connect import Connections
 from aven.harness.context import find as find_instructions
 from aven.harness.context import read as read_instructions
 from aven.harness.messages import new_id
@@ -71,6 +72,16 @@ class Kit:
 
     box: ToolBox
     describe: dict[str, str] = field(default_factory=dict)
+
+    # The services, with their sign-in state. Separate from `box` because the
+    # box answers "what may be called this turn" and this answers "what could
+    # work at all" - a service can be signed in and not currently in play.
+    connections: Connections = field(default_factory=Connections)
+
+    # What was wrong with the configuration, if anything. Carried rather than
+    # printed where it was found: a typo in connectors.toml should be said once,
+    # by whichever interface is running, not written over a full-screen app.
+    trouble: list[str] = field(default_factory=list)
 
     # What the tools oblige the system prompt to say. Which folders are in play
     # and what they are called is not something a fixed prompt can know, and
@@ -317,7 +328,7 @@ async def watch(*, session, model, tools, compactor, policy, standing, args) -> 
 
 
 async def serve_rpc(*, session, model, tools, compactor, policy, standing, args,
-                    box, describe, sessions_dir) -> int:
+                    box, describe, connections, sessions_dir) -> int:
     """Hand the session to another program.
 
     `tools` is ignored here and `box` taken instead: the RPC client can connect a
@@ -327,7 +338,8 @@ async def serve_rpc(*, session, model, tools, compactor, policy, standing, args,
     conversation = Conversation(
         session=session, model=model, box=box, describe=describe,
         policy=policy, standing=standing, compactor=compactor,
-        sessions_dir=sessions_dir, max_turns=args.max_turns, emit=write,
+        sessions_dir=sessions_dir, connections=connections,
+        max_turns=args.max_turns, emit=write,
     )
     return await serve_stdio(conversation)
 
@@ -466,6 +478,7 @@ async def launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
         # banner - stdout carries protocol records and nothing else. The banner
         # above already went to stderr, which is where it belongs.
         return await serve_rpc(box=box, describe=kit.describe,
+                               connections=kit.connections,
                                sessions_dir=blueprint.sessions, **running)
 
     if args.watch:
