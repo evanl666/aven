@@ -202,6 +202,17 @@ class Claude:
         yield to_assistant(complete)
 
 
+    def use_key(self, key: str) -> None:
+        """Start using a different key, without restarting.
+
+        The SDK reads the environment once, when the client is constructed, and
+        keeps what it found. So putting a new key in `os.environ` does nothing
+        for a client that already exists - somebody who replaced a revoked key
+        would go on being told their key was revoked until they restarted the
+        thing they had just fixed. The client is rebuilt instead.
+        """
+        self.client = anthropic.AsyncAnthropic(api_key=key)
+
     async def context_window(self) -> int:
         """How much this model can read, asked once and remembered.
 

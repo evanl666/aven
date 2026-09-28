@@ -342,7 +342,11 @@ async def serve_rpc(*, session, model, tools, compactor, policy, standing, args,
         session=session, model=model, box=box, describe=describe,
         policy=policy, standing=standing, compactor=compactor,
         sessions_dir=sessions_dir, connections=connections,
-        has_key=key_is_available, keep_key=keep_key,
+        has_key=key_is_available,
+        # Bound to this model, so a key supplied while the window is open
+        # reaches the client that is about to be used rather than only the one
+        # built next time the process starts.
+        keep_key=lambda key: keep_key(key, model),
         keeps=vault_for().about(),
         max_turns=args.max_turns, emit=write,
     )
@@ -392,15 +396,19 @@ def key_is_available() -> bool:
     return False
 
 
-def keep_key(key: str) -> None:
+def keep_key(key: str, model: Any = None) -> None:
     """Store one and make it usable straight away.
 
-    Both halves matter. The vault is so it survives the process; the
-    environment is so the very next request works, without anybody having to
-    restart the window they just typed it into.
+    Three places, and each is needed. The vault is so it survives the process.
+    The environment is for anything built after this point. And the live model,
+    because the SDK read the environment when its client was constructed and
+    kept what it found - without this, somebody who pasted a replacement for a
+    revoked key would go on being told the key was revoked.
     """
     vault_for().put(KEY, {"key": key})
     os.environ["ANTHROPIC_API_KEY"] = key
+    if model is not None and hasattr(model, "use_key"):
+        model.use_key(key)
 
 
 def store_key() -> int:

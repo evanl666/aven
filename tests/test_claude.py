@@ -310,3 +310,17 @@ async def test_a_refusal_we_have_no_words_for_is_not_swallowed():
         async for _ in model([{"role": "user", "content": "hi"}]):
             pass
     assert not issubclass(ValueError, Unreachable)
+
+
+async def test_a_replaced_key_is_used_without_restarting():
+    """The SDK reads the environment once, when the client is constructed, and
+    keeps what it found. Without rebuilding it, somebody who pasted a
+    replacement for a revoked key would go on being told the key was revoked -
+    by the very thing they had just fixed."""
+    model = Claude(client=SimpleNamespace(messages=None))
+    before = model.client
+
+    model.use_key("sk-ant-the-new-one")
+
+    assert model.client is not before
+    assert model.client.api_key == "sk-ant-the-new-one"
