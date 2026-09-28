@@ -359,6 +359,10 @@ class Conversation:
             raise KeyError(f"no connector called {group!r}")
         forgotten = self.connections.forget(group)
         self.box.put_away(group)
+        # Whatever was running behind it is nobody's any more. Without this a
+        # window that connects and disconnects a few times over an afternoon
+        # leaves a process behind each time.
+        self.connections.release(group)
         return {**self._connector_state(group, self.connections.state(group)),
                 "forgotten": forgotten}
 
@@ -414,6 +418,7 @@ class Conversation:
     async def _do_shutdown(self, command: dict[str, Any]) -> dict[str, Any]:
         if self.busy and self.task is not None:
             self.task.cancel()
+        self.connections.release_all()
         self.stopped = True
         return {"stopped": True}
 

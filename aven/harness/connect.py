@@ -26,7 +26,7 @@ cannot work.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from typing import Literal, Protocol
 
@@ -63,6 +63,13 @@ class Connector:
     about: str
     tools: ToolSource
     auth: Auth | None = None
+
+    # How to let go of whatever backs this one. A connector that runs its tools
+    # in another process has to be told when nobody wants them any more, or
+    # disconnecting leaves the process running - and in a window, where the
+    # agent outlives many conversations, connecting and disconnecting a few
+    # times leaves a few of them.
+    close: Callable[[], None] | None = None
 
     # Set when the last sign-in attempt failed, so the surface can say why
     # rather than just flipping back to a button.
@@ -136,6 +143,28 @@ class Connections:
             return False
         connector.trouble = None
         return connector.auth.forget()
+
+    def release(self, name: str) -> None:
+        """Let go of whatever is running behind one connector.
+
+        Separate from `forget`, because they are different acts on different
+        things: forget throws away a credential, this shuts down a process. A
+        local connector has neither, and an MCP server has only the second.
+        """
+        connector = self.held.get(name)
+        if connector is not None and connector.close is not None:
+            try:
+                connector.close()
+            except Exception:
+                # Best effort. Failing to shut something down must not fail the
+                # disconnect the person asked for - they would be left with the
+                # tools still in play and no way to try again.
+                pass
+
+    def release_all(self) -> None:
+        """On the way out. Whatever is left running is nobody's any more."""
+        for name in self.held:
+            self.release(name)
 
     def gate(self, name: str) -> str | None:
         """Why the model may not bring this group in, if it may not.

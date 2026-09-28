@@ -163,3 +163,53 @@ def test_forgetting_something_with_no_credential_is_not_an_error():
     connections = Connections([Connector(name="memory", about="", tools=[look])])
 
     assert connections.forget("memory") is False
+
+
+def test_disconnecting_lets_go_of_whatever_was_running_behind_it():
+    """A connector that runs its tools in another process has to be told when
+    nobody wants them any more. In a window the agent outlives many
+    conversations, so connecting and disconnecting a few times over an
+    afternoon would leave a few processes behind."""
+    closed = []
+    connections = Connections([
+        Connector(name="mcp", about="", tools=[look], close=lambda: closed.append(1))
+    ])
+
+    connections.release("mcp")
+
+    assert closed == [1]
+
+
+def test_letting_go_of_a_local_connector_is_not_an_error():
+    """Most have nothing running behind them."""
+    connections = Connections([Connector(name="memory", about="", tools=[look])])
+
+    connections.release("memory")  # no close, nothing to do
+    connections.release("nope")    # and an unknown name is not a crash
+
+
+def test_something_that_will_not_shut_down_does_not_fail_the_disconnect():
+    """The person asked to disconnect. Failing that because the thing behind it
+    would not leave cleanly leaves them with the tools still in play and no way
+    to try again."""
+    def stubborn():
+        raise OSError("will not go")
+
+    connections = Connections([
+        Connector(name="mcp", about="", tools=[look], close=stubborn)
+    ])
+
+    connections.release("mcp")  # does not raise
+
+
+def test_shutting_down_lets_go_of_all_of_them():
+    closed = []
+    connections = Connections([
+        Connector(name="a", about="", tools=[look], close=lambda: closed.append("a")),
+        Connector(name="b", about="", tools=[look], close=lambda: closed.append("b")),
+        Connector(name="local", about="", tools=[look]),
+    ])
+
+    connections.release_all()
+
+    assert sorted(closed) == ["a", "b"]

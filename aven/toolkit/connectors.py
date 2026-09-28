@@ -151,6 +151,11 @@ def _mcp(said: Any) -> list[tuple[str, Connector | str]]:
             # is brought in rather than at startup. Six configured servers must
             # not mean six processes launched to answer one question about a
             # file. There is nothing to sign in to, so no auth.
-            Connector(name=spec.name, about=spec.about, tools=server.tools),
+            Connector(
+                name=spec.name,
+                about=spec.about,
+                tools=server.tools,
+                close=server.stop,
+            ),
         ))
     return out
