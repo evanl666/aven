@@ -406,3 +406,26 @@ def test_the_transport_is_chosen_by_how_it_is_configured():
 
     assert isinstance(open_server(Spec(name="a", command="x")), Server)
     assert isinstance(open_server(Spec(name="b", url="https://x/mcp")), Remote)
+
+
+def test_a_name_that_already_carries_the_prefix_does_not_get_it_twice(tmp_path):
+    """A server called `browser` whose tools are `browser_click` would become
+    `browser_browser_click` - noise in every request for as long as the group is
+    loaded. The prefix is there so two servers cannot collide and so nothing can
+    shadow a built-in; a name already carrying it does both."""
+    from aven.toolkit.mcp import Server
+
+    server = Server(Spec(name="browser", command="x"))
+
+    assert server._named("browser_click") == "browser_click"
+    assert server._named("click") == "browser_click"
+
+
+def test_a_merely_similar_name_still_gets_the_prefix():
+    """`browserify` is not `browser_`, and treating it as one would let a tool
+    called `browsering` through unprefixed."""
+    from aven.toolkit.mcp import Server
+
+    server = Server(Spec(name="browser", command="x"))
+
+    assert server._named("browserify") == "browser_browserify"

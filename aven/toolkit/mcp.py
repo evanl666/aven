@@ -166,7 +166,7 @@ class Talks:
 
     def _as_tool(self, declared: dict[str, Any]) -> Tool:
         theirs = str(declared.get("name", ""))
-        mine = f"{self.spec.name}_{theirs}"
+        mine = self._named(theirs)
         schema = declared.get("inputSchema") or {"type": "object", "properties": {}}
 
         def run(**args: Any) -> ToolResult:
@@ -193,6 +193,19 @@ class Talks:
             # one, ever.
             pre_approvable=False,
         )
+
+    def _named(self, theirs: str) -> str:
+        """The server's name in front, unless it is already there.
+
+        A server called `browser` whose tools are `browser_click` would become
+        `browser_browser_click`, which is noise in every request for as long as
+        the group is loaded. The prefix exists so two servers cannot collide and
+        so nothing can shadow a built-in; a name that already carries it does
+        both jobs already.
+        """
+        if theirs.startswith(f"{self.spec.name}_"):
+            return theirs
+        return f"{self.spec.name}_{theirs}"
 
     def _risk_of(self, declared: dict[str, Any]) -> Risk:
         """How much this call is allowed to be trusted, and on whose word.
