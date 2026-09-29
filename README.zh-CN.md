@@ -153,7 +153,25 @@ Calendar API,然后 **凭据 → 创建凭据 → OAuth 客户端 ID → 桌面�
 一个 server 就是一个 connector。这是"想连什么就连什么"的答案:手写一个 connector
 要为每个服务做一遍 OAuth 和 API 封装,而指向一个 MCP server 只要四行。
 
-`aven --connectors` 会列出值得知道的那些,连配置一起打印。两种连法:
+`aven --connectors <关键词>` 会搜索公开的 MCP 注册表(约九千个 server),并打印
+可以直接粘贴的配置:
+
+```
+$ aven --connectors stripe
+
+com.stripe/mcp
+published by stripe.com
+MCP server integrating with Stripe - tools for customers, products, payments.
+
+[mcp.stripe]
+url = "https://mcp.stripe.com"
+```
+
+**它只说明是谁发布的,不下判断。** 名字是一个注册表验证过归属的命名空间,所以
+`stripe.com` 是事实;那是不是你想要的那一方,由你判断。搜 `stripe` 同样会返回
+陌生人发布的 server,区别摆在那里,而不是被一个标签盖住。
+
+两种连法:
 
 ```toml
 [mcp.files]                                  # 本机的一个进程

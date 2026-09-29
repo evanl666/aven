@@ -228,7 +228,25 @@ One server is one connector. This is the answer to "connect anything": writing a
 connector by hand costs an OAuth flow and an API wrapper per service, and
 pointing at an MCP server costs four lines.
 
-`aven --connectors` lists the ones worth knowing about, with the config to paste.
+`aven --connectors <anything>` searches the public MCP registry — some nine
+thousand servers — and prints the config to paste:
+
+```
+$ aven --connectors stripe
+
+com.stripe/mcp
+published by stripe.com
+MCP server integrating with Stripe - tools for customers, products, payments.
+
+[mcp.stripe]
+url = "https://mcp.stripe.com"
+```
+
+**It says who published it, and nothing more.** The name is a namespace whose
+ownership the registry verified, so `stripe.com` is a fact; whether that is the
+party you meant is yours to judge. A search for `stripe` also returns servers
+published by strangers, and the difference is visible rather than labelled.
+
 Two ways to reach one:
 
 ```toml

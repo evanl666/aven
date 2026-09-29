@@ -33,7 +33,7 @@ from aven.harness.context import read as read_instructions
 from aven.harness.messages import new_id
 from aven.harness.session import Session
 from aven.harness.vault import vault_for
-from aven.toolkit.catalogue import printable
+from aven.toolkit import registry
 from aven.harness.sessions import Card, catalogue
 from aven.harness.sessions import render as render_cards
 from aven.harness.skills import catalogue as skill_catalogue
@@ -138,7 +138,7 @@ def build_parser(blueprint: Blueprint) -> argparse.ArgumentParser:
     parser.add_argument("--model", default=os.environ.get("AVEN_MODEL"),
                         help=t("cli.model"))
     parser.add_argument("--set-key", action="store_true", help=t("cli.set_key"))
-    parser.add_argument("--connectors", action="store_true",
+    parser.add_argument("--connectors", nargs="?", const="", metavar="search",
                         help=t("cli.connectors"))
     parser.add_argument("--no-cache", dest="cache", action="store_false",
                         help=t("cli.nocache"))
@@ -374,6 +374,10 @@ def piped(prompt: str | None) -> str:
 # --- the whole thing ---------------------------------------------------------
 
 
+# Where aven keeps the things a person is entitled to edit: the approvals, the
+# triggers, the connectors, and the caches that serve them.
+HOME = Path.home() / ".aven"
+
 # The name the API key is kept under, when it is kept rather than exported.
 KEY = "anthropic"
 
@@ -397,6 +401,27 @@ def key_is_available() -> bool:
         os.environ["ANTHROPIC_API_KEY"] = str(held["key"])
         return True
     return False
+
+
+def look_up(query: str) -> int:
+    """`aven --connectors [search]`.
+
+    With nothing to search for, this says how to search rather than printing a
+    list. A list would be a list maintained by hand, which is what the registry
+    replaced.
+    """
+    if not query.strip():
+        print(t("cli.connectors_how"))
+        return 0
+
+    try:
+        found, where = registry.search(query.strip(), home=HOME)
+    except registry.Offline as unreachable:
+        print(RED(t("cli.registry_offline", why=unreachable)), file=sys.stderr)
+        return 1
+
+    print(registry.found(query.strip(), found, where))
+    return 0
 
 
 def keep_key(key: str, model: Any = None) -> None:
@@ -461,9 +486,8 @@ async def _launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
     if args.set_key:
         return store_key()
 
-    if args.connectors:
-        print(printable())
-        return 0
+    if args.connectors is not None:
+        return look_up(args.connectors)
 
     # Repeatable, because one sentence can span Downloads and Documents. The
     # first is the working folder: bare paths resolve against it, and it is what

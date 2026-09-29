@@ -165,7 +165,16 @@ Esc 中断当前任务 · Ctrl+T 显示/隐藏暂存区 · Ctrl+Q 退出""",
     "cli.no_key": "没有 API key。要么 export ANTHROPIC_API_KEY,"
                   "要么跑一次 `aven --set-key` 把它存进本机钥匙串。",
     "cli.set_key": "把 Anthropic API key 存进钥匙串,从 stdin 读取",
-    "cli.connectors": "列出可连接的服务,以及对应的配置",
+    "cli.connectors": "在 MCP 注册表里搜索可连接的服务,例如 --connectors stripe",
+    "cli.connectors_how": (
+        "在公开的 MCP 注册表里搜索要连接的服务:\n\n"
+        "    aven --connectors stripe\n"
+        "    aven --connectors calendar\n"
+        "    aven --connectors github\n\n"
+        "它会打印可以粘进 ~/.aven/connectors.toml 的配置,并注明每一个是谁发布的。\n"
+        "结果会缓存一天。"
+    ),
+    "cli.registry_offline": "连不上 MCP 注册表,本地也没有缓存:{why}",
 
     "app.not_running": "{app} 没有打开,而且 macOS 不让它自动启动。手动打开一次 "
                        "{app},然后再试。",

@@ -173,7 +173,16 @@ Esc interrupts · Ctrl+T shows the staging panel · Ctrl+Q quits""",
     "cli.no_key": "No API key. Either export ANTHROPIC_API_KEY, or run "
                   "`aven --set-key` once to keep one in this machine's keychain.",
     "cli.set_key": "store an Anthropic API key in the keychain, read from stdin",
-    "cli.connectors": "list the services that can be connected, with the config to do it",
+    "cli.connectors": "search the MCP registry for a service to connect, e.g. --connectors stripe",
+    "cli.connectors_how": (
+        "Search the public MCP registry for something to connect:\n\n"
+        "    aven --connectors stripe\n"
+        "    aven --connectors calendar\n"
+        "    aven --connectors github\n\n"
+        "It prints the config to paste into ~/.aven/connectors.toml, and says\n"
+        "who published each one. Results are kept for a day."
+    ),
+    "cli.registry_offline": "could not reach the MCP registry, and nothing is cached: {why}",
 
     # macOS refusing, in words that name the fix. The raw text says neither
     # which application nor that aven is what wanted it.
