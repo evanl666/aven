@@ -228,15 +228,44 @@ One server is one connector. This is the answer to "connect anything": writing a
 connector by hand costs an OAuth flow and an API wrapper per service, and
 pointing at an MCP server costs four lines.
 
+`aven --connectors` lists the ones worth knowing about, with the config to paste.
+Two ways to reach one:
+
+```toml
+[mcp.files]                                  # a process here
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-filesystem", "/Users/me/Notes"]
+
+[mcp.github]                                 # a server somewhere else
+url = "https://api.githubcopilot.com/mcp/"
+[mcp.github.headers]
+Authorization = "Bearer ghp_..."
+```
+
+A remote url has to be `https`, unless it is loopback. Anything else would put
+the tools' arguments, and the token authorising them, on the wire in clear.
+
 **Every MCP tool is `irreversible` until you say otherwise**, so it is staged and
 waits. That is deliberate. MCP lets a server describe its own tools as read-only
 — a hint from the very party whose behaviour is in question, and a server that
-deletes your files can claim to be harmless. The two ways out are both your own
-words: `trust = true` honours the server's hints, or name a tool in `[…risk]`
-and give it a risk yourself. What you write always wins.
+deletes your files can claim to be harmless. This matters more for a remote
+server, not less: a local one at least runs as you, on your machine. The two
+ways out are both your own words: `trust = true` honours the server's hints, or
+name a tool in `[…risk]` and give it a risk yourself. What you write always wins.
 
-Tool names are prefixed with the server's (`notes_read_file`), so an MCP tool can
+Tool names are prefixed with the server's (`files_read_file`), so an MCP tool can
 never shadow aven's own — the ones with the folder sandbox around them.
+
+A good way in: leave the risks alone for the first run. Every call goes to the
+tray, so you can read what each tool actually wanted to do, with its arguments,
+before deciding which of them are really read-only.
+
+**On Google and other big names.** Searching a package registry for one returns a
+dozen servers by a dozen strangers, and connecting one means handing that
+stranger your account. aven's catalogue lists only servers published by whoever
+makes the thing they talk to. For Google, use aven's own connector above: an
+OAuth client you register yourself, talking to Google directly, with no third
+party in between.
 
 ## How it works
 

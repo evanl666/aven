@@ -33,6 +33,7 @@ from aven.harness.context import read as read_instructions
 from aven.harness.messages import new_id
 from aven.harness.session import Session
 from aven.harness.vault import vault_for
+from aven.toolkit.catalogue import printable
 from aven.harness.sessions import Card, catalogue
 from aven.harness.sessions import render as render_cards
 from aven.harness.skills import catalogue as skill_catalogue
@@ -137,6 +138,8 @@ def build_parser(blueprint: Blueprint) -> argparse.ArgumentParser:
     parser.add_argument("--model", default=os.environ.get("AVEN_MODEL"),
                         help=t("cli.model"))
     parser.add_argument("--set-key", action="store_true", help=t("cli.set_key"))
+    parser.add_argument("--connectors", action="store_true",
+                        help=t("cli.connectors"))
     parser.add_argument("--no-cache", dest="cache", action="store_false",
                         help=t("cli.nocache"))
     parser.add_argument("--no-instructions", dest="instructions", action="store_false",
@@ -457,6 +460,10 @@ async def _launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
     # Before anything that needs a key, since this is how you get one.
     if args.set_key:
         return store_key()
+
+    if args.connectors:
+        print(printable())
+        return 0
 
     # Repeatable, because one sentence can span Downloads and Documents. The
     # first is the working folder: bare paths resolve against it, and it is what

@@ -173,6 +173,7 @@ Esc interrupts · Ctrl+T shows the staging panel · Ctrl+Q quits""",
     "cli.no_key": "No API key. Either export ANTHROPIC_API_KEY, or run "
                   "`aven --set-key` once to keep one in this machine's keychain.",
     "cli.set_key": "store an Anthropic API key in the keychain, read from stdin",
+    "cli.connectors": "list the services that can be connected, with the config to do it",
     "cli.set_key_prompt": "Paste your Anthropic API key and press return:",
     "cli.set_key_empty": "nothing pasted; nothing stored",
     "cli.set_key_done": "Kept in {where}. Nothing to export from now on.",

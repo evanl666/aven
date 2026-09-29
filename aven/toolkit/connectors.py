@@ -39,7 +39,7 @@ from typing import Any
 from aven.harness.connect import Connector
 from aven.harness.vault import Vault
 from aven.toolkit.google import calendar_auth, calendar_tools
-from aven.toolkit.mcp import Server, Spec
+from aven.toolkit.mcp import Spec, open_server
 
 CONFIG = "connectors.toml"
 
@@ -126,8 +126,18 @@ def _mcp(said: Any) -> list[tuple[str, Connector | str]]:
             out.append((name, f"mcp.{name}: expected a table"))
             continue
         command = str(settings.get("command", "")).strip()
-        if not command:
-            out.append((name, f"mcp.{name}: command is missing"))
+        url = str(settings.get("url", "")).strip()
+        if command and url:
+            out.append((name, f"mcp.{name}: give it a command or a url, not both"))
+            continue
+        if not command and not url:
+            out.append((name, f"mcp.{name}: needs a command or a url"))
+            continue
+        # http:// to somewhere that is not this machine would put whatever the
+        # tools carry, and the token authorising them, on the wire in clear.
+        if url and not (url.startswith("https://") or url.startswith("http://127.0.0.1")
+                        or url.startswith("http://localhost")):
+            out.append((name, f"mcp.{name}: a remote url has to be https"))
             continue
 
         spec = Spec(
@@ -136,6 +146,8 @@ def _mcp(said: Any) -> list[tuple[str, Connector | str]]:
             args=[str(a) for a in settings.get("args", [])],
             env={str(k): str(v) for k, v in (settings.get("env") or {}).items()},
             cwd=str(settings["cwd"]) if settings.get("cwd") else None,
+            url=url,
+            headers={str(k): str(v) for k, v in (settings.get("headers") or {}).items()},
             about=str(settings.get("about", "")) or f"Tools from the {name} MCP server.",
             trust=bool(settings.get("trust", False)),
             risk={
@@ -144,7 +156,7 @@ def _mcp(said: Any) -> list[tuple[str, Connector | str]]:
                 if v in ("read", "reversible", "irreversible")
             },
         )
-        server = Server(spec)
+        server = open_server(spec)
         out.append((
             spec.name,
             # `tools` is the bound method, so the process starts when the group

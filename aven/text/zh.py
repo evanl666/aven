@@ -165,6 +165,7 @@ Esc 中断当前任务 · Ctrl+T 显示/隐藏暂存区 · Ctrl+Q 退出""",
     "cli.no_key": "没有 API key。要么 export ANTHROPIC_API_KEY,"
                   "要么跑一次 `aven --set-key` 把它存进本机钥匙串。",
     "cli.set_key": "把 Anthropic API key 存进钥匙串,从 stdin 读取",
+    "cli.connectors": "列出可连接的服务,以及对应的配置",
     "cli.set_key_prompt": "粘贴你的 Anthropic API key,然后回车:",
     "cli.set_key_empty": "没有粘贴内容,什么都没存",
     "cli.set_key_done": "已存入 {where}。以后不用再 export 了。",

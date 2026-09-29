@@ -153,14 +153,39 @@ Calendar API,然后 **凭据 → 创建凭据 → OAuth 客户端 ID → 桌面�
 一个 server 就是一个 connector。这是"想连什么就连什么"的答案:手写一个 connector
 要为每个服务做一遍 OAuth 和 API 封装,而指向一个 MCP server 只要四行。
 
+`aven --connectors` 会列出值得知道的那些,连配置一起打印。两种连法:
+
+```toml
+[mcp.files]                                  # 本机的一个进程
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-filesystem", "/Users/me/Notes"]
+
+[mcp.github]                                 # 别处的一个服务
+url = "https://api.githubcopilot.com/mcp/"
+[mcp.github.headers]
+Authorization = "Bearer ghp_..."
+```
+
+远程 url 必须是 `https`(回环地址除外),否则工具的参数和授权用的 token 都会明文
+走在网上。
+
 **每个 MCP 工具在你开口之前一律按 `irreversible` 处理**,也就是暂存等待确认。这是
 故意的。MCP 允许 server 声明自己的工具是只读的 —— 这个提示恰恰来自行为本身存疑的
-那一方,一个会删你文件的 server 完全可以自称人畜无害。两个出口都得是你自己的话:
-`trust = true` 表示采信这个 server 的声明,或者在 `[…risk]` 里点名某个工具、自己
-给它定级。**你写的永远赢。**
+那一方,一个会删你文件的 server 完全可以自称人畜无害。**对远程 server 这一点更重要
+而不是更不重要**:本地的至少还跑在你自己机器上、以你的身份受系统约束。两个出口都得
+是你自己的话:`trust = true` 表示采信这个 server 的声明,或者在 `[…risk]` 里点名
+某个工具、自己给它定级。**你写的永远赢。**
 
-工具名前面会加上 server 名(`notes_read_file`),所以 MCP 工具永远不可能顶替掉
+工具名前面会加上 server 名(`files_read_file`),所以 MCP 工具永远不可能顶替掉
 aven 自己那些 —— 外面套着文件夹沙箱的那些。
+
+一个好的上手方式:第一轮什么风险都别配。每次调用都会进托盘,你能看清每个工具到底
+想干什么、带什么参数,再决定哪些确实是只读的。
+
+**关于 Google 这类大厂。** 去包仓库里搜,返回的是一打陌生人写的一打 server,连上
+其中一个等于把账号交给那个陌生人。aven 的清单里只收**由被连接方自己发布**的 server。
+Google 请用上面 aven 自己的 connector:你自己注册的 OAuth client,直连 Google,
+中间没有第三方。
 
 ## 它是怎么工作的
 
