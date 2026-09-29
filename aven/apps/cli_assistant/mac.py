@@ -29,36 +29,71 @@ class OsaError(Exception):
     """osascript refused, timed out, or the app said no."""
 
 
-def _run(command: list[str], timeout: float) -> str:
+# What osascript says, and what a person can actually do about it. The raw text
+# names neither: "Application isn't running. (-600)" does not say which
+# application, that aven is what wanted it, or that opening it is the fix.
+#
+# Keyed on the number rather than the wording, because the wording is localised
+# and a machine set to Chinese reports the same failure in different words.
+_MEANS = {
+    "-600": "app.not_running",
+    "-1743": "app.not_permitted",
+    "-1728": "app.no_such",
+    "-10004": "app.not_permitted",
+}
+
+
+def _explain(said: str, app: str) -> str:
+    """Turn what osascript printed into something worth reading."""
+    from aven.text import t
+
+    for code, key in _MEANS.items():
+        if f"({code})" in said:
+            return t(key, app=app, said=said.strip())
+    return said.strip()
+
+
+def _run(command: list[str], timeout: float, app: str = "") -> str:
     """The single point where aven shells out. Tests replace this."""
     try:
         done = subprocess.run(command, capture_output=True, text=True, timeout=timeout)
     except subprocess.TimeoutExpired:
         raise OsaError(f"{command[0]} took longer than {timeout:g}s") from None
     if done.returncode != 0:
-        raise OsaError(done.stderr.strip() or f"{command[0]} exited {done.returncode}")
+        said = done.stderr.strip() or f"{command[0]} exited {done.returncode}"
+        raise OsaError(_explain(said, app))
     return done.stdout.strip()
 
 
-def osa(script: str, *args: object, timeout: float = 60.0) -> str:
+def osa(script: str, *args: object, timeout: float = 60.0, app: str = "") -> str:
     """Run AppleScript, passing every value as an argument rather than as text.
 
     The script must be written as `on run argv ... end run`; `--` separates the
     script from the values so a value starting with a dash is still a value.
+
+    `app` is the application the script talks to, used only to say which one a
+    failure was about.
     """
-    return _run(["osascript", "-e", script, "--", *(str(a) for a in args)], timeout)
+    return _run(
+        ["osascript", "-e", script, "--", *(str(a) for a in args)], timeout, app
+    )
 
 
 # --- the scripts -----------------------------------------------------------
 # Each one reads its values out of argv and never builds a string from them.
 
+# Each script launches what it talks to. Without this a closed app is
+# "Application isn't running (-600)" and the tool simply fails; `launch` rather
+# than `activate`, which would steal focus from whatever you were doing.
 CALENDARS = """on run argv
+    tell application "Calendar" to launch
     tell application "Calendar" to set names to name of calendars
     set AppleScript's text item delimiters to linefeed
     return names as text
 end run"""
 
 EVENTS = """on run argv
+    tell application "Calendar" to launch
     set horizon to (item 1 of argv) as integer
     set fromDate to current date
     set toDate to fromDate + horizon * days
@@ -75,6 +110,7 @@ EVENTS = """on run argv
 end run"""
 
 NEW_EVENT = """on run argv
+    tell application "Calendar" to launch
     set when to current date
     set day of when to 1
     set year of when to (item 3 of argv) as integer
@@ -93,6 +129,7 @@ NEW_EVENT = """on run argv
 end run"""
 
 DROP_EVENT = """on run argv
+    tell application "Calendar" to launch
     tell application "Calendar"
         tell calendar (item 1 of argv)
             delete (first event whose uid is (item 2 of argv))
@@ -101,21 +138,26 @@ DROP_EVENT = """on run argv
     return "deleted"
 end run"""
 
+# `note` is a term AppleScript already has, so a variable called that turns the
+# next line into a syntax error - "Expected expression but found to" - which
+# names neither the variable nor the reason. Every script here says `outgoing`.
 DRAFT = """on run argv
+    tell application "Mail" to launch
     tell application "Mail"
-        set note to make new outgoing message with properties {subject:(item 2 of argv), content:(item 3 of argv), visible:false}
-        tell note to make new to recipient at end of to recipients with properties {address:(item 1 of argv)}
-        save note
-        return (id of note) as string
+        set outgoing to make new outgoing message with properties {subject:(item 2 of argv), content:(item 3 of argv), visible:false}
+        tell outgoing to make new to recipient at end of to recipients with properties {address:(item 1 of argv)}
+        save outgoing
+        return (id of outgoing) as string
     end tell
 end run"""
 
 DROP_DRAFT = """on run argv
+    tell application "Mail" to launch
     set wanted to (item 1 of argv) as integer
     tell application "Mail"
-        repeat with note in messages of drafts mailbox
-            if (id of note) is wanted then
-                delete note
+        repeat with outgoing in messages of drafts mailbox
+            if (id of outgoing) is wanted then
+                delete outgoing
                 return "deleted"
             end if
         end repeat
@@ -124,10 +166,11 @@ DROP_DRAFT = """on run argv
 end run"""
 
 SEND = """on run argv
+    tell application "Mail" to launch
     tell application "Mail"
-        set note to make new outgoing message with properties {subject:(item 2 of argv), content:(item 3 of argv), visible:false}
-        tell note to make new to recipient at end of to recipients with properties {address:(item 1 of argv)}
-        send note
+        set outgoing to make new outgoing message with properties {subject:(item 2 of argv), content:(item 3 of argv), visible:false}
+        tell outgoing to make new to recipient at end of to recipients with properties {address:(item 1 of argv)}
+        send outgoing
     end tell
     return "sent"
 end run"""

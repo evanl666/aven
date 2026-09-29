@@ -21,7 +21,8 @@
 import { useEffect, useRef, useState } from "react";
 
 import { MicIcon, PlusIcon, SendIcon, StopIcon } from "./Icons";
-import type { Call, Detail } from "./wire";
+import { Markdown } from "./Markdown";
+import type { Call, Detail, Entry } from "./wire";
 
 export type Bubble =
   | { kind: "mine"; text: string; at: number; queued?: boolean }
@@ -51,21 +52,36 @@ interface Props {
   bubbles: Bubble[];
   busy: boolean;
   queued: number;
+  /** What is staged, so it can be decided here rather than in another pane. */
+  waiting: Entry[];
   onSay: (text: string) => void;
   onInterrupt: () => void;
+  onApprove: (ids: string[]) => void;
+  onDiscard: () => void;
+  onSeeWaiting: () => void;
 }
 
 /** Longer than this between messages and the conversation gets a date on it. */
 const APART = 10 * 60 * 1000;
 
-export function Chat({ bubbles, busy, queued, onSay, onInterrupt }: Props) {
+export function Chat({
+  bubbles,
+  busy,
+  queued,
+  waiting,
+  onSay,
+  onInterrupt,
+  onApprove,
+  onDiscard,
+  onSeeWaiting,
+}: Props) {
   const [draft, setDraft] = useState("");
   const box = useRef<HTMLTextAreaElement>(null);
   const foot = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     foot.current?.scrollIntoView({ block: "end" });
-  }, [bubbles.length, busy]);
+  }, [bubbles.length, busy, waiting.length]);
 
   // Grow with the text, up to the cap the stylesheet sets.
   useEffect(() => {
@@ -111,13 +127,26 @@ export function Chat({ bubbles, busy, queued, onSay, onInterrupt }: Props) {
               )}
 
               {bubble.kind === "theirs" && (
-                <div className="said theirs">{bubble.text}</div>
+                <div className="said theirs">
+                  {/* Theirs only. What you typed is what you typed - running a
+                      person's own asterisks through a renderer would rewrite
+                      their message back at them. */}
+                  <Markdown text={bubble.text} />
+                </div>
               )}
 
               {bubble.kind === "tool" && <ToolRow bubble={bubble} />}
 
               {bubble.kind === "notice" && (
-                <div className={`notice${bubble.bad ? " bad" : ""}`}>
+                // A pill is right for one line and wrong for several: 999px of
+                // rounding on a block of text is a lozenge. A list of what just
+                // happened gets a plain card, and reads left to right.
+                <div
+                  className={
+                    `notice${bubble.bad ? " bad" : ""}` +
+                    (bubble.text.includes("\n") ? " tall" : "")
+                  }
+                >
                   {bubble.text}
                 </div>
               )}
@@ -129,6 +158,48 @@ export function Chat({ bubbles, busy, queued, onSay, onInterrupt }: Props) {
 
       <div className="composer-wrap">
         <div className="column">
+          {/*
+           * Above the composer rather than in another pane. Something staged is
+           * something the run stopped short of doing, and being told that in a
+           * tab you are not looking at is the same as not being told: the reply
+           * reads as finished, and the work sits there.
+           */}
+          {waiting.length > 0 && (
+            <div className="waiting-here">
+              <div className="what">
+                <strong>
+                  {waiting.length} thing{waiting.length === 1 ? "" : "s"} need
+                  {waiting.length === 1 ? "s" : ""} your decision
+                </strong>
+                {waiting.slice(0, 3).map((entry) => (
+                  <div className="line" key={entry.id}>
+                    <span className={`tag ${entry.risk}`}>{entry.risk}</span>
+                    {entry.preview.split("⚠")[0].trim()}
+                  </div>
+                ))}
+                {waiting.length > 3 && (
+                  <div className="line quiet">
+                    and {waiting.length - 3} more
+                  </div>
+                )}
+              </div>
+              <div className="choices">
+                <button
+                  className="pill go"
+                  onClick={() => onApprove(waiting.map((e) => e.id))}
+                >
+                  Approve all
+                </button>
+                <button className="pill quiet" onClick={onSeeWaiting}>
+                  Review
+                </button>
+                <button className="pill quiet" onClick={onDiscard}>
+                  Discard
+                </button>
+              </div>
+            </div>
+          )}
+
           <div className="composer">
             <button
               className="icon-button"

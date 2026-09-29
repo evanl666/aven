@@ -42,7 +42,23 @@ const bubbles: Bubble[] = [
   },
   {
     kind: "theirs",
-    text: "There are 47 screenshots spanning March to September. I've staged the moves into month folders — 47 files, nothing overwritten. Have a look at the list and approve it when you're happy.",
+    text: [
+      "Found **47 screenshots** spanning March to September.",
+      "",
+      "I've grouped them by month:",
+      "",
+      "- `2026-03/` — 12 files",
+      "- `2026-05/` — 9 files",
+      "- `2026-09/` — 26 files",
+      "",
+      "Then one thing needs you:",
+      "",
+      "```sh",
+      "rm ~/Downloads/March/*.png    # 12 files, cannot be undone",
+      "```",
+      "",
+      "> Nothing has been deleted yet.",
+    ].join("\n"),
     at: t - 87e4,
   },
   {
@@ -54,7 +70,11 @@ const bubbles: Bubble[] = [
     failed: false,
     detail: null,
   },
-  { kind: "notice", text: "3 things are waiting for you", at: t - 85e4 },
+  {
+    kind: "notice",
+    text: "Done:\n\u00b7 Move 47 screenshots into month folders\n\u00b7 Wrote notes/september.md",
+    at: t - 85e4,
+  },
   {
     kind: "mine",
     text: "Also delete the ones from March.",
@@ -187,8 +207,12 @@ createRoot(document.getElementById("root")!).render(
         bubbles={bubbles}
         busy={true}
         queued={1}
+        waiting={tray.pending}
         onSay={() => {}}
         onInterrupt={() => {}}
+        onApprove={() => {}}
+        onDiscard={() => {}}
+        onSeeWaiting={() => {}}
       />
     ) : which === "key" ? (
       <NeedsKey keeps="the macOS login keychain" onSave={async () => {}} />

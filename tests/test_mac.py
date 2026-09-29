@@ -1,5 +1,7 @@
 """Tests for the macOS actuators, without touching Mail or Calendar."""
 
+import pathlib
+import platform
 import subprocess
 
 import pytest
@@ -22,7 +24,7 @@ class Shell(list):
 def calls(monkeypatch):
     recorded = Shell()
 
-    def fake_run(command, timeout):
+    def fake_run(command, timeout, app=""):
         recorded.append(command)
         return recorded.replies.pop(0) if recorded.replies else ""
 
@@ -130,3 +132,84 @@ def test_a_refusal_surfaces_what_the_app_said(monkeypatch):
     )
     with pytest.raises(OsaError, match="Not authorised"):
         osa("on run argv\nend run")
+
+
+# --- the scripts themselves ---------------------------------------------------
+
+
+@pytest.mark.skipif(platform.system() != "Darwin", reason="osacompile is macOS")
+def test_every_applescript_compiles():
+    """The one thing the stubs above cannot check.
+
+    `send_mail` shipped broken because it used `note` as a variable, and `note`
+    is a term AppleScript already has - so the next line failed to parse with
+    "Expected expression but found to", which names neither the variable nor
+    the reason. Every test passed, because every test replaced the shell.
+    """
+    import re
+    import subprocess
+    import tempfile
+
+    source = pathlib.Path(mac.__file__).read_text()
+    scripts = re.findall(r'^([A-Z_]+) = """(on run argv.*?)"""', source, re.S | re.M)
+    assert scripts, "no scripts found - has the shape of this file changed?"
+
+    broken = []
+    for name, body in scripts:
+        with tempfile.NamedTemporaryFile("w", suffix=".applescript") as handle:
+            handle.write(body)
+            handle.flush()
+            done = subprocess.run(
+                ["osacompile", "-o", "/dev/null", handle.name],
+                capture_output=True, text=True,
+            )
+        if done.returncode != 0:
+            broken.append(f"{name}: {done.stderr.strip()}")
+
+    assert broken == [], "\n".join(broken)
+
+
+@pytest.mark.skipif(platform.system() != "Darwin", reason="osacompile is macOS")
+def test_every_script_launches_what_it_talks_to():
+    """A closed app is "Application isn't running (-600)" and the tool simply
+    fails. `launch` rather than `activate`: starting Mail should not take the
+    screen away from whatever somebody was doing."""
+    import re
+
+    source = pathlib.Path(mac.__file__).read_text()
+    for name, body in re.findall(r'^([A-Z_]+) = """(on run argv.*?)"""', source, re.S | re.M):
+        assert "to launch" in body, f"{name} never starts the app it talks to"
+        assert "activate" not in body, f"{name} would steal focus"
+
+
+def test_a_closed_app_is_reported_as_something_to_do_about_it():
+    """"Application isn't running. (-600)" names neither which application nor
+    that opening it is the fix."""
+    said = mac._explain("execution error: Calendar got an error. (-600)", "Calendar")
+
+    assert "Calendar" in said
+    assert "-600" not in said, "the number is not the message"
+    assert "Open" in said
+
+
+def test_a_refused_permission_says_where_to_grant_it():
+    said = mac._explain("execution error: Not authorized to send Apple events. (-1743)", "Mail")
+
+    assert "System Settings" in said
+    assert "Automation" in said
+
+
+def test_an_error_we_have_no_words_for_is_passed_through_whole():
+    """Better the raw text than a guess at what it meant."""
+    said = mac._explain("execution error: something nobody anticipated (-9999)", "Mail")
+
+    assert "something nobody anticipated" in said
+
+
+def test_the_code_is_matched_and_not_the_wording():
+    """A machine set to another language reports the same failure in different
+    words. The number is the only stable part."""
+    said = mac._explain("执行错误: Calendar 出错。 (-600)", "Calendar")
+
+    assert "Open Calendar" in said or "Calendar" in said
+    assert "执行错误" not in said

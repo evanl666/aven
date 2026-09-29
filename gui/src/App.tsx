@@ -24,6 +24,7 @@ import { pickFolders, readRoots, writeRoots } from "./roots";
 import {
   EXPECTS_VERSION,
   type Connector,
+  type Entry,
   type State,
   type Tray,
   type Usage,
@@ -335,9 +336,20 @@ export default function App() {
     attempt(async () => {
       const reply = await agent.send({ type: "approve", ids });
       setTray(reply.data.tray);
-      const done = reply.data.committed?.length ?? 0;
-      say({ kind: "notice", text: `Approved ${done}.` });
-      for (const entry of reply.data.failed ?? [])
+
+      // Named, not counted. "Approved 2" leaves somebody wondering which two,
+      // and whether the thing they were actually worried about was one of
+      // them. These are the lines they just read and decided on.
+      const done = (reply.data.committed ?? []) as Entry[];
+      if (done.length)
+        say({
+          kind: "notice",
+          text:
+            "Done:\n" +
+            done.map((e) => `· ${e.preview.split("⚠")[0].trim()}`).join("\n"),
+        });
+
+      for (const entry of (reply.data.failed ?? []) as Entry[])
         say({
           kind: "notice",
           text: `${entry.preview} failed: ${entry.output}`,
@@ -351,7 +363,10 @@ export default function App() {
       setTray(reply.data.tray);
       say({
         kind: "notice",
-        text: `Discarded ${reply.data.discarded}; they never happened.`,
+        text:
+          reply.data.discarded === 1
+            ? "Discarded it; it never happened."
+            : `Discarded ${reply.data.discarded}; they never happened.`,
       });
     });
 
@@ -527,8 +542,12 @@ export default function App() {
             bubbles={bubbles}
             busy={busy}
             queued={queued}
+            waiting={tray.pending}
             onSay={onSay}
             onInterrupt={onInterrupt}
+            onApprove={onApprove}
+            onDiscard={onDiscard}
+            onSeeWaiting={() => setPane("waiting")}
           />
         )}
         {pane === "waiting" && (

@@ -166,6 +166,12 @@ Esc 中断当前任务 · Ctrl+T 显示/隐藏暂存区 · Ctrl+Q 退出""",
                   "要么跑一次 `aven --set-key` 把它存进本机钥匙串。",
     "cli.set_key": "把 Anthropic API key 存进钥匙串,从 stdin 读取",
     "cli.connectors": "列出可连接的服务,以及对应的配置",
+
+    "app.not_running": "{app} 没有打开,而且 macOS 不让它自动启动。手动打开一次 "
+                       "{app},然后再试。",
+    "app.not_permitted": "macOS 没有允许 aven 控制 {app}。去 系统设置 → 隐私与安全性 "
+                         "→ 自动化,在你启动 aven 的那个终端或 App 底下打开它。",
+    "app.no_such": "{app} 里没有这个:{said}",
     "cli.set_key_prompt": "粘贴你的 Anthropic API key,然后回车:",
     "cli.set_key_empty": "没有粘贴内容,什么都没存",
     "cli.set_key_done": "已存入 {where}。以后不用再 export 了。",

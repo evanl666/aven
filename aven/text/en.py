@@ -174,6 +174,15 @@ Esc interrupts · Ctrl+T shows the staging panel · Ctrl+Q quits""",
                   "`aven --set-key` once to keep one in this machine's keychain.",
     "cli.set_key": "store an Anthropic API key in the keychain, read from stdin",
     "cli.connectors": "list the services that can be connected, with the config to do it",
+
+    # macOS refusing, in words that name the fix. The raw text says neither
+    # which application nor that aven is what wanted it.
+    "app.not_running": "{app} is not open, and macOS would not start it. Open {app} "
+                       "once and try again.",
+    "app.not_permitted": "macOS has not allowed aven to control {app}. Allow it in "
+                         "System Settings → Privacy & Security → Automation, under "
+                         "the entry for the terminal or app you started aven from.",
+    "app.no_such": "{app} has no such item: {said}",
     "cli.set_key_prompt": "Paste your Anthropic API key and press return:",
     "cli.set_key_empty": "nothing pasted; nothing stored",
     "cli.set_key_done": "Kept in {where}. Nothing to export from now on.",
