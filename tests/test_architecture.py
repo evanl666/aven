@@ -8,9 +8,9 @@ than trusting a convention.
 The rule is one-directional: an app may reach down to anything, the foundation
 may reach down to the harness, and the harness may reach nowhere.
 
-    apps/cli_assistant   apps/cli_code   apps/gui_assistant
-            |                  |                |
-            +--------> terminal, toolkit <------+
+    apps/cli_assistant            apps/cli_code
+            |                            |
+            +----> terminal, toolkit <---+
                               |
                            harness
                               |
@@ -26,9 +26,6 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent / "aven"
 # What each layer is allowed to import from, beyond the standard library and
 # third-party packages. `harness` is deliberately not in its own list: nothing
 # above it may be reached, and nothing beside it either.
-# `text` sits below the harness rather than beside it: every layer has something
-# to tell somebody, so every layer may reach the catalogue, and the catalogue
-# reaches nothing.
 # `text` sits below the harness rather than beside it: every layer has something
 # to tell somebody, so every layer may reach the catalogue, and the catalogue
 # reaches nothing.
@@ -124,6 +121,8 @@ def test_the_apps_do_not_reach_into_each_other():
         ]
         for other in others:
             assert f"aven.apps.{other}" not in source, f"{path.name} reaches into {other}"
+
+
 def test_no_text_for_a_person_below_the_apps():
     """The harness and the foundation must not assume the reader's language.
 

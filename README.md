@@ -315,7 +315,11 @@ aven/
   apps/
     cli_assistant/   the personal assistant  (aven)
     cli_code/        the coding agent        (aven-code)
-    gui_assistant/   not built yet
+
+gui/          the desktop window: React, TypeScript, a Rust shell
+              It does not import aven. It starts `aven --mode rpc` as a
+              sidecar and speaks the protocol in aven/wire/ — the same
+              coupling a phone client will have.
 ```
 
 Each app is about a hundred lines: its system prompt, its tools, and any flag of
