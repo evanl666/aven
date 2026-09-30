@@ -1094,3 +1094,81 @@ async def test_a_failure_is_reported_to_the_model_too(tmp_path):
             if m.kind == "user" and m.source == "approval"][0]
     assert "failed" in told.text
     assert "the network said no" in told.text
+
+
+async def test_a_rejected_key_says_which_key_was_used(tmp_path):
+    """Otherwise somebody replaces the key they can see, an exported one goes
+    on winning, and the same message comes back. Which key was actually used is
+    knowable on this side and nowhere else."""
+    from aven.harness.calling import Unreachable
+
+    sent = []
+
+    def refusing(_messages):
+        raise Unreachable("Anthropic rejected the API key. Replace it.")
+
+    conversation = Conversation(
+        session=Session.open(tmp_path / "s.jsonl"),
+        model=refusing,
+        box=ToolBox(core=[look], groups={}),
+        sessions_dir=tmp_path,
+        key_from=lambda: "environment",
+        emit=sent.append,
+    )
+
+    await conversation.handle({"type": "prompt", "message": "hello"})
+    await settled(conversation)
+
+    said = [r for r in sent if r["type"] == "failed"][0]["error"]
+    assert "exported" in said
+    assert "unset" in said
+
+
+async def test_a_stored_key_being_rejected_does_not_blame_the_shell(tmp_path):
+    """There is no export to unset, and sending somebody to look for one would
+    be worse than saying nothing."""
+    from aven.harness.calling import Unreachable
+
+    sent = []
+
+    def refusing(_messages):
+        raise Unreachable("Anthropic rejected the API key. Replace it.")
+
+    conversation = Conversation(
+        session=Session.open(tmp_path / "s.jsonl"),
+        model=refusing,
+        box=ToolBox(core=[look], groups={}),
+        sessions_dir=tmp_path,
+        key_from=lambda: "keychain",
+        emit=sent.append,
+    )
+
+    await conversation.handle({"type": "prompt", "message": "hello"})
+    await settled(conversation)
+
+    said = [r for r in sent if r["type"] == "failed"][0]["error"]
+    assert "exported" not in said
+
+
+async def test_a_failure_that_is_not_about_a_key_is_left_alone(tmp_path):
+    from aven.harness.calling import Unreachable
+
+    sent = []
+
+    def refusing(_messages):
+        raise Unreachable("Could not reach Anthropic: the network is down.")
+
+    conversation = Conversation(
+        session=Session.open(tmp_path / "s.jsonl"),
+        model=refusing,
+        box=ToolBox(core=[look], groups={}),
+        sessions_dir=tmp_path,
+        key_from=lambda: "environment",
+        emit=sent.append,
+    )
+
+    await conversation.handle({"type": "prompt", "message": "hello"})
+    await settled(conversation)
+
+    said = [r for r in sent if r["type"] == "failed"][0]["error"]
+    assert said == "Could not reach Anthropic: the network is down."

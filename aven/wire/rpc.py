@@ -240,7 +240,7 @@ class Conversation:
             # Its message is the whole explanation and was written to be read.
             # Prefixing the class name would put "Unreachable:" in front of a
             # finished sentence, which reads as a crash rather than an answer.
-            self.emit({"type": "failed", "error": str(stopped)})
+            self.emit({"type": "failed", "error": self._about(str(stopped))})
         except Exception as problem:
             # Anything else is a bug, and the class name is part of the report.
             self.emit({
@@ -249,6 +249,24 @@ class Conversation:
             })
         finally:
             self.emit({"type": "tray", **protocol.tray_as_dict(self.tray)})
+
+    def _about(self, said: str) -> str:
+        """A refusal, with the part only this side knows.
+
+        A rejected key sends somebody to replace the one they can see, and if an
+        exported one is winning they will replace the wrong thing and watch the
+        same message come back. Which key was actually used is knowable here and
+        nowhere else, so it is said here.
+        """
+        if "API key" in said and self.key_from() == "environment":
+            return (
+                said
+                + " Note: the key in use came from an exported "
+                "ANTHROPIC_API_KEY, not from the one kept for you - so "
+                "replacing the stored key will not help until you unset it in "
+                "the shell aven was started from."
+            )
+        return said
 
     def _finished(self, task: asyncio.Task[None]) -> None:
         """Say the run is over, however it ended.
