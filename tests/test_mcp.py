@@ -579,3 +579,46 @@ def test_the_cap_matches_the_one_the_file_tools_use():
     from aven.toolkit.mcp import MAX_RESULT
 
     assert MAX_RESULT == MAX_READ
+
+
+# --- taking only some of what a server offers --------------------------------
+
+
+def test_only_takes_the_named_tools(started):
+    """Every tool's schema rides in every request for as long as the group is
+    loaded. A browser server's twenty-five come to about 4,600 tokens a turn
+    whether or not any is used; the six a task needs come to under a thousand."""
+    names = [t.name for t in started(only=["peek"]).tools()]
+
+    assert names == ["toy_peek"]
+
+
+def test_naming_none_takes_all_of_them():
+    """The default has to be everything, or a server added without thinking
+    about it would arrive with nothing."""
+    from aven.toolkit.mcp import Spec
+
+    assert Spec(name="x", command="y").only == []
+
+
+def test_a_name_that_is_not_there_is_simply_not_taken(started):
+    """Rather than raising. A server that renamed a tool should lose that tool,
+    not stop working - and the rest is still useful."""
+    names = [t.name for t in started(only=["peek", "gone_in_a_later_version"]).tools()]
+
+    assert names == ["toy_peek"]
+
+
+def test_a_tool_not_taken_is_not_reachable(started):
+    """The point is not only the tokens. A capability that was never loaded
+    cannot be misused, by a confused model or by a poisoned page."""
+    server = started(only=["peek"])
+
+    assert not any(t.name.endswith("wreck") for t in server.tools())
+
+
+def test_only_is_matched_before_the_prefix(started):
+    """Like `risk`. Writing the prefixed name in the config would mean knowing
+    what aven calls the connector before naming the server's own tools."""
+    assert [t.name for t in started(only=["toy_peek"]).tools()] == []
+    assert [t.name for t in started(only=["peek"]).tools()] == ["toy_peek"]

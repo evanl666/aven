@@ -150,6 +150,7 @@ def _mcp(said: Any) -> list[tuple[str, Connector | str]]:
             headers={str(k): str(v) for k, v in (settings.get("headers") or {}).items()},
             about=str(settings.get("about", "")) or f"Tools from the {name} MCP server.",
             trust=bool(settings.get("trust", False)),
+            only=[str(t) for t in settings.get("only", [])],
             risk={
                 str(k): v
                 for k, v in (settings.get("risk") or {}).items()

@@ -152,6 +152,17 @@ class Spec:
     # The person's own risk per tool name, before prefixing. Beats everything.
     risk: dict[str, Risk] = field(default_factory=dict)
 
+    # Which of the server's tools to take, by name before prefixing. Empty
+    # means all of them.
+    #
+    # Worth having for two reasons that point the same way. Every tool's schema
+    # rides in every request for as long as the group is loaded, and a browser
+    # server's twenty-five come to about 4,600 tokens a turn whether or not any
+    # of them is used - where the six a task actually needs come to under a
+    # thousand. And a capability that was never loaded cannot be misused, by a
+    # confused model or a poisoned page.
+    only: list[str] = field(default_factory=list)
+
     @property
     def remote(self) -> bool:
         return bool(self.url)
@@ -208,7 +219,12 @@ class Talks:
     def tools(self) -> list[Tool]:
         """The server's tools, as aven tools. Connects if it is not connected."""
         self.start()
-        return [self._as_tool(declared) for declared in self.listed]
+        wanted = set(self.spec.only)
+        return [
+            self._as_tool(declared)
+            for declared in self.listed
+            if not wanted or str(declared.get("name", "")) in wanted
+        ]
 
     def _as_tool(self, declared: dict[str, Any]) -> Tool:
         theirs = str(declared.get("name", ""))
