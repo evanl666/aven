@@ -277,11 +277,34 @@ class Conversation:
         failures = [protocol.entry_as_dict(e) for e in self.tray.entries
                     if e.state == "failed"]
         self._settle()
+
+        # The model was told these were staged and never told otherwise. Its
+        # last tool result still reads "waiting for the user to approve", so
+        # asked anything afterwards it answers about a world that moved on
+        # without it - the calls ran, and it is the only party that does not
+        # know. Telling it is what `resume` does.
+        resumed = False
+        if bool(command.get("resume")) and (done or failures) and not self.busy:
+            resumed = self._pick_up(_what_happened(done, failures))
+
         return {
             "committed": [protocol.entry_as_dict(e) for e in done],
             "failed": failures,
+            "resumed": resumed,
             "tray": protocol.tray_as_dict(self.tray),
         }
+
+    def _pick_up(self, said: str) -> bool:
+        """Carry on, with something the system is saying rather than the person.
+
+        `source` is what keeps this honest. It goes into the session as a turn,
+        because that is the only shape the model reads, but it is marked as not
+        having been typed by anybody - the same way a trigger's prompt and a
+        steering follow-up are.
+        """
+        self.task = asyncio.create_task(self._run(said, "approval"))
+        self.task.add_done_callback(self._finished)
+        return True
 
     async def _do_discard(self, command: dict[str, Any]) -> dict[str, Any]:
         dropped = self.tray.discard()
@@ -503,6 +526,34 @@ async def serve_stdio(conversation: Conversation) -> int:
     if conversation.busy and conversation.task is not None:
         conversation.task.cancel()
     return 0
+
+
+def _what_happened(done: list[Any], failed: list[dict[str, Any]]) -> str:
+    """What to tell the model once its staged calls have been decided.
+
+    Written as a report rather than as an instruction. The model decides what
+    to do next - it is the one that knows why it asked - and a prompt saying
+    "now continue" would have it continue whether or not there is anything
+    left to do.
+    """
+    lines = ["The calls you staged have been decided."]
+    if done:
+        lines.append("")
+        lines.append("Approved, and these are the results:")
+        for entry in done:
+            lines.append(f"- {entry.preview}")
+            if entry.output:
+                lines.append(f"  -> {entry.output}")
+    if failed:
+        lines.append("")
+        lines.append("Approved but failed:")
+        for entry in failed:
+            lines.append(f"- {entry['preview']}: {entry['output']}")
+    lines.append("")
+    lines.append(
+        "Carry on from here if there is more to do, or say where things stand."
+    )
+    return "\n".join(lines)
 
 
 def write(record: dict[str, Any]) -> None:

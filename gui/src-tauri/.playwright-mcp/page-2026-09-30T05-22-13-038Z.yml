@@ -1,0 +1,490 @@
+- generic [active] [ref=f2e1]:
+  - generic:
+    - generic:
+      - link "Skip to main content" [ref=f2e2] [cursor=pointer]
+      - link "Accessibility help" [ref=f2e3] [cursor=pointer]:
+        - /url: https://support.google.com/websearch/answer/181196?hl=en
+  - generic [ref=f2e8]:
+    - search [ref=f2e9]:
+      - generic [ref=f2e11]:
+        - link [ref=f2e13] [cursor=pointer]:
+          - /url: https://www.google.com/webhp?hl=en&ictx=2&sa=X&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQPXoECAYQBA
+          - img "WNBA Playoffs 2026" [ref=f2e14]
+        - generic [ref=f2e16]:
+          - combobox "Search" [ref=f2e18]: 最新新闻 最新新闻
+          - generic [ref=f2e19]:
+            - button "Clear" [ref=f2e23] [cursor=pointer]
+            - generic [ref=f2e28]:
+              - button "Search by voice" [ref=f2e31] [cursor=pointer]
+              - button "Search by image" [ref=f2e36] [cursor=pointer]
+    - generic [ref=f2e39]:
+      - button "Settings" [ref=f2e41] [cursor=pointer]
+      - button "Share" [ref=f2e46] [cursor=pointer]
+      - generic [ref=f2e52]:
+        - button "Google apps" [ref=f2e54] [cursor=pointer]
+        - link "Sign in" [ref=f2e59] [cursor=pointer]:
+          - /url: https://accounts.google.com/ServiceLogin?hl=en&passive=true&continue=https://www.google.com/search%3Fq%3D%25E6%259C%2580%25E6%2596%25B0%25E6%2596%25B0%25E9%2597%25BB%26sei%3Dg5y8auysDpjc5OUP1Om_2AI&ec=futura_srp_og_si_72236_p
+  - generic [ref=f2e62]:
+    - navigation [ref=f2e68]:
+      - generic [ref=f2e74]:
+        - list [ref=f2e75]:
+          - listitem [ref=f2e76]:
+            - link "AI Mode" [ref=f2e79] [cursor=pointer]:
+              - /url: /search?q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&udm=50&fbs=ABfTbFVyMZGZf1hfvX9uKjN_-G8cY2oODYyTyZk24Xz37_7FQ-WwsgSXs3G1Acf3uFzybY10s1hrAwRiNmX-q6YMPsVrKkzHf1T9FgeVz1lz0zJ_Lw_l-rT9zhsYusVn5JobHwce6Dom29zVmYzEkp_B4CL0M-2Fcody_ogu_RXjZRVhtE3xmOkvdh-NcEDYidPyBgCSkEBj2nhyForJB3nBH_UDihHrsQ&vsint=&aep=1&ntc=1&cs=0&sa=X&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ2J8OegQIEhAD
+          - listitem [ref=f2e83]:
+            - link "All" [disabled] [ref=f2e84]
+          - listitem [ref=f2e87]:
+            - link "News" [ref=f2e88] [cursor=pointer]:
+              - /url: /search?sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&tbm=nws&source=lnms&fbs=ABfTbFVyMZGZf1hfvX9uKjN_-G8cY2oODYyTyZk24Xz37_7FQ-WwsgSXs3G1Acf3uFzybY10s1hrAwRiNmX-q6YMPsVrKkzHf1T9FgeVz1lz0zJ_Lw_l-rT9zhsYusVn5JobHwce6Dom29zVmYzEkp_B4CL0M-2Fcody_ogu_RXjZRVhtE3xmOkvdh-NcEDYidPyBgCSkEBj2nhyForJB3nBH_UDihHrsQ&sa=X&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ0pQJegQIGRAB
+          - listitem [ref=f2e91]:
+            - link "Videos" [ref=f2e92] [cursor=pointer]:
+              - /url: /search?sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&udm=vids&fbs=ABfTbFVyMZGZf1hfvX9uKjN_-G8cY2oODYyTyZk24Xz37_7FQ-WwsgSXs3G1Acf3uFzybY10s1hrAwRiNmX-q6YMPsVrKkzHf1T9FgeVz1lz0zJ_Lw_l-rT9zhsYusVn5JobHwce6Dom29zVmYzEkp_B4CL0M-2Fcody_ogu_RXjZRVhtE3xmOkvdh-NcEDYidPyBgCSkEBj2nhyForJB3nBH_UDihHrsQ&q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sa=X&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQtKgLegQIFxAB
+          - listitem [ref=f2e95]:
+            - link "Images" [ref=f2e96] [cursor=pointer]:
+              - /url: /search?sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&udm=2&fbs=ABfTbFVyMZGZf1hfvX9uKjN_-G8cY2oODYyTyZk24Xz37_7FQ-WwsgSXs3G1Acf3uFzybY10s1hrAwRiNmX-q6YMPsVrKkzHf1T9FgeVz1lz0zJ_Lw_l-rT9zhsYusVn5JobHwce6Dom29zVmYzEkp_B4CL0M-2Fcody_ogu_RXjZRVhtE3xmOkvdh-NcEDYidPyBgCSkEBj2nhyForJB3nBH_UDihHrsQ&q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sa=X&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQtKgLegQIFhAB
+          - listitem [ref=f2e99]:
+            - link "Short videos" [ref=f2e100] [cursor=pointer]:
+              - /url: /search?sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&udm=39&fbs=ABfTbFVyMZGZf1hfvX9uKjN_-G8cY2oODYyTyZk24Xz37_7FQ-WwsgSXs3G1Acf3uFzybY10s1hrAwRiNmX-q6YMPsVrKkzHf1T9FgeVz1lz0zJ_Lw_l-rT9zhsYusVn5JobHwce6Dom29zVmYzEkp_B4CL0M-2Fcody_ogu_RXjZRVhtE3xmOkvdh-NcEDYidPyBgCSkEBj2nhyForJB3nBH_UDihHrsQ&q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sa=X&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQs6gLegQIFRAB
+          - listitem [ref=f2e103]:
+            - link "Shopping" [ref=f2e104] [cursor=pointer]:
+              - /url: /search?sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&udm=28&fbs=ABfTbFVyMZGZf1hfvX9uKjN_-G8cY2oODYyTyZk24Xz37_7FQ-WwsgSXs3G1Acf3uFzybY10s1hrAwRiNmX-q6YMPsVrKkzHf1T9FgeVz1lz0zJ_Lw_l-rT9zhsYusVn5JobHwce6Dom29zVmYzEkp_B4CL0M-2Fcody_ogu_RXjZRVhtE3xmOkvdh-NcEDYidPyBgCSkEBj2nhyForJB3nBH_UDihHrsQ&q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&ved=1t:220175&ictx=111
+          - listitem [ref=f2e107]:
+            - button [ref=f2e108] [cursor=pointer]:
+              - generic "More filters" [ref=f2e109]: More
+        - button "Tools" [ref=f2e116] [cursor=pointer]
+    - heading "Search Results" [level=1] [ref=f2e123]
+    - generic [ref=f2e131]:
+      - generic [ref=f2e147]:
+        - heading "Searching Thinking a little longer" [level=2] [ref=f2e151]:
+          - generic [ref=f2e152]:
+            - generic [ref=f2e153]: Searching
+            - generic [ref=f2e163]: Thinking a little longer
+        - progressbar "Generating" [ref=f2e166]
+      - main [ref=f2e217]:
+        - generic [ref=f2e221]:
+          - region "Ads" [ref=f2e225]:
+            - generic [ref=f2e226]:
+              - heading "Sponsored results" [level=2] [ref=f2e233]
+              - generic [ref=f2e234]:
+                - generic [ref=f2e241]:
+                  - generic [ref=f2e246]:
+                    - generic [ref=f2e247]:
+                      - link "Daily Online News csmonitor.com https://www.csmonitor.com" [ref=f2e248] [cursor=pointer]:
+                        - /url: /goto?url=CAESVQHrOzAV6057qdHpd1T1C8D_WDVTjPO5NhUk9IHNqtLNywv9Z3Ivs8qwH023C0ZdB4F5rZVSaRuJg0e4tzRSOnfKWiqsmvpaToO50s5MjdEO-vOyJJw
+                        - heading "Daily Online News" [level=3] [ref=f2e249]
+                        - generic [ref=f2e255]:
+                          - generic [ref=f2e256]: csmonitor.com
+                          - generic [ref=f2e258]: https://www.csmonitor.com
+                      - button "Why this ad?" [ref=f2e261] [cursor=pointer]
+                    - generic [ref=f2e265]: Unbiased US & World News — Unlimited Access To CSMonitor.com - The Monitor Daily - Weekly Print Magazine. No Risk. For $15...
+                    - generic [ref=f2e268]:
+                      - link "World Explore Our Posts On To Navigate Gaza Peace Process And More." [ref=f2e271] [cursor=pointer]:
+                        - /url: /goto?url=CAESkwEB6zswFRYEqlmGMJOSSQeu-Ea_OB9T0_m8q_ig7xDrAuOBB6miAf9VuPO3Nguz8DExmkds4lkv-36nA2yAdOvWGzKyQsoFLQKrnmQ5GL1jQm8dNLG8q3e8LlQi0u5dajoSWPA1VcLeXaSX9CL39atY49FWi7Z3S0Nwo8Y2C57XWc66GsptIR98t1tP-yyNUCrPkHA
+                        - generic [ref=f2e272]:
+                          - generic [ref=f2e273]: World
+                          - generic [ref=f2e277]: Explore Our Posts On To Navigate Gaza Peace Process And More.
+                      - link "USA Gain Insights On America’s Kids Need Help Reading And More." [ref=f2e281] [cursor=pointer]:
+                        - /url: /goto?url=CAESkQEB6zswFW0fGURLtmQxX5PF0K-AJGl91vLVo-SuKf2EGgOrS2Kxrvcn1BXgkNMF77wqRvdxabFroesWkgxYX7m4jDjLrn8fyX0e5Ck-wwP1-iahA2mxZS-pitL2xBE9zAUKG3beMbXRyyDJY81hVHSNys6Tm59n1S_z2Khve2RwI6i86ZAgk5_skR6fEYZUrF7s
+                        - generic [ref=f2e282]:
+                          - generic [ref=f2e283]: USA
+                          - generic [ref=f2e287]: Gain Insights On America’s Kids Need Help Reading And More.
+                      - link "Science News" [ref=f2e291] [cursor=pointer]:
+                        - /url: /goto?url=CAESlQEB6zswFTgyO5iLY4NPTi8TXGk80zFuP957a5m6HfW3SoAXggfESFiWi_e85z6qEQQ2RlAM7ecDl2LuPMbW-gzkSeUOYLZt9TKdzWv3rIs2jjDY0CDeN3uQnGAF3nOccGmOiDfEsOOPh4weRSHmjuYYPnIjt3si-FtnqWmYfnI35hHo3wFMKEvO3BXi2WFwh2z213IfHw
+                      - link "Middle East" [ref=f2e298] [cursor=pointer]:
+                        - /url: /goto?url=CAESnwEB6zswFY7iFq-6mKNghRtHA-iZkh0AGOuQxn-M4y9SqqkpxRsVxmhgAy5blVXSe6IFqYSsbu9CGctWyO0zaSZVLXbaFBMBTyDpxEUudlx1zGoc9FuU407F55DMSMuLTPq-bc_jD9_ltddWHiljNrz67HRanTJWV6CHzHwVJa2q8Op-4LX0wrUGCMPUvIqogeyHCEFHZ-8K69JcK56HdIs
+                  - generic [ref=f2e308]:
+                    - link [ref=f2e310] [cursor=pointer]:
+                      - /url: https://www.google.com/aclk?sa=L&pf=1&ai=DChsSEwjS4eTZx5WXAxVDVkgAHfGeAK8YACICCAEQAhoCY2U&co=1&ase=2&gclid=EAIaIQobChMI0uHk2ceVlwMVQ1ZIAB3xngCvEAAYAiABEgLpDPD_BwE&cid=CAAS0gHkaGrKhy0_k1sPpsE2sNKRjsGUQyVA3aHAtNDtnDCGTzTYBiSYkPJfqQ49ka53_HPR915CHszZycZN8QjV-nW3KjQOMdrpX3-zDjt2hF0q46J-8rYHZRekasGRWPbJ3B61kmDAnEaJFxBhFjq8axog8xk3CHwGICDw8F4QyVv0bYWNn3GIQdGB1KLXz6gzn1yV4FGoJZAKWiIoOYnza07GeeRoD71s7pBdBl5WIhmtJwf-_D1MIHzJR8O67JGjNKkyrKduZchiDk9Ejbm-AGy-DPc&cce=2&category=acrcp_v1_32&sig=AOD64_3UNJz62Gs6Rm74-mIa5x0KCeNM5A&q=&nis=4&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQh78CegQIHBAB&adurl=https://100r.org/section/all-categories/pol/%3Fgad_source%3D1%26gad_campaignid%3D22405499236%26gbraid%3D0AAAAADo60hmvb2hpEPxlAjZmIi59Mauis%26gclid%3DEAIaIQobChMI0uHk2ceVlwMVQ1ZIAB3xngCvEAAYAiABEgLpDPD_BwE
+                      - img "Image from 100r.org" [ref=f2e312]
+                    - generic [ref=f2e313]:
+                      - link "World News 100Reporters https://www.100r.org" [ref=f2e314] [cursor=pointer]:
+                        - /url: /goto?url=CAESZwHrOzAV5K0wPb-GYHiaWVNKu7tRcFyyrlw13XqzgEfKOxlqfnqru5Zq6CURgzWbuLw1KP5HKJO3wX9vj9l6hYdnP1019UgnuRfiAfaTMdqIWGT1Oug3-uIpi0_7D_DyGrkZdymwspw
+                        - heading "World News" [level=3] [ref=f2e316]
+                        - generic [ref=f2e322]:
+                          - generic [ref=f2e323]: 100Reporters
+                          - generic [ref=f2e325]: https://www.100r.org
+                      - button "Why this ad?" [ref=f2e328] [cursor=pointer]
+                    - generic [ref=f2e332]: Latest Corruption News — Exposing election fraud and political misconduct around the world. Learn the truth today. Stay...
+                - button "Hide sponsored results" [ref=f2e336] [cursor=pointer]:
+                  - separator [aria-hidden] [ref=f2e337]
+          - generic [ref=f2e345]:
+            - heading "网页搜索结果" [level=2] [ref=f2e346]
+            - generic [ref=f2e347]:
+              - generic [ref=f2e350]:
+                - link "Google 新闻 Google News https://news.google.com › ..." [ref=f2e352] [cursor=pointer]:
+                  - /url: https://news.google.com/home?hl=zh-CN&gl=CN&ceid=CN%3Azh-Hans
+                  - heading "Google 新闻" [level=3] [ref=f2e353]
+                  - generic [ref=f2e359]:
+                    - generic [ref=f2e360]: Google News
+                    - generic [ref=f2e362]: https://news.google.com › ...
+                - generic [ref=f2e364]:
+                  - generic [ref=f2e365]: ·
+                  - link "Translate this page" [ref=f2e366] [cursor=pointer]:
+                    - /url: /goto?url=CAES0QEB6zswFS7b-XMg0zCEUj0dCq4PL5FlBKAur2P-eIodNJ1tx5r5f8ILdGdFo97wgMqkDWjG3fx2gCtGMHULLLxj2iTvcIqEIAgAHvnP9dHvuD-Rta-TliQ5xBZR17Zf123VHtkJMI1rEJtntOWIcIPD6H-xhXYhqoAOwhA8inY2nxypJtOZQ7RbImnLkHvdHTxBxcRmQg3Er4BZvRup1XgieLv48R9zSOL05tWuJXlZZb0dMnM7p2Fmz64HeZw6lyyOFPenTWsFZDGquGCA8mQDQg
+                - button "About this result" [ref=f2e371] [cursor=pointer]
+              - generic [ref=f2e377]:
+                - generic [ref=f2e378]:
+                  - text: 焦点
+                  - emphasis [ref=f2e379]: 新闻
+                  - text: · 德语媒体：休战期延长火药味未减 · 海报丨烈士纪念日：山河永念英魂不朽 · 庆祝四川大学建校130周年大会举行王晓晖宣读回信并致辞施小琳田向利出席.
+                - link "Read more" [ref=f2e380] [cursor=pointer]:
+                  - /url: https://news.google.com/home?hl=zh-CN&gl=CN&ceid=CN:zh-Hans#:~:text=%E7%84%A6%E7%82%B9%E6%96%B0%E9%97%BB&text=%E5%BE%B7%E8%AF%AD%E5%AA%92%E4%BD%93%EF%BC%9A%E4%BC%91%E6%88%98%E6%9C%9F%E5%BB%B6%E9%95%BF%E7%81%AB%E8%8D%AF%E5%91%B3%E6%9C%AA%E5%87%8F&text=%E6%B5%B7%E6%8A%A5%E4%B8%A8%E7%83%88%E5%A3%AB%E7%BA%AA%E5%BF%B5%E6%97%A5%EF%BC%9A%E5%B1%B1%E6%B2%B3%E6%B0%B8%E5%BF%B5%E8%8B%B1%E9%AD%82%E4%B8%8D%E6%9C%BD&text=%E5%BA%86%E7%A5%9D%E5%9B%9B%E5%B7%9D%E5%A4%A7%E5%AD%A6%E5%BB%BA%E6%A0%A1130%E5%91%A8%E5%B9%B4%E5%A4%A7%E4%BC%9A%E4%B8%BE%E8%A1%8C%E7%8E%8B%E6%99%93%E6%99%96%E5%AE%A3%E8%AF%BB%E5%9B%9E%E4%BF%A1%E5%B9%B6%E8%87%B4%E8%BE%9E%E6%96%BD%E5%B0%8F%E7%90%B3%E7%94%B0%E5%90%91%E5%88%A9%E5%87%BA%E5%B8%AD
+          - generic [ref=f2e384]:
+            - generic [ref=f2e387]:
+              - link "主页- BBC News 中文 BBC https://www.bbc.com › simp" [ref=f2e389] [cursor=pointer]:
+                - /url: /goto?url=CAESXAHrOzAVs4DJgQJVowvf3zsQVa3vsc9Kkt4K13grUYmK5gV4WtiLl5bkO0Xaa7HkCGNY05W9o_zLKv3n699Skl6oRR8O6d4OQzoK9xgCO7e5EhLJPU-IK7Rl2nWg
+                - heading "主页- BBC News 中文" [level=3] [ref=f2e390]
+                - generic [ref=f2e396]:
+                  - generic [ref=f2e397]: BBC
+                  - generic [ref=f2e399]: https://www.bbc.com › simp
+              - generic [ref=f2e401]:
+                - generic [ref=f2e402]: ·
+                - link "Translate this page" [ref=f2e403] [cursor=pointer]:
+                  - /url: /goto?url=CAESqAEB6zswFUi38T1329T4eemr6Ptm2pofTY7maDB5i8y_qkZ3PaV2bWGHQJEtMtF1K8Cxoe0kFqb-GnaezVeHZmndKWcFjA-rg4HpH77aJ1mMUQy4_rJwFjW58_czp95kmWyo5cd9I9kly-j-eWbMu0DkMzmxAx1IeU4WULfzUDoD7XEdO5xcvKqkq9L0jtuzXpyIaXB4TIG0HbAfReBX7yQq3q1GztLOKgI
+              - button "About this result" [ref=f2e408] [cursor=pointer]
+            - generic [ref=f2e414]:
+              - generic [ref=f2e415]:
+                - emphasis [ref=f2e416]: 習近平和特朗普在美國國宴
+                - text: . 02:54 · 誰贏了特習會：習近平佔盡上風？, 节目全长2,54 ; 華盛頓的抗議者. 00:57 · 示威者聚集華府抗議習近平訪美, 节目全长0,57 ; 特朗普與習近平.
+              - link "Read more" [ref=f2e417] [cursor=pointer]:
+                - /url: /goto?url=CAESmAMB6zswFbqKdo5DpkqL5scdXWE2FgJ7qn1mvp5w21Gdvmlz6V9sbd9IJc9tuPQLU_HuEKo2pPP-xWd_Zh-MteT-P0G9f8IDvjYEs3HMTTiRQe0-AZDpUiR5tdABpS4qs-dxgm7gWJaRWZrlOOflUtB-v2OKrKzFE9DT81YAvYSTCudzcVtgEZuS0j8ky0CUH6X9nvyw8VAbD5C-DBlEE5SdwjT7Dv5Whh715ZB5Xqero9dWlUC3nhaEfX45CDBPvAfqtHPmexCKF2WhyMtor1KvD7iCfkdZPu6rI_tujRiwsy9SG7-ejRkBZ_PrICoNuiuoUqIFCksXtghQRgqBGJDlOAb9h9ihnhMb4TAHddkRvgxJlT6GTfmWbejIttsrWhkGWoZePgWssUCpd7zCF_2DLybKddUeJsFjyNw61VgPOjB-SMbaheV-2318Xsx-HXJRDN6VfCpKwm8_n09Uh9fuC-2atjuOCoi7bkVV9NeIQJeFa428o8ARpIVeqqbileb8xWDgFjxevNxvATg9oSBBJR6DvhbG_UQ
+          - generic [ref=f2e421]:
+            - generic [ref=f2e423]:
+              - heading "Local news" [level=2] [ref=f2e424]
+              - generic [ref=f2e427]: near 加利福尼亚
+            - generic [ref=f2e429]:
+              - generic [ref=f2e430]:
+                - link "KQED About this result California Farmers Are Struggling to Sell Grapes as Demand for Wine Drops 2 days ago" [ref=f2e433] [cursor=pointer]:
+                  - /url: /goto?url=CAESpwEB6zswFdom0l-COnVrk7TbuXANfmig6czaTo--LzT6bEwpenw2xKKZwf-JMTRVamb3-sOB-H1xFMWmzZAG8AnjPgVasVRVa1zF-vm1A-Mizzt0zG64ejy-l3P3H9PVI5HuMcPqNC2hdMgshS-OO3QmdnA6yJ8vHT9zYiPYNiSGf7k4p5Cdci796r9cqfRv0NwogP1VG5zVDbTIthlRhN2KuPtjVr0CZQ
+                  - generic [ref=f2e438]:
+                    - generic [ref=f2e440]:
+                      - generic [ref=f2e441]: KQED
+                      - button "About this result" [ref=f2e448]
+                    - heading "California Farmers Are Struggling to Sell Grapes as Demand for Wine Drops" [level=3] [ref=f2e451]
+                    - generic: 2 days ago
+                - link "大纪元 About this result 加州柴油價保持高位 卡車長途運費劇增 3 hours ago" [ref=f2e457] [cursor=pointer]:
+                  - /url: /goto?url=CAESbgHrOzAViLHHulUUvWM13kcx4IGcO9qScPKmnkH8RH72H3SNH2dM0X2orfbcHQEGlU3EQdbWYfiWR424qCaa2l89leE0JPP1oeN0BG92d1-btthJT0l3VZvL_5VfLHQnlJEQGEC6XiHFzcQgt3rV
+                  - generic [ref=f2e462]:
+                    - generic [ref=f2e464]:
+                      - generic [ref=f2e465]: 大纪元
+                      - button "About this result" [ref=f2e472]
+                    - heading "加州柴油價保持高位 卡車長途運費劇增" [level=3] [ref=f2e475]
+                    - generic: 3 hours ago
+              - generic [ref=f2e478]:
+                - link "大纪元 About this result 外籍男南加州連續搶劫 獲判逾5年監禁 6 hours ago" [ref=f2e481] [cursor=pointer]:
+                  - /url: /goto?url=CAESbgHrOzAVTKos691RoY6y9le2Ekh5ZNqPWbvCd4-uLxvnyOeOvIpP7IBUMBm8KLl1JzrVQNnLtRwVp6AIpO1W1ZdfKWFZhYj8h0uFFLp0kVTNByclPFniLhc6rM3eUhkzi5mhaUmBReGZtXxphFyr
+                  - generic [ref=f2e486]:
+                    - generic [ref=f2e488]:
+                      - generic [ref=f2e489]: 大纪元
+                      - button "About this result" [ref=f2e496]
+                    - heading "外籍男南加州連續搶劫 獲判逾5年監禁" [level=3] [ref=f2e499]
+                    - generic: 6 hours ago
+                - link "Yahoo About this result 2 seriously injured in East Palo Alto crash Tuesday 10 hours ago" [ref=f2e504] [cursor=pointer]:
+                  - /url: /goto?url=CAESiwEB6zswFdCtUpnGx1WnqSr8rHR5y9HAu7iZ39FPpe9m2eHxNuj7R22b9jontk1qEA3i_QgTT8xkJUuQdPhhFgzaXeJQq3JEALjK3Dg9EkHpJKHcCgt6wxFgnFDYVwcaI2N81CIS_saqDI_HjkhwElydVDqfdhLoHyxRNVsTADWAC9a1I2mHqCgDtqeH
+                  - generic [ref=f2e509]:
+                    - generic [ref=f2e511]:
+                      - generic [ref=f2e512]: Yahoo
+                      - button "About this result" [ref=f2e519]
+                    - heading "2 seriously injured in East Palo Alto crash Tuesday" [level=3] [ref=f2e522]
+                    - generic: 10 hours ago
+              - generic [ref=f2e528]:
+                - separator [ref=f2e529]
+                - button "Show more" [ref=f2e530] [cursor=pointer]
+          - generic [ref=f2e539]:
+            - generic [ref=f2e541]:
+              - heading "Top stories" [level=2] [ref=f2e543]
+              - link "Sign in to customize" [ref=f2e547] [cursor=pointer]:
+                - /url: https://accounts.google.com/ServiceLogin?ec=oo-seaport-srp-sp-11135&continue=https://www.google.com/search?q%3D%25E6%259C%2580%25E6%2596%25B0%25E6%2596%25B0%25E9%2597%25BB%26sca_esv%3D658d89bb58b2aa3f%26sxsrf%3DAPpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666%26ptid%3D11135%26ptt%3D8%26fpts%3D1790745732077
+            - generic [ref=f2e554]:
+              - generic [ref=f2e555]:
+                - link "早晨报 About this result 陈光炎：习特华盛顿峰会后的中美关系——从战略对抗走向可管控的竞争性共存 1 day ago" [ref=f2e558] [cursor=pointer]:
+                  - /url: /goto?url=CAESdgHrOzAVw42wkm3A95yWdw9j6Q-SfLzzxcE9fGaG6k05lEPnwsdagWtllFHPEMUSK2XBi-27jnH06ED74ZRZSgW4OgRTzsIqUsG15EwP1RrU_V6xq1EsQNKoytwsOkBX9iGSXvqY1h2jS3leGss9TtwSAbV-aXA
+                  - generic [ref=f2e563]:
+                    - generic [ref=f2e565]:
+                      - generic [ref=f2e566]: 早晨报
+                      - button "About this result" [ref=f2e573]
+                    - heading "陈光炎：习特华盛顿峰会后的中美关系——从战略对抗走向可管控的竞争性共存" [level=3] [ref=f2e576]
+                    - generic: 1 day ago
+                - link "中华网 About this result 清晰可见的台湾岛中央山脉 警告“台独”分裂势力 3 hours ago" [ref=f2e582] [cursor=pointer]:
+                  - /url: /goto?url=CAESegHrOzAVYhhiVLeUbH6wwXafNRB406BHY1GgyvKuMAibPCx9sxnLWiBinvgVxp7pSL3ssnvbrrQqTS-P1IJyL3XgNeESwDLXD95XPp3wk7-HHhLjmzYQCHZhCdEODUkQORR06JMIT_zl3wkXbeqvEC-wimwNaOVHhMl_
+                  - generic [ref=f2e584]:
+                    - generic [ref=f2e586]:
+                      - generic [ref=f2e587]: 中华网
+                      - button "About this result" [ref=f2e594]
+                    - heading "清晰可见的台湾岛中央山脉 警告“台独”分裂势力" [level=3] [ref=f2e597]
+                    - generic: 3 hours ago
+              - generic [ref=f2e600]:
+                - link "华尔街日报中文版 About this result 尽管油价下跌且美联储发表偏宽松讲话，美债收益率仍持续走高 6 hours ago" [ref=f2e603] [cursor=pointer]:
+                  - /url: /goto?url=CAES1QIB6zswFby97pXi3thvycLN-ootAxxoD9WSm5kVdJogiB9yhMvNCjfmaAN_jkQjErwYgaGRiFWrBJYjeSK6V55HHdzJhNWy86BHpqYE8vyWX32lcHNwSdJfGpQ5zagBq4Ksh4I8O-bgZbBHn1tVeLwpE23pcul5sPkE--b5ZdhtniEycEd58no0uXP3xeRZpkTins4xAlcoGWs7LRD4jcjC7QF5QgpTlinlfZ8jxBP73GgSzA1ZA4dIhig8pv6sKw49jiPQV_70kelKkJoQaTkFJQwokUihLA_gvJSHCaYkEVYsJSH-0qT7otDtkcgFh8GZ8YUpFOerkzKKkb6G9mgV1yJ3FwarXABTjJHNL0dHjYCZmnqUgbM6jzEa0IrtvoOPD4B7-PnnA8tcRTk27j18qfxBMoRT98CTULFJNK1cdV-B74MfJZl76JslfpFME9IfGOCRQQ
+                  - generic [ref=f2e608]:
+                    - generic [ref=f2e610]:
+                      - generic [ref=f2e611]: 华尔街日报中文版
+                      - button "About this result" [ref=f2e618]
+                    - heading "尽管油价下跌且美联储发表偏宽松讲话，美债收益率仍持续走高" [level=3] [ref=f2e621]
+                    - generic: 6 hours ago
+                - link "新华网 About this result 波音将造美海军第六代战机 研发合同超200亿美元 2 hours ago" [ref=f2e627] [cursor=pointer]:
+                  - /url: /goto?url=CAEShAEB6zswFTadYPtM503teiETMjP9_PgxJ0NnufOCZCx571g1Ri7CD0Pu9b6lMe8u2DfFxgVY3vFfwBAYLzQgVxQru7aB3eqJaBubMYZD9Wzo7lhycNSIsxdJrHObM52DSuV62Ne6MZixBntUQXkskMYpotgkIBEOkD5B9hlScYJoL4Vjxj8
+                  - generic [ref=f2e629]:
+                    - generic [ref=f2e631]:
+                      - generic [ref=f2e632]: 新华网
+                      - button "About this result" [ref=f2e639]
+                    - heading "波音将造美海军第六代战机 研发合同超200亿美元" [level=3] [ref=f2e642]
+                    - generic: 2 hours ago
+              - generic [ref=f2e645]:
+                - link "加美财经 About this result 华尔街日报：23年造成30万人死亡后，美国军队撤离伊拉克，留下一个危机四伏的国家 3 hours ago" [ref=f2e648] [cursor=pointer]:
+                  - /url: /goto?url=CAESaQHrOzAVpiiJXSLETLZKKf_-LJLYex_fgU1WjkiA4RXF17Vnv6wID5CNf-nA1BbB0aR5Tvl_q-xxZhUc7wPboFXFmz3hOtqg3kvV4fV3-xUf_BADrsgr09fIbOBDeVihIwXESscDUcsotw
+                  - generic [ref=f2e653]:
+                    - generic [ref=f2e655]:
+                      - generic [ref=f2e656]: 加美财经
+                      - button "About this result" [ref=f2e663]
+                    - heading "华尔街日报：23年造成30万人死亡后，美国军队撤离伊拉克，留下一个危机四伏的国家" [level=3] [ref=f2e666]
+                    - generic: 3 hours ago
+                - link "新华网客户端 About this result 美媒：美军将大幅削减高级将领职位 2 hours ago" [ref=f2e671] [cursor=pointer]:
+                  - /url: /goto?url=CAESmQEB6zswFV-S1oDEiW1bo0_OpfAv915jXFZ1hoC6xrUGNVAcat9HY83GEWD9AtLl4D5J1cuRrfDDTfFGgDmVLvEjH84ZImXq7TXEp6NROtRkIZBUTqM5zCtJbxh_IdqlamZY_5GPra_D4dd_5fjr24KGxyDNM9N9MwvAqXtJjK_gZNmEH5tIONJ6sn-oTXe0yE2-KCYloHqOp2c
+                  - generic [ref=f2e673]:
+                    - generic [ref=f2e675]:
+                      - generic [ref=f2e676]: 新华网客户端
+                      - button "About this result" [ref=f2e683]
+                    - heading "美媒：美军将大幅削减高级将领职位" [level=3] [ref=f2e686]
+                    - generic: 2 hours ago
+            - link "More news" [ref=f2e689] [cursor=pointer]:
+              - /url: /search?sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&tbm=nws&source=univ&tbo=u&sa=X&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQt8YBKAJ6BAhPEAU
+              - separator [aria-hidden] [ref=f2e690]
+          - generic [ref=f2e701]:
+            - heading "People also ask" [level=2] [ref=f2e703]
+            - generic [ref=f2e704]:
+              - button "最近有什么重大新闻?" [ref=f2e710] [cursor=pointer]
+              - button "最近有什么新闻?" [ref=f2e724] [cursor=pointer]
+              - button "中国最近有什么重大事件?" [ref=f2e738] [cursor=pointer]
+              - button "世界三大新闻社是哪三家?" [ref=f2e752] [cursor=pointer]
+          - generic [ref=f2e762]:
+            - heading "网页搜索结果" [level=2] [ref=f2e763]
+            - generic [ref=f2e764]:
+              - generic [ref=f2e767]:
+                - link "纽约时报中文网 纽约时报中文网 https://m.cn.nytimes.com" [ref=f2e769] [cursor=pointer]:
+                  - /url: /goto?url=CAESVAHrOzAVHsukK8cdhHIuhX1eXf0oOZQ77XjKCcK9Al_H1SnW2ERXBQWDPZD2TRElAUKXKJExp-9cLgVTmRRU9pamp-8GZ6o20_IGAYSmR5g6tWvPIQ
+                  - heading "纽约时报中文网" [level=3] [ref=f2e770]
+                  - generic [ref=f2e776]:
+                    - generic [ref=f2e777]: 纽约时报中文网
+                    - generic [ref=f2e779]: https://m.cn.nytimes.com
+                - generic [ref=f2e781]:
+                  - generic [ref=f2e782]: ·
+                  - link "Translate this page" [ref=f2e783] [cursor=pointer]:
+                    - /url: /goto?url=CAESoAEB6zswFd_FXV8Mi3zO2qxp6SFoCIogz0Aheh4gBYNKKEh8i5k3u8v8B37NNX-fBqEFu89Z3lEIFZxuwZ4EVySEMpIBCStyVD3J7Os7gF1A_261qzxMcbHUhodvbygxKpVVelxWSlLpVzrIFODRsBhRPAXUD7Rk_40I7v-E2HXR-nghcAr3KwmLNJFLK_290NzCndJKOPYvl8IrOF_5P5S8
+                - button "About this result" [ref=f2e788] [cursor=pointer]
+              - generic [ref=f2e794]:
+                - text: 美中同意互降关税涉及多领域商品，价值600亿美元 · 农民工文学：“中国制造”背后的声音 · 特朗普要求人工智能巨头自我监管 · 康奈尔大学兄弟会强奸案调查重启 · 中国真的在窃取 ...
+                - link "Read more" [ref=f2e795] [cursor=pointer]:
+                  - /url: /goto?url=CAES9gYB6zswFSbeQ37hvaomyo2wXq19g41MrE8NUjiPB6AAHwHVgzl2AuRXPlCovaKmfdVEAqpulAAv9xLzCdfLR-MOdbC_kgSuVm_ZP9kFeKfy0JiPX0B42g-qcINAWFgCgHHaHyPBpsfuoT0qjECt11uDqEH6dcnkohyp2bKl2f_xcl4_k7rJ3LXklKQvRkvIF-gbcdDQD_DbzlPJoHWohydm-Ewqi2BoSIUBts9XJhwlWrZh9g2QCHnYiKWBHWVP4To_tVlPv9B7U1t2k1v1_Eu2bOC8i1Jwr0NRjL-nLj9iYeQW313HG26x4rVuIBb9DzyOhErC_oEbXulk5xD-9LPGpTMFoZAkh2_CtyBdS2Xe-v8dTKx2KPMH8HmWcbfSOz1uHC-XVzwv-37Cvs-QuD5Vsr6WzDsVbngq_l0YIH8gbfrHPwWo0FYNUz5TvAkLBpqgUrFW8Ukp06BuiFRnOcsxQDANjTIezLmFKjDVrjLV2Qyk2zTJJPOX_lNHnriyNE1Kw2xpaK5GLcyRvyH12fq-ycHgUI4e3JBg9PuFqJCztF32Q_qdQAre6e6bxyAziOiFbDc3Sz1tZ1bN3PGjEtmFRAqtrmqTWt2YY2YahV2rpxu1ZiDZotJJqJnHVZxuzSfkZkJ_BgBgZxqwH6XACraeVMe8cTdmb9QK1Inza09o_9Wlct4Qdj29sgmhn13a5zFE45EQl0ViB6VtU8hVkV-KOJDIdBzDyZCEkU1Z5e8J7bApVVyTHTWvxNMObGDS-GGtW1WAHGULxmWxb07sBC_B8dr2aRsCxtSYfjdSS0X7aITz2RSWE-5ek2ltqpWz9ZGx6IpbzJ3YR_cKdpmKpyNaFcjvpYeaz9doM2dDW_fpjoee5yszMRczYU4z89LbzcLejY75vGNimvdV2IhCUXP2gyGXCRd6nDMOY3DCaiZHES6lPSOT8v9aTzd7j2AZsSZqTZ3V-D6XZ65Ek6b6w88Mjiel1anmLFxcfbLkqUWYSJMqyMXM993bhsTpLZso-ey49fz7-fB340wIO4wHtxYI31u095dk34M6bfbqaZ2h-CCocc-ZQgVld7DBJCzwU5FCsHHOjn3m4HqKf6t7Gd69j_MbGso3ELxgG1JM_r0qL1DDRaiAgXj83lV7vmy3YxDdRtLnaN_mLsAPvSdoXDlVqRD8GnLQ
+          - generic [ref=f2e799]:
+            - generic [ref=f2e802]:
+              - link "美国之音中文网新闻 美国之音 https://www.voachinese.com › ..." [ref=f2e804] [cursor=pointer]:
+                - /url: /goto?url=CAESXAHrOzAVDAszyIt66pLBMQ9BBMuPqJxG1MGfKp2YBPCpp4e5nRqWuRs7jgnbN4Fekreu_Q9AU2E6fdVIodtdRp-YNDtVOxFsRSvSInDydygRnKkY6PO5UlgG5_Qx
+                - heading "美国之音中文网新闻" [level=3] [ref=f2e805]
+                - generic [ref=f2e811]:
+                  - generic [ref=f2e812]: 美国之音
+                  - generic [ref=f2e814]: https://www.voachinese.com › ...
+              - generic [ref=f2e816]:
+                - generic [ref=f2e817]: ·
+                - link "Translate this page" [ref=f2e818] [cursor=pointer]:
+                  - /url: /goto?url=CAESqAEB6zswFSK7a7FKVh4iOy-bfdpkoPIJs9g4LJ22Dhu0MO0N3FgfIpd6gxKKCy6Svx834lWRdFd2proMMxlREEyXyPuvcQUQtEjb--1EZDmxQanPD8wxErCzor_8M2eqmGTNuNbICjXOvIh-FaMdtUHjYx1eG3Z03mY0VFpTQBZFQxi8YPanZVpdAyLafc1fwhzeoaLE3PvK6s1_f8hTbZ-xXO0Xm_mpw4Q
+              - button "About this result" [ref=f2e823] [cursor=pointer]
+            - generic [ref=f2e829]:
+              - generic [ref=f2e830]:
+                - emphasis [ref=f2e831]: 美国总统唐纳德·特朗普(Donald Trump)与中国国家主席习近平的峰会上星期五结束
+                - text: ，台湾议题并未如原先外界预期那样在峰会中成为焦点。美国众议院议长麦克·约翰逊(Mike ...
+              - link "Read more" [ref=f2e832] [cursor=pointer]:
+                - /url: /goto?url=CAEShwEB6zswFZUR94I3O4ja6WBio--TwKHLL6R5rvqlZjSCy4JFO4YQxMqvZ_vOll8Qf0NsAYwej5kL3S43tNie-al4o5YSiY9y_-0lTsMmjF2aHrEpdAf2N9lyWAkqI3rKWKS2_G2YR4rBT6MtygN312Iw6tyvWy7gzZSPLLuqW2V304JB_HoiW2o
+          - generic [ref=f2e836]:
+            - generic [ref=f2e839]:
+              - link "华尔街日报中文网_突发新闻，商业，经济，金融，财经，国际 ... 华尔街日报中文版 https://cn.wsj.com" [ref=f2e841] [cursor=pointer]:
+                - /url: /goto?url=CAESTgHrOzAVGOqRWoqqE2pvVH51WNqBUXC2j5jb3YNcQYHn8-i8cBJIbpCwzyO3gZjP226VEJwkNzc7XeJILlyKMp6G7AAJqHX4RofyRVKlhg
+                - heading "华尔街日报中文网_突发新闻，商业，经济，金融，财经，国际 ..." [level=3] [ref=f2e842]
+                - generic [ref=f2e848]:
+                  - generic [ref=f2e849]: 华尔街日报中文版
+                  - generic [ref=f2e851]: https://cn.wsj.com
+              - generic [ref=f2e853]:
+                - generic [ref=f2e854]: ·
+                - link "Translate this page" [ref=f2e855] [cursor=pointer]:
+                  - /url: /goto?url=CAESmgEB6zswFXQ7odMcjsBK4GZ3b5j97SCsBuhTV9HzvQEyS_W6QT13L-hD0bXm_BarYyjDvczOhBPlLC9IezPQ2Z1ykF8vBhS0Up3l7EDCicxAwqwLS6hc65egna9QIDI8OQpGVcIF7urN9O8RC5OMx0OvRHTOuWZraRm3AwlnrliI40Xl-Ab6MALYpu3Gyuk-KBbSVnsy80dCH3Nn
+              - button "About this result" [ref=f2e860] [cursor=pointer]
+            - generic [ref=f2e866]:
+              - text: 中美同意削减共600亿美元关税，但稀土问题仍是症结所在 · 图解美国正如何削弱中国对关键矿物的控制 · 中美哪些商品可能受益于关税下调？ · 中美同意削减关税并启动AI对话 ...
+              - link "Read more" [ref=f2e867] [cursor=pointer]:
+                - /url: /goto?url=CAES9wUB6zswFX3XDIjf3ea3YxZJQzna5zEUCcYvDB6mQPr57hwuD1pF-r-oa0PjkrQB5TSEOGk_fRW0ynr0Vu2dxQQiDTAEZLbZQ961eUbcsYYWgGUpjaUaQOtba_51G73sEhe1Zd_GqC19DPC-sI4rZU0NFK2_Avk9il6z5cAhyaBpZiFfkDs0kRBSCFUcHzv5iAG3EUiUGgQWoNL2_tXCP5AOq2vvoQ6Lm8vdcoYJ2QG_fN4yoQNpdBS3YL14rpBm_VloyEP7bdebCnNnPz79CyasaauZYdm1A2eLBacToC-VHrIebKAvdfaOtW2uwAiCmKxGWT2-dh5gzhNZfnwSpFfgZqWS_Enr-Uai0fmG2l5UZ-KLy1REvhY0K7h2BAMLUDrTvCNqB2temCy6biH1VT-WYRFOxMogPg3vefy8eXwx4SoSA6JCM70ca_AAKUW30FBxon4-s082UZToO3lcnUlDO6Oc2f2HJMn2l0cKH2rj7KBzRoQl-w4sen9R655Old3IBL-buhRWDccDS0Ym5HWnotM5VRtnWToQwY1tJeE3CTJWoikX6Uhu71JwUx484vy2mcyoRb-3F1EVeDyX4_xKxw5tWRX_KIdlVmgLnZGxIspZMucyBy_3A2YS5Grsqnk3nrBXgUgoUCE4nf-L96gMwv4GXPs2-K-_8EnShqkPotALUr3Fs8NNbbp7EjOIvjASdyy7VT6ASMwOQf4NooHhbZtkcRbZIJUkMU0K358oRMC_ZFvZ0NPSnu9ZP2CyXWbiYWNEPisd5Q1R-KAAEdYgHUimpb5xb_gv0b70n8WdUm3eHiqtLdKYUCQXKCJoVw4_Tf3hIX74oa6JldbjeQcItcUW4BINNT_jcgxVNEH91MOefm4xhsLuMzRDsc3PugW7ffZ5ZeTCNvqP14YT-dXM0FNhUsrscRv6EvQTDOszHja-1bzP3MFaU5-O2CDo2yWbN_CXqt1Sz20l1qweLPFENCpk3S0PMGHVhNKDIJYjQA3Hyxpifpc
+          - generic [ref=f2e871]:
+            - generic [ref=f2e874]:
+              - link "中国新闻_央视网 央视网 https://news.cctv.com › china" [ref=f2e876] [cursor=pointer]:
+                - /url: /goto?url=CAESVwHrOzAVxJ0bJL2xPnsrf3T3gX5jdEM-sPYP9foT7swmG91KlLjqvfjsm06y58bvLhYgLzYTKOCYIXUvNVyw0QRnc1RmGR__qjF-UOabzNU6_IPgdKIPpQ
+                - heading "中国新闻_央视网" [level=3] [ref=f2e877]
+                - generic [ref=f2e883]:
+                  - generic [ref=f2e884]: 央视网
+                  - generic [ref=f2e886]: https://news.cctv.com › china
+              - generic [ref=f2e888]:
+                - generic [ref=f2e889]: ·
+                - link "Translate this page" [ref=f2e890] [cursor=pointer]:
+                  - /url: /goto?url=CAESowEB6zswFamHQsYOUgtP_6xtaj3jAiV_MLa87ie6LNF9wWWdIQ2KK4oPRIaDHiTya2AI5k8NHaW8LhLFPT4Na-eN5c-cVDbwBQwol9gEIO2_-7b36SBKRoou3VG4PylriNRbzrFosISXHVvlRlrvLlpLeN-sn0cw07KKMo5zKQsUgTaa2szcNysTEJVTIWl2n__usqsbkQZ81xp8AWpP-b4OE3Fe
+              - button "About this result" [ref=f2e895] [cursor=pointer]
+            - generic [ref=f2e902]:
+              - emphasis [ref=f2e903]: 新闻
+              - text: 提供最及时,最权威,最全面的国内大事,时政资讯。内容涵盖:国内
+              - emphasis [ref=f2e904]: 最新
+              - text: 政策,重要
+              - emphasis [ref=f2e905]: 新闻
+              - text: 发布会及港澳
+              - emphasis [ref=f2e906]: 新闻
+              - text: 报道。
+          - generic [ref=f2e910]:
+            - generic [ref=f2e913]:
+              - 'link "世界新聞網: 一網帶您看遍世界 世界新聞網 https://www.worldjournal.com › ..." [ref=f2e915] [cursor=pointer]':
+                - /url: /goto?url=CAESYAHrOzAVYEzLQ_wZyuhAa-8byEm_-gO3Fb09D2Cb7BLNutD9Jwt0N_Ul10SKWuiorXxaSuXSI8H0yixNiaWu3st5xvhdF8OICci6MnQ30WYJ9rP-NpsCviAc3AVdjtF9Ow
+                - 'heading "世界新聞網: 一網帶您看遍世界" [level=3] [ref=f2e916]'
+                - generic [ref=f2e922]:
+                  - generic [ref=f2e923]: 世界新聞網
+                  - generic [ref=f2e925]: https://www.worldjournal.com › ...
+              - generic [ref=f2e927]:
+                - generic [ref=f2e928]: ·
+                - link "Translate this page" [ref=f2e929] [cursor=pointer]:
+                  - /url: /goto?url=CAESrAEB6zswFZbrhVgAJzLG1yw0F5pz71IE0SuhZS_s5PZ70_LiK-5rDG-J2VgKZTyJkxUD2n8JTZDXZ8NIhvtbJIRuTurqABQBQUjJS25VLHsCsLcPqnuI8RzP2ubARLtQyHbm8TCXodlrXrKJyvyve4fLNxXKtaQ3TOxD-W3HxGRHBmkoGvDCN01TZjiwrCZ05-tmB7OAYlp7SmQaWf7028SkJNaKV3pZHTE0xePB
+              - button "About this result" [ref=f2e934] [cursor=pointer]
+            - generic [ref=f2e940]:
+              - generic [ref=f2e941]:
+                - emphasis [ref=f2e942]: 投資人把Fed想得太鷹
+                - text: ？ · 王鶴棣捲「下體壞死」疑雲首露面曝「哥們的哥們兒」現況 · 川習會內幕中企高層為何遭白宮拒於門外？ · 2中國人微信買美國護照偷渡至加州被逮 · 極度 ...
+              - link "Read more" [ref=f2e943] [cursor=pointer]:
+                - /url: /goto?url=CAES-wYB6zswFVQL0adQ86Dk1zAaUD1ogG_AGcbXvFrWfWJ7HF8njavu7cPdYdso1HkcSGvz3_EwhjQRahNk3U_Iw4St0MzOrVXYBT4INi3zgiurfE-1-OjUGQRAO2eNOmfZislCVzuEGf2zgqIQ3SZ6olmtKGKhGNM_Ut7wIyCxbSrGK30KirIQ7b5vWncxwZkFZN1gKGwDJWaRK-PiyNDX4AI9qOY0Et94oFKA1guQhfTkLzHL0--cnue5ZvRekku6x19e59j_RpCW1JHmlSbFiYDlUDxIy059SJQbFoec-LqvSH24EpHlzogD0XgyJwWobX9O41QiH7ZYWFsahNmUqwKXNm_tscqH9Rh47KB1Je64jmuHtFr2RdquFmcCtjxgDx5hLxS_lDDIajM_GcYEGM-8xXDy5GNSD2MiWUOlYXtLr1CYP1A_ZaiL3vBHoitvDoCFPcD-ZNwL51nRuNXnQ3luu1Mab38J9CbhXY_Ov_658nHl-mfo3qOBv0onXjrPW0f8IDmHgwgN07xOEtv8tuQcoHOBV8sw6jf-hkb_an7EJbr9gO9UR20oKw-7v0r8sxTcjTdIei4Ot_k9EdtIzZZ1pNWIMVQvPjF-YA6hIP_rTrFmJs8BTPmA4M5uumrFNbI91tx_NuqowcjgLjoWHSDugO2Q7twf-0-Kp1l-SH90s2Y3XeXClrro9r5mqmkivETKXc4ofZaqsS4lu53MpbXR1T92JpgYjylqtcUebrNl4pNJgHkNFwiJB3GfNZxu6n8mkACjNNBAVs_xJZ_ELCbLFajKZaKG2dBjth-Nj-Ovq7hin3YQc1AgJpBviSlB84MDiU9YLAQYeBU4CKrw-lX0RQgCOnwHnPjMWhsu_mjd7wcyKdk3zIktZJUizBruQrZA5_5yVHJcxPWIwFrrYnaHt7lYgzhGt8ugpSZxWzADjwTV8g0jC4eol1BA8pNYZi1pYk54xVN2ToC4ZEPe18ErVYbVf1Gu7LR6wktlXzV1U-OV3sT-qAEssTFEROtqo7G4imSU_FnS3KfJ0u9KMeXb3jJsd4JNK_eqgwB8lHpPm0jKwTotalmc8wcslvlqGTIo0jTqEARYAkXdS33xH94m08GNvexI-IDRHnZnj3FdFpVNSn3eUJevUG7nFaioFc0njzinTQM24VP67GXvR7B_UhjpZR9yBKBmgZE
+          - region "Ads" [ref=f2e947]:
+            - generic [ref=f2e948]:
+              - heading "Sponsored results" [level=2] [ref=f2e955]
+              - generic [ref=f2e956]:
+                - generic [ref=f2e963]:
+                  - generic [ref=f2e968]:
+                    - generic [ref=f2e969]:
+                      - link "US Economic News Capital & Main https://www.capitalandmain.com" [ref=f2e970] [cursor=pointer]:
+                        - /url: /goto?url=CAESYQHrOzAVAj49SNUknE2q-p3lskTzc09jbNZDUZEj-m47DGMYxDsmAEPzekDf7T6y3Z6XKWv7c_D16Di2elRXoJBP-0yoHqIpHlaCIoiE_tIrc3cd4C5WEg0yznI8_nMoagw
+                        - heading "US Economic News" [level=3] [ref=f2e971]
+                        - generic [ref=f2e977]:
+                          - generic [ref=f2e978]: Capital & Main
+                          - generic [ref=f2e980]: https://www.capitalandmain.com
+                      - button "Why this ad?" [ref=f2e983] [cursor=pointer]
+                    - generic [ref=f2e987]: Capital & Main’s Latest News — Explore top stories on economics, environment, and society. Stay informed with us. Reporting on...
+                    - generic [ref=f2e991]:
+                      - text: ‎
+                      - link "Latest News" [ref=f2e992] [cursor=pointer]:
+                        - /url: /goto?url=CAESYQHrOzAVAj49SNUknE2q-p3lskTzc09jbNZDUZEj-m47DGMYxDsmAEPzekDf7T6y3Z6XKWv7c_D16Di2elRXoJBP-0yoHqIpHlaCIoiE_tIrc3cd4C5WEg0yznI8_nMoagw
+                      - text: · ‎
+                      - link "Awards" [ref=f2e993] [cursor=pointer]:
+                        - /url: /goto?url=CAESngEB6zswFVMdNqA3pUdXec9SWeNWGatoX37p_F9ZsR248C01L2d2ewAMw48oJ2HC41_pqQSARgZs2c35HbVwiWgNY2Pcp_QtW9oBVWGxVN8HBkFy3LKG9ObHPQqoPMdRMwfeNC4I3cCqq6_HaOmjT3DC5mY2qMSkhRur_TsVVOhzNMSqbucuV9mrei2Qr8eh1Y81A0q0Om2CZ_cx5eFgHA
+                      - text: · ‎
+                      - link "Investigative US News" [ref=f2e994] [cursor=pointer]:
+                        - /url: /aclk?sa=L&ai=DChsSEwjS4eTZx5WXAxVDVkgAHfGeAK8YACICCAIQCxoCY2U&co=1&ase=2&gclid=EAIaIQobChMI0uHk2ceVlwMVQ1ZIAB3xngCvEAMYASAGEgJDgPD_BwE&cid=CAAS0gHkaGrKhy0_k1sPpsE2sNKRjsGUQyVA3aHAtNDtnDCGTzTYBiSYkPJfqQ49ka53_HPR915CHszZycZN8QjV-nW3KjQOMdrpX3-zDjt2hF0q46J-8rYHZRekasGRWPbJ3B61kmDAnEaJFxBhFjq8axog8xk3CHwGICDw8F4QyVv0bYWNn3GIQdGB1KLXz6gzn1yV4FGoJZAKWiIoOYnza07GeeRoD71s7pBdBl5WIhmtJwf-_D1MIHzJR8O67JGjNKkyrKduZchiDk9Ejbm-AGy-DPc&cce=2&category=acrcp_v1_32&sig=AOD64_08lbCtFF3JddcuhJahprdCWobrrA&adurl=&q=
+                      - text: · ‎
+                      - link "Culture & Media" [ref=f2e995] [cursor=pointer]:
+                        - /url: /goto?url=CAESegHrOzAVaAxPLv_0UM4yn1aqUdGfpSPq3MkMThz8gfC3EpY5G1Wc_4urW1vfhL2EVVP8mWvHAQDXD_NNKf96Rv88nQKB9_j3_7h7yZ2jvdniUlc2ngLYU2g1Ny51kH24vcCuCv0QYSXjIrDQo2gOGiCQm3xcZTnb28Sb
+                      - text: · ‎
+                      - link "Featured Video" [ref=f2e996] [cursor=pointer]:
+                        - /url: /goto?url=CAESdwHrOzAVPYE1YkxcIVIAYH3Jn1DMJeENLAl2dVu7D2LR-FssB2rn-AN6kJJD3QAPaUQMWMOOnNnt4cnfAnizKCSjjuxwXMBpROkObmxLgT_Zy4FPvevM17cqybNzIMJDcmApZfq44HpjCyWxNXtmUioSVqEMJF1m
+                      - text: · ‎
+                      - link "Video Gallery" [ref=f2e997] [cursor=pointer]:
+                        - /url: /goto?url=CAESZwHrOzAVHNeRp_-WgbUZcujSEb-I6XeJWDwRjRRTwSdx7spWHmuxz_yekL-ItPX8wNLYIYL1L5FxAxIDsLtn-0brM9x3PNrSxkUhG0WkPOE28m2Yk54h2nvEqsvf4U2qmheS7H3tED4
+                  - generic [ref=f2e1002]:
+                    - generic [ref=f2e1003]:
+                      - link "Global News Live news.theater-strategy.org https://news.theater-strategy.org" [ref=f2e1004] [cursor=pointer]:
+                        - /url: /goto?url=CAESXQHrOzAVfKf31ZDY-tv8eakYGvx9RLLIZruzW0vNF3sqK-RQytlJsoLvLnXNfzDdBkhHQKX2Fq4rsGnUfMAUwZBxVBxELdoTE6SJJXCEKa-Kbci8SQWz_f8FJeSBxQ
+                        - heading "Global News Live" [level=3] [ref=f2e1005]
+                        - generic [ref=f2e1011]:
+                          - generic [ref=f2e1012]: news.theater-strategy.org
+                          - generic [ref=f2e1014]: https://news.theater-strategy.org
+                      - button "Why this ad?" [ref=f2e1017] [cursor=pointer]
+                    - generic [ref=f2e1021]: World News Coverage — Track breaking international news and daily world events as they unfold live. Live updates and news summaries from 18 regions around the globe. Read now. Real-time world briefing. Global risk index.
+                    - generic [ref=f2e1025]:
+                      - text: ‎
+                      - link "Top World Headlines" [ref=f2e1026] [cursor=pointer]:
+                        - /url: /aclk?sa=L&ai=DChsSEwjS4eTZx5WXAxVDVkgAHfGeAK8YACICCAIQBxoCY2U&co=1&ase=2&gclid=EAIaIQobChMI0uHk2ceVlwMVQ1ZIAB3xngCvEAMYAiADEgJ4oPD_BwE&cid=CAAS0gHkaGrKhy0_k1sPpsE2sNKRjsGUQyVA3aHAtNDtnDCGTzTYBiSYkPJfqQ49ka53_HPR915CHszZycZN8QjV-nW3KjQOMdrpX3-zDjt2hF0q46J-8rYHZRekasGRWPbJ3B61kmDAnEaJFxBhFjq8axog8xk3CHwGICDw8F4QyVv0bYWNn3GIQdGB1KLXz6gzn1yV4FGoJZAKWiIoOYnza07GeeRoD71s7pBdBl5WIhmtJwf-_D1MIHzJR8O67JGjNKkyrKduZchiDk9Ejbm-AGy-DPc&cce=2&category=acrcp_v1_32&sig=AOD64_3apk9HmeYnWqZk0OYlTKAUQ9VgZw&adurl=&q=
+                      - text: · ‎
+                      - link "Summarized World News" [ref=f2e1027] [cursor=pointer]:
+                        - /url: /aclk?sa=L&ai=DChsSEwjS4eTZx5WXAxVDVkgAHfGeAK8YACICCAIQCRoCY2U&co=1&ase=2&gclid=EAIaIQobChMI0uHk2ceVlwMVQ1ZIAB3xngCvEAMYAiAEEgKWdPD_BwE&cid=CAAS0gHkaGrKhy0_k1sPpsE2sNKRjsGUQyVA3aHAtNDtnDCGTzTYBiSYkPJfqQ49ka53_HPR915CHszZycZN8QjV-nW3KjQOMdrpX3-zDjt2hF0q46J-8rYHZRekasGRWPbJ3B61kmDAnEaJFxBhFjq8axog8xk3CHwGICDw8F4QyVv0bYWNn3GIQdGB1KLXz6gzn1yV4FGoJZAKWiIoOYnza07GeeRoD71s7pBdBl5WIhmtJwf-_D1MIHzJR8O67JGjNKkyrKduZchiDk9Ejbm-AGy-DPc&cce=2&category=acrcp_v1_32&sig=AOD64_2bVxfgQGe7JqQytMZLo4Tp75KzBA&adurl=&q=
+                      - text: · ‎
+                      - link "Iran monitoring" [ref=f2e1028] [cursor=pointer]:
+                        - /url: /goto?url=CAESYQHrOzAVMrUnATqok9B2pwiYeYaV982wP2qEB3cWeK0D4GZEOa1zlqAmQaaPm7pCu4Q2GTbGJ31j0Ps68TEwV8hZSww70hVTaMdFP36TGmgpXKjmQCdW_QtD_1mP9vRydWg
+                      - text: · ‎
+                      - link "Germany monitoring" [ref=f2e1029] [cursor=pointer]:
+                        - /url: /goto?url=CAESZAHrOzAVWvoB8DG8Gzbpr3XLTEyQgj5nXqWaELuH8pqSSJ8TdMRO7eTXHoaWIMVuF9T5DOjswpJZeDa4nQBubCyvuHzHHhLPhEmHwVg8LdUqayYpYdipTLCV0K3KWV7hGbHULcs
+                - button "Hide sponsored results" [ref=f2e1031] [cursor=pointer]:
+                  - separator [aria-hidden] [ref=f2e1032]
+        - generic [ref=f2e1039]:
+          - generic [ref=f2e1044]:
+            - heading "People also search for" [level=2] [ref=f2e1046]
+            - generic [ref=f2e1048]:
+              - generic [ref=f2e1049]:
+                - link "国内最新新闻" [ref=f2e1053] [cursor=pointer]:
+                  - /url: /search?sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&q=%E5%9B%BD%E5%86%85%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sa=X&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ1QJ6BAgxEAE
+                - link "最新新闻事件今天" [ref=f2e1067] [cursor=pointer]:
+                  - /url: /search?sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB%E4%BA%8B%E4%BB%B6%E4%BB%8A%E5%A4%A9&sa=X&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ1QJ6BAhFEAE
+                - link "美国今天最新新闻" [ref=f2e1081] [cursor=pointer]:
+                  - /url: /search?sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&q=%E7%BE%8E%E5%9B%BD%E4%BB%8A%E5%A4%A9%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sa=X&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ1QJ6BAg-EAE
+                - link "全球最新新闻" [ref=f2e1095] [cursor=pointer]:
+                  - /url: /search?sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&q=%E5%85%A8%E7%90%83%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sa=X&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ1QJ6BAg9EAE
+              - generic [ref=f2e1106]:
+                - link "美国最新新闻事件今天" [ref=f2e1110] [cursor=pointer]:
+                  - /url: /search?sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&q=%E7%BE%8E%E5%9B%BD%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB%E4%BA%8B%E4%BB%B6%E4%BB%8A%E5%A4%A9&sa=X&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ1QJ6BAg7EAE
+                - link "大陆最新新闻" [ref=f2e1124] [cursor=pointer]:
+                  - /url: /search?sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&q=%E5%A4%A7%E9%99%86%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sa=X&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ1QJ6BAg6EAE
+                - link "新闻头条最新消息" [ref=f2e1138] [cursor=pointer]:
+                  - /url: /search?sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&q=%E6%96%B0%E9%97%BB%E5%A4%B4%E6%9D%A1%E6%9C%80%E6%96%B0%E6%B6%88%E6%81%AF&sa=X&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ1QJ6BAg5EAE
+                - link "即时国际新闻" [ref=f2e1152] [cursor=pointer]:
+                  - /url: /search?sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&q=%E5%8D%B3%E6%97%B6%E5%9B%BD%E9%99%85%E6%96%B0%E9%97%BB&sa=X&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ1QJ6BAgyEAE
+          - navigation [ref=f2e1163]:
+            - heading "Page Navigation" [level=1] [ref=f2e1164]
+            - text: "1"
+            - link "Page 2" [ref=f2e1167] [cursor=pointer]:
+              - /url: /search?q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&ei=g5y8auaQJ4XY5OUP8quQiQM&start=10&sa=N&sstk=AS6-VmLs7LkbGuNmZ_tg4mIuR2pDsMcYwuLMHXxRIO0p0pNeEFPVu6U0VdW5Rai11-lkfFzwXo5TheAfgTCvUl1a3OFTBU-sHQaPjQ&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ8tMDegQILhAE
+              - text: "2"
+            - link "Page 3" [ref=f2e1169] [cursor=pointer]:
+              - /url: /search?q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&ei=g5y8auaQJ4XY5OUP8quQiQM&start=20&sa=N&sstk=AS6-VmLs7LkbGuNmZ_tg4mIuR2pDsMcYwuLMHXxRIO0p0pNeEFPVu6U0VdW5Rai11-lkfFzwXo5TheAfgTCvUl1a3OFTBU-sHQaPjQ&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ8tMDegQILhAG
+              - text: "3"
+            - link "Page 4" [ref=f2e1171] [cursor=pointer]:
+              - /url: /search?q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&ei=g5y8auaQJ4XY5OUP8quQiQM&start=30&sa=N&sstk=AS6-VmLs7LkbGuNmZ_tg4mIuR2pDsMcYwuLMHXxRIO0p0pNeEFPVu6U0VdW5Rai11-lkfFzwXo5TheAfgTCvUl1a3OFTBU-sHQaPjQ&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ8tMDegQILhAI
+              - text: "4"
+            - link "Page 5" [ref=f2e1173] [cursor=pointer]:
+              - /url: /search?q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&ei=g5y8auaQJ4XY5OUP8quQiQM&start=40&sa=N&sstk=AS6-VmLs7LkbGuNmZ_tg4mIuR2pDsMcYwuLMHXxRIO0p0pNeEFPVu6U0VdW5Rai11-lkfFzwXo5TheAfgTCvUl1a3OFTBU-sHQaPjQ&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ8tMDegQILhAK
+              - text: "5"
+            - link "Page 6" [ref=f2e1175] [cursor=pointer]:
+              - /url: /search?q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&ei=g5y8auaQJ4XY5OUP8quQiQM&start=50&sa=N&sstk=AS6-VmLs7LkbGuNmZ_tg4mIuR2pDsMcYwuLMHXxRIO0p0pNeEFPVu6U0VdW5Rai11-lkfFzwXo5TheAfgTCvUl1a3OFTBU-sHQaPjQ&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ8tMDegQILhAM
+              - text: "6"
+            - link "Page 7" [ref=f2e1177] [cursor=pointer]:
+              - /url: /search?q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&ei=g5y8auaQJ4XY5OUP8quQiQM&start=60&sa=N&sstk=AS6-VmLs7LkbGuNmZ_tg4mIuR2pDsMcYwuLMHXxRIO0p0pNeEFPVu6U0VdW5Rai11-lkfFzwXo5TheAfgTCvUl1a3OFTBU-sHQaPjQ&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ8tMDegQILhAO
+              - text: "7"
+            - link "Page 8" [ref=f2e1179] [cursor=pointer]:
+              - /url: /search?q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&ei=g5y8auaQJ4XY5OUP8quQiQM&start=70&sa=N&sstk=AS6-VmLs7LkbGuNmZ_tg4mIuR2pDsMcYwuLMHXxRIO0p0pNeEFPVu6U0VdW5Rai11-lkfFzwXo5TheAfgTCvUl1a3OFTBU-sHQaPjQ&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ8tMDegQILhAQ
+              - text: "8"
+            - link "Page 9" [ref=f2e1181] [cursor=pointer]:
+              - /url: /search?q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&ei=g5y8auaQJ4XY5OUP8quQiQM&start=80&sa=N&sstk=AS6-VmLs7LkbGuNmZ_tg4mIuR2pDsMcYwuLMHXxRIO0p0pNeEFPVu6U0VdW5Rai11-lkfFzwXo5TheAfgTCvUl1a3OFTBU-sHQaPjQ&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ8tMDegQILhAS
+              - text: "9"
+            - link "Page 10" [ref=f2e1183] [cursor=pointer]:
+              - /url: /search?q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&ei=g5y8auaQJ4XY5OUP8quQiQM&start=90&sa=N&sstk=AS6-VmLs7LkbGuNmZ_tg4mIuR2pDsMcYwuLMHXxRIO0p0pNeEFPVu6U0VdW5Rai11-lkfFzwXo5TheAfgTCvUl1a3OFTBU-sHQaPjQ&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ8tMDegQILhAU
+              - text: "10"
+            - heading [level=2] [ref=f2e1185]:
+              - link "Next" [ref=f2e1186] [cursor=pointer]:
+                - /url: /search?q=%E6%9C%80%E6%96%B0%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnsU5KQdeqVDRoQU2tf1AIbeO6kxJQ:1790745731666&ei=g5y8auaQJ4XY5OUP8quQiQM&start=10&sa=N&sstk=AS6-VmLs7LkbGuNmZ_tg4mIuR2pDsMcYwuLMHXxRIO0p0pNeEFPVu6U0VdW5Rai11-lkfFzwXo5TheAfgTCvUl1a3OFTBU-sHQaPjQ&ved=2ahUKEwim3t7Zx5WXAxUFLLkGHfIVJDEQ8NMDegQILhAW
+        - navigation
+    - contentinfo [ref=f2e1189]:
+      - heading "Footer Links" [level=1] [ref=f2e1190]
+      - generic [ref=f2e1194]:
+        - generic [ref=f2e1198]:
+          - button "95051, Santa Clara, CA - From your IP address" [ref=f2e1200] [cursor=pointer]:
+            - generic [ref=f2e1201]: 95051, Santa Clara, CA
+            - generic [ref=f2e1203]:
+              - text: "-"
+              - generic [ref=f2e1204]: From your IP address
+          - text: "-"
+          - button "Update location" [ref=f2e1206] [cursor=pointer]
+        - generic [ref=f2e1209]:
+          - link "Help" [ref=f2e1210] [cursor=pointer]:
+            - /url: https://support.google.com/websearch/?p=ws_results_help&hl=en&fg=1
+          - link "Send feedback" [ref=f2e1211] [cursor=pointer]:
+            - /url: "#"
+          - link "Privacy" [ref=f2e1212] [cursor=pointer]:
+            - /url: https://policies.google.com/privacy?hl=en&fg=1
+          - link "Terms" [ref=f2e1213] [cursor=pointer]:
+            - /url: https://policies.google.com/terms?hl=en&fg=1

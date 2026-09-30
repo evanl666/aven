@@ -1,0 +1,192 @@
+- generic [active] [ref=f7e1]:
+  - generic:
+    - generic:
+      - link "Skip to main content" [ref=f7e2] [cursor=pointer]
+      - link "Accessibility help" [ref=f7e3] [cursor=pointer]:
+        - /url: https://support.google.com/websearch/answer/181196?hl=en
+  - generic [ref=f7e6]:
+    - search [ref=f7e7]:
+      - generic [ref=f7e9]:
+        - link [ref=f7e11] [cursor=pointer]:
+          - /url: https://www.google.com/webhp?hl=en&ictx=2&sa=X&ved=0ahUKEwiJhp_qx5WXAxXSNIYAHV2KLa0QPQgH
+          - img "WNBA Playoffs 2026" [ref=f7e12]
+        - generic [ref=f7e13]:
+          - generic [ref=f7e14]:
+            - combobox "Search" [ref=f7e17]: 美股 大盘 新闻 美股 大盘 新闻
+            - generic [ref=f7e18]:
+              - button "Clear" [ref=f7e20] [cursor=pointer]
+              - button "Search by voice" [ref=f7e26] [cursor=pointer]
+          - button "Google Search" [ref=f7e29] [cursor=pointer]
+    - generic [ref=f7e34]:
+      - button "Settings" [ref=f7e36] [cursor=pointer]
+      - generic [ref=f7e41]:
+        - button "Google apps" [ref=f7e43] [cursor=pointer]
+        - link "Sign in" [ref=f7e48] [cursor=pointer]:
+          - /url: https://accounts.google.com/ServiceLogin?hl=en&passive=true&continue=https://www.google.com/search%3Fq%3D%25E7%25BE%258E%25E8%2582%25A1%2B%25E5%25A4%25A7%25E7%259B%2598%2B%25E6%2596%25B0%25E9%2597%25BB%26tbm%3Dnws&ec=futura_srp_og_si_72236_p
+  - generic [ref=f7e51]:
+    - navigation [ref=f7e57]:
+      - generic [ref=f7e63]:
+        - list [ref=f7e64]:
+          - listitem [ref=f7e65]:
+            - link "AI Mode" [ref=f7e68] [cursor=pointer]:
+              - /url: /search?q=%E7%BE%8E%E8%82%A1+%E5%A4%A7%E7%9B%98+%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnuJgfh2VezYgNVbu9Zc7aIGj8LsFw:1790745766254&udm=50&vsint=&aep=1&ntc=1&cs=0&sa=X&ved=2ahUKEwiJhp_qx5WXAxXSNIYAHV2KLa0Q2J8OegQIAxAD
+          - listitem [ref=f7e72]:
+            - link "All" [ref=f7e73] [cursor=pointer]:
+              - /url: /search?q=%E7%BE%8E%E8%82%A1+%E5%A4%A7%E7%9B%98+%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&sxsrf=APpeQnuJgfh2VezYgNVbu9Zc7aIGj8LsFw:1790745766254&source=lnms&sa=X&ved=2ahUKEwiJhp_qx5WXAxXSNIYAHV2KLa0Q0pQJegQIAxAF
+          - listitem [ref=f7e76]:
+            - link "Images" [ref=f7e77] [cursor=pointer]:
+              - /url: /search?q=%E7%BE%8E%E8%82%A1+%E5%A4%A7%E7%9B%98+%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&udm=2&sxsrf=APpeQnuJgfh2VezYgNVbu9Zc7aIGj8LsFw:1790745766254&source=lnms&sa=X&ved=2ahUKEwiJhp_qx5WXAxXSNIYAHV2KLa0Q0pQJegQIAxAH
+          - listitem [ref=f7e80]:
+            - link "Videos" [ref=f7e81] [cursor=pointer]:
+              - /url: /search?q=%E7%BE%8E%E8%82%A1+%E5%A4%A7%E7%9B%98+%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&udm=vids&sxsrf=APpeQnuJgfh2VezYgNVbu9Zc7aIGj8LsFw:1790745766254&source=lnms&sa=X&ved=2ahUKEwiJhp_qx5WXAxXSNIYAHV2KLa0Q0pQJegQIAxAJ
+          - listitem [ref=f7e84]:
+            - link "News" [disabled] [ref=f7e85]
+          - listitem [ref=f7e88]:
+            - link "Shopping" [ref=f7e89] [cursor=pointer]:
+              - /url: /search?q=%E7%BE%8E%E8%82%A1+%E5%A4%A7%E7%9B%98+%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&udm=28&sxsrf=APpeQnuJgfh2VezYgNVbu9Zc7aIGj8LsFw:1790745766254&source=lnms&ved=1t:200715&ictx=111
+          - listitem [ref=f7e92]:
+            - link "Books" [ref=f7e93] [cursor=pointer]:
+              - /url: /search?q=%E7%BE%8E%E8%82%A1+%E5%A4%A7%E7%9B%98+%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&udm=36&sxsrf=APpeQnuJgfh2VezYgNVbu9Zc7aIGj8LsFw:1790745766254&source=lnms&sa=X&ved=2ahUKEwiJhp_qx5WXAxXSNIYAHV2KLa0Q0pQJegQIAxAP
+          - listitem [ref=f7e96]:
+            - button [ref=f7e97] [cursor=pointer]:
+              - generic "More filters" [ref=f7e98]: More
+        - button "Tools" [ref=f7e105] [cursor=pointer]
+    - heading "Search Results" [level=1] [ref=f7e112]
+    - navigation
+    - main [ref=f7e118]:
+      - generic [ref=f7e124]:
+        - link "东方财富 美股IPO又遭“泼冷水” 智能戒指制造商Oura上市前一天突然踩刹车 手机东方财富网是东方财富网的手机门户网站，为亿万用户打造一个手机联通世界的超级平台，提供7*24小时全面及时的财经中文资讯，内容覆盖国内外突发... . 8 hours ago" [ref=f7e128] [cursor=pointer]:
+          - /url: /goto?url=CAESbwHrOzAVh0yScG2nrwiy8QqB-1Mj3THhaASRBPndPsoO7CAtc3FJhgkROjIASICJbjebSOqlXgasJ5O_wtJ0NU4kt92XOILM8gFKpgMiwQtVxm8ixeb-R2FHfpNdU_Fwqlh0aJj7ee7OG1SZKrp-nA
+          - generic [ref=f7e133]:
+            - generic [ref=f7e134]: 东方财富
+            - heading "美股IPO又遭“泼冷水” 智能戒指制造商Oura上市前一天突然踩刹车" [level=3] [ref=f7e138]
+            - generic [ref=f7e139]: 手机东方财富网是东方财富网的手机门户网站，为亿万用户打造一个手机联通世界的超级平台，提供7*24小时全面及时的财经中文资讯，内容覆盖国内外突发...
+            - generic [ref=f7e140]: .
+            - generic: 8 hours ago
+        - link "上观新闻 美股市场广度急剧萎缩，能否顶住债券风暴冲击 一段时间以来，美股市场呈现出这样一种特征：三大指数表面上相对平静，当前距离历史高点近在咫尺，但盘面之下却上演着剧烈且令人不安的行情。 . 1 day ago" [ref=f7e145] [cursor=pointer]:
+          - /url: /goto?url=CAESZgHrOzAVBtLbcmRthwI64DSCMbyJqAjLk0TITDp0n8HuaZ_Uji-n2DAKUvL4eByiUUVWmbxLXnMF1iGHo31q_qCK_DrI06-tA_ookAta2WajZwSW592gDM7V4rmgleYxp0M9yjN4ng
+          - generic [ref=f7e150]:
+            - generic [ref=f7e151]: 上观新闻
+            - heading "美股市场广度急剧萎缩，能否顶住债券风暴冲击" [level=3] [ref=f7e155]
+            - generic [ref=f7e156]: 一段时间以来，美股市场呈现出这样一种特征：三大指数表面上相对平静，当前距离历史高点近在咫尺，但盘面之下却上演着剧烈且令人不安的行情。
+            - generic [ref=f7e157]: .
+            - generic: 1 day ago
+        - link "东方财富 美股集体低开 英伟达逆势涨近2%逼近历史新高 美股集体低开英伟达逆势涨近2%逼近历史新高】美股开盘集体低开，道指跌0.65%，纳指跌0.46%，标普500指数跌0.42%。英伟达涨近2%，公司宣布将股票回购... . 1 day ago" [ref=f7e162] [cursor=pointer]:
+          - /url: /goto?url=CAESgQEB6zswFSpASwysmIFETHuKxuLSYQAvlT7kAB5rVMLl5sLk9d-Lk95NvzlVZgQvTigs8T3emncxgZU970xjcFYKUADjOEUNNXSw28w8U4zGSHkqW6HQp7XjeTvRyqAuxzsIZ4wCDvdKXBh4qoMJR_4CddkHF-OlTViH_Arlm2mf2LA
+          - generic [ref=f7e167]:
+            - generic [ref=f7e168]: 东方财富
+            - heading "美股集体低开 英伟达逆势涨近2%逼近历史新高" [level=3] [ref=f7e172]
+            - generic [ref=f7e173]: 美股集体低开英伟达逆势涨近2%逼近历史新高】美股开盘集体低开，道指跌0.65%，纳指跌0.46%，标普500指数跌0.42%。英伟达涨近2%，公司宣布将股票回购...
+            - generic [ref=f7e174]: .
+            - generic: 1 day ago
+        - 'link "手机新浪网 #美股# 过去三个月中，大盘股相对于中小盘股的强势出现了分化，这一点在成长型和价值型股票中均有体现 该微博内容分析了过去三个月美股大盘股与中小盘股在成长型及价值型股票中的表现分化。博主指出大盘股相对强势出现分化，并附带三张图表展示过去五年... . 5 days ago" [ref=f7e179] [cursor=pointer]':
+          - /url: /goto?url=CAESbQHrOzAV7ecVdvH_i7622JhO9UsUSO7JeXIYKqSCuVs0pz22zoBnQyUBcHG3POUk5FzNcb2GNxQ-VDldV90l7G6snu5BSU4e6--uOCm9o9hqdWoUZVWA8HBqwvYqd4lv97MjrRfPckAWIgAqXkc
+          - generic [ref=f7e184]:
+            - generic [ref=f7e185]: 手机新浪网
+            - heading "#美股# 过去三个月中，大盘股相对于中小盘股的强势出现了分化，这一点在成长型和价值型股票中均有体现" [level=3] [ref=f7e189]
+            - generic [ref=f7e190]: 该微博内容分析了过去三个月美股大盘股与中小盘股在成长型及价值型股票中的表现分化。博主指出大盘股相对强势出现分化，并附带三张图表展示过去五年...
+            - generic [ref=f7e191]: .
+            - generic: 5 days ago
+        - link "国际金融报 盛况之下的美股“下行风险” 美股大盘继续上涨，主要基准指数处于历史高位。 截至5月22日，道琼斯工业平均指数收于50579.70点的历史新高；标准普尔500指数连续八周上涨，创下... . May 25, 2026" [ref=f7e196] [cursor=pointer]:
+          - /url: /goto?url=CAESYwHrOzAV-Fihsha1IrbKT0Mn3s-j9jdQBUHLPJ94t2qNCeohnMQqNysiSe7RpFCKNBSuqeFzSozbG7GbcFfqMKxcfgN3dZwVY2t59FSd7kqZkSiUFd4HNJ14Mrz4fIgHcUyiQA
+          - generic [ref=f7e201]:
+            - generic [ref=f7e202]: 国际金融报
+            - heading "盛况之下的美股“下行风险”" [level=3] [ref=f7e206]
+            - generic [ref=f7e207]: 美股大盘继续上涨，主要基准指数处于历史高位。 截至5月22日，道琼斯工业平均指数收于50579.70点的历史新高；标准普尔500指数连续八周上涨，创下...
+            - generic [ref=f7e208]: .
+            - generic: May 25, 2026
+        - link "富途牛牛 非农“吓退”美股大盘，AI硬件却逆势狂飙！半导体指数涨超3%，闪迪暴涨12% 美联储加息前景压制的是整体估值和部分软件成长股，AI算力、存储和数据中心互联需求的产业逻辑暂时未被利率预期破坏。存储芯片股$SK海力士(SKHY. . 3 weeks ago" [ref=f7e213] [cursor=pointer]:
+          - /url: /goto?url=CAESmAEB6zswFXxKl51-VxjPbSJRihrer-T11rSH96JfAiw9xa0XqhO_ZFx6r7mFkDwq33ffnU-Ra7mSC3b6jIq_jeK8WPXjB5Fr8p7ioV0M0dQj1Vz8ffcXlBwYo4FsUnj-fNgnnw98esvEfas9IVFD2JYfwZU-S3lnlOH1Q2nguYHWVqpVUluAzF-ZmwX7SDvMo-xrh8jHgHCklQ
+          - generic [ref=f7e218]:
+            - generic [ref=f7e219]: 富途牛牛
+            - heading "非农“吓退”美股大盘，AI硬件却逆势狂飙！半导体指数涨超3%，闪迪暴涨12%" [level=3] [ref=f7e223]
+            - generic [ref=f7e224]: 美联储加息前景压制的是整体估值和部分软件成长股，AI算力、存储和数据中心互联需求的产业逻辑暂时未被利率预期破坏。存储芯片股$SK海力士(SKHY.
+            - generic [ref=f7e225]: .
+            - generic: 3 weeks ago
+        - link "雪球 【科普】2026美股实战手册：从现金管理到3倍杠杆，一文讲透配置逻辑 美股横盘有些日子了。今天新闻上说华尔街的分析师认为底部已现，是时候爬起来干活了各位。那么我就把美股最核心的几类ETF工具... . Mar 5, 2026" [ref=f7e230] [cursor=pointer]:
+          - /url: /goto?url=CAESXwHrOzAVh2UUlutyVtGq60KHRfgmTBRGVuL1epLhJK_HdW2LFhhzaweOwfmCf2h3YSuHvI5g3gqXXK02DoLRwHFNz-OdgbU6Fjw0ZDLkP_opQkdA2kvp6ZC-0qUnLsy_
+          - generic [ref=f7e235]:
+            - generic [ref=f7e236]: 雪球
+            - heading "【科普】2026美股实战手册：从现金管理到3倍杠杆，一文讲透配置逻辑" [level=3] [ref=f7e240]
+            - generic [ref=f7e241]: 美股横盘有些日子了。今天新闻上说华尔街的分析师认为底部已现，是时候爬起来干活了各位。那么我就把美股最核心的几类ETF工具...
+            - generic [ref=f7e242]: .
+            - generic: Mar 5, 2026
+        - link "亚洲日报 美股下跌影响下，韩国股市大盘股表现分化 纽约股市因中东地缘政治风险和私募信贷市场的不安而普遍下跌，导致投资者避险情绪加剧。因此，韩国股市也受到美国股市调整和韩元兑美元汇率上升压力的... . Jun 4, 2026" [ref=f7e247] [cursor=pointer]:
+          - /url: /goto?url=CAESYwHrOzAV7dVUpzRIQplcPX2IaQZ8vigO33XtHUTeyTS1KqOD2ra23khoFiy4UFXoCqAW4zytpzB03D3kypvdp8uA53XcYKjRMWezFslF0UVowN9UnfGCtEO8RgP6r9bkWTIUAg
+          - generic [ref=f7e252]:
+            - generic [ref=f7e253]: 亚洲日报
+            - heading "美股下跌影响下，韩国股市大盘股表现分化" [level=3] [ref=f7e257]
+            - generic [ref=f7e258]: 纽约股市因中东地缘政治风险和私募信贷市场的不安而普遍下跌，导致投资者避险情绪加剧。因此，韩国股市也受到美国股市调整和韩元兑美元汇率上升压力的...
+            - generic [ref=f7e259]: .
+            - generic: Jun 4, 2026
+        - link "华尔街见闻 做空ETF、恐慌指数都在飙！高盛戳穿美股“假平静”，市场实则极度脆弱 美股市场正在经历一场反常的“虚假繁荣”。 3月8日，高盛销售与交易团队发布研报指出，尽管地缘政治头条新闻频出，标普500指数的波动看起来相对平稳，但... . Mar 8, 2026" [ref=f7e264] [cursor=pointer]:
+          - /url: /goto?url=CAESYQHrOzAVt2SoljJIAPnRezh82owmwTv86FHuCwEZEsrShQ1zAFf0IKKfQlYkZj4F2DznJUqlGosfBQrsNpYrbPUkqUmyIGIaNQ1DZmxSDNCd9f40CKtdsietHu-xg3fb_C8
+          - generic [ref=f7e269]:
+            - generic [ref=f7e270]: 华尔街见闻
+            - heading "做空ETF、恐慌指数都在飙！高盛戳穿美股“假平静”，市场实则极度脆弱" [level=3] [ref=f7e274]
+            - generic [ref=f7e275]: 美股市场正在经历一场反常的“虚假繁荣”。 3月8日，高盛销售与交易团队发布研报指出，尽管地缘政治头条新闻频出，标普500指数的波动看起来相对平稳，但...
+            - generic [ref=f7e276]: .
+            - generic: Mar 8, 2026
+        - link "富途牛牛 美股收盘| 科技股走强提振大盘，三大指数齐涨；英伟达终结七连跌涨超2%，AMD涨近5%；油价重挫，比特币冲高回落 纳指涨0.66%领涨，标普500涨0.30%，道指涨0.30%实现三连涨。AI芯片股反弹，英伟达涨超2%终结七连跌，光通信板块领涨，能源股承压。 . 1 month ago" [ref=f7e281] [cursor=pointer]:
+          - /url: /goto?url=CAESmgEB6zswFcJxhAT4BTnCieo2SLMopgBD8H1Ehvf0qinJRSy8R-jiZU5H5aY1MJ8otnM544dBftEPMmhQGQ5PwfeZbg42YmNw7NccJGhSnqLrZCRRVjAuM9jFwt9RZWwMSjkX8SEXApeLyjb7A8giVgcug8cI2FgscW20r4RtNAiMBn_MTvm1HyNUnpIicQNcf4mqMJd4N-snmM0h
+          - generic [ref=f7e286]:
+            - generic [ref=f7e287]: 富途牛牛
+            - heading "美股收盘| 科技股走强提振大盘，三大指数齐涨；英伟达终结七连跌涨超2%，AMD涨近5%；油价重挫，比特币冲高回落" [level=3] [ref=f7e291]
+            - generic [ref=f7e292]: 纳指涨0.66%领涨，标普500涨0.30%，道指涨0.30%实现三连涨。AI芯片股反弹，英伟达涨超2%终结七连跌，光通信板块领涨，能源股承压。
+            - generic [ref=f7e293]: .
+            - generic: 1 month ago
+      - navigation [ref=f7e297]:
+        - heading "Page Navigation" [level=1] [ref=f7e298]
+        - text: "1"
+        - link "Page 2" [ref=f7e301] [cursor=pointer]:
+          - /url: /search?q=%E7%BE%8E%E8%82%A1+%E5%A4%A7%E7%9B%98+%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&tbm=nws&sxsrf=APpeQnuJgfh2VezYgNVbu9Zc7aIGj8LsFw:1790745766254&ei=ppy8aombD9LpmLQP3ZS26Qo&start=10&sa=N&ved=2ahUKEwiJhp_qx5WXAxXSNIYAHV2KLa0Q8tMDegQIHRAE
+          - text: "2"
+        - link "Page 3" [ref=f7e303] [cursor=pointer]:
+          - /url: /search?q=%E7%BE%8E%E8%82%A1+%E5%A4%A7%E7%9B%98+%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&tbm=nws&sxsrf=APpeQnuJgfh2VezYgNVbu9Zc7aIGj8LsFw:1790745766254&ei=ppy8aombD9LpmLQP3ZS26Qo&start=20&sa=N&ved=2ahUKEwiJhp_qx5WXAxXSNIYAHV2KLa0Q8tMDegQIHRAG
+          - text: "3"
+        - link "Page 4" [ref=f7e305] [cursor=pointer]:
+          - /url: /search?q=%E7%BE%8E%E8%82%A1+%E5%A4%A7%E7%9B%98+%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&tbm=nws&sxsrf=APpeQnuJgfh2VezYgNVbu9Zc7aIGj8LsFw:1790745766254&ei=ppy8aombD9LpmLQP3ZS26Qo&start=30&sa=N&ved=2ahUKEwiJhp_qx5WXAxXSNIYAHV2KLa0Q8tMDegQIHRAI
+          - text: "4"
+        - link "Page 5" [ref=f7e307] [cursor=pointer]:
+          - /url: /search?q=%E7%BE%8E%E8%82%A1+%E5%A4%A7%E7%9B%98+%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&tbm=nws&sxsrf=APpeQnuJgfh2VezYgNVbu9Zc7aIGj8LsFw:1790745766254&ei=ppy8aombD9LpmLQP3ZS26Qo&start=40&sa=N&ved=2ahUKEwiJhp_qx5WXAxXSNIYAHV2KLa0Q8tMDegQIHRAK
+          - text: "5"
+        - link "Page 6" [ref=f7e309] [cursor=pointer]:
+          - /url: /search?q=%E7%BE%8E%E8%82%A1+%E5%A4%A7%E7%9B%98+%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&tbm=nws&sxsrf=APpeQnuJgfh2VezYgNVbu9Zc7aIGj8LsFw:1790745766254&ei=ppy8aombD9LpmLQP3ZS26Qo&start=50&sa=N&ved=2ahUKEwiJhp_qx5WXAxXSNIYAHV2KLa0Q8tMDegQIHRAM
+          - text: "6"
+        - link "Page 7" [ref=f7e311] [cursor=pointer]:
+          - /url: /search?q=%E7%BE%8E%E8%82%A1+%E5%A4%A7%E7%9B%98+%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&tbm=nws&sxsrf=APpeQnuJgfh2VezYgNVbu9Zc7aIGj8LsFw:1790745766254&ei=ppy8aombD9LpmLQP3ZS26Qo&start=60&sa=N&ved=2ahUKEwiJhp_qx5WXAxXSNIYAHV2KLa0Q8tMDegQIHRAO
+          - text: "7"
+        - link "Page 8" [ref=f7e313] [cursor=pointer]:
+          - /url: /search?q=%E7%BE%8E%E8%82%A1+%E5%A4%A7%E7%9B%98+%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&tbm=nws&sxsrf=APpeQnuJgfh2VezYgNVbu9Zc7aIGj8LsFw:1790745766254&ei=ppy8aombD9LpmLQP3ZS26Qo&start=70&sa=N&ved=2ahUKEwiJhp_qx5WXAxXSNIYAHV2KLa0Q8tMDegQIHRAQ
+          - text: "8"
+        - link "Page 9" [ref=f7e315] [cursor=pointer]:
+          - /url: /search?q=%E7%BE%8E%E8%82%A1+%E5%A4%A7%E7%9B%98+%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&tbm=nws&sxsrf=APpeQnuJgfh2VezYgNVbu9Zc7aIGj8LsFw:1790745766254&ei=ppy8aombD9LpmLQP3ZS26Qo&start=80&sa=N&ved=2ahUKEwiJhp_qx5WXAxXSNIYAHV2KLa0Q8tMDegQIHRAS
+          - text: "9"
+        - link "Page 10" [ref=f7e317] [cursor=pointer]:
+          - /url: /search?q=%E7%BE%8E%E8%82%A1+%E5%A4%A7%E7%9B%98+%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&tbm=nws&sxsrf=APpeQnuJgfh2VezYgNVbu9Zc7aIGj8LsFw:1790745766254&ei=ppy8aombD9LpmLQP3ZS26Qo&start=90&sa=N&ved=2ahUKEwiJhp_qx5WXAxXSNIYAHV2KLa0Q8tMDegQIHRAU
+          - text: "10"
+        - heading [level=2] [ref=f7e319]:
+          - link "Next" [ref=f7e320] [cursor=pointer]:
+            - /url: /search?q=%E7%BE%8E%E8%82%A1+%E5%A4%A7%E7%9B%98+%E6%96%B0%E9%97%BB&sca_esv=658d89bb58b2aa3f&tbm=nws&sxsrf=APpeQnuJgfh2VezYgNVbu9Zc7aIGj8LsFw:1790745766254&ei=ppy8aombD9LpmLQP3ZS26Qo&start=10&sa=N&ved=2ahUKEwiJhp_qx5WXAxXSNIYAHV2KLa0Q8NMDegQIHRAW
+      - navigation
+    - contentinfo [ref=f7e323]:
+      - heading "Footer Links" [level=1] [ref=f7e324]
+      - generic [ref=f7e328]:
+        - generic [ref=f7e332]:
+          - button "95051, Santa Clara, CA - From your IP address" [ref=f7e334] [cursor=pointer]:
+            - generic [ref=f7e335]: 95051, Santa Clara, CA
+            - generic [ref=f7e337]:
+              - text: "-"
+              - generic [ref=f7e338]: From your IP address
+          - text: "-"
+          - button "Update location" [ref=f7e340] [cursor=pointer]
+        - generic [ref=f7e343]:
+          - link "Help" [ref=f7e344] [cursor=pointer]:
+            - /url: https://support.google.com/websearch/?p=ws_results_help&hl=en&fg=1
+          - link "How News Works" [ref=f7e345] [cursor=pointer]:
+            - /url: /goto?url=CAEScAHrOzAVvRjB9p5BYilWl6jpqeZnvHzEs4QpAW8PAXuXN8wkwKz3Odd4cU8iKmCAMlczuZhURLi-kasdmKt7BkMf18EjcbIHbHKhjyvJ4F-tGO4l7V4t-t-dYzt2z7cOpNhU88vk__rBMlAn1XsFv2I
+          - button "Send feedback" [ref=f7e347] [cursor=pointer]
+          - link "Privacy" [ref=f7e349] [cursor=pointer]:
+            - /url: https://policies.google.com/privacy?hl=en&fg=1
+          - link "Terms" [ref=f7e350] [cursor=pointer]:
+            - /url: https://policies.google.com/terms?hl=en&fg=1

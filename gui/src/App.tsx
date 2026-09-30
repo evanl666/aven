@@ -334,8 +334,12 @@ export default function App() {
 
   const onApprove = (ids: string[]) =>
     attempt(async () => {
-      const reply = await agent.send({ type: "approve", ids });
+      // `resume` because this is a conversation. The model was told these were
+      // staged and would otherwise never be told they ran - asked anything
+      // afterwards it answers about a world that moved on without it.
+      const reply = await agent.send({ type: "approve", ids, resume: true });
       setTray(reply.data.tray);
+      if (reply.data.resumed) setBusy(true);
 
       // Named, not counted. "Approved 2" leaves somebody wondering which two,
       // and whether the thing they were actually worried about was one of

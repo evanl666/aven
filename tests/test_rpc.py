@@ -994,3 +994,103 @@ async def test_an_actual_bug_keeps_its_class_name(tmp_path):
     failed = [record for record in sent if record["type"] == "failed"]
     assert failed[0]["error"].startswith("ZeroDivisionError:")
 
+
+
+# --- what happens after a decision -------------------------------------------
+
+
+async def test_approving_tells_the_model_what_it_missed(talking):
+    """The reported bug. The model is told a call is staged, the person
+    approves, the call runs — and nobody tells the model. Asked anything
+    afterwards it answers about a world that moved on without it: its last tool
+    result still reads "waiting for the user to approve"."""
+    conversation = talking(scripted(calling("buy", what="kettle"), done("staged it")))
+    await conversation.handle({"type": "prompt", "message": "buy a kettle"})
+    await settled(conversation)
+    assert ran == [], "not bought yet"
+
+    await conversation.handle({"type": "approve", "resume": True})
+    await settled(conversation)
+
+    assert ran == ["buy:kettle"], "it really ran"
+    said = [m.text for m in conversation.session.history() if m.kind == "user"]
+    assert any("decided" in (t or "") for t in said), (
+        "and the model was told, in the only shape it reads"
+    )
+
+
+async def test_what_the_model_is_told_carries_the_result(talking):
+    conversation = talking(scripted(calling("buy", what="kettle"), done()))
+    await conversation.handle({"type": "prompt", "message": "buy a kettle"})
+    await settled(conversation)
+
+    await conversation.handle({"type": "approve", "resume": True})
+    await settled(conversation)
+
+    told = [m for m in conversation.session.history()
+            if m.kind == "user" and m.source == "approval"][0]
+    assert "buy kettle" in told.text
+    assert "bought" in told.text, "the output, not only that it happened"
+
+
+async def test_the_continuation_is_not_attributed_to_the_person(talking):
+    """It goes into the session as a turn because that is the only shape the
+    model reads. `source` is what keeps it honest - nobody typed it."""
+    conversation = talking(scripted(calling("buy", what="kettle"), done()))
+    await conversation.handle({"type": "prompt", "message": "buy a kettle"})
+    await settled(conversation)
+
+    await conversation.handle({"type": "approve", "resume": True})
+    await settled(conversation)
+
+    sources = [m.source for m in conversation.session.history() if m.kind == "user"]
+    assert sources == ["chat", "approval"]
+
+
+async def test_approving_without_resume_leaves_the_agent_alone(talking):
+    """The terminal reviews at the end of a run and then stops. Starting a new
+    one there would be answering a question nobody asked."""
+    conversation = talking(scripted(calling("buy", what="kettle"), done()))
+    await conversation.handle({"type": "prompt", "message": "buy a kettle"})
+    await settled(conversation)
+
+    reply = await conversation.handle({"type": "approve"})
+
+    assert reply["data"]["resumed"] is False
+    assert conversation.busy is False
+
+
+async def test_approving_nothing_starts_nothing(talking):
+    """An empty tray approved is not a reason to go and talk to the model."""
+    conversation = talking()
+
+    reply = await conversation.handle({"type": "approve", "resume": True})
+
+    assert reply["data"]["resumed"] is False
+
+
+async def test_a_failure_is_reported_to_the_model_too(tmp_path):
+    """It has to know the difference between done and tried. Otherwise it
+    reports success for something that never happened."""
+
+    @tool(risk="irreversible", preview="send {what}")
+    def send(what: str) -> ToolResult:
+        raise RuntimeError("the network said no")
+
+    conversation = Conversation(
+        session=Session.open(tmp_path / "s.jsonl"),
+        model=scripted(calling("send", what="it"), done()),
+        box=ToolBox(core=[send], groups={}),
+        sessions_dir=tmp_path,
+        emit=lambda _: None,
+    )
+    await conversation.handle({"type": "prompt", "message": "send it"})
+    await settled(conversation)
+
+    await conversation.handle({"type": "approve", "resume": True})
+    await settled(conversation)
+
+    told = [m for m in conversation.session.history()
+            if m.kind == "user" and m.source == "approval"][0]
+    assert "failed" in told.text
+    assert "the network said no" in told.text
