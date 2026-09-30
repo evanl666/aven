@@ -65,6 +65,7 @@ export default function App() {
    */
   const [keyed, setKeyed] = useState<boolean | null>(null);
   const [keeps, setKeeps] = useState("");
+  const [keyFrom, setKeyFrom] = useState<State["key_from"]>("");
 
   /**
    * The folders aven may act in. `null` means "not read yet" and `[]` means
@@ -106,6 +107,7 @@ export default function App() {
     setUsage(state.usage);
     setKeyed(state.key);
     setKeeps(state.keeps);
+    setKeyFrom(state.key_from);
   }, []);
 
   // --- wire up once --------------------------------------------------------
@@ -571,6 +573,7 @@ export default function App() {
             onConnect={onConnect}
             onDisconnect={onDisconnect}
             keeps={keeps}
+            keyFrom={keyFrom}
             onKey={onKey}
             roots={roots}
             pending={tray.pending.length}

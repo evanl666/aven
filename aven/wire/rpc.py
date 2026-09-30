@@ -70,6 +70,7 @@ class Conversation:
         sessions_dir: Any = None,
         connections: Connections | None = None,
         has_key: Callable[[], bool] | None = None,
+        key_from: Callable[[], str] | None = None,
         keep_key: Callable[[str], None] | None = None,
         keeps: str = "",
         max_turns: int = 12,
@@ -91,6 +92,9 @@ class Conversation:
         # about where this machine keeps secrets - and a test can drive the
         # whole flow without touching a keychain.
         self.has_key = has_key or (lambda: True)
+        # Where the key in use came from. A stored key shadowed by an exported
+        # one is a Replace button that appears to work and changes nothing.
+        self.key_from = key_from or (lambda: "")
         self.keep_key = keep_key
         # Where a key would be kept, in words. A screen that asks for a secret
         # has to say where it is about to put it.
@@ -135,6 +139,7 @@ class Conversation:
             # there is a key and put up its own way of supplying one, which is
             # the only option a window has - it has no shell to export from.
             "key": self.has_key(),
+            "key_from": self.key_from(),
             "keeps": self.keeps,
         }
 

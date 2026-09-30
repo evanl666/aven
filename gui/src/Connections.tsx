@@ -35,8 +35,9 @@ interface Props {
   busy: boolean;
   onConnect: (name: string) => void;
   onDisconnect: (name: string) => void;
-  /** Where the API key is kept, and how to replace it. */
+  /** Where the API key is kept, where the one in use came from, how to replace. */
   keeps: string;
+  keyFrom: "environment" | "keychain" | "";
   onKey: (key: string) => Promise<void>;
   roots: string[];
   pending: number;
@@ -51,6 +52,7 @@ export function Connections({
   onConnect,
   onDisconnect,
   keeps,
+  keyFrom,
   onKey,
   roots,
   pending,
@@ -80,7 +82,7 @@ export function Connections({
             onRemove={onRemoveFolder}
           />
 
-          <KeyRow keeps={keeps} onSave={onKey} />
+          <KeyRow keeps={keeps} from={keyFrom} onSave={onKey} />
 
           {connectors.length === 0 && (
             <div className="card empty">

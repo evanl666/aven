@@ -346,6 +346,7 @@ async def serve_rpc(*, session, model, tools, compactor, policy, standing, args,
         policy=policy, standing=standing, compactor=compactor,
         sessions_dir=sessions_dir, connections=connections,
         has_key=key_is_available,
+        key_from=key_source,
         # Bound to this model, so a key supplied while the window is open
         # reaches the client that is about to be used rather than only the one
         # built next time the process starts.
@@ -382,25 +383,54 @@ HOME = Path.home() / ".aven"
 KEY = "anthropic"
 
 
-def key_is_available() -> bool:
-    """Whether a key can be found, looking in the keychain if the shell has none.
+# The key this process took out of the vault, if it did. Module state rather
+# than an environment variable: a marker in the environment would be inherited
+# by every MCP server aven starts, which is the one place work has just gone
+# into handing over less.
+_taken: str | None = None
+
+
+def _remember(key: str) -> None:
+    global _taken
+    _taken = key
+    os.environ["ANTHROPIC_API_KEY"] = key
+
+
+def key_source() -> str:
+    """Where the key in use came from: "environment", "keychain", or "".
 
     The environment wins, because somebody who exported one meant that one - a
     stored key silently overriding it would be the worst kind of surprise.
+
+    But the reverse surprise is real too, and worse for being invisible:
+    replace the key in the window, and an exported one from months ago goes on
+    being used. The button appears to work and nothing changes. So this returns
+    which, and every surface that offers to replace a key says so.
 
     The keychain is why this is not simply a check. A window launched from the
     dock has no shell and therefore no exported variable, and telling somebody
     to edit their login profile so a desktop app can start is not an answer.
     Found here and put into the environment, which is where the SDK reads it.
     """
-    if os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN"):
-        return True
+    exported = (
+        os.environ.get("ANTHROPIC_API_KEY")
+        or os.environ.get("ANTHROPIC_AUTH_TOKEN")
+    )
+    if exported:
+        # Compared rather than flagged. This function puts the stored key into
+        # the environment so the SDK can read it, so without this the second
+        # call would find its own work and call it an export.
+        return "keychain" if exported == _taken else "environment"
 
     held = vault_for().get(KEY)
     if held and held.get("key"):
-        os.environ["ANTHROPIC_API_KEY"] = str(held["key"])
-        return True
-    return False
+        _remember(str(held["key"]))
+        return "keychain"
+    return ""
+
+
+def key_is_available() -> bool:
+    return key_source() != ""
 
 
 def look_up(query: str) -> int:
@@ -434,7 +464,8 @@ def keep_key(key: str, model: Any = None) -> None:
     revoked key would go on being told the key was revoked.
     """
     vault_for().put(KEY, {"key": key})
-    os.environ["ANTHROPIC_API_KEY"] = key
+    # Stored, so it is the vault's now whatever was exported before.
+    _remember(key)
     if model is not None and hasattr(model, "use_key"):
         model.use_key(key)
 

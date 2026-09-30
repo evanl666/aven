@@ -510,3 +510,53 @@ def _holding(tmp_path, key):
     vault = Locked(tmp_path / "creds.json")
     vault.put("anthropic", {"key": key})
     return vault
+
+
+def test_an_exported_key_is_reported_as_coming_from_the_shell(monkeypatch, tmp_path):
+    """Because it wins, and replacing the stored one then changes nothing. A
+    Replace button that appears to work and does not is the worst shape a bug
+    can take."""
+    from aven.terminal import app
+
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "from-the-shell")
+    monkeypatch.setattr(app, "vault_for", lambda *a, **k: _holding(tmp_path, "stored"))
+
+    assert app.key_source() == "environment"
+
+
+def test_a_stored_key_is_reported_as_such_however_often_it_is_asked(monkeypatch, tmp_path):
+    """It is put into the environment so the SDK can read it. Asked a second
+    time, this must not find its own work and call it an export."""
+    from aven.terminal import app
+
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setattr(app, "vault_for", lambda *a, **k: _holding(tmp_path, "stored"))
+
+    assert app.key_source() == "keychain"
+    assert app.key_source() == "keychain", "and again"
+    assert os.environ["ANTHROPIC_API_KEY"] == "stored"
+
+
+def test_storing_a_key_makes_it_the_stored_one_even_over_an_export(monkeypatch, tmp_path):
+    """Somebody who just typed a key into the window meant that one."""
+    from aven.harness.vault import Locked
+    from aven.terminal import app
+
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "from-the-shell")
+    monkeypatch.setattr(app, "vault_for", lambda *a, **k: Locked(tmp_path / "c.json"))
+
+    app.keep_key("just-typed")
+
+    assert app.key_source() == "keychain"
+    assert os.environ["ANTHROPIC_API_KEY"] == "just-typed"
+
+
+def test_nothing_anywhere_is_reported_as_nothing(monkeypatch, tmp_path):
+    from aven.harness.vault import Locked
+    from aven.terminal import app
+
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("ANTHROPIC_AUTH_TOKEN", raising=False)
+    monkeypatch.setattr(app, "vault_for", lambda *a, **k: Locked(tmp_path / "empty.json"))
+
+    assert app.key_source() == ""

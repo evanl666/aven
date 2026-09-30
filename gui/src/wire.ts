@@ -100,6 +100,12 @@ export interface State {
   key: boolean;
   /** Where a key would be kept, in words, for the screen that asks for one. */
   keeps: string;
+  /**
+   * Where the key in use came from. "environment" means an exported
+   * ANTHROPIC_API_KEY is winning, and replacing the stored one changes nothing
+   * until that export goes away.
+   */
+  key_from: "environment" | "keychain" | "";
 }
 
 export interface StoredMessage {

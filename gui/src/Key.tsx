@@ -104,9 +104,12 @@ export function NeedsKey({ keeps, onSave }: Props) {
  */
 export function KeyRow({
   keeps,
+  from,
   onSave,
 }: {
   keeps: string;
+  /** Where the key in use came from, so Replace cannot silently do nothing. */
+  from: "environment" | "keychain" | "";
   onSave: (key: string) => Promise<void>;
 }) {
   const [open, setOpen] = useState(false);
@@ -138,12 +141,30 @@ export function KeyRow({
         <div className="body">
           <div className="name">
             Anthropic API key
-            <span className="tag standing">set</span>
+            <span className="tag standing">
+              {from === "environment" ? "from the shell" : "set"}
+            </span>
           </div>
           <div className="about">
-            What aven talks to the models with. {keeps && `Kept in ${keeps}.`}{" "}
-            It is never shown back and never reaches the conversation.
+            What aven talks to the models with. It is never shown back and never
+            reaches the conversation.
           </div>
+
+          {/*
+           * An exported key wins, which is right: somebody who exported one
+           * meant that one. The reverse surprise is worse for being invisible -
+           * replace the key here, and a months-old export goes on being used
+           * while the button appears to have worked.
+           */}
+          {from === "environment" ? (
+            <div className="meta warn">
+              ⚠ An exported <code>ANTHROPIC_API_KEY</code> is in use and wins
+              over anything kept here. Replacing the stored key changes nothing
+              until you unset it in the shell aven was started from.
+            </div>
+          ) : (
+            keeps && <div className="meta">Kept in {keeps}.</div>
+          )}
           {done && (
             <div className="meta">Replaced. The next message uses it.</div>
           )}

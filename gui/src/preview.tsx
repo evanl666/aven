@@ -224,6 +224,7 @@ createRoot(document.getElementById("root")!).render(
         onConnect={() => {}}
         onDisconnect={() => {}}
         keeps="the macOS login keychain"
+        keyFrom="environment"
         onKey={async () => {}}
         roots={["/Users/evan/Downloads"]}
         pending={2}

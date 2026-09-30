@@ -37,4 +37,7 @@ def nobodys_keychain(tmp_path_factory, monkeypatch):
     kept = real.Locked(tmp_path_factory.mktemp("vault") / "credentials.json")
     monkeypatch.setattr(real, "vault_for", lambda *a, **k: kept)
     monkeypatch.setattr(app, "vault_for", lambda *a, **k: kept)
+    # And no memory of a key taken out of somebody else's vault, which would
+    # make "no key anywhere" unreachable after the first test that had one.
+    monkeypatch.setattr(app, "_taken", None)
     yield kept
