@@ -109,6 +109,18 @@ def _child_environment(asked: dict[str, str]) -> dict[str, str]:
 # it says so rather than guessing.
 SPEAKS = "2024-11-05"
 
+# How much of one result is worth reading, in characters.
+#
+# aven's own file tools have capped this from the start and MCP results did not,
+# which measurement made untenable: a browser snapshot of one Wikipedia article
+# is 534,000 characters - about 134,000 tokens, most of a context window, from a
+# single call. Uncapped it goes into the session, into the next request, and
+# into every request after that until it is compacted away.
+#
+# The same 40,000 the file tools use, for the same reason: enough for a page of
+# text or a directory listing, not for something nobody is going to read.
+MAX_RESULT = 40_000
+
 
 class Unreachable(Exception):
     """The server is not running, or stopped answering."""
@@ -593,4 +605,17 @@ def _readable(answer: dict[str, Any]) -> str:
             said.append(str(part.get("text", "")))
         else:
             said.append(f"[{part.get('type', 'something')} the model cannot read here]")
-    return "\n".join(said) or "(nothing)"
+
+    whole = "\n".join(said)
+    if len(whole) > MAX_RESULT:
+        # Said out loud, and with the size, because a model handed a silently
+        # truncated page will answer about the part it got as though that were
+        # the page. Knowing it was cut is what lets it ask for less - a narrower
+        # selector, a single section - instead of guessing.
+        return (
+            whole[:MAX_RESULT]
+            + f"\n\n[cut here: the result was {len(whole):,} characters and "
+            f"only the first {MAX_RESULT:,} are above. Ask for less of it - a "
+            "narrower query, one section, a specific element.]"
+        )
+    return whole or "(nothing)"

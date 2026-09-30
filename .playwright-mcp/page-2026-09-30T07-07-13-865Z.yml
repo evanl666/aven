@@ -1,0 +1,630 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e3]:
+    - link "Skip to content" [ref=f3e4] [cursor=pointer]:
+      - /url: "#bbc-main"
+    - banner [ref=f3e5]:
+      - generic [ref=f3e6]:
+        - generic [ref=f3e7]:
+          - button "Open menu" [ref=f3e8] [cursor=pointer]
+          - link "Watch Live" [ref=f3e16] [cursor=pointer]:
+            - /url: /watch-live-news/
+        - link "British Broadcasting Corporation" [ref=f3e26] [cursor=pointer]:
+          - /url: /
+          - img "British Broadcasting Corporation" [ref=f3e27]
+        - generic [ref=f3e30]:
+          - button "Subscribe" [ref=f3e31] [cursor=pointer]
+          - link [ref=f3e33] [cursor=pointer]:
+            - /url: https://session.bbc.com/session?userOrigin=BBCS_BBC&ptrt=https%3A%2F%2Fwww.bbc.com%2Fnews
+            - button "Sign In" [ref=f3e34]
+    - navigation [ref=f3e36]:
+      - navigation [ref=f3e38]:
+        - list [ref=f3e39]:
+          - listitem [ref=f3e40]:
+            - link "Home" [ref=f3e42] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f3e43]:
+            - link "News" [ref=f3e45] [cursor=pointer]:
+              - /url: /news
+          - listitem [ref=f3e46]:
+            - link "Sport" [ref=f3e48] [cursor=pointer]:
+              - /url: /sport
+          - listitem [ref=f3e49]:
+            - link "Business" [ref=f3e51] [cursor=pointer]:
+              - /url: /business
+          - listitem [ref=f3e52]:
+            - link "Technology" [ref=f3e54] [cursor=pointer]:
+              - /url: /technology
+          - listitem [ref=f3e55]:
+            - link "Health" [ref=f3e57] [cursor=pointer]:
+              - /url: /health
+          - listitem [ref=f3e58]:
+            - link "Culture" [ref=f3e60] [cursor=pointer]:
+              - /url: /culture
+          - listitem [ref=f3e61]:
+            - link "Arts" [ref=f3e63] [cursor=pointer]:
+              - /url: /arts
+          - listitem [ref=f3e64]:
+            - link "Travel" [ref=f3e66] [cursor=pointer]:
+              - /url: /travel
+          - listitem [ref=f3e67]:
+            - link "Earth" [ref=f3e69] [cursor=pointer]:
+              - /url: /future-planet
+          - listitem [ref=f3e70]:
+            - link "Audio" [ref=f3e72] [cursor=pointer]:
+              - /url: /audio
+          - listitem [ref=f3e73]:
+            - link "Video" [ref=f3e75] [cursor=pointer]:
+              - /url: /video
+          - listitem [ref=f3e76]:
+            - link "Live" [ref=f3e78] [cursor=pointer]:
+              - /url: /live
+          - listitem [ref=f3e79]:
+            - link "Documentaries" [ref=f3e81] [cursor=pointer]:
+              - /url: /video/docs
+      - navigation [ref=f3e82]:
+        - navigation [ref=f3e83]:
+          - list [ref=f3e84]:
+            - listitem [ref=f3e85]:
+              - link "US & Canada" [ref=f3e87] [cursor=pointer]:
+                - /url: /news/us-canada
+            - listitem [ref=f3e88]:
+              - link "UK" [ref=f3e90] [cursor=pointer]:
+                - /url: /news/uk
+            - listitem [ref=f3e91]:
+              - link "Africa" [ref=f3e93] [cursor=pointer]:
+                - /url: /news/world/africa
+            - listitem [ref=f3e94]:
+              - link "Asia" [ref=f3e96] [cursor=pointer]:
+                - /url: /news/world/asia
+            - listitem [ref=f3e97]:
+              - link "Australia" [ref=f3e99] [cursor=pointer]:
+                - /url: /news/world/australia
+            - listitem [ref=f3e100]:
+              - link "Europe" [ref=f3e102] [cursor=pointer]:
+                - /url: /news/world/europe
+            - listitem [ref=f3e103]:
+              - link "Latin America" [ref=f3e105] [cursor=pointer]:
+                - /url: /news/world/latin_america
+            - listitem [ref=f3e106]:
+              - link "Middle East" [ref=f3e108] [cursor=pointer]:
+                - /url: /news/world/middle_east
+            - listitem [ref=f3e109]:
+              - link "In Pictures" [ref=f3e111] [cursor=pointer]:
+                - /url: /news/in_pictures
+            - listitem [ref=f3e112]:
+              - link "BBC InDepth" [ref=f3e114] [cursor=pointer]:
+                - /url: /news/bbcindepth
+            - listitem [ref=f3e115]:
+              - link "BBC Verify" [ref=f3e117] [cursor=pointer]:
+                - /url: /news/bbcverify
+    - main [ref=f3e118]:
+      - article [ref=f3e119]:
+        - heading [level=1] [ref=f3e124]:
+          - img "News" [ref=f3e125]
+        - generic [ref=f3e129]:
+          - generic [ref=f3e132]:
+            - link [ref=f3e136] [cursor=pointer]:
+              - /url: /news/articles/cqn8m342rgk9o
+              - img "Aerial footage shows white vans in Whelford, near RAF Fairford." [ref=f3e138]
+            - link "One of the five men arrested near RAF Fairford called 999 himself He made the call almost an hour before a farmer also called police after seeing men in balaclavas. 7 hrs ago UK" [ref=f3e142] [cursor=pointer]:
+              - /url: /news/articles/cqn8m342rgk9o
+              - generic [ref=f3e143]:
+                - heading "One of the five men arrested near RAF Fairford called 999 himself" [level=2] [ref=f3e146]
+                - paragraph [ref=f3e147]: He made the call almost an hour before a farmer also called police after seeing men in balaclavas.
+                - generic [ref=f3e148]:
+                  - generic [ref=f3e149]: 7 hrs ago
+                  - generic: UK
+          - generic [ref=f3e152]:
+            - link "Moonshot AI logo on a smartphone Chinese AI tool told researchers how to make bioweapons Mindgard said it discovered in July that Kimi models K2.6 and K3 Swarm could evade developer's safety limits. 8 hrs ago Technology" [ref=f3e156] [cursor=pointer]:
+              - /url: /news/articles/cmrergq3j7lgo
+              - generic [ref=f3e157]:
+                - img "Moonshot AI logo on a smartphone" [ref=f3e161]
+                - generic [ref=f3e162]:
+                  - heading "Chinese AI tool told researchers how to make bioweapons" [level=2] [ref=f3e165]
+                  - paragraph [ref=f3e166]: Mindgard said it discovered in July that Kimi models K2.6 and K3 Swarm could evade developer's safety limits.
+                  - generic [ref=f3e167]:
+                    - generic [ref=f3e168]: 8 hrs ago
+                    - generic: Technology
+            - link "US Supreme Court denies Christa Pike's last-ditch bid to halt execution The Tennessee inmate has been awaiting execution since she was sentenced to death in 1996 for the murder of a teenage classmate. 7 hrs ago US & Canada" [ref=f3e173] [cursor=pointer]:
+              - /url: /news/articles/cwe879654mj7o
+              - generic [ref=f3e175]:
+                - heading "US Supreme Court denies Christa Pike's last-ditch bid to halt execution" [level=2] [ref=f3e178]
+                - paragraph [ref=f3e179]: The Tennessee inmate has been awaiting execution since she was sentenced to death in 1996 for the murder of a teenage classmate.
+                - generic [ref=f3e180]:
+                  - generic [ref=f3e181]: 7 hrs ago
+                  - generic: US & Canada
+            - link "Ukraine's prized steel industry left in ruins by Russian missile campaign Ukraine's remaining steelworks, a vital part of its economy, have all but ground to a halt because of relentless attacks. 8 hrs ago Europe" [ref=f3e186] [cursor=pointer]:
+              - /url: /news/articles/cjkg7k6z9296o
+              - generic [ref=f3e188]:
+                - heading "Ukraine's prized steel industry left in ruins by Russian missile campaign" [level=2] [ref=f3e191]
+                - paragraph [ref=f3e192]: Ukraine's remaining steelworks, a vital part of its economy, have all but ground to a halt because of relentless attacks.
+                - generic [ref=f3e193]:
+                  - generic [ref=f3e194]: 8 hrs ago
+                  - generic: Europe
+          - generic [ref=f3e197]:
+            - link "President Donald Trump pictured leaning towards Meta boss Mark Zuckerberg whom he is speaking to. Three takeaways from Trump's 'Super Intelligence' summit The meeting at the White House came as some tech bosses and experts have called for tighter rules around AI. 3 hrs ago Business" [ref=f3e201] [cursor=pointer]:
+              - /url: /news/articles/cme30dz5vkzko
+              - generic [ref=f3e202]:
+                - img "President Donald Trump pictured leaning towards Meta boss Mark Zuckerberg whom he is speaking to." [ref=f3e206]
+                - generic [ref=f3e207]:
+                  - heading "Three takeaways from Trump's 'Super Intelligence' summit" [level=2] [ref=f3e210]
+                  - paragraph [ref=f3e211]: The meeting at the White House came as some tech bosses and experts have called for tighter rules around AI.
+                  - generic [ref=f3e212]:
+                    - generic [ref=f3e213]: 3 hrs ago
+                    - generic: Business
+            - link "Burnham speaks into a microphone LIVE Move to rejoin EU among options for UK, PM Andy Burnham tells BBC The PM was speaking after using his conference speech to say the government will end the existing triple lock on pensions from 2030 to help fund social care reforms in England." [ref=f3e218] [cursor=pointer]:
+              - /url: https://www.bbc.com/news/live/c6x2zrv774gvt
+              - generic [ref=f3e219]:
+                - img "Burnham speaks into a microphone" [ref=f3e223]
+                - generic [ref=f3e224]:
+                  - generic [ref=f3e226]:
+                    - generic [ref=f3e227]: LIVE
+                    - heading "Move to rejoin EU among options for UK, PM Andy Burnham tells BBC" [level=2] [ref=f3e232]
+                  - paragraph [ref=f3e233]: The PM was speaking after using his conference speech to say the government will end the existing triple lock on pensions from 2030 to help fund social care reforms in England.
+            - link "A man wearing a cap seen spraying a substance on a counter top in this black-and-white still from surveillance footage Restaurant named after Xi Jinping attacked by Chinese nationals in South Korea The owner said he chose the name because he wanted to run the \"best Chinese restaurant\" in South Korea. 3 hrs ago Asia" [ref=f3e238] [cursor=pointer]:
+              - /url: /news/articles/c9kgvm275ev8o
+              - generic [ref=f3e239]:
+                - img "A man wearing a cap seen spraying a substance on a counter top in this black-and-white still from surveillance footage" [ref=f3e243]
+                - generic [ref=f3e244]:
+                  - heading "Restaurant named after Xi Jinping attacked by Chinese nationals in South Korea" [level=2] [ref=f3e247]
+                  - paragraph [ref=f3e248]: The owner said he chose the name because he wanted to run the "best Chinese restaurant" in South Korea.
+                  - generic [ref=f3e249]:
+                    - generic [ref=f3e250]: 3 hrs ago
+                    - generic: Asia
+            - link "A young girl is seen in a hospital bed while a woman wearing scrubs strokes her hair Girl has multiple surgeries to control infections after strike in Gaza Witnesses say Raseel's tent was hit by an Israeli helicopter strike. Israel’s military says it has no record of the attack. 2 hrs ago Middle East" [ref=f3e255] [cursor=pointer]:
+              - /url: /news/videos/c8n5d0e0n6wdo
+              - generic [ref=f3e256]:
+                - img "A young girl is seen in a hospital bed while a woman wearing scrubs strokes her hair" [ref=f3e260]
+                - generic [ref=f3e265]:
+                  - heading "Girl has multiple surgeries to control infections after strike in Gaza" [level=2] [ref=f3e268]
+                  - paragraph [ref=f3e269]: Witnesses say Raseel's tent was hit by an Israeli helicopter strike. Israel’s military says it has no record of the attack.
+                  - generic [ref=f3e270]:
+                    - generic [ref=f3e271]: 2 hrs ago
+                    - generic: Middle East
+        - generic [ref=f3e275]:
+          - link [ref=f3e278] [cursor=pointer]:
+            - /url: /sport/football/articles/c65y51l3gzq4o
+            - heading "The intricate web Man City spun to con the Premier League" [level=2] [ref=f3e282]
+          - link [ref=f3e285] [cursor=pointer]:
+            - /url: /news/videos/cv70d2nd6r0yo
+            - 'heading "Watch: Moment a government building collapses into a river in Nepal amid floods" [level=2] [ref=f3e292]'
+          - link [ref=f3e295] [cursor=pointer]:
+            - /url: /news/articles/c5rm9gv7n07xo
+            - heading "Former American Idol contestant and pastor found guilty of murdering wife" [level=2] [ref=f3e299]
+          - link [ref=f3e302] [cursor=pointer]:
+            - /url: /news/articles/cwj3dkvpm4e7o
+            - heading "South Korea demands apology from Pyongyang for landmine blasts that injured three" [level=2] [ref=f3e306]
+          - link [ref=f3e309] [cursor=pointer]:
+            - /url: /news/articles/ck8d3vl9mj13o
+            - heading "'Backpack' declared Alaska's Fat Bear Week winner" [level=2] [ref=f3e313]
+        - generic [ref=f3e314]:
+          - generic [ref=f3e318]:
+            - separator [ref=f3e320]
+            - heading "More to explore" [level=2] [ref=f3e323]
+          - generic [ref=f3e325]:
+            - generic [ref=f3e328]:
+              - link [ref=f3e332] [cursor=pointer]:
+                - /url: /news/articles/ck9qr8jy8ynyo
+                - img "Evan smiling at cameras after the prisoner swap." [ref=f3e334]
+              - 'link "''I was lured into a trap'': Evan Gershkovich on moment that led to 16 months in Russian jail The US journalist says he realised he was a \"a pawn in a greater game\" when he was not interrogated or tortured by FSB agents. 18 hrs ago World" [ref=f3e338] [cursor=pointer]':
+                - /url: /news/articles/ck9qr8jy8ynyo
+                - generic [ref=f3e339]:
+                  - 'heading "''I was lured into a trap'': Evan Gershkovich on moment that led to 16 months in Russian jail" [level=2] [ref=f3e342]'
+                  - paragraph [ref=f3e343]: The US journalist says he realised he was a "a pawn in a greater game" when he was not interrogated or tortured by FSB agents.
+                  - generic [ref=f3e344]:
+                    - generic [ref=f3e345]: 18 hrs ago
+                    - generic: World
+            - generic [ref=f3e348]:
+              - link "Gyanesh Kumar, Chief Election Commissioner (CEC) of India, addresses a press conference in New Delhi on August 17, 2025. (Photo by Sajjad HUSSAIN / AFP) (Photo by SAJJAD HUSSAIN/AFP via Getty Images) How India's election chief became embroiled in a crisis of trust Praised as a tough administrator, Gyanesh Kumar now finds himself at the centre of election-related controversy. 9 hrs ago India" [ref=f3e352] [cursor=pointer]:
+                - /url: /news/articles/cmdx575lq49xo
+                - generic [ref=f3e353]:
+                  - img "Gyanesh Kumar, Chief Election Commissioner (CEC) of India, addresses a press conference in New Delhi on August 17, 2025. (Photo by Sajjad HUSSAIN / AFP) (Photo by SAJJAD HUSSAIN/AFP via Getty Images)" [ref=f3e357]
+                  - generic [ref=f3e358]:
+                    - heading "How India's election chief became embroiled in a crisis of trust" [level=2] [ref=f3e361]
+                    - paragraph [ref=f3e362]: Praised as a tough administrator, Gyanesh Kumar now finds himself at the centre of election-related controversy.
+                    - generic [ref=f3e363]:
+                      - generic [ref=f3e364]: 9 hrs ago
+                      - generic: India
+              - link "How did the RAF Fairford incident go from 'suspected bomb plot' to police bail? Detectives are entering a vital stage of the investigation, with a number of options still open, the BBC's Daniel Sandford writes. 11 hrs ago UK" [ref=f3e369] [cursor=pointer]:
+                - /url: /news/articles/c6p3kelx4epwo
+                - generic [ref=f3e371]:
+                  - heading "How did the RAF Fairford incident go from 'suspected bomb plot' to police bail?" [level=2] [ref=f3e374]
+                  - paragraph [ref=f3e375]: Detectives are entering a vital stage of the investigation, with a number of options still open, the BBC's Daniel Sandford writes.
+                  - generic [ref=f3e376]:
+                    - generic [ref=f3e377]: 11 hrs ago
+                    - generic: UK
+              - link "Close-up look at Turner's '£50m' Rome painting on show in the city Turner’s early 19th century painting - Rome, from Mount Aventine - will be on display in the Italian capital for the first time ahead of an auction in London in December. 17 hrs ago Europe" [ref=f3e382] [cursor=pointer]:
+                - /url: /news/videos/crkgwvqjk0g7o
+                - generic [ref=f3e384]:
+                  - heading "Close-up look at Turner's '£50m' Rome painting on show in the city" [level=2] [ref=f3e390]
+                  - paragraph [ref=f3e391]: Turner’s early 19th century painting - Rome, from Mount Aventine - will be on display in the Italian capital for the first time ahead of an auction in London in December.
+                  - generic [ref=f3e392]:
+                    - generic [ref=f3e393]: 17 hrs ago
+                    - generic: Europe
+            - generic [ref=f3e396]:
+              - link "Perez leaning against a blue Honda car in a parking lot, smiling Venezuelan man shot by ICE in Texas is charged with assault Wilber Rafael Garces-Perez is accused of striking an agent with his car's side-view mirror while driving away. 8 hrs ago US & Canada" [ref=f3e400] [cursor=pointer]:
+                - /url: /news/articles/c63eqgz41n0xo
+                - generic [ref=f3e401]:
+                  - img "Perez leaning against a blue Honda car in a parking lot, smiling" [ref=f3e405]
+                  - generic [ref=f3e406]:
+                    - heading "Venezuelan man shot by ICE in Texas is charged with assault" [level=2] [ref=f3e409]
+                    - paragraph [ref=f3e410]: Wilber Rafael Garces-Perez is accused of striking an agent with his car's side-view mirror while driving away.
+                    - generic [ref=f3e411]:
+                      - generic [ref=f3e412]: 8 hrs ago
+                      - generic: US & Canada
+              - link "A female university student in a library wearing a demin jacket looking towards the camera with her hand on a book Hidden habits that make your social anxiety worse - and how to break them Social anxiety is more common than many think. Here's what you need to know about the condition. 6 hrs ago Health" [ref=f3e417] [cursor=pointer]:
+                - /url: /news/articles/cm4gl1yllg6po
+                - generic [ref=f3e418]:
+                  - img "A female university student in a library wearing a demin jacket looking towards the camera with her hand on a book" [ref=f3e422]
+                  - generic [ref=f3e423]:
+                    - heading "Hidden habits that make your social anxiety worse - and how to break them" [level=2] [ref=f3e426]
+                    - paragraph [ref=f3e427]: Social anxiety is more common than many think. Here's what you need to know about the condition.
+                    - generic [ref=f3e428]:
+                      - generic [ref=f3e429]: 6 hrs ago
+                      - generic: Health
+              - link "Several pinned beetle specimens in a museum-style display tray. Their oval wing cases shine metallic gold, green and bronze under bright light, with fine ridges running lengthways along their backs. The largest beetle, on the right, has six dark grey legs spread outward and curved, claw-like feet. Smaller beetles lie nearby, partly cropped by the frame. Each specimen is mounted on a thin pin above a small white identification label, some with tiny printed codes. The tray has white sides and a pale grey base. The bright reflections make the insects appear almost jewel-like, although they are preserved scientific specimens. How AI is creating a UK super-museum and revealing our planet's history More than 70 million specimens from 100 UK collections will be put into an online digital museum 6 hrs ago Science & Environment" [ref=f3e434] [cursor=pointer]:
+                - /url: /news/articles/cv5yjgrj4ello
+                - generic [ref=f3e435]:
+                  - img "Several pinned beetle specimens in a museum-style display tray. Their oval wing cases shine metallic gold, green and bronze under bright light, with fine ridges running lengthways along their backs. The largest beetle, on the right, has six dark grey legs spread outward and curved, claw-like feet. Smaller beetles lie nearby, partly cropped by the frame. Each specimen is mounted on a thin pin above a small white identification label, some with tiny printed codes. The tray has white sides and a pale grey base. The bright reflections make the insects appear almost jewel-like, although they are preserved scientific specimens." [ref=f3e439]
+                  - generic [ref=f3e440]:
+                    - heading "How AI is creating a UK super-museum and revealing our planet's history" [level=2] [ref=f3e443]
+                    - paragraph [ref=f3e444]: More than 70 million specimens from 100 UK collections will be put into an online digital museum
+                    - generic [ref=f3e445]:
+                      - generic [ref=f3e446]: 6 hrs ago
+                      - generic: Science & Environment
+              - link "Ferran Soriano questioned Man City CEO refuses to answer questions on guilty verdict Manchester City chief executive Ferran Soriano refused to answer questions about the Premier League charges from BBC Sports Editor Dan Roan at a conference of top European clubs in Copenhagen. 16 hrs ago" [ref=f3e451] [cursor=pointer]:
+                - /url: /sport/football/videos/cjly4dlwd1n5o
+                - generic [ref=f3e452]:
+                  - img "Ferran Soriano questioned" [ref=f3e456]
+                  - generic [ref=f3e461]:
+                    - heading "Man City CEO refuses to answer questions on guilty verdict" [level=2] [ref=f3e464]
+                    - paragraph [ref=f3e465]: Manchester City chief executive Ferran Soriano refused to answer questions about the Premier League charges from BBC Sports Editor Dan Roan at a conference of top European clubs in Copenhagen.
+                    - generic [ref=f3e466]: 16 hrs ago
+        - generic [ref=f3e470]:
+          - generic [ref=f3e471]:
+            - separator [ref=f3e473]
+            - heading "Most watched" [level=2] [ref=f3e476]
+          - generic [ref=f3e477]:
+            - link "1 Would you pay for this robot to clean your house?" [ref=f3e480] [cursor=pointer]:
+              - /url: /news/videos/c6lyq52wx7dko
+              - generic [ref=f3e481]:
+                - generic [ref=f3e482]: "1"
+                - heading "Would you pay for this robot to clean your house?" [level=2] [ref=f3e488]
+            - link "2 Why an investigation into alleged frat house gang rape is reopening" [ref=f3e491] [cursor=pointer]:
+              - /url: /news/videos/cqvgyrr0mrngo
+              - generic [ref=f3e492]:
+                - generic [ref=f3e493]: "2"
+                - heading "Why an investigation into alleged frat house gang rape is reopening" [level=2] [ref=f3e499]
+            - link "3 Girl has multiple surgeries to control infections after strike in Gaza" [ref=f3e502] [cursor=pointer]:
+              - /url: /news/videos/c8n5d0e0n6wdo
+              - generic [ref=f3e503]:
+                - generic [ref=f3e504]: "3"
+                - heading "Girl has multiple surgeries to control infections after strike in Gaza" [level=2] [ref=f3e510]
+            - link "4 What you need to know about the OpenAI Australian government hack" [ref=f3e513] [cursor=pointer]:
+              - /url: /news/videos/cwe8ekyzdjvlo
+              - generic [ref=f3e514]:
+                - generic [ref=f3e515]: "4"
+                - heading "What you need to know about the OpenAI Australian government hack" [level=2] [ref=f3e521]
+            - 'link "5 Watch: Moment a government building collapses into a river in Nepal amid floods" [ref=f3e524] [cursor=pointer]':
+              - /url: /news/videos/cv70d2nd6r0yo
+              - generic [ref=f3e525]:
+                - generic [ref=f3e526]: "5"
+                - 'heading "Watch: Moment a government building collapses into a river in Nepal amid floods" [level=2] [ref=f3e532]'
+        - generic [ref=f3e533]:
+          - generic [ref=f3e537]:
+            - separator [ref=f3e539]
+            - heading "Also in news" [level=2] [ref=f3e542]
+          - generic [ref=f3e544]:
+            - generic [ref=f3e547]:
+              - link [ref=f3e551] [cursor=pointer]:
+                - /url: /news/articles/c862epne7glyo
+                - generic [ref=f3e552]:
+                  - img "image unavailable" [ref=f3e553]
+                  - img "Black smoke billows from burning bins and bicycles as students carry out a blocking protest at the Cesar Baggio secondary school during a day of nationwide public sector strikes and demonstrations, in Lille, on September 29, 2026." [ref=f3e554]
+              - link "More than 400 detained as France student protests escalate Students have been protesting conditions and resources in high schools since last week. 9 hrs ago World" [ref=f3e558] [cursor=pointer]:
+                - /url: /news/articles/c862epne7glyo
+                - generic [ref=f3e559]:
+                  - heading "More than 400 detained as France student protests escalate" [level=2] [ref=f3e562]
+                  - paragraph [ref=f3e563]: Students have been protesting conditions and resources in high schools since last week.
+                  - generic [ref=f3e564]:
+                    - generic [ref=f3e565]: 9 hrs ago
+                    - generic: World
+            - generic [ref=f3e568]:
+              - link "A man wearing a cap seen spraying a substance on a counter top in this black-and-white still from surveillance footage Restaurant named after Xi Jinping attacked by Chinese nationals in South Korea The owner said he chose the name because he wanted to run the \"best Chinese restaurant\" in South Korea. 3 hrs ago Asia" [ref=f3e572] [cursor=pointer]:
+                - /url: /news/articles/c9kgvm275ev8o
+                - generic [ref=f3e573]:
+                  - img "A man wearing a cap seen spraying a substance on a counter top in this black-and-white still from surveillance footage" [ref=f3e577]
+                  - generic [ref=f3e578]:
+                    - heading "Restaurant named after Xi Jinping attacked by Chinese nationals in South Korea" [level=2] [ref=f3e581]
+                    - paragraph [ref=f3e582]: The owner said he chose the name because he wanted to run the "best Chinese restaurant" in South Korea.
+                    - generic [ref=f3e583]:
+                      - generic [ref=f3e584]: 3 hrs ago
+                      - generic: Asia
+              - link "image unavailable A stock picture of students walking in the Cornell university campus US prosecutors reopen case of alleged gang rape at Cornell University It comes after the woman filed a civil lawsuit alleging she was drugged and raped at a fraternity house in 2024. 10 hrs ago US & Canada" [ref=f3e589] [cursor=pointer]:
+                - /url: /news/articles/c5wyzrm0n74ro
+                - generic [ref=f3e590]:
+                  - generic [ref=f3e593]:
+                    - img "image unavailable" [ref=f3e594]
+                    - img "A stock picture of students walking in the Cornell university campus" [ref=f3e595]
+                  - generic [ref=f3e596]:
+                    - heading "US prosecutors reopen case of alleged gang rape at Cornell University" [level=2] [ref=f3e599]
+                    - paragraph [ref=f3e600]: It comes after the woman filed a civil lawsuit alleging she was drugged and raped at a fraternity house in 2024.
+                    - generic [ref=f3e601]:
+                      - generic [ref=f3e602]: 10 hrs ago
+                      - generic: US & Canada
+            - link "image unavailable Four women and a man shout and raise their arms while protesting at Puerta del Sol in Madrid. Crowds of other people stand around them. Spain announces ban on evictions after protests over 87-year-old woman's removal from flat The ban is part of a number of proposals that must be approved in parliament within 30 days. 15 hrs ago Europe" [ref=f3e607] [cursor=pointer]:
+              - /url: /news/articles/cwm2qmjgy93do
+              - generic [ref=f3e608]:
+                - generic [ref=f3e611]:
+                  - img "image unavailable" [ref=f3e612]
+                  - img "Four women and a man shout and raise their arms while protesting at Puerta del Sol in Madrid. Crowds of other people stand around them." [ref=f3e613]
+                - generic [ref=f3e614]:
+                  - heading "Spain announces ban on evictions after protests over 87-year-old woman's removal from flat" [level=2] [ref=f3e617]
+                  - paragraph [ref=f3e618]: The ban is part of a number of proposals that must be approved in parliament within 30 days.
+                  - generic [ref=f3e619]:
+                    - generic [ref=f3e620]: 15 hrs ago
+                    - generic: Europe
+            - link "image unavailable Sam Altman stands in front of a black background with many different-coloured dots. He's wearing a blue top and gesturing with his left hand. OpenAI unveils AI assistant 'dots' while safety worries delay new model Sam Altman spoke in San Francisco during OpenAI’s annual event for tech developers. 2 hrs ago Technology" [ref=f3e625] [cursor=pointer]:
+              - /url: /news/articles/cw7v42rp083eo
+              - generic [ref=f3e626]:
+                - generic [ref=f3e629]:
+                  - img "image unavailable" [ref=f3e630]
+                  - img "Sam Altman stands in front of a black background with many different-coloured dots. He's wearing a blue top and gesturing with his left hand." [ref=f3e631]
+                - generic [ref=f3e632]:
+                  - heading "OpenAI unveils AI assistant 'dots' while safety worries delay new model" [level=2] [ref=f3e635]
+                  - paragraph [ref=f3e636]: Sam Altman spoke in San Francisco during OpenAI’s annual event for tech developers.
+                  - generic [ref=f3e637]:
+                    - generic [ref=f3e638]: 2 hrs ago
+                    - generic: Technology
+        - generic [ref=f3e642]:
+          - generic [ref=f3e643]:
+            - separator [ref=f3e645]
+            - heading "Most read" [level=2] [ref=f3e648]
+          - generic [ref=f3e649]:
+            - link "1 One of the five men arrested near RAF Fairford called 999 himself" [ref=f3e652] [cursor=pointer]:
+              - /url: /news/articles/cqn8m342rgk9o
+              - generic [ref=f3e653]:
+                - generic [ref=f3e654]: "1"
+                - heading "One of the five men arrested near RAF Fairford called 999 himself" [level=2] [ref=f3e657]
+            - link "2 US prosecutors reopen case of alleged gang rape at Cornell University" [ref=f3e660] [cursor=pointer]:
+              - /url: /news/articles/c5wyzrm0n74ro
+              - generic [ref=f3e661]:
+                - generic [ref=f3e662]: "2"
+                - heading "US prosecutors reopen case of alleged gang rape at Cornell University" [level=2] [ref=f3e665]
+            - link "3 US Supreme Court denies Christa Pike's last-ditch bid to halt execution" [ref=f3e668] [cursor=pointer]:
+              - /url: /news/articles/cwe879654mj7o
+              - generic [ref=f3e669]:
+                - generic [ref=f3e670]: "3"
+                - heading "US Supreme Court denies Christa Pike's last-ditch bid to halt execution" [level=2] [ref=f3e673]
+            - link "4 Three takeaways from Trump's 'Super Intelligence' summit" [ref=f3e676] [cursor=pointer]:
+              - /url: /news/articles/cme30dz5vkzko
+              - generic [ref=f3e677]:
+                - generic [ref=f3e678]: "4"
+                - heading "Three takeaways from Trump's 'Super Intelligence' summit" [level=2] [ref=f3e681]
+            - link "5 Former American Idol contestant and pastor found guilty of murdering wife" [ref=f3e684] [cursor=pointer]:
+              - /url: /news/articles/c5rm9gv7n07xo
+              - generic [ref=f3e685]:
+                - generic [ref=f3e686]: "5"
+                - heading "Former American Idol contestant and pastor found guilty of murdering wife" [level=2] [ref=f3e689]
+            - link "6 Chinese AI tool told researchers how to make bioweapons" [ref=f3e692] [cursor=pointer]:
+              - /url: /news/articles/cmrergq3j7lgo
+              - generic [ref=f3e693]:
+                - generic [ref=f3e694]: "6"
+                - heading "Chinese AI tool told researchers how to make bioweapons" [level=2] [ref=f3e697]
+            - link "7 Ukraine's prized steel industry left in ruins by Russian missile campaign" [ref=f3e700] [cursor=pointer]:
+              - /url: /news/articles/cjkg7k6z9296o
+              - generic [ref=f3e701]:
+                - generic [ref=f3e702]: "7"
+                - heading "Ukraine's prized steel industry left in ruins by Russian missile campaign" [level=2] [ref=f3e705]
+            - link "8 Restaurant named after Xi Jinping attacked by Chinese nationals in South Korea" [ref=f3e708] [cursor=pointer]:
+              - /url: /news/articles/c9kgvm275ev8o
+              - generic [ref=f3e709]:
+                - generic [ref=f3e710]: "8"
+                - heading "Restaurant named after Xi Jinping attacked by Chinese nationals in South Korea" [level=2] [ref=f3e713]
+            - link "9 Six Flags shuts down X2 rollercoaster after more than 100 allege brain injuries" [ref=f3e716] [cursor=pointer]:
+              - /url: /news/articles/cw14d37446d8o
+              - generic [ref=f3e717]:
+                - generic [ref=f3e718]: "9"
+                - heading "Six Flags shuts down X2 rollercoaster after more than 100 allege brain injuries" [level=2] [ref=f3e721]
+            - link "10 Hidden habits that make your social anxiety worse - and how to break them" [ref=f3e724] [cursor=pointer]:
+              - /url: /news/articles/cm4gl1yllg6po
+              - generic [ref=f3e725]:
+                - generic [ref=f3e726]: "10"
+                - heading "Hidden habits that make your social anxiety worse - and how to break them" [level=2] [ref=f3e729]
+        - generic [ref=f3e730]:
+          - generic [ref=f3e734]:
+            - separator [ref=f3e736]
+            - heading "Sport" [level=2] [ref=f3e739]
+          - generic [ref=f3e741]:
+            - generic [ref=f3e744]:
+              - link [ref=f3e748] [cursor=pointer]:
+                - /url: /sport/football/articles/c65y51l3gzq4o
+                - generic [ref=f3e749]:
+                  - img "image unavailable" [ref=f3e750]
+                  - img "Manchester City celebration winning the Premier League title" [ref=f3e751]
+              - link "The intricate web Man City spun to con the Premier League The 40-page document which confirmed Manchester City were found guilty of inflating sponsorship income makes fascinating reading. Here's what it sets out. 10 hrs ago Man City" [ref=f3e755] [cursor=pointer]:
+                - /url: /sport/football/articles/c65y51l3gzq4o
+                - generic [ref=f3e756]:
+                  - heading "The intricate web Man City spun to con the Premier League" [level=2] [ref=f3e759]
+                  - paragraph [ref=f3e760]: The 40-page document which confirmed Manchester City were found guilty of inflating sponsorship income makes fascinating reading. Here's what it sets out.
+                  - generic [ref=f3e761]:
+                    - generic [ref=f3e762]: 10 hrs ago
+                    - generic: Man City
+            - generic [ref=f3e765]:
+              - link "image unavailable Kevin de Bruyne, Sergio Aguero, Vincent Kompany, Fernandinho, and David Silva pose while celebrating with the EFL Cup after Manchester City's 3-0 victory over Arsenal £1.2bn on transfers with £830m inflated in accounts - Man City's 'asterisk era' BBC Sport analyses Manchester City's dominance of English football during the period in which they were breaching financial rules. 41 mins ago Man City" [ref=f3e769] [cursor=pointer]:
+                - /url: /sport/football/articles/c9lyk46gekkeo
+                - generic [ref=f3e770]:
+                  - generic [ref=f3e773]:
+                    - img "image unavailable" [ref=f3e774]
+                    - img "Kevin de Bruyne, Sergio Aguero, Vincent Kompany, Fernandinho, and David Silva pose while celebrating with the EFL Cup after Manchester City's 3-0 victory over Arsenal" [ref=f3e775]
+                  - generic [ref=f3e776]:
+                    - heading "£1.2bn on transfers with £830m inflated in accounts - Man City's 'asterisk era'" [level=2] [ref=f3e779]
+                    - paragraph [ref=f3e780]: BBC Sport analyses Manchester City's dominance of English football during the period in which they were breaching financial rules.
+                    - generic [ref=f3e781]:
+                      - generic [ref=f3e782]: 41 mins ago
+                      - generic: Man City
+              - link "The part-timers who won three Wembley finals in a row You probably knew Pep Guardiola's Manchester City won four League Cups on the bounce between 2018 and 2021 – but another side did the silverware hat-trick first. 60 mins ago Football" [ref=f3e787] [cursor=pointer]:
+                - /url: /sport/football/articles/c6y4z21xelk4o
+                - generic [ref=f3e789]:
+                  - heading "The part-timers who won three Wembley finals in a row" [level=2] [ref=f3e792]
+                  - paragraph [ref=f3e793]: You probably knew Pep Guardiola's Manchester City won four League Cups on the bounce between 2018 and 2021 – but another side did the silverware hat-trick first.
+                  - generic [ref=f3e794]:
+                    - generic [ref=f3e795]: 60 mins ago
+                    - generic: Football
+              - link "Saracens face fines over 'wine consultant' Venter's media no-shows Saracens are facing fines from Prem Rugby for director of rugby Brendan Venter's failure to fulfil media commitments. 15 hrs ago Saracens" [ref=f3e800] [cursor=pointer]:
+                - /url: /sport/rugby-union/articles/ck7902q3g5vgo
+                - generic [ref=f3e802]:
+                  - heading "Saracens face fines over 'wine consultant' Venter's media no-shows" [level=2] [ref=f3e805]
+                  - paragraph [ref=f3e806]: Saracens are facing fines from Prem Rugby for director of rugby Brendan Venter's failure to fulfil media commitments.
+                  - generic [ref=f3e807]:
+                    - generic [ref=f3e808]: 15 hrs ago
+                    - generic: Saracens
+            - link "image unavailable Trent Alexander-Arnold Time for Tuchel to offer Alexander-Arnold some trust Having been overlooked for so long, Trent Alexander-Arnold produced a world-class moment on his return, writes Phil McNulty. 9 hrs ago England Men" [ref=f3e813] [cursor=pointer]:
+              - /url: /sport/football/articles/c8dx51r59xndo
+              - generic [ref=f3e814]:
+                - generic [ref=f3e817]:
+                  - img "image unavailable" [ref=f3e818]
+                  - img "Trent Alexander-Arnold" [ref=f3e819]
+                - generic [ref=f3e820]:
+                  - heading "Time for Tuchel to offer Alexander-Arnold some trust" [level=2] [ref=f3e823]
+                  - paragraph [ref=f3e824]: Having been overlooked for so long, Trent Alexander-Arnold produced a world-class moment on his return, writes Phil McNulty.
+                  - generic [ref=f3e825]:
+                    - generic [ref=f3e826]: 9 hrs ago
+                    - generic: England Men
+            - link "image unavailable Billy Gilmour of Scotland New coach, new players, but same old failings hamper Scotland Self-inflicted wounds cost Scotland on Sebastien Pocognoli's Hampden debut, writes Tom English. 9 hrs ago Scotland Men" [ref=f3e831] [cursor=pointer]:
+              - /url: /sport/football/articles/cmrl6g9nw5lyo
+              - generic [ref=f3e832]:
+                - generic [ref=f3e835]:
+                  - img "image unavailable" [ref=f3e836]
+                  - img "Billy Gilmour of Scotland" [ref=f3e837]
+                - generic [ref=f3e838]:
+                  - heading "New coach, new players, but same old failings hamper Scotland" [level=2] [ref=f3e841]
+                  - paragraph [ref=f3e842]: Self-inflicted wounds cost Scotland on Sebastien Pocognoli's Hampden debut, writes Tom English.
+                  - generic [ref=f3e843]:
+                    - generic [ref=f3e844]: 9 hrs ago
+                    - generic: Scotland Men
+            - link "image unavailable Morgan Rogers celebrates with Anthony Gordon. Who continues to show how important they are? England player ratings How the England players rated following their Nations League match. 10 hrs ago England Men" [ref=f3e849] [cursor=pointer]:
+              - /url: /sport/football/articles/c6g7kldr9378o
+              - generic [ref=f3e850]:
+                - generic [ref=f3e853]:
+                  - img "image unavailable" [ref=f3e854]
+                  - img "Morgan Rogers celebrates with Anthony Gordon." [ref=f3e855]
+                - generic [ref=f3e856]:
+                  - heading "Who continues to show how important they are? England player ratings" [level=2] [ref=f3e859]
+                  - paragraph [ref=f3e860]: How the England players rated following their Nations League match.
+                  - generic [ref=f3e861]:
+                    - generic [ref=f3e862]: 10 hrs ago
+                    - generic: England Men
+    - separator [ref=f3e865]
+    - contentinfo [ref=f3e866]:
+      - link "British Broadcasting Corporation" [ref=f3e869] [cursor=pointer]:
+        - /url: /
+        - img "British Broadcasting Corporation" [ref=f3e870]
+      - navigation "Footer navigation" [ref=f3e873]:
+        - list [ref=f3e874]:
+          - listitem [ref=f3e875]:
+            - link "Home" [ref=f3e877] [cursor=pointer]:
+              - /url: https://www.bbc.com/
+          - listitem [ref=f3e878]:
+            - link "News" [ref=f3e880] [cursor=pointer]:
+              - /url: /news
+          - listitem [ref=f3e881]:
+            - link "Sport" [ref=f3e883] [cursor=pointer]:
+              - /url: /sport
+          - listitem [ref=f3e884]:
+            - link "Business" [ref=f3e886] [cursor=pointer]:
+              - /url: /business
+          - listitem [ref=f3e887]:
+            - link "Technology" [ref=f3e889] [cursor=pointer]:
+              - /url: /technology
+          - listitem [ref=f3e890]:
+            - link "Health" [ref=f3e892] [cursor=pointer]:
+              - /url: /health
+          - listitem [ref=f3e893]:
+            - link "Culture" [ref=f3e895] [cursor=pointer]:
+              - /url: /culture
+          - listitem [ref=f3e896]:
+            - link "Arts" [ref=f3e898] [cursor=pointer]:
+              - /url: /arts
+          - listitem [ref=f3e899]:
+            - link "Travel" [ref=f3e901] [cursor=pointer]:
+              - /url: /travel
+          - listitem [ref=f3e902]:
+            - link "Earth" [ref=f3e904] [cursor=pointer]:
+              - /url: /future-planet
+          - listitem [ref=f3e905]:
+            - link "Audio" [ref=f3e907] [cursor=pointer]:
+              - /url: /audio
+          - listitem [ref=f3e908]:
+            - link "Video" [ref=f3e910] [cursor=pointer]:
+              - /url: /video
+          - listitem [ref=f3e911]:
+            - link "Live" [ref=f3e913] [cursor=pointer]:
+              - /url: /live
+          - listitem [ref=f3e914]:
+            - link "Documentaries" [ref=f3e916] [cursor=pointer]:
+              - /url: /video/docs
+          - listitem [ref=f3e917]:
+            - link "Weather" [ref=f3e919] [cursor=pointer]:
+              - /url: https://www.bbc.com/weather
+          - listitem [ref=f3e920]:
+            - link "BBC Shop" [ref=f3e922] [cursor=pointer]:
+              - /url: https://shop.bbc.com/
+          - listitem [ref=f3e923]:
+            - link "BritBox" [ref=f3e925] [cursor=pointer]:
+              - /url: https://www.britbox.com/?utm_source=bbc.com&utm_medium=referral&utm_campaign=footer
+      - button [ref=f3e928] [cursor=pointer]
+      - generic [ref=f3e932]:
+        - generic [ref=f3e933]: "Follow BBC on:"
+        - generic [ref=f3e934]:
+          - button "Follow BBC on x" [ref=f3e935]
+          - button "Follow BBC on facebook" [ref=f3e938]
+          - button "Follow BBC on instagram" [ref=f3e941]
+          - button "Follow BBC on tiktok" [ref=f3e944]
+          - button "Follow BBC on linkedin" [ref=f3e947]
+          - button "Follow BBC on youtube" [ref=f3e950]
+      - navigation [ref=f3e954]:
+        - list [ref=f3e955]:
+          - listitem [ref=f3e956]:
+            - link "Terms of Use" [ref=f3e958] [cursor=pointer]:
+              - /url: https://www.bbc.com/pages/terms-of-use
+          - listitem [ref=f3e959]:
+            - link "Subscription Terms" [ref=f3e961] [cursor=pointer]:
+              - /url: https://www.bbc.com/pages/subscription-terms
+          - listitem [ref=f3e962]:
+            - link "About the BBC" [ref=f3e964] [cursor=pointer]:
+              - /url: https://www.bbc.co.uk/aboutthebbc
+          - listitem [ref=f3e965]:
+            - link "Privacy Policy" [ref=f3e967] [cursor=pointer]:
+              - /url: https://www.bbc.com/pages/privacy-policy
+          - listitem [ref=f3e968]:
+            - link "Cookies" [ref=f3e970] [cursor=pointer]:
+              - /url: https://www.bbc.com/usingthebbc/cookies/how-can-i-change-my-bbc-cookie-settings/
+          - listitem [ref=f3e971]:
+            - link "Do not share or sell my info" [ref=f3e973] [cursor=pointer]:
+              - /url: https://www.bbc.com/usingthebbc/cookies/how-can-i-change-my-bbc-cookie-settings/
+          - listitem [ref=f3e974]:
+            - link "Accessibility Help" [ref=f3e976] [cursor=pointer]:
+              - /url: https://www.bbc.co.uk/accessibility/
+          - listitem [ref=f3e977]:
+            - link "Contact the BBC" [ref=f3e979] [cursor=pointer]:
+              - /url: https://www.bbc.co.uk/contact
+          - listitem [ref=f3e980]:
+            - link "Advertise with us" [ref=f3e982] [cursor=pointer]:
+              - /url: https://advertising.bbcstudios.com/
+          - listitem [ref=f3e983]:
+            - link "BBC.com Help & FAQs" [ref=f3e985] [cursor=pointer]:
+              - /url: https://help.bbc.com/hc/
+          - listitem [ref=f3e986]:
+            - link "Content Index" [ref=f3e988] [cursor=pointer]:
+              - /url: https://www.bbc.com/pages/content-index
+          - listitem [ref=f3e989]:
+            - link "Set Preferred Source" [ref=f3e991] [cursor=pointer]:
+              - /url: https://www.bbc.com/future/article/20260128-how-to-make-google-put-trusted-sources-up-top-when-you-search
+      - generic [ref=f3e992]:
+        - paragraph [ref=f3e993]:
+          - text: Copyright 2026 BBC. All rights reserved. The BBC is not responsible for the content of external sites.
+          - link "Read about our approach to external linking." [ref=f3e994] [cursor=pointer]:
+            - /url: https://www.bbc.com/editorialguidelines/guidance/links-and-feeds
+        - paragraph [ref=f3e995]
+  - alert [ref=f3e996]

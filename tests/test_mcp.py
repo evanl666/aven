@@ -536,3 +536,46 @@ def test_drawing_a_call_never_raises(started):
 
     assert isinstance(peek.preview(awkward), str)
     peek.detail_for(awkward)  # None or a Body; what matters is that it returns
+
+
+# --- how much of a result is worth reading -----------------------------------
+
+
+def test_an_enormous_result_is_cut():
+    """Measured, not imagined. A browser snapshot of one Wikipedia article is
+    534,000 characters - about 134,000 tokens, most of a context window, from a
+    single call. Uncapped it goes into the session, into the next request, and
+    into every request after that."""
+    from aven.toolkit.mcp import MAX_RESULT, _readable
+
+    said = _readable({"content": [{"type": "text", "text": "x" * 534_191}]})
+
+    assert len(said) < MAX_RESULT + 500
+
+
+def test_being_cut_is_said_out_loud_with_the_size():
+    """A model handed a silently truncated page answers about the part it got
+    as though that were the page. Knowing it was cut is what lets it ask for
+    less instead of guessing."""
+    from aven.toolkit.mcp import _readable
+
+    said = _readable({"content": [{"type": "text", "text": "y" * 100_000}]})
+
+    assert "cut here" in said
+    assert "100,000" in said, "the real size, so it can judge how much it missed"
+    assert "narrower" in said, "and what to do about it"
+
+
+def test_a_result_that_fits_is_left_exactly_alone():
+    from aven.toolkit.mcp import _readable
+
+    assert _readable({"content": [{"type": "text", "text": "short"}]}) == "short"
+
+
+def test_the_cap_matches_the_one_the_file_tools_use():
+    """Two limits that mean the same thing and drift apart are worse than one
+    that is occasionally wrong."""
+    from aven.toolkit.files import MAX_READ
+    from aven.toolkit.mcp import MAX_RESULT
+
+    assert MAX_RESULT == MAX_READ
