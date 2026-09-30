@@ -18,7 +18,7 @@ to talk to a model, what a tool does, or how any of it is displayed.
 from __future__ import annotations
 
 import asyncio
-from collections.abc import AsyncIterator, Sequence
+from collections.abc import AsyncIterator, Callable, Sequence
 
 from aven.harness.events import (
     AgentEnd,
@@ -75,12 +75,19 @@ async def run(
     steering: Steering | None = None,
     max_turns: int = 12,
     source: str = "chat",
+    offload: Callable[[str, str, str], str] | None = None,
 ) -> AsyncIterator[Event]:
     """Run one prompt to completion, yielding events as they happen.
 
     Every message appended to the session emits exactly one MessageEnd. Tool
     results additionally get a ToolEnd, so a renderer can show a finished tool
     without having to recognise tool results among the message stream.
+
+    `offload` is given every successful result and returns what to put in the
+    conversation in its place. Injected rather than done here: what to do with
+    something too big to carry is a question about storage, and the loop has no
+    opinion about storage. A caller that passes nothing keeps everything, which
+    is what the loop did before there was anywhere to put it.
     """
 
     # No tray passed still means no irreversible action: one is created here and
@@ -199,7 +206,9 @@ async def run(
         try:
             for call in runnable:
                 yield ToolStart(call=call)
-                message, staged = await _execute(call, by_name, tray, origin=reply.id)
+                message, staged = await _execute(
+                    call, by_name, tray, origin=reply.id, offload=offload
+                )
                 session.append(message)
                 answered += 1
                 yield MessageEnd(message=message)
@@ -298,7 +307,11 @@ def _close_unanswered(session: Session, calls: Sequence[ToolCall]) -> None:
 
 
 async def _execute(
-    call: ToolCall, tools: dict[str, Tool], tray: Tray, origin: str
+    call: ToolCall,
+    tools: dict[str, Tool],
+    tray: Tray,
+    origin: str,
+    offload: Callable[[str, str, str], str] | None = None,
 ) -> tuple[ToolResultMessage, bool]:
     """Hand one tool call to the tray, turning any failure into a result.
 
@@ -329,6 +342,13 @@ async def _execute(
         )
     except Exception as exc:
         return failure(f"{type(exc).__name__}: {exc}")
+
+    # Only what worked, and only when it ran. A staged call's result is one
+    # sentence saying so, and a failure is something the model needs in front of
+    # it - being told "it went wrong, fetch the details" buys nothing, because
+    # it will fetch them.
+    if offload is not None and not staged:
+        output = offload(call.id, call.name, output)
 
     message = ToolResultMessage(
         tool_call_id=call.id, tool_name=call.name, output=output

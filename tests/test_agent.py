@@ -481,3 +481,105 @@ async def test_a_finished_reply_runs_every_call_it_made(tmp_path):
     )
 
     assert _ran(session) == ["echo", "echo"]
+
+
+async def test_a_big_result_can_be_kept_out_of_the_conversation(tmp_path):
+    """The loop hands every successful result to whatever was injected and puts
+    back what it returns. It has no opinion about storage - that question
+    belongs to something that knows what a filesystem is."""
+    from aven.harness.tools import tool
+
+    @tool(risk="read")
+    def sprawl() -> str:
+        """Return a lot."""
+        return "x" * 50_000
+
+    seen = []
+
+    def offload(call_id, name, output):
+        seen.append((name, len(output)))
+        return f"[kept as {name}-{call_id}]"
+
+    session = Session.open(tmp_path / "s.jsonl")
+    model = scripted(
+        AssistantMessage(tool_calls=[ToolCall(name="sprawl", args={})],
+                         stop_reason="tool_use"),
+        AssistantMessage(text="read it"),
+    )
+
+    await drive(run(session=session, prompt="go", model=model,
+                    tools=[sprawl], offload=offload))
+
+    assert seen == [("sprawl", 50_000)]
+    results = [m for m in session.history() if m.kind == "tool_result"]
+    assert results[0].output.startswith("[kept as sprawl-")
+
+
+async def test_a_staged_call_is_not_offloaded(tmp_path):
+    """Its result is one sentence saying it is waiting. There is nothing to
+    put aside, and a reference in its place would hide the one thing it says."""
+    from aven.harness.tools import ToolResult, tool
+    from aven.harness.tx import Tray
+
+    @tool(risk="irreversible", preview="buy {what}")
+    def buy(what: str) -> ToolResult:
+        return ToolResult(output="bought")
+
+    asked = []
+    session = Session.open(tmp_path / "s.jsonl")
+    model = scripted(
+        AssistantMessage(tool_calls=[ToolCall(name="buy", args={"what": "a kettle"})],
+                         stop_reason="tool_use"),
+        AssistantMessage(text="waiting on you"),
+    )
+
+    await drive(run(session=session, prompt="buy it", model=model, tools=[buy],
+                    tray=Tray(), offload=lambda *a: asked.append(a) or "[kept]"))
+
+    assert asked == [], "nothing was offered to it"
+
+
+async def test_a_failure_is_never_offloaded(tmp_path):
+    """A model told "something went wrong, fetch it to find out what" will
+    fetch it. The round trip buys nothing and the failure arrives a turn late."""
+    from aven.harness.tools import tool
+
+    @tool(risk="read")
+    def breaks() -> str:
+        """Fail at length."""
+        raise RuntimeError("y" * 50_000)
+
+    asked = []
+    session = Session.open(tmp_path / "s.jsonl")
+    model = scripted(
+        AssistantMessage(tool_calls=[ToolCall(name="breaks", args={})],
+                         stop_reason="tool_use"),
+        AssistantMessage(text="it broke"),
+    )
+
+    await drive(run(session=session, prompt="go", model=model, tools=[breaks],
+                    offload=lambda *a: asked.append(a) or "[kept]"))
+
+    assert asked == []
+    assert "y" * 100 in [m for m in session.history() if m.kind == "tool_result"][0].output
+
+
+async def test_without_one_everything_is_kept(tmp_path):
+    """What the loop did before there was anywhere to put it."""
+    from aven.harness.tools import tool
+
+    @tool(risk="read")
+    def sprawl() -> str:
+        """Return a lot."""
+        return "x" * 50_000
+
+    session = Session.open(tmp_path / "s.jsonl")
+    model = scripted(
+        AssistantMessage(tool_calls=[ToolCall(name="sprawl", args={})],
+                         stop_reason="tool_use"),
+        AssistantMessage(text="done"),
+    )
+
+    await drive(run(session=session, prompt="go", model=model, tools=[sprawl]))
+
+    assert len([m for m in session.history() if m.kind == "tool_result"][0].output) == 50_000

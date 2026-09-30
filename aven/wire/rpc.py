@@ -71,6 +71,7 @@ class Conversation:
         connections: Connections | None = None,
         has_key: Callable[[], bool] | None = None,
         key_from: Callable[[], str] | None = None,
+        offload: Callable[[str, str, str], str] | None = None,
         keep_key: Callable[[str], None] | None = None,
         keeps: str = "",
         max_turns: int = 12,
@@ -95,6 +96,7 @@ class Conversation:
         # Where the key in use came from. A stored key shadowed by an exported
         # one is a Replace button that appears to work and changes nothing.
         self.key_from = key_from or (lambda: "")
+        self.offload = offload
         self.keep_key = keep_key
         # Where a key would be kept, in words. A screen that asks for a secret
         # has to say where it is about to put it.
@@ -227,6 +229,7 @@ class Conversation:
                 steering=self.steering,
                 max_turns=self.max_turns,
                 source=source,
+                offload=self.offload,
             ):
                 self.emit(protocol.event_as_dict(event))
                 if event.__class__.__name__ == "ToolEnd":

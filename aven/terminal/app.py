@@ -81,6 +81,11 @@ class Kit:
     # work at all" - a service can be signed in and not currently in play.
     connections: Connections = field(default_factory=Connections)
 
+    # What to do with a tool result too big to keep in the conversation. None
+    # keeps everything, which is what happened before there was anywhere to put
+    # it.
+    offload: Any = None
+
     # What was wrong with the configuration, if anything. Carried rather than
     # printed where it was found: a typo in connectors.toml should be said once,
     # by whichever interface is running, not written over a full-screen app.
@@ -238,7 +243,7 @@ def choose(cards: list[Card], sessions: Path) -> Path | None:
 
 
 async def turn(*, session, prompt, model, tools, compactor, policy, standing,
-               args) -> None:
+               args, offload=None) -> None:
     """One prompt: run it, then decide what takes effect."""
     tray = Tray(policy=policy, standing=standing)
     screen = Renderer(verbose=args.verbose)
@@ -247,6 +252,7 @@ async def turn(*, session, prompt, model, tools, compactor, policy, standing,
     async for event in run(
         session=session, prompt=prompt, model=model, tools=tools,
         tray=tray, compactor=compactor, max_turns=args.max_turns,
+        offload=offload,
     ):
         screen.handle(event)
 
@@ -259,7 +265,7 @@ async def turn(*, session, prompt, model, tools, compactor, policy, standing,
 
 
 async def oneshot(*, session, prompt, model, tools, compactor, policy, standing,
-                  args) -> int:
+                  args, offload=None) -> int:
     """One prompt for a caller that is not watching the screen.
 
     No review step: review asks a person a question, and there is no person
@@ -273,6 +279,7 @@ async def oneshot(*, session, prompt, model, tools, compactor, policy, standing,
     async for event in run(
         session=session, prompt=prompt, model=model, tools=tools,
         tray=tray, compactor=compactor, max_turns=args.max_turns,
+        offload=offload,
     ):
         sink.handle(event)
 
@@ -282,7 +289,8 @@ async def oneshot(*, session, prompt, model, tools, compactor, policy, standing,
     return 0
 
 
-async def watch(*, session, model, tools, compactor, policy, standing, args) -> int:
+async def watch(*, session, model, tools, compactor, policy, standing, args,
+                offload=None) -> int:
     """Fire triggers on a clock until interrupted.
 
     What it can do, and what it deliberately cannot:
@@ -319,6 +327,7 @@ async def watch(*, session, model, tools, compactor, policy, standing, args) -> 
                 async for event in run(
                     session=session, prompt=trigger.prompt, model=model, tools=tools,
                     tray=tray, compactor=compactor, max_turns=args.max_turns,
+        offload=offload,
                     source=trigger.source,
                 ):
                     sink.handle(event)
@@ -334,7 +343,7 @@ async def watch(*, session, model, tools, compactor, policy, standing, args) -> 
 
 
 async def serve_rpc(*, session, model, tools, compactor, policy, standing, args,
-                    box, describe, connections, sessions_dir) -> int:
+                    box, describe, connections, sessions_dir, offload=None) -> int:
     """Hand the session to another program.
 
     `tools` is ignored here and `box` taken instead: the RPC client can connect a
@@ -344,7 +353,7 @@ async def serve_rpc(*, session, model, tools, compactor, policy, standing, args,
     conversation = Conversation(
         session=session, model=model, box=box, describe=describe,
         policy=policy, standing=standing, compactor=compactor,
-        sessions_dir=sessions_dir, connections=connections,
+        sessions_dir=sessions_dir, connections=connections, offload=offload,
         has_key=key_is_available,
         key_from=key_source,
         # Bound to this model, so a key supplied while the window is open
@@ -622,7 +631,8 @@ async def _launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
             note(DIM(f"     {approval}"))
 
     running = dict(session=session, model=model, tools=tools, compactor=compactor,
-                   policy=policy, standing=standing, args=args)
+                   policy=policy, standing=standing, args=args,
+                   offload=kit.offload)
 
     # Read for both runners: the shell fires them while it is up, and --watch is
     # the headless half for a machine nobody is sitting at.
@@ -657,7 +667,7 @@ async def _launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
         await Shell(
             session=session, model=model, tools=tools, root=root,
             compactor=compactor, policy=policy, standing=standing,
-            triggers=triggers, max_turns=args.max_turns,
+            triggers=triggers, max_turns=args.max_turns, offload=kit.offload,
         ).run_async()
         return 0
 

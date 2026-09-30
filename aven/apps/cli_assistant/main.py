@@ -28,6 +28,7 @@ from aven.terminal.app import Blueprint, Kit, launch
 from aven.toolkit import file_tools, memory_tools, skill_tools
 from aven.toolkit.connectors import build
 from aven.toolkit.files import names_for
+from aven.toolkit.offload import Keeper
 
 HOME = Path.home() / ".aven"
 SESSIONS = HOME / "sessions"
@@ -127,9 +128,15 @@ def assemble(args: argparse.Namespace, roots: list[Path], found_skills: list) ->
     configured, trouble = build(HOME, vault_for(HOME), extra=local)
     connections = Connections(configured)
 
+    # Somewhere to put a result too big to carry, and the tool that reads it
+    # back. Core rather than a group: a result can be offloaded on the first
+    # turn, and a model that cannot reach it until it has asked for a group is
+    # a model looking at a reference to something it cannot open.
+    keeper = Keeper(HOME / "results")
+
     return Kit(
         box=ToolBox(
-            core=file_tools(*roots) + skill_tools(found_skills),
+            core=file_tools(*roots) + skill_tools(found_skills) + keeper.tools(),
             groups=connections.groups(),
             # So `use_tools` on a service nobody has signed in to comes back
             # with a sentence, rather than loading tools that fail on every call.
@@ -138,6 +145,7 @@ def assemble(args: argparse.Namespace, roots: list[Path], found_skills: list) ->
         describe=connections.describe(),
         connections=connections,
         instructions=folders(roots),
+        offload=keeper.keep,
         trouble=trouble,
     )
 
