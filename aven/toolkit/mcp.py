@@ -64,7 +64,7 @@ import urllib.request
 from dataclasses import dataclass, field
 from typing import Any
 
-from aven.harness.tools import Risk, Tool, ToolResult
+from aven.harness.tools import Body, Detail, Risk, Tool, ToolResult
 
 # A server that has not answered in this long is not going to. Long enough for a
 # cold `npx` to fetch a package on a slow connection.
@@ -216,11 +216,8 @@ class Talks:
             schema=schema,
             risk=self._risk_of(declared),
             fn=run,
-            preview_with=lambda **args: (
-                f"{self.spec.name}: {theirs}("
-                + ", ".join(f"{k}={v!r}" for k, v in args.items())
-                + ")"
-            ),
+            preview_with=lambda **args: _one_line(self.spec.name, theirs, args),
+            detail_with=lambda **args: _in_full(theirs, args),
             # Never. A standing approval is a decision made in advance about
             # something whose behaviour is known, and an outside server's tool
             # is the case where it is least known. Nothing here is covered by
@@ -528,6 +525,53 @@ def _records(content_type: str, body: bytes) -> list[dict[str, Any]]:
     if isinstance(one, list):
         return [r for r in one if isinstance(r, dict)]
     return [one] if isinstance(one, dict) else []
+
+
+def _one_line(server: str, tool: str, args: dict[str, Any]) -> str:
+    """The line in the tray: what, and roughly with what.
+
+    Clipped hard, because an argument can be a whole program. `browser_evaluate`
+    arrives carrying twenty lines of JavaScript, and `repr` of that is one line
+    of escaped backslashes that nobody can read and nobody should be asked to
+    approve. The full text is in the detail below it, laid out.
+    """
+    said = []
+    for key, value in args.items():
+        if isinstance(value, str):
+            flat = " ".join(value.split())
+            shown = flat if len(flat) <= 40 else f"{flat[:39]}…"
+            said.append(f"{key}={shown!r}")
+        else:
+            rendered = repr(value)
+            said.append(f"{key}={rendered if len(rendered) <= 40 else '…'}")
+    return f"{server}: {tool}(" + ", ".join(said) + ")"
+
+
+def _in_full(tool: str, args: dict[str, Any]) -> Detail | None:
+    """The arguments as something a person can actually read.
+
+    A `Body`, because for the calls that matter the argument *is* the decision.
+    `browser_evaluate(function=...)` is a program about to run inside a page you
+    are signed in to; approving it without reading it is approving nothing in
+    particular. Newlines are newlines here rather than `\n`.
+
+    Nothing for a call whose arguments fit on the line above - a card repeating
+    what was just read is noise, and noise is what stops people reading.
+    """
+    if not args:
+        return None
+    if all(len(str(v)) <= 40 for v in args.values()):
+        return None
+
+    lines = []
+    for key, value in args.items():
+        text = value if isinstance(value, str) else repr(value)
+        if "\n" in text or len(text) > 40:
+            lines.append(f"{key}:")
+            lines.extend(f"    {row}" for row in text.splitlines() or [""])
+        else:
+            lines.append(f"{key}: {text}")
+    return Body(title=tool, text="\n".join(lines))
 
 
 def _readable(answer: dict[str, Any]) -> str:

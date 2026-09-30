@@ -354,6 +354,13 @@ body {
   color: var(--danger);
 }
 
+/* Decided against. Not a failure - nothing went wrong, it simply never ran. */
+.toolrow.dropped {
+  color: var(--ink-faint);
+  text-decoration: line-through;
+  text-decoration-color: var(--line-strong);
+}
+
 .notice {
   align-self: center;
   max-width: 82%;

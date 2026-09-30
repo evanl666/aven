@@ -1172,3 +1172,54 @@ async def test_a_failure_that_is_not_about_a_key_is_left_alone(tmp_path):
 
     said = [r for r in sent if r["type"] == "failed"][0]["error"]
     assert said == "Could not reach Anthropic: the network is down."
+
+
+async def test_a_decision_names_the_call_it_was_about(talking):
+    """A surface that drew the call as it happened has a row for it, and that
+    row goes on saying "waiting for you" unless it is told which call was
+    decided. The tool name is not enough - the same tool is often called
+    twice in a turn."""
+    conversation = talking(scripted(calling("buy", what="kettle"), done()))
+    await conversation.handle({"type": "prompt", "message": "buy a kettle"})
+    await settled(conversation)
+
+    staged = (await conversation.handle({"type": "pending"}))["data"]["pending"]
+    assert staged[0]["call_id"], "staged with the call it came from"
+
+    reply = await conversation.handle({"type": "approve"})
+
+    assert reply["data"]["committed"][0]["call_id"] == staged[0]["call_id"]
+
+
+async def test_discarding_hands_back_the_entries_not_only_a_count(talking):
+    conversation = talking(scripted(calling("buy", what="kettle"), done()))
+    await conversation.handle({"type": "prompt", "message": "buy a kettle"})
+    await settled(conversation)
+
+    reply = await conversation.handle({"type": "discard"})
+
+    assert reply["data"]["discarded"] == 1
+    assert len(reply["data"]["dropped"]) == 1
+    assert reply["data"]["dropped"][0]["call_id"]
+
+
+async def test_two_calls_of_one_tool_stay_apart(talking):
+    """Matching on the tool name would mark the wrong row done, which is worse
+    than marking none."""
+    conversation = talking(scripted(
+        AssistantMessage(tool_calls=[ToolCall(name="buy", args={"what": "a"}),
+                                     ToolCall(name="buy", args={"what": "b"})],
+                         stop_reason="tool_use"),
+        done(),
+    ))
+    await conversation.handle({"type": "prompt", "message": "buy both"})
+    await settled(conversation)
+
+    staged = (await conversation.handle({"type": "pending"}))["data"]["pending"]
+    ids = [e["call_id"] for e in staged]
+
+    assert len(set(ids)) == 2, "two calls, two ids"
+
+    reply = await conversation.handle({"type": "approve", "ids": [staged[0]["id"]]})
+
+    assert [e["call_id"] for e in reply["data"]["committed"]] == [ids[0]]

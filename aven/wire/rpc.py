@@ -332,7 +332,14 @@ class Conversation:
     async def _do_discard(self, command: dict[str, Any]) -> dict[str, Any]:
         dropped = self.tray.discard()
         self._settle()
-        return {"discarded": len(dropped), "tray": protocol.tray_as_dict(self.tray)}
+        return {
+            "discarded": len(dropped),
+            # The entries themselves, not only how many. A surface that drew
+            # each call as it was staged has a row for each, and those rows go
+            # on saying "waiting for you" unless it is told which ones stopped.
+            "dropped": [protocol.entry_as_dict(e) for e in dropped],
+            "tray": protocol.tray_as_dict(self.tray),
+        }
 
     async def _do_undo(self, command: dict[str, Any]) -> dict[str, Any]:
         if self.busy:

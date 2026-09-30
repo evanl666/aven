@@ -1,0 +1,2130 @@
+- generic [ref=f228e2]:
+  - navigation "Shortcuts menu" [ref=f228e3]:
+    - heading "Skip to" [level=2] [ref=f228e4]
+    - list "Skip to" [ref=f228e5]:
+      - listitem [ref=f228e6]:
+        - link "main content" [ref=f228e7] [cursor=pointer]:
+          - /url: "#skippedLink"
+          - text: Main content
+      - listitem [ref=f228e8]:
+        - link "About this item" [ref=f228e9] [cursor=pointer]:
+          - /url: "#productFactsDesktopExpander"
+      - listitem [ref=f228e10]:
+        - link "Buying options" [ref=f228e11] [cursor=pointer]:
+          - /url: "#buybox"
+      - listitem [ref=f228e12]:
+        - link "Videos" [ref=f228e13] [cursor=pointer]:
+          - /url: "#va-related-videos-widget_feature_div"
+      - listitem [ref=f228e14]:
+        - link "Reviews" [ref=f228e15] [cursor=pointer]:
+          - /url: "#customerReviews"
+    - separator [aria-hidden] [ref=f228e16]
+    - heading "Keyboard shortcuts" [level=2] [ref=f228e17]
+    - list "Keyboard shortcuts" [ref=f228e18]:
+      - listitem [ref=f228e19]:
+        - link "Search, option, forward slash" [ref=f228e20] [cursor=pointer]:
+          - /url: javascript:void(0)
+          - generic [aria-hidden] [ref=f228e21]:
+            - generic [ref=f228e22]: Search
+            - generic [ref=f228e23]:
+              - generic [ref=f228e24]: opt
+              - generic [ref=f228e25]: +
+              - generic [ref=f228e26]: /
+      - listitem [ref=f228e27]:
+        - link "Cart, shift, option, c" [ref=f228e28] [cursor=pointer]:
+          - /url: javascript:void(0)
+          - generic [aria-hidden] [ref=f228e29]:
+            - generic [ref=f228e30]: Cart
+            - generic [ref=f228e31]:
+              - generic [ref=f228e32]: shift
+              - generic [ref=f228e33]: +
+              - generic [ref=f228e34]: opt
+              - generic [ref=f228e35]: +
+              - generic [ref=f228e36]: C
+      - listitem [ref=f228e37]:
+        - link "Home, shift, option, h" [ref=f228e38] [cursor=pointer]:
+          - /url: javascript:void(0)
+          - generic [aria-hidden] [ref=f228e39]:
+            - generic [ref=f228e40]: Home
+            - generic [ref=f228e41]:
+              - generic [ref=f228e42]: shift
+              - generic [ref=f228e43]: +
+              - generic [ref=f228e44]: opt
+              - generic [ref=f228e45]: +
+              - generic [ref=f228e46]: H
+      - listitem [ref=f228e47]:
+        - link "Your orders, shift, option, o" [ref=f228e48] [cursor=pointer]:
+          - /url: javascript:void(0)
+          - generic [aria-hidden] [ref=f228e49]:
+            - generic [ref=f228e50]: Orders
+            - generic [ref=f228e51]:
+              - generic [ref=f228e52]: shift
+              - generic [ref=f228e53]: +
+              - generic [ref=f228e54]: opt
+              - generic [ref=f228e55]: +
+              - generic [ref=f228e56]: O
+      - listitem [ref=f228e57]:
+        - button "Add to cart, shift, option, K" [ref=f228e58] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f228e59]:
+            - generic [ref=f228e60]: Add to cart
+            - generic [ref=f228e61]:
+              - generic [ref=f228e62]: shift
+              - generic [ref=f228e63]: +
+              - generic [ref=f228e64]: opt
+              - generic [ref=f228e65]: +
+              - generic [ref=f228e66]: K
+      - listitem [ref=f228e67]:
+        - button "Product summary, shift, option, d" [ref=f228e68] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f228e69]:
+            - generic [ref=f228e70]: Product summary
+            - generic [ref=f228e71]:
+              - generic [ref=f228e72]: shift
+              - generic [ref=f228e73]: +
+              - generic [ref=f228e74]: opt
+              - generic [ref=f228e75]: +
+              - generic [ref=f228e76]: D
+      - listitem [ref=f228e77]:
+        - button "Show/hide shortcuts, shift, option, z" [ref=f228e78] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f228e79]:
+            - generic [ref=f228e80]: Show/Hide shortcuts
+            - generic [ref=f228e81]:
+              - generic [ref=f228e82]: shift
+              - generic [ref=f228e83]: +
+              - generic [ref=f228e84]: opt
+              - generic [ref=f228e85]: +
+              - generic [ref=f228e86]: Z
+    - generic [ref=f228e89]:
+      - generic [ref=f228e90] [cursor=pointer]
+      - generic [ref=f228e92]: To move between items, use your keyboard's up or down arrows.
+  - banner [ref=f228e93]:
+    - navigation "Primary" [ref=f228e94]:
+      - generic [ref=f228e95]:
+        - generic [ref=f228e96]:
+          - generic [ref=f228e97]:
+            - link "Amazon Prime" [ref=f228e98] [cursor=pointer]:
+              - /url: /ref=nav_logo
+            - generic:
+              - link:
+                - /url: /ref=nav_logo_prime
+          - button "Deliver to Kevin Sunnyvale 94085‌" [ref=f228e101] [cursor=pointer]:
+            - generic [ref=f228e103]:
+              - generic [ref=f228e104]: Deliver to Kevin
+              - generic [ref=f228e105]: Sunnyvale 94085‌
+        - search [ref=f228e108]:
+          - generic [ref=f228e111]:
+            - generic [ref=f228e112]: All
+            - combobox "Select the department you want to search in" [ref=f228e115] [cursor=pointer]:
+              - option "All Departments" [selected]
+              - option "Alexa Skills"
+              - option "Amazon Autos"
+              - option "Amazon Devices"
+              - option "Amazon Fresh"
+              - option "Amazon Global Store"
+              - option "Amazon Haul"
+              - option "Amazon One Medical"
+              - option "Amazon Pharmacy"
+              - option "Amazon Resale"
+              - option "Appliances"
+              - option "Apps & Games"
+              - option "Arts, Crafts & Sewing"
+              - option "Audible Books & Originals"
+              - option "Automotive Parts & Accessories"
+              - option "Baby"
+              - option "Beauty & Personal Care"
+              - option "Books"
+              - option "CDs & Vinyl"
+              - option "Cell Phones & Accessories"
+              - option "Clothing, Shoes & Jewelry"
+              - option "Women's Clothing, Shoes & Jewelry"
+              - option "Men's Clothing, Shoes & Jewelry"
+              - option "Girl's Clothing, Shoes & Jewelry"
+              - option "Boy's Clothing, Shoes & Jewelry"
+              - option "Baby Clothing, Shoes & Jewelry"
+              - option "Collectibles & Fine Art"
+              - option "Computers"
+              - option "Credit and Payment Cards"
+              - option "Digital Music"
+              - option "Electronics"
+              - option "FoodMaxx"
+              - option "Garden & Outdoor"
+              - option "Gift Cards"
+              - option "Grocery & Gourmet Food"
+              - option "Handmade"
+              - option "Health, Household & Baby Care"
+              - option "Home & Business Services"
+              - option "Home & Kitchen"
+              - option "Industrial & Scientific"
+              - option "Just for Prime"
+              - option "Kindle Store"
+              - option "Luggage & Travel Gear"
+              - option "Luxury Stores"
+              - option "Magazine Subscriptions"
+              - option "Movies & TV"
+              - option "Musical Instruments"
+              - option "Office Products"
+              - option "Pet Food Express"
+              - option "Pet Supplies"
+              - option "Premium Beauty"
+              - option "Prime Video"
+              - option "Same-Day Store"
+              - option "Smart Home"
+              - option "Software"
+              - option "Sousa's Wine & Liquors"
+              - option "Sports & Outdoors"
+              - option "Subscribe & Save"
+              - option "Subscription Boxes"
+              - option "Tools & Home Improvement"
+              - option "Toys & Games"
+              - option "Under $10"
+              - option "Video Games"
+              - option "Whole Foods Market"
+          - searchbox "Search Amazon" [ref=f228e118]
+          - generic "Go" [ref=f228e121] [cursor=pointer]:
+            - button "Go" [ref=f228e122]
+        - generic [ref=f228e124]:
+          - generic [ref=f228e125]:
+            - link "Choose a language for shopping in Amazon United States. The current selection is English (EN)." [ref=f228e126] [cursor=pointer]:
+              - /url: /customer-preferences/edit?ie=UTF8&preferencesReturnUrl=%2F&ref_=topnav_lang
+              - generic [ref=f228e129]:
+                - img "United States" [ref=f228e130]
+                - generic [ref=f228e131]: EN
+            - button "Expand to Change Language or Country" [ref=f228e132] [cursor=pointer]
+          - generic [ref=f228e133]:
+            - link "Hello, Kevin Account & Lists" [ref=f228e134] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/css/homepage.html?ref_=nav_youraccount_btn
+              - generic [ref=f228e135]: Hello, Kevin
+              - generic [ref=f228e137]: Account & Lists
+            - button "Expand Account and Lists" [ref=f228e138] [cursor=pointer]
+          - link "Returns & Orders" [ref=f228e139] [cursor=pointer]:
+            - /url: /gp/css/order-history?ref_=nav_orders_first
+            - generic [ref=f228e140]: Returns
+            - generic [ref=f228e141]: "& Orders"
+          - link "0 items in cart" [ref=f228e142] [cursor=pointer]:
+            - /url: /gp/cart/view.html?ref_=nav_cart
+            - generic [aria-hidden] [ref=f228e144]: "0"
+            - generic [aria-hidden] [ref=f228e147]: Cart
+      - generic [ref=f228e148]:
+        - generic [ref=f228e149]:
+          - button "Open All Categories Menu" [ref=f228e150] [cursor=pointer]:
+            - generic [ref=f228e152]: All
+          - button "Open Alexa panel" [ref=f228e153] [cursor=pointer]
+        - list [ref=f228e158]:
+          - listitem [ref=f228e159]:
+            - link "Early Prime Deals" [ref=f228e161] [cursor=pointer]:
+              - /url: /primebigdealdays?ref_=nav_cs_td_pbdd_dt_cr
+          - listitem [ref=f228e162]:
+            - link "Buy Again" [ref=f228e164] [cursor=pointer]:
+              - /url: /gp/buyagain?ie=UTF8&ref_=nav_cs_buy_again
+          - listitem [ref=f228e165]:
+            - link "Prime Video" [ref=f228e167] [cursor=pointer]:
+              - /url: /gp/video/storefront?ref_=nav_cs_prime_video
+          - listitem [ref=f228e168]:
+            - link "Customer Service" [ref=f228e170] [cursor=pointer]:
+              - /url: /hz/contact-us/foresight/hubgateway?ref_=nav_cs_fs_hybridhub_navbar_c
+          - listitem [ref=f228e171]:
+            - link "Kindle Books" [ref=f228e173] [cursor=pointer]:
+              - /url: /Kindle-eBooks/b/?ie=UTF8&node=154606011&ref_=nav_cs_kindle_books
+          - listitem [ref=f228e174]:
+            - link "Books" [ref=f228e176] [cursor=pointer]:
+              - /url: /books-used-books-textbooks/b/?ie=UTF8&node=283155&ref_=nav_cs_books
+          - listitem [ref=f228e177]:
+            - link "Subscribe & Save" [ref=f228e179] [cursor=pointer]:
+              - /url: /auto-deliveries/landing?ref_=nav_cs_sns
+          - listitem [ref=f228e180]:
+            - generic [ref=f228e181]:
+              - link "Browsing History" [ref=f228e182] [cursor=pointer]:
+                - /url: /gp/history?ref_=nav_cs_timeline
+              - button "Browsing History Details" [ref=f228e183] [cursor=pointer]
+          - listitem [ref=f228e184]:
+            - link "Coupons" [ref=f228e186] [cursor=pointer]:
+              - /url: /coupons?ref_=nav_cs_coupons
+          - listitem [ref=f228e187]:
+            - link "TV & Video" [ref=f228e189] [cursor=pointer]:
+              - /url: /tvs/b/?ie=UTF8&node=172659&ref_=nav_cs_tv
+          - listitem [ref=f228e190]:
+            - link "Registry" [ref=f228e192] [cursor=pointer]:
+              - /url: /gp/browse.html?node=16115931011&ref_=nav_cs_registry
+          - listitem [ref=f228e193]:
+            - generic [ref=f228e194]:
+              - link "Gift Cards" [ref=f228e195] [cursor=pointer]:
+                - /url: /gift-cards/b/?ie=UTF8&node=2238192011&ref_=nav_cs_gc
+              - button "Gift Cards Details" [ref=f228e196] [cursor=pointer]
+          - listitem [ref=f228e197]:
+            - link "Best Sellers" [ref=f228e199] [cursor=pointer]:
+              - /url: /gp/bestsellers/?ref_=nav_cs_bestsellers
+          - listitem [ref=f228e200]:
+            - link "Amazon Basics" [ref=f228e202] [cursor=pointer]:
+              - /url: /Amazon_Basics?channel=discovbar&field-lbr_brands_browse-bin=AmazonBasics&ref_=nav_cs_amazonbasics
+          - listitem [ref=f228e203]:
+            - generic [ref=f228e204]:
+              - link "Home Improvement" [ref=f228e205] [cursor=pointer]:
+                - /url: /Tools-and-Home-Improvement/b/?ie=UTF8&node=228013&ref_=nav_cs_hi
+              - button "Home Improvement Details" [ref=f228e206] [cursor=pointer]
+          - listitem [ref=f228e207]:
+            - link "Whole Foods" [ref=f228e209] [cursor=pointer]:
+              - /url: /alm/storefront?almBrandId=VUZHIFdob2xlIEZvb2Rz&ref_=nav_cs_whole_foods
+          - listitem [ref=f228e210]:
+            - link "Groceries" [ref=f228e212] [cursor=pointer]:
+              - /url: /fmc/grocery-gateway?gsc=fe16aGPfFs46S&ref_=nav_cs_groceries
+          - listitem [ref=f228e213]:
+            - link "Pharmacy" [ref=f228e215] [cursor=pointer]:
+              - /url: https://pharmacy.amazon.com/?nodl=0&ref_=nav_cs_pharmacy
+          - listitem [ref=f228e216]:
+            - link "Automotive" [ref=f228e218] [cursor=pointer]:
+              - /url: /automotive-auto-truck-replacements-parts/b/?ie=UTF8&node=15684181&ref_=nav_cs_automotive
+          - listitem [ref=f228e219]:
+            - generic [ref=f228e220]:
+              - link "Music" [ref=f228e221] [cursor=pointer]:
+                - /url: /music/player?ref_=nav_cs_musicFlyout
+              - button "Music Details" [ref=f228e222] [cursor=pointer]
+          - listitem [ref=f228e223]:
+            - link "New Releases" [ref=f228e225] [cursor=pointer]:
+              - /url: /gp/new-releases/?ref_=nav_cs_newreleases
+          - listitem [ref=f228e226]:
+            - link "Livestreams" [ref=f228e228] [cursor=pointer]:
+              - /url: /live?ref_=nav_cs_amazonlive
+          - listitem [ref=f228e229]:
+            - link "Home Audio & Theater" [ref=f228e231] [cursor=pointer]:
+              - /url: /Home-Audio-Electronics/b/?ie=UTF8&node=667846011&ref_=nav_cs_home_audio
+          - listitem [ref=f228e232]:
+            - link "Works with Alexa" [ref=f228e234] [cursor=pointer]:
+              - /url: /gp/browse.html?node=73846268011&ref_=nav_cs_wwa
+          - listitem [ref=f228e235]:
+            - link "Same-Day Delivery" [ref=f228e237] [cursor=pointer]:
+              - /url: /fmc/ssd-storefront?gsc=fe16aGPfFs46S&ref_=nav_cs_SSD_nav_storefront
+          - listitem [ref=f228e238]:
+            - link "Everyday" [ref=f228e240] [cursor=pointer]:
+              - /url: /everyday-essentials?ref_=nav_cs_ee
+          - listitem [ref=f228e241]:
+            - link "Household, Health & Baby Care" [ref=f228e243] [cursor=pointer]:
+              - /url: /health-personal-care-nutrition-fitness/b/?ie=UTF8&node=3760901&ref_=nav_cs_hpc
+          - listitem [ref=f228e244]:
+            - link "Amazon Haul" [ref=f228e246] [cursor=pointer]:
+              - /url: /haul/store?ref_=nav_cs_hul_disb
+          - listitem [ref=f228e247]:
+            - link "Health AI" [ref=f228e249] [cursor=pointer]:
+              - /url: https://health.amazon.com/health-ai?ref_=nav_cs_health_ai
+          - listitem [ref=f228e250]:
+            - link "Sell" [ref=f228e252] [cursor=pointer]:
+              - /url: /b/?_encoding=UTF8&ld=AZUSSOA-sell&node=12766669011&ref_=nav_cs_sell
+        - link "Prime Big Deal Days is October 6-7" [ref=f228e255] [cursor=pointer]:
+          - /url: /primebigdealdays/?_encoding=UTF8&ref_=nav_swm_2026_Event_PBDD&pf_rd_p=03097195-e931-4c0c-8295-df27feb46091&pf_rd_s=nav-sitewide-msg-text&pf_rd_t=4201&pf_rd_i=navbar-4201&pf_rd_m=ATVPDKIKX0DER&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ
+      - generic [ref=f228e257]:
+        - link [ref=f228e258] [cursor=pointer]:
+          - /url: /amazon-fashion/b/?ie=UTF8&node=7141123011&ref_=topnav_storetab_sl
+          - img "AMAZON FASHION" [ref=f228e260]
+        - link "Women, You are currently on a drop-down. To open this drop-down, Press Enter." [ref=f228e261] [cursor=pointer]:
+          - /url: /Womens-Fashion/b/?ie=UTF8&node=7147440011&ref_=sv_sl_1
+          - text: Women
+        - link "Men, You are currently on a drop-down. To open this drop-down, Press Enter." [ref=f228e262] [cursor=pointer]:
+          - /url: /Mens-Fashion/b/?ie=UTF8&node=7147441011&ref_=sv_sl_2
+          - text: Men
+        - link "Kids, You are currently on a drop-down. To open this drop-down, Press Enter." [ref=f228e263] [cursor=pointer]:
+          - /url: /b/?ie=UTF8&node=20939775011&ref_=sv_sl_3
+          - text: Kids
+        - link "Luggage, You are currently on a drop-down. To open this drop-down, Press Enter." [ref=f228e264] [cursor=pointer]:
+          - /url: /Luggage-Travel-Gear/b/?ie=UTF8&node=9479199011&ref_=sv_sl_4
+          - text: Luggage
+        - link "Sales & Deals" [ref=f228e265] [cursor=pointer]:
+          - /url: /fashion-sales-and-deals/b/?ie=UTF8&node=9538491011&ref_=sv_sl_5
+        - link "New Arrivals, You are currently on a drop-down. To open this drop-down, Press Enter." [ref=f228e266] [cursor=pointer]:
+          - /url: /New-Arrivals/b/?_encoding=UTF8&node=17020138011&ref_=sv_sl_6
+          - text: New Arrivals
+        - link "Amazon Brands" [ref=f228e267] [cursor=pointer]:
+          - /url: /stores/AmazonEssentials/page/F8FB6F3C-F896-455C-BC52-7879F4CEF0CF/?_encoding=UTF8&ref_=sv_sl_7
+      - dialog [ref=f228e268]
+  - generic [ref=f228e270]:
+    - heading "Product summary presents key product information Keyboard shortcut shift + opt + D" [level=1] [ref=f228e272]:
+      - button "Product summary presents key product information" [ref=f228e274] [cursor=pointer]
+      - separator [aria-hidden] [ref=f228e277]
+      - generic [ref=f228e278]:
+        - text: Keyboard shortcut
+        - generic [ref=f228e279]: shift + opt + D
+    - main [ref=f228e280]:
+      - generic [ref=f228e281]:
+        - generic [ref=f228e284]:
+          - iframe [ref=f228e285]:
+            - generic [ref=f229e10]:
+              - link "Sponsored ad. Click to learn more information." [ref=f229e11] [cursor=pointer]:
+                - /url: https://aax-events-cell01-cf.us-east.ono.axp.amazon-adsystem.com/x/c/RDSISRxOhvibXxeXF1oCM94AAAGg8OFBOgEAAAH0AQBvbm9fdHhuX2JpZDQgICBvbm9fdHhuX2ltcDEgICBspOAB/clv1c_ek-IBffXLcTSnevbk7Lok6bZDTynsnE6BrHzQHTDi0xrZomyG3yP-zl4lv4RF-9n8tNoxRAm5NMxqMsSFxQQ8SNV3U654G5Z-mos03RGdk48oyG7TW-3Hm6Mojn2rH8C9_uRBeeTrCwpSNIuRWc12PpzINybumWqoeRpj5aowoUZ7XD2D5Ln6R25Lphq1SRGDIdJpUxfOVN4fLR9M-lLUEYamdMT50eQHupngI-fCi3sAB5DaypIfFZDl4BORlFVoIZpp4XwMJbt-D_djvLB_yEO8zO1ILAu_Mwm4k6LR34liM1PGax2fNhpjPwbCQEfGYGT58qlNTWL9OuBewvQwZyB0nSA8QllYnOZoG4JEnv-qfAszuUSKWbDwFeffmauQiFm34WWRxeNLOkS1PD93feFtsOcYqOA2ZnqPW_XSpMOp3movHxS7XoT4G5ew_JDtO2a00YdiPtEytcRggOqcfqmVvo-iGO_EPpIwo2EpbR_IKZU5cf-0e09vJGpjXy8ZzOWj-ihHJXqzqV8p5r55PZSgPIwxEonSZsL901xL3DSZDHOdi9bWeCdArGleM0dUeXQfhJABNHB1dsIoeTeSNZpEqRpuJh0ABOTkaiy8rlkgbLyrB8idLN5jA2Ah95HUQAUretT-F-QPYX91Nwv8RSm2IZKuuV5qtKuqsZcS-WtLih1N-29-CTgqGiZuPxFaCdi7hnky6a1IzJtVCVdPPNOtRS9t3ZDu1CarbNUMUudhuHD_i9yShmPHN8E7Sl26lhGFYnOWB_vroBBPSXY9lfnVci_ye7Vq7pXcMUztEerabRsMiru6ER8nNxJ8KS9OV0a9Ty-BnkjEwRKomwEPqpZpZCstcwyyPUqRoju-HYXguk9WS1bNegkiRS-mQwFOq6TablOaJyou73IvFi3-5fcoYnjHH9RETOBLJW-VfI6LgGfBq3s2rlq-21imCWTWjbr6dxzUnNuvOh9tp3pkigZm3XLQFztOPqOc82F3NnUGnxE7b-JLeIOQxUeK0zydn1yhOaRTuPZKLfM9Uy7rsI1GK9kwJAr75Eu5oVPpjZ-AtsymG_msQ48U4nve538mTs7EhlXeRcT5oPEebO9jx1xvSmqqd4ARU1VnT1wlTW4LMaT3LW0fiqBh6r_lqI6wVsTDNvpG4_P6mWmB5BYLufE4UET04QDYO6pG0zA2mI1iV4SStwZvdAwBSPzr-FnwswuKOZmKk4Xn5n0Ky8O4QQA_N94sD-4g6k8n8wXrClcOZ23QkX9KfCqRJYm6yMUvTRjA89E4sSrEidXtCZR4l9Qf0EfiDf2KhRYectIh1kfHv9OKwsLuxT9wWIHWLVKeF1fZKHtb0VdcmjrbXFXkj64W-mTg-bTkVPfHVIS-rnNyIfJuS7SvGnmtLuDyzqOQWYXg1dSYdaJfIs15zSpgw6_bPXwIpDXHJSSC3mzP_sdr3LghYVHFwC73YwizdxzaLREtMwvwcnZGlFXkrcz6wn4oKMiuMNasslAa4oFKu07VYkVe-EiE9YZwIE/https://www.amazon.com/stores/page/741C6C4C-C250-4F40-BE07-CCAC0AE99C0F
+              - generic [ref=f229e12]:
+                - generic [ref=f229e13]: 4 inch Adjustable Height Increasing Shoes
+                - generic [ref=f229e16]:
+                  - img "Accessibility support for this content is in progress. We are working to provide an accessible version shortly." [ref=f229e18]
+                  - img "Accessibility support for this content is in progress. We are working to provide an accessible version shortly." [ref=f229e20]
+                - generic [ref=f229e22]:
+                  - generic [ref=f229e23]:
+                    - link "Sponsored ad. Click to learn more information." [ref=f229e24] [cursor=pointer]:
+                      - /url: https://aax-events-cell01-cf.us-east.ono.axp.amazon-adsystem.com/x/c/RDSISRxOhvibXxeXF1oCM94AAAGg8OFBOgEAAAH0AQBvbm9fdHhuX2JpZDQgICBvbm9fdHhuX2ltcDEgICBspOAB/clv1c_ek-IBffXLcTSnevbk7Lok6bZDTynsnE6BrHzQHTDi0xrZomyG3yP-zl4lv4RF-9n8tNoxRAm5NMxqMsSFxQQ8SNV3U654G5Z-mos03RGdk48oyG7TW-3Hm6Mojn2rH8C9_uRBeeTrCwpSNIuRWc12PpzINybumWqoeRpj5aowoUZ7XD2D5Ln6R25Lphq1SRGDIdJpUxfOVN4fLR9M-lLUEYamdMT50eQHupngI-fCi3sAB5DaypIfFZDl4BORlFVoIZpp4XwMJbt-D_djvLB_yEO8zO1ILAu_Mwm4k6LR34liM1PGax2fNhpjPwbCQEfGYGT58qlNTWL9OuBewvQwZyB0nSA8QllYnOZoG4JEnv-qfAszuUSKWbDwFeffmauQiFm34WWRxeNLOkS1PD93feFtsOcYqOA2ZnqPW_XSpMOp3movHxS7XoT4G5ew_JDtO2a00YdiPtEytcRggOqcfqmVvo-iGO_EPpIwo2EpbR_IKZU5cf-0e09vJGpjXy8ZzOWj-ihHJXqzqV8p5r55PZSgPIwxEonSZsL901xL3DSZDHOdi9bWeCdArGleM0dUeXQfhJABNHB1dsIoeTeSNZpEqRpuJh0ABOTkaiy8rlkgbLyrB8idLN5jA2Ah95HUQAUretT-F-QPYX91Nwv8RSm2IZKuuV5qtKuqsZcS-WtLih1N-29-CTgqGiZuPxFaCdi7hnky6a1IzJtVCVdPPNOtRS9t3ZDu1CarbNUMUudhuHD_i9yShmPHN8E7Sl26lhGFYnOWB_vroBBPSXY9lfnVci_ye7Vq7pXcMUztEerabRsMiru6ER8nNxJ8KS9OV0a9Ty-BnkjEwRKomwEPqpZpZCstcwyyPUqRoju-HYXguk9WS1bNegkiRS-mQwFOq6TablOaJyou73IvFi3-5fcoYnjHH9RETOBLJW-VfI6LgGfBq3s2rlq-21imCWTWjbr6dxzUnNuvOh9tp3pkigZm3XLQFztOPqOc82F3NnUGnxE7b-JLeIOQxUeK0zydn1yhOaRTuPZKLfM9Uy7rsI1GK9kwJAr75Eu5oVPpjZ-AtsymG_msQ48U4nve538mTs7EhlXeRcT5oPEebO9jx1xvSmqqd4ARU1VnT1wlTW4LMaT3LW0fiqBh6r_lqI6wVsTDNvpG4_P6mWmB5BYLufE4UET04QDYO6pG0zA2mI1iV4SStwZvdAwBSPzr-FnwswuKOZmKk4Xn5n0Ky8O4QQA_N94sD-4g6k8n8wXrClcOZ23QkX9KfCqRJYm6yMUvTRjA89E4sSrEidXtCZR4l9Qf0EfiDf2KhRYectIh1kfHv9OKwsLuxT9wWIHWLVKeF1fZKHtb0VdcmjrbXFXkj64W-mTg-bTkVPfHVIS-rnNyIfJuS7SvGnmtLuDyzqOQWYXg1dSYdaJfIs15zSpgw6_bPXwIpDXHJSSC3mzP_sdr3LghYVHFwC73YwizdxzaLREtMwvwcnZGlFXkrcz6wn4oKMiuMNasslAa4oFKu07VYkVe-EiE9YZwIE/https://www.amazon.com/dp/B0FZKP4V44
+                    - generic [ref=f229e26]:
+                      - img "Tallure Sneakers, 4 Inch Hidden Height Increase Shoes, Lightweight Breathable Walking Sneakers with Arch Support and Non-Slip Sole (Men6.5-Women8.0, White 4.0in)" [ref=f229e28]
+                      - img "Tallure Sneakers, 4 Inch Hidden Height Increase Shoes, Lightweight Breathable Walking Sneakers with Arch Support and Non-Slip Sole (Men6.5-Women8.0, White 4.0in)" [ref=f229e30]
+                  - generic [ref=f229e31]:
+                    - link "Sponsored ad. Click to learn more information." [ref=f229e32] [cursor=pointer]:
+                      - /url: https://aax-events-cell01-cf.us-east.ono.axp.amazon-adsystem.com/x/c/RDSISRxOhvibXxeXF1oCM94AAAGg8OFBOgEAAAH0AQBvbm9fdHhuX2JpZDQgICBvbm9fdHhuX2ltcDEgICBspOAB/clv1c_ek-IBffXLcTSnevbk7Lok6bZDTynsnE6BrHzQHTDi0xrZomyG3yP-zl4lv4RF-9n8tNoxRAm5NMxqMsSFxQQ8SNV3U654G5Z-mos03RGdk48oyG7TW-3Hm6Mojn2rH8C9_uRBeeTrCwpSNIuRWc12PpzINybumWqoeRpj5aowoUZ7XD2D5Ln6R25Lphq1SRGDIdJpUxfOVN4fLR9M-lLUEYamdMT50eQHupngI-fCi3sAB5DaypIfFZDl4BORlFVoIZpp4XwMJbt-D_djvLB_yEO8zO1ILAu_Mwm4k6LR34liM1PGax2fNhpjPwbCQEfGYGT58qlNTWL9OuBewvQwZyB0nSA8QllYnOZoG4JEnv-qfAszuUSKWbDwFeffmauQiFm34WWRxeNLOkS1PD93feFtsOcYqOA2ZnqPW_XSpMOp3movHxS7XoT4G5ew_JDtO2a00YdiPtEytcRggOqcfqmVvo-iGO_EPpIwo2EpbR_IKZU5cf-0e09vJGpjXy8ZzOWj-ihHJXqzqV8p5r55PZSgPIwxEonSZsL901xL3DSZDHOdi9bWeCdArGleM0dUeXQfhJABNHB1dsIoeTeSNZpEqRpuJh0ABOTkaiy8rlkgbLyrB8idLN5jA2Ah95HUQAUretT-F-QPYX91Nwv8RSm2IZKuuV5qtKuqsZcS-WtLih1N-29-CTgqGiZuPxFaCdi7hnky6a1IzJtVCVdPPNOtRS9t3ZDu1CarbNUMUudhuHD_i9yShmPHN8E7Sl26lhGFYnOWB_vroBBPSXY9lfnVci_ye7Vq7pXcMUztEerabRsMiru6ER8nNxJ8KS9OV0a9Ty-BnkjEwRKomwEPqpZpZCstcwyyPUqRoju-HYXguk9WS1bNegkiRS-mQwFOq6TablOaJyou73IvFi3-5fcoYnjHH9RETOBLJW-VfI6LgGfBq3s2rlq-21imCWTWjbr6dxzUnNuvOh9tp3pkigZm3XLQFztOPqOc82F3NnUGnxE7b-JLeIOQxUeK0zydn1yhOaRTuPZKLfM9Uy7rsI1GK9kwJAr75Eu5oVPpjZ-AtsymG_msQ48U4nve538mTs7EhlXeRcT5oPEebO9jx1xvSmqqd4ARU1VnT1wlTW4LMaT3LW0fiqBh6r_lqI6wVsTDNvpG4_P6mWmB5BYLufE4UET04QDYO6pG0zA2mI1iV4SStwZvdAwBSPzr-FnwswuKOZmKk4Xn5n0Ky8O4QQA_N94sD-4g6k8n8wXrClcOZ23QkX9KfCqRJYm6yMUvTRjA89E4sSrEidXtCZR4l9Qf0EfiDf2KhRYectIh1kfHv9OKwsLuxT9wWIHWLVKeF1fZKHtb0VdcmjrbXFXkj64W-mTg-bTkVPfHVIS-rnNyIfJuS7SvGnmtLuDyzqOQWYXg1dSYdaJfIs15zSpgw6_bPXwIpDXHJSSC3mzP_sdr3LghYVHFwC73YwizdxzaLREtMwvwcnZGlFXkrcz6wn4oKMiuMNasslAa4oFKu07VYkVe-EiE9YZwIE/https://www.amazon.com/dp/B0FZKXS56C
+                    - generic [ref=f229e34]:
+                      - img "Tallure Sneakers, 4 Inch Hidden Height Increase Shoes, Lightweight Breathable Walking Sneakers with Arch Support and Non-Slip Sole (Men7.0-Women8.5, Black 3.2in)" [ref=f229e36]
+                      - img "Tallure Sneakers, 4 Inch Hidden Height Increase Shoes, Lightweight Breathable Walking Sneakers with Arch Support and Non-Slip Sole (Men7.0-Women8.5, Black 3.2in)" [ref=f229e38]
+                - generic [ref=f229e41]:
+                  - img "TRUE BEAUTY GLOW logo image" [ref=f229e43]
+                  - img "TRUE BEAUTY GLOW logo image" [ref=f229e45]
+                - link "Shop TRUE BEAUTY GLOW" [ref=f229e47] [cursor=pointer]:
+                  - /url: https://aax-events-cell01-cf.us-east.ono.axp.amazon-adsystem.com/x/c/RDSISRxOhvibXxeXF1oCM94AAAGg8OFBOgEAAAH0AQBvbm9fdHhuX2JpZDQgICBvbm9fdHhuX2ltcDEgICBspOAB/clv1c_ek-IBffXLcTSnevbk7Lok6bZDTynsnE6BrHzQHTDi0xrZomyG3yP-zl4lv4RF-9n8tNoxRAm5NMxqMsSFxQQ8SNV3U654G5Z-mos03RGdk48oyG7TW-3Hm6Mojn2rH8C9_uRBeeTrCwpSNIuRWc12PpzINybumWqoeRpj5aowoUZ7XD2D5Ln6R25Lphq1SRGDIdJpUxfOVN4fLR9M-lLUEYamdMT50eQHupngI-fCi3sAB5DaypIfFZDl4BORlFVoIZpp4XwMJbt-D_djvLB_yEO8zO1ILAu_Mwm4k6LR34liM1PGax2fNhpjPwbCQEfGYGT58qlNTWL9OuBewvQwZyB0nSA8QllYnOZoG4JEnv-qfAszuUSKWbDwFeffmauQiFm34WWRxeNLOkS1PD93feFtsOcYqOA2ZnqPW_XSpMOp3movHxS7XoT4G5ew_JDtO2a00YdiPtEytcRggOqcfqmVvo-iGO_EPpIwo2EpbR_IKZU5cf-0e09vJGpjXy8ZzOWj-ihHJXqzqV8p5r55PZSgPIwxEonSZsL901xL3DSZDHOdi9bWeCdArGleM0dUeXQfhJABNHB1dsIoeTeSNZpEqRpuJh0ABOTkaiy8rlkgbLyrB8idLN5jA2Ah95HUQAUretT-F-QPYX91Nwv8RSm2IZKuuV5qtKuqsZcS-WtLih1N-29-CTgqGiZuPxFaCdi7hnky6a1IzJtVCVdPPNOtRS9t3ZDu1CarbNUMUudhuHD_i9yShmPHN8E7Sl26lhGFYnOWB_vroBBPSXY9lfnVci_ye7Vq7pXcMUztEerabRsMiru6ER8nNxJ8KS9OV0a9Ty-BnkjEwRKomwEPqpZpZCstcwyyPUqRoju-HYXguk9WS1bNegkiRS-mQwFOq6TablOaJyou73IvFi3-5fcoYnjHH9RETOBLJW-VfI6LgGfBq3s2rlq-21imCWTWjbr6dxzUnNuvOh9tp3pkigZm3XLQFztOPqOc82F3NnUGnxE7b-JLeIOQxUeK0zydn1yhOaRTuPZKLfM9Uy7rsI1GK9kwJAr75Eu5oVPpjZ-AtsymG_msQ48U4nve538mTs7EhlXeRcT5oPEebO9jx1xvSmqqd4ARU1VnT1wlTW4LMaT3LW0fiqBh6r_lqI6wVsTDNvpG4_P6mWmB5BYLufE4UET04QDYO6pG0zA2mI1iV4SStwZvdAwBSPzr-FnwswuKOZmKk4Xn5n0Ky8O4QQA_N94sD-4g6k8n8wXrClcOZ23QkX9KfCqRJYm6yMUvTRjA89E4sSrEidXtCZR4l9Qf0EfiDf2KhRYectIh1kfHv9OKwsLuxT9wWIHWLVKeF1fZKHtb0VdcmjrbXFXkj64W-mTg-bTkVPfHVIS-rnNyIfJuS7SvGnmtLuDyzqOQWYXg1dSYdaJfIs15zSpgw6_bPXwIpDXHJSSC3mzP_sdr3LghYVHFwC73YwizdxzaLREtMwvwcnZGlFXkrcz6wn4oKMiuMNasslAa4oFKu07VYkVe-EiE9YZwIE/https://www.amazon.com/stores/page/741C6C4C-C250-4F40-BE07-CCAC0AE99C0F
+          - button "Leave feedback on Sponsored ad" [ref=f228e287] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f228e288]: Sponsored
+        - list [ref=f228e294]:
+          - listitem [ref=f228e295]:
+            - link "Clothing, Shoes & Jewelry" [ref=f228e297] [cursor=pointer]:
+              - /url: /amazon-fashion/b/ref=dp_bc_1?ie=UTF8&node=7141123011
+          - listitem [aria-hidden] [ref=f228e298]: ›
+          - listitem [ref=f228e299]:
+            - link "Men" [ref=f228e301] [cursor=pointer]:
+              - /url: /Mens-Fashion/b/ref=dp_bc_2?ie=UTF8&node=7147441011
+          - listitem [aria-hidden] [ref=f228e302]: ›
+          - listitem [ref=f228e303]:
+            - link "Shoes" [ref=f228e305] [cursor=pointer]:
+              - /url: /Mens-Shoes/b/ref=dp_bc_3?ie=UTF8&node=679255011
+          - listitem [aria-hidden] [ref=f228e306]: ›
+          - listitem [ref=f228e307]:
+            - link "Fashion Sneakers" [ref=f228e309] [cursor=pointer]:
+              - /url: /Mens-Fashion-Sneakers/b/ref=dp_bc_4?ie=UTF8&node=679312011
+      - generic [ref=f228e311]:
+        - generic [ref=f228e312]:
+          - generic [ref=f228e314]:
+            - generic:
+              - generic:
+                - button [ref=f228e315]:
+                  - button "Share" [ref=f228e316] [cursor=pointer]
+                - button [ref=f228e322] [cursor=pointer]:
+                  - img "Heart to save an item to your list" [ref=f228e323]
+            - generic [ref=f228e326]:
+              - heading "Product Images and Videos (AI Generated Alt Text)" [level=3] [ref=f228e327]
+              - radiogroup "Image thumbnails" [ref=f228e329]:
+                - listitem [ref=f228e330]:
+                  - radio [ref=f228e335] [cursor=pointer]:
+                    - img "Nike Dunk Low sneaker in white and royal blue, shown from a three-quarter front angle. Features a large blue swoosh, blue laces, perforated toe box, and a white midsole with blue outsole." [ref=f228e336]
+                - listitem [ref=f228e337]:
+                  - radio [ref=f228e342] [cursor=pointer]:
+                    - img "Nike low-top sneaker in white and royal blue, shown at a three-quarter angle. Features a large blue swoosh on the side, blue laces, perforated toe box, and a white midsole with blue outsole." [ref=f228e343]
+                - listitem [ref=f228e344]:
+                  - radio [ref=f228e349] [cursor=pointer]:
+                    - img "Rear close-up of two Nike low-top sneakers in royal blue and white. The heel tabs display the Nike wordmark in white on blue. White midsoles sit above blue rubber lug outsoles." [ref=f228e350]
+                - listitem [ref=f228e351]:
+                  - radio [ref=f228e356] [cursor=pointer]:
+                    - img "Close-up of two Nike Dunk Low sneakers showing white perforated toe boxes with royal blue overlays, blue laces, and white midsoles. Smooth leather-like upper with small ventilation holes across the toe area." [ref=f228e357]
+              - generic [ref=f228e360]:
+                - list
+                - list [ref=f228e361]:
+                  - listitem [ref=f228e362] [cursor=pointer]:
+                    - button [ref=f228e365]:
+                      - img "Nike Dunk Low sneaker in white and royal blue, shown from a three-quarter front angle. Features a large blue swoosh, blue laces, perforated toe box, and a white midsole with blue outsole." [ref=f228e366]
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - list
+        - generic [ref=f228e372]:
+          - generic [ref=f228e373]:
+            - generic [ref=f228e374]:
+              - 'link "Brand: Nike" [ref=f228e378] [cursor=pointer]':
+                - /url: /Nike/b/ref=bl_sl_s_sh_web_119088564011?ie=UTF8&node=119088564011&field-lbr_brands_browse-bin=Nike
+              - generic [ref=f228e379]:
+                - heading "Nike Mens Dunk Low Retro" [level=1] [ref=f228e382]
+                - generic [ref=f228e384]:
+                  - generic "4.6 out of 5 stars" [ref=f228e386]:
+                    - button "4.6 out of 5 stars" [ref=f228e388] [cursor=pointer]: "4.6"
+                  - link "631 Reviews" [ref=f228e393] [cursor=pointer]:
+                    - /url: "#averageCustomerReviewsAnchor"
+                    - text: (631)
+                - generic [ref=f228e394]:
+                  - text: "|"
+                  - link "Search this page" [ref=f228e397] [cursor=pointer]:
+                    - /url: "#"
+            - separator [ref=f228e398]
+            - generic [ref=f228e401]:
+              - generic [ref=f228e403]:
+                - generic [ref=f228e404]:
+                  - generic [ref=f228e405]: $94.29 with 21 percent savings
+                  - generic [ref=f228e406]:
+                    - generic [ref=f228e407]: "-21%"
+                    - generic [aria-hidden] [ref=f228e409]:
+                      - text: $
+                      - generic [ref=f228e410]:
+                        - text: "94"
+                        - generic [ref=f228e411]: .
+                      - text: "29"
+                    - generic [ref=f228e418] [cursor=pointer]:
+                      - button "Price history" [ref=f228e419]
+                      - generic [aria-hidden] [ref=f228e420]: Price history
+                - generic [ref=f228e423]:
+                  - generic [ref=f228e424]:
+                    - generic [ref=f228e425]: "List Price: $120.00"
+                    - generic [aria-hidden] [ref=f228e426]:
+                      - text: "List Price:"
+                      - generic [ref=f228e427]:
+                        - generic [ref=f228e428]: $120.00
+                        - text: $120.00
+                  - link [ref=f228e431] [cursor=pointer]:
+                    - /url: "#"
+                    - img "Learn more about Amazon pricing and savings" [ref=f228e432]
+              - alert [ref=f228e434]:
+                - generic [ref=f228e435]:
+                  - generic [ref=f228e437]:
+                    - generic [ref=f228e438]:
+                      - text: Or
+                      - generic [ref=f228e440]:
+                        - generic [ref=f228e441]: $23.57
+                        - generic [aria-hidden] [ref=f228e442]:
+                          - text: $
+                          - generic [ref=f228e443]:
+                            - text: "23"
+                            - generic [ref=f228e444]: .
+                          - text: "57"
+                    - text: /2 weeks (x4).
+                  - link "Select from 2 plans" [ref=f228e447] [cursor=pointer]:
+                    - /url: "#"
+              - img "prime" [ref=f228e450]
+              - button "FREE Returns" [ref=f228e456] [cursor=pointer]
+              - generic:
+                - table
+            - paragraph [ref=f228e460]:
+              - text: Shopping for work? Save 35% up to $125 on your Amazon Business orders.
+              - link "Sign up for a free business account." [ref=f228e461] [cursor=pointer]:
+                - /url: /ab/incentives/reg/nt?campaignId=2f6984ec-01a5-40eb-8494-966d479d7b3f&ABevent=PBDD26&ref=ab_reg_inct_onsite_oth_dpx&returnToUrl=%2Fdp%2FB0F8J7KSR1%3FregistrationStatus%3DREGISTERED&client=abupsell
+            - generic [ref=f228e466]:
+              - generic [ref=f228e467]:
+                - generic "Selected Color is White Hyper Royal. Tap to collapse." [ref=f228e468] [cursor=pointer]: "Color: White Hyper Royal"
+                - generic "There are 11 options." [ref=f228e471]:
+                  - group "Make a Color selection" [ref=f228e473]:
+                    - radiogroup [ref=f228e474]:
+                      - listitem [ref=f228e475]:
+                        - generic [ref=f228e478] [cursor=pointer]:
+                          - radio "White Hyper Royal $94.29 with 21 percent savings $94.29 $120.00 $120.00 FREE Delivery Friday Friday Only 5 left in stock - order soon." [checked] [ref=f228e479]
+                          - generic [aria-hidden] [ref=f228e480]:
+                            - separator [aria-hidden] [ref=f228e484]
+                            - generic [ref=f228e486]:
+                              - generic [ref=f228e490]:
+                                - generic [ref=f228e491]:
+                                  - generic [ref=f228e492]: $94.29 with 21 percent savings
+                                  - generic [ref=f228e493]: $94.29
+                                - generic [ref=f228e496]:
+                                  - generic [ref=f228e497]: $120.00
+                                  - text: $120.00
+                              - generic [ref=f228e498]: FREE Delivery Friday
+                      - listitem [ref=f228e500]:
+                        - generic [ref=f228e503] [cursor=pointer]:
+                          - radio "White Light Smoke Grey White 105 $125.19 $125.19 FREE Delivery Tue, Oct 6 Tue, Oct 6 Only 4 left in stock - order soon." [ref=f228e504]
+                          - generic [aria-hidden] [ref=f228e505]:
+                            - separator [aria-hidden] [ref=f228e509]
+                            - generic [ref=f228e511]:
+                              - generic [ref=f228e516]:
+                                - generic [ref=f228e517]: $125.19
+                                - generic [ref=f228e518]: $125.19
+                              - generic [ref=f228e519]: FREE Delivery Tue, Oct 6
+                      - listitem [ref=f228e521]:
+                        - generic [ref=f228e524] [cursor=pointer]:
+                          - radio "White Midnight Navy White $127.75 $127.75 In Stock" [ref=f228e525]
+                          - generic [aria-hidden] [ref=f228e526]:
+                            - separator [aria-hidden] [ref=f228e530]
+                            - generic [ref=f228e537]:
+                              - generic [ref=f228e538]: $127.75
+                              - generic [ref=f228e539]: $127.75
+                      - listitem [ref=f228e540]:
+                        - generic [ref=f228e543] [cursor=pointer]:
+                          - radio "Mystic Navy/Marine/White $125.95 with 10 percent savings $125.95 $139.97 $139.97 FREE Delivery Friday Friday Only 1 left in stock - order soon." [ref=f228e544]
+                          - generic [aria-hidden] [ref=f228e545]:
+                            - separator [aria-hidden] [ref=f228e549]
+                            - generic [ref=f228e551]:
+                              - generic [ref=f228e555]:
+                                - generic [ref=f228e556]:
+                                  - generic [ref=f228e557]: $125.95 with 10 percent savings
+                                  - generic [ref=f228e558]: $125.95
+                                - generic [ref=f228e561]:
+                                  - generic [ref=f228e562]: $139.97
+                                  - text: $139.97
+                              - generic [ref=f228e563]: FREE Delivery Friday
+                      - listitem [ref=f228e565]:
+                        - generic [ref=f228e568] [cursor=pointer]:
+                          - radio "Pale Ivory Wheat $99.00 $99.00 Only 3 left in stock - order soon." [ref=f228e569]
+                          - generic [aria-hidden] [ref=f228e570]:
+                            - separator [aria-hidden] [ref=f228e574]
+                            - generic [ref=f228e581]:
+                              - generic [ref=f228e582]: $99.00
+                              - generic [ref=f228e583]: $99.00
+                      - listitem [ref=f228e584]:
+                        - generic [ref=f228e587] [cursor=pointer]:
+                          - radio "Varsity Red Silver White $121.00 $121.00 Only 2 left in stock - order soon." [ref=f228e588]
+                          - generic [aria-hidden] [ref=f228e589]:
+                            - separator [aria-hidden] [ref=f228e593]
+                            - generic [ref=f228e600]:
+                              - generic [ref=f228e601]: $121.00
+                              - generic [ref=f228e602]: $121.00
+                      - button "See 2 options with no featured offers" [ref=f228e603] [cursor=pointer]
+                    - navigation [ref=f228e605]:
+                      - list [ref=f228e606]:
+                        - listitem [ref=f228e607]:
+                          - link "Previous , Disabled" [ref=f228e608]:
+                            - /url: javascript:void(0);
+                        - listitem [ref=f228e609]:
+                          - link "1" [ref=f228e610] [cursor=pointer]:
+                            - /url: javascript:void(0);
+                        - listitem [ref=f228e611]:
+                          - link "2" [ref=f228e612] [cursor=pointer]:
+                            - /url: javascript:void(0);
+                        - listitem [ref=f228e613]:
+                          - link "Next" [ref=f228e614] [cursor=pointer]:
+                            - /url: javascript:void(0);
+              - generic [ref=f228e615]:
+                - generic "Selected Size is 9. Tap to collapse." [ref=f228e616] [cursor=pointer]: "Size: 9"
+                - generic "There are 14 options." [ref=f228e619]:
+                  - group "Make a Size selection" [ref=f228e621]:
+                    - radiogroup [ref=f228e622]:
+                      - listitem [ref=f228e623]:
+                        - generic [ref=f228e626] [cursor=pointer]:
+                          - radio "6" [ref=f228e627]
+                          - generic [ref=f228e629]: "6"
+                      - listitem [ref=f228e632]:
+                        - generic [ref=f228e635] [cursor=pointer]:
+                          - radio "7" [ref=f228e636]
+                          - generic [ref=f228e638]: "7"
+                      - listitem [ref=f228e641]:
+                        - generic [ref=f228e644] [cursor=pointer]:
+                          - radio "7.5" [ref=f228e645]
+                          - generic [ref=f228e647]: "7.5"
+                      - listitem [ref=f228e650]:
+                        - generic [ref=f228e653] [cursor=pointer]:
+                          - radio "8" [ref=f228e654]
+                          - generic [ref=f228e656]: "8"
+                      - listitem [ref=f228e659]:
+                        - generic [ref=f228e662] [cursor=pointer]:
+                          - radio "8.5" [ref=f228e663]
+                          - generic [ref=f228e665]: "8.5"
+                      - listitem [ref=f228e668]:
+                        - generic [ref=f228e671] [cursor=pointer]:
+                          - radio "9" [checked] [ref=f228e672]
+                          - generic [ref=f228e674]: "9"
+                      - listitem [ref=f228e677]:
+                        - generic [ref=f228e680] [cursor=pointer]:
+                          - radio "9.5" [ref=f228e681]
+                          - generic [ref=f228e683]: "9.5"
+                      - listitem [ref=f228e686]:
+                        - generic [ref=f228e689] [cursor=pointer]:
+                          - radio "10" [ref=f228e690]
+                          - generic [ref=f228e692]: "10"
+                      - listitem [ref=f228e695]:
+                        - generic [ref=f228e698] [cursor=pointer]:
+                          - radio "10.5" [ref=f228e699]
+                          - generic [ref=f228e701]: "10.5"
+                      - listitem [ref=f228e704]:
+                        - generic [ref=f228e707] [cursor=pointer]:
+                          - radio "11" [ref=f228e708]
+                          - generic [ref=f228e710]: "11"
+                      - listitem [ref=f228e713]:
+                        - generic [ref=f228e716] [cursor=pointer]:
+                          - radio "11.5" [ref=f228e717]
+                          - generic [ref=f228e719]: "11.5"
+                      - listitem [ref=f228e722]:
+                        - generic [ref=f228e725] [cursor=pointer]:
+                          - radio "12" [ref=f228e726]
+                          - generic [ref=f228e728]: "12"
+                      - listitem [ref=f228e731]:
+                        - generic [ref=f228e734] [cursor=pointer]:
+                          - radio "13" [ref=f228e735]
+                          - generic [ref=f228e737]: "13"
+                      - listitem [ref=f228e740]:
+                        - generic [ref=f228e743] [cursor=pointer]:
+                          - radio "14" [ref=f228e744]
+                          - generic [ref=f228e746]: "14"
+            - button "Size Chart" [ref=f228e751] [cursor=pointer]
+            - generic [ref=f228e753]:
+              - heading "Product details" [level=1] [ref=f228e755]
+              - generic [ref=f228e757]:
+                - generic [ref=f228e759]:
+                  - button [expanded] [ref=f228e761] [cursor=pointer]:
+                    - heading "Top highlights" [level=5] [ref=f228e763]
+                  - generic [ref=f228e766]:
+                    - list [ref=f228e767]:
+                      - generic [ref=f228e769]:
+                        - generic [ref=f228e770]: Origin
+                        - generic [ref=f228e772]: Imported
+                      - generic [ref=f228e775]:
+                        - generic [ref=f228e776]: Sole material
+                        - generic [ref=f228e778]: Rubber
+                      - generic [ref=f228e781]:
+                        - generic [ref=f228e782]: Shaft height
+                        - generic [ref=f228e784]: Ankle Strap
+                      - generic [ref=f228e787]:
+                        - generic [ref=f228e788]: Outer material
+                        - generic [ref=f228e790]: Leather
+                    - separator [aria-hidden] [ref=f228e792]
+                    - heading "About this item" [level=3] [ref=f228e793]
+                    - list [ref=f228e794]:
+                      - listitem [ref=f228e795]: Rubber sole
+                      - listitem [ref=f228e796]: Perforated details, Cushioned collar and tongue
+                      - listitem [ref=f228e797]: Round toe
+                - button [ref=f228e801] [cursor=pointer]:
+                  - heading "Style" [level=5] [ref=f228e803]
+                - button [ref=f228e807] [cursor=pointer]:
+                  - heading "Features & Specs" [level=5] [ref=f228e809]
+              - link "See all product specifications" [disabled] [ref=f228e815] [cursor=pointer]:
+                - /url: javascript:void(0)
+            - link "Report an issue with this product or seller" [ref=f228e821] [cursor=pointer]:
+              - /url: javascript:void(0)
+            - generic [ref=f228e822]:
+              - separator [aria-hidden] [ref=f228e823]
+              - generic [ref=f228e829]:
+                - link [aria-hidden] [ref=f228e831] [cursor=pointer]:
+                  - /url: /shoptheshow/?_encoding=UTF8&lr=alc_pdphqp_STS&ref=gmeshp_sts_pdphqp&pf_rd_p=defe11f6-1109-47e2-8313-df25bcfefb8d&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ
+                - generic [ref=f228e832]:
+                  - generic [ref=f228e833]: Shop what you see on Prime Video
+                  - generic [ref=f228e836]:
+                    - text: Explore looks, décor, and more from your favorite shows and movies.
+                    - link "Shop what you see on Prime Video with Shop the Show." [ref=f228e837] [cursor=pointer]:
+                      - /url: /shoptheshow/?_encoding=UTF8&lr=alc_pdphqp_STS&ref=gmeshp_sts_pdphqp&pf_rd_p=defe11f6-1109-47e2-8313-df25bcfefb8d&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ
+                      - text: See more
+          - generic [ref=f228e838]:
+            - generic [ref=f228e849]:
+              - generic [ref=f228e856]:
+                - generic [ref=f228e857]:
+                  - generic [ref=f228e858]: $94.29
+                  - generic [aria-hidden] [ref=f228e859]:
+                    - text: $
+                    - generic [ref=f228e860]:
+                      - text: "94"
+                      - generic [ref=f228e861]: .
+                    - text: "29"
+                - generic [ref=f228e868] [cursor=pointer]:
+                  - button "Price history" [ref=f228e869]
+                  - generic [aria-hidden] [ref=f228e870]: Price history
+              - generic [ref=f228e872]:
+                - generic [ref=f228e873]:
+                  - img "prime" [ref=f228e877]
+                  - generic [ref=f228e878]:
+                    - generic [ref=f228e879]: FREE delivery Friday, October 2. Order within 1 hr 5 mins
+                    - button "Deliver to Kevin - Sunnyvale 94085‌" [ref=f228e886] [cursor=pointer]:
+                      - generic [ref=f228e888]: Deliver to Kevin - Sunnyvale 94085‌
+                - generic [ref=f228e893]: Only 5 left in stock - order soon.
+                - generic [ref=f228e902]:
+                  - generic [aria-hidden] [ref=f228e903]: "Quantity:"
+                  - combobox "Quantity:" [ref=f228e904]:
+                    - option "1" [selected]
+                    - option "2"
+                    - option "3"
+                    - option "4"
+                    - option "5"
+                  - generic [aria-hidden] [ref=f228e907] [cursor=pointer]: Quantity:1
+                - generic [ref=f228e913] [cursor=pointer]:
+                  - button "Add to cart" [ref=f228e914]
+                  - generic [aria-hidden] [ref=f228e915]: Add to cart
+                - generic [ref=f228e920] [cursor=pointer]:
+                  - button "Buy Now" [ref=f228e921]
+                  - generic [aria-hidden] [ref=f228e922]: Buy Now
+                - generic [ref=f228e925]:
+                  - group "Seller, shipping, and buying option details" [ref=f228e927]:
+                    - generic [ref=f228e928]:
+                      - heading "Ships from" [level=4] [ref=f228e929]
+                      - generic [ref=f228e931]: Amazon
+                    - generic [ref=f228e934]:
+                      - heading "Sold by" [level=4] [ref=f228e935]
+                      - link "Voadera" [ref=f228e939] [cursor=pointer]:
+                        - /url: /gp/help/seller/at-a-glance.html/ref=dp_merchant_link?ie=UTF8&seller=A3E9SVC4GWPUCM&asin=B0F8J7KSR1&ref_=dp_merchant_link&isAmazonFulfilled=1
+                    - generic [ref=f228e940]:
+                      - heading "Returns" [level=4] [ref=f228e941]
+                      - button "FREE 30-day refund/replacement" [ref=f228e945] [cursor=pointer]
+                    - generic [ref=f228e949]:
+                      - heading "Gift options" [level=4] [ref=f228e950]
+                      - button "Available at checkout" [ref=f228e954] [cursor=pointer]
+                  - button "See more" [ref=f228e958] [cursor=pointer]
+                - generic [ref=f228e961]:
+                  - generic [ref=f228e962]: "Seller Certifications:"
+                  - text: Minority-Owned Business
+              - link "Add to Auto Buy" [ref=f228e969] [cursor=pointer]:
+                - /url: /buying-rules/ref=rsi_ye_brh_yed&action=dyn-create-br&source=dpx_ye&asin=B0F8J7KSR1&existingRuleRedirectView=edit&existingRuleTerminatedRedirectView=edit&minFormActions=true
+              - generic [ref=f228e970]:
+                - separator [aria-hidden] [ref=f228e971]
+                - generic [ref=f228e973]:
+                  - generic [ref=f228e975] [cursor=pointer]:
+                    - button "Add to List" [ref=f228e976]
+                    - generic [ref=f228e978]: Add to List
+                  - button "Select a list from the dropdown" [ref=f228e982] [cursor=pointer]
+            - generic [ref=f228e986]:
+              - generic [ref=f228e987]: Other sellers on Amazon
+              - separator [aria-hidden] [ref=f228e988]
+              - button "New (16) from $94.29 prime" [ref=f228e991] [cursor=pointer]:
+                - text: New (16) from
+                - generic [ref=f228e992]:
+                  - generic [ref=f228e993]: $94.29
+                  - generic [aria-hidden] [ref=f228e994]:
+                    - text: $
+                    - generic [ref=f228e995]:
+                      - text: "94"
+                      - generic [ref=f228e996]: .
+                    - text: "29"
+                - img "prime" [ref=f228e998]
+      - generic [ref=f228e1002]:
+        - separator [aria-hidden] [ref=f228e1003]
+        - heading "Bundle these items" [level=2] [ref=f228e1005]
+        - generic [ref=f228e1006]:
+          - generic [ref=f228e1007]:
+            - generic [ref=f228e1009]:
+              - generic [ref=f228e1010]:
+                - checkbox [checked] [ref=f228e1014]
+                - img "Nike Mens Dunk Low Retro" [ref=f228e1020]
+              - generic [ref=f228e1021]:
+                - generic [aria-hidden] [ref=f228e1023]: "This item: Nike Mens Dunk Low Retro"
+                - generic [ref=f228e1025]:
+                  - text: "4.6"
+                  - generic [ref=f228e1026]: 4.6 out of 5 stars
+                  - link "631" [ref=f228e1028] [cursor=pointer]:
+                    - /url: /product-reviews/B0F8J7KSR1/ref=sspa_dk_detail_gen_ai_d_sccl_2_cr/135-7104915-2311601?pd_rd_w=C6FHa&content-id=amzn1.sym.3dd2641c-5c46-4bbe-b125-fcc207c60e44&pf_rd_p=3dd2641c-5c46-4bbe-b125-fcc207c60e44&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0F8J7KSR1
+                - generic [ref=f228e1029]:
+                  - generic [ref=f228e1030]:
+                    - text: "-21%"
+                    - generic [ref=f228e1031]:
+                      - generic [ref=f228e1032]: $94.29
+                      - generic [aria-hidden] [ref=f228e1033]:
+                        - text: $
+                        - generic [ref=f228e1034]:
+                          - text: "94"
+                          - generic [ref=f228e1035]: .
+                        - text: "29"
+                  - generic [ref=f228e1036]: "List: $120.00"
+            - generic [ref=f228e1039]:
+              - generic [ref=f228e1040]:
+                - checkbox [checked] [ref=f228e1044]
+                - generic [ref=f228e1046]: +
+                - link [ref=f228e1050] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2Nzc1Njc4MTU5MDYzNTE5OjE3OTA3NDc2ODk6c3BfZGV0YWlsX3RoZW1hdGljOjMwMDAyNTQ2ODEwMDQwMjo6MDo6&url=%2FDANHUA-Thick-Sneakers-Shoe-Laces%2Fdp%2FB07FRD88CW%3Fpsc%3D1%26pd_rd_w%3DC6FHa%26content-id%3Damzn1.sym.3dd2641c-5c46-4bbe-b125-fcc207c60e44%26pf_rd_p%3D3dd2641c-5c46-4bbe-b125-fcc207c60e44%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26ref_%3Dsspa_dk_detail_gen_ai_img_0%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWxfdGhlbWF0aWM%3D
+                  - 'img "DANHUA Thick Sneakers Shoe Laces: Twill Point Athletic Shoelaces | Flat Laces for Boot 2 Pair, Woven Color Highlights, Sturdy" [ref=f228e1052]'
+              - generic [ref=f228e1053]:
+                - generic [ref=f228e1054]:
+                  - button "Leave feedback on Sponsored ad" [ref=f228e1059] [cursor=pointer]: Sponsored
+                  - link [ref=f228e1062] [cursor=pointer]:
+                    - /url: /sspa/click?ie=UTF8&spc=MTo2Nzc1Njc4MTU5MDYzNTE5OjE3OTA3NDc2ODk6c3BfZGV0YWlsX3RoZW1hdGljOjMwMDAyNTQ2ODEwMDQwMjo6MDo6&url=%2FDANHUA-Thick-Sneakers-Shoe-Laces%2Fdp%2FB07FRD88CW%3Fpsc%3D1%26pd_rd_w%3DC6FHa%26content-id%3Damzn1.sym.3dd2641c-5c46-4bbe-b125-fcc207c60e44%26pf_rd_p%3D3dd2641c-5c46-4bbe-b125-fcc207c60e44%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26ref_%3Dsspa_dk_detail_gen_ai_0%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWxfdGhlbWF0aWM%3D
+                    - generic [aria-hidden] [ref=f228e1063]: "DANHUA Thick Sneakers Shoe Laces: Twill Point Athletic Shoelaces | Flat Laces for Boot 2 Pair, Woven Color Highlights, Sturdy and Durable, for Casual Shoes"
+                - generic [ref=f228e1065]:
+                  - text: "4.6"
+                  - generic [ref=f228e1066]: 4.6 out of 5 stars
+                  - link "890" [ref=f228e1068] [cursor=pointer]:
+                    - /url: /product-reviews/B07FRD88CW/ref=sspa_dk_detail_gen_ai_d_sccl_1_cr/135-7104915-2311601?pd_rd_w=C6FHa&content-id=amzn1.sym.3dd2641c-5c46-4bbe-b125-fcc207c60e44&pf_rd_p=3dd2641c-5c46-4bbe-b125-fcc207c60e44&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B07FRD88CW
+                - generic [ref=f228e1070]:
+                  - generic [ref=f228e1071]:
+                    - generic [ref=f228e1072]: $8.08
+                    - generic [aria-hidden] [ref=f228e1073]:
+                      - text: $
+                      - generic [ref=f228e1074]:
+                        - text: "8"
+                        - generic [ref=f228e1075]: .
+                      - text: "08"
+                  - generic [ref=f228e1076]: ($4.04/pack)
+                - img "Amazon Prime" [ref=f228e1079]
+          - generic [ref=f228e1080]:
+            - generic [ref=f228e1081]:
+              - generic [ref=f228e1082]: Total price:$102.37
+              - generic [ref=f228e1090] [cursor=pointer]:
+                - button "Add both to Cart, Nike Mens Dunk Low Retro" [ref=f228e1091]
+                - generic [aria-hidden] [ref=f228e1092]: Add both to Cart
+            - generic [ref=f228e1093]:
+              - generic [ref=f228e1094]: One of these items ships sooner than the other.
+              - link "Show details" [ref=f228e1099] [cursor=pointer]:
+                - /url: javascript:void(0)
+      - generic [ref=f228e1103]:
+        - separator [aria-hidden] [ref=f228e1104]
+        - group [ref=f228e1107]:
+          - generic [ref=f228e1109]:
+            - heading "Customers who viewed this item also viewed" [level=2] [ref=f228e1112]
+            - button "Not interested in specific items" [ref=f228e1117] [cursor=pointer]
+          - group [ref=f228e1121]:
+            - list [ref=f228e1122]:
+              - listitem [ref=f228e1123]:
+                - generic [ref=f228e1125]:
+                  - link [aria-hidden] [ref=f228e1127] [cursor=pointer]:
+                    - /url: /Nike-Court-Vision-Basketball-Black-Black/dp/B098F8CBBN/ref=pd_sbs_d_sccl_1_1/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B098F8CBBN&psc=1
+                  - generic [ref=f228e1130]:
+                    - link "Nike mens Court Vision Lo Nn Shoes" [ref=f228e1131] [cursor=pointer]:
+                      - /url: /Nike-Court-Vision-Basketball-Black-Black/dp/B098F8CBBN/ref=pd_sbs_d_sccl_1_1/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B098F8CBBN&psc=1
+                    - link "4.4 out of 5 stars, 11,461 ratings" [ref=f228e1136] [cursor=pointer]:
+                      - /url: /product-reviews/B098F8CBBN/ref=pd_sbs_d_sccl_1_1_cr/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B098F8CBBN
+                      - generic [ref=f228e1138]: 4.4 out of 5 stars
+                      - text: 11,461
+                    - generic [ref=f228e1139]: Amazon's Choice
+                    - generic [ref=f228e1144]:
+                      - generic [ref=f228e1146]:
+                        - generic [ref=f228e1147]:
+                          - link "-20%" [ref=f228e1148] [cursor=pointer]:
+                            - /url: /Nike-Court-Vision-Basketball-Black-Black/dp/B098F8CBBN/ref=pd_sbs_d_sccl_1_1/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B098F8CBBN&psc=1
+                          - link "$68.00" [ref=f228e1149] [cursor=pointer]:
+                            - /url: /Nike-Court-Vision-Basketball-Black-Black/dp/B098F8CBBN/ref=pd_sbs_d_sccl_1_1/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B098F8CBBN&psc=1
+                            - generic [ref=f228e1150]:
+                              - generic [ref=f228e1151]: $68.00
+                              - generic [aria-hidden] [ref=f228e1152]:
+                                - text: $
+                                - generic [ref=f228e1153]:
+                                  - text: "68"
+                                  - generic [ref=f228e1154]: .
+                                - text: "00"
+                        - 'link "List: $85.00" [ref=f228e1156] [cursor=pointer]':
+                          - /url: /Nike-Court-Vision-Basketball-Black-Black/dp/B098F8CBBN/ref=pd_sbs_d_sccl_1_1/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B098F8CBBN&psc=1
+                      - generic [ref=f228e1159]:
+                        - img "Amazon Prime" [ref=f228e1161]
+                        - generic [ref=f228e1162]: FREE Delivery Friday, Oct 2
+              - listitem [ref=f228e1163]:
+                - generic [ref=f228e1165]:
+                  - link [aria-hidden] [ref=f228e1167] [cursor=pointer]:
+                    - /url: /Nike-Court-Vision-Shoes-White/dp/B0FRNDWN1D/ref=pd_sbs_d_sccl_1_2/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0H6YJM7DH&psc=1
+                  - generic [ref=f228e1170]:
+                    - link "Nike Men's Court Vision Low Nubuck Shoes" [ref=f228e1171] [cursor=pointer]:
+                      - /url: /Nike-Court-Vision-Shoes-White/dp/B0FRNDWN1D/ref=pd_sbs_d_sccl_1_2/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0H6YJM7DH&psc=1
+                    - link "4.2 out of 5 stars, 131 ratings" [ref=f228e1176] [cursor=pointer]:
+                      - /url: /product-reviews/B0H6YJM7DH/ref=pd_sbs_d_sccl_1_2_cr/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0H6YJM7DH
+                      - generic [ref=f228e1178]: 4.2 out of 5 stars
+                      - text: "131"
+                    - link "$85.00" [ref=f228e1183] [cursor=pointer]:
+                      - /url: /Nike-Court-Vision-Shoes-White/dp/B0FRNDWN1D/ref=pd_sbs_d_sccl_1_2/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0H6YJM7DH&psc=1
+                      - generic [ref=f228e1184]:
+                        - generic [ref=f228e1185]: $85.00
+                        - generic [aria-hidden] [ref=f228e1186]:
+                          - text: $
+                          - generic [ref=f228e1187]:
+                            - text: "85"
+                            - generic [ref=f228e1188]: .
+                          - text: "00"
+              - listitem [ref=f228e1189]:
+                - generic [ref=f228e1191]:
+                  - link [aria-hidden] [ref=f228e1193] [cursor=pointer]:
+                    - /url: /Nike-Retro-DD1391-Hyper-Cobalt/dp/B08Q9Q2BKW/ref=pd_sbs_d_sccl_1_3/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B08Q9Q2BKW&psc=1
+                  - generic [ref=f228e1196]:
+                    - link "Dunk Low RETRO \"Reverse Panda\" DJ6188 101 Sneakers" [ref=f228e1197] [cursor=pointer]:
+                      - /url: /Nike-Retro-DD1391-Hyper-Cobalt/dp/B08Q9Q2BKW/ref=pd_sbs_d_sccl_1_3/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B08Q9Q2BKW&psc=1
+                    - link "4.4 out of 5 stars, 91 ratings" [ref=f228e1202] [cursor=pointer]:
+                      - /url: /product-reviews/B08Q9Q2BKW/ref=pd_sbs_d_sccl_1_3_cr/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B08Q9Q2BKW
+                      - generic [ref=f228e1204]: 4.4 out of 5 stars
+                      - text: "91"
+                    - link "2 offers from $40400" [ref=f228e1206] [cursor=pointer]:
+                      - /url: /Nike-Retro-DD1391-Hyper-Cobalt/dp/B08Q9Q2BKW/ref=pd_sbs_d_sccl_1_3/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B08Q9Q2BKW&psc=1
+                      - generic [ref=f228e1207]:
+                        - text: 2 offers from
+                        - generic [ref=f228e1208]:
+                          - generic [ref=f228e1209]: $40400
+                          - generic [aria-hidden] [ref=f228e1210]:
+                            - text: $
+                            - generic [ref=f228e1211]: "404"
+                            - text: "00"
+              - listitem [ref=f228e1212]:
+                - generic [ref=f228e1214]:
+                  - link [aria-hidden] [ref=f228e1216] [cursor=pointer]:
+                    - /url: /Nike-Amber-Brown-Guava-FV5926-200/dp/B0DL3V925D/ref=pd_sbs_d_sccl_1_4/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0DFTGY5YP&psc=1
+                  - generic [ref=f228e1219]:
+                    - link "Nike Men's Dunk Low Retro Shoes" [ref=f228e1220] [cursor=pointer]:
+                      - /url: /Nike-Amber-Brown-Guava-FV5926-200/dp/B0DL3V925D/ref=pd_sbs_d_sccl_1_4/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0DFTGY5YP&psc=1
+                    - link "4.6 out of 5 stars, 364 ratings" [ref=f228e1225] [cursor=pointer]:
+                      - /url: /product-reviews/B0DFTGY5YP/ref=pd_sbs_d_sccl_1_4_cr/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0DFTGY5YP
+                      - generic [ref=f228e1227]: 4.6 out of 5 stars
+                      - text: "364"
+                    - link "$204.50" [ref=f228e1232] [cursor=pointer]:
+                      - /url: /Nike-Amber-Brown-Guava-FV5926-200/dp/B0DL3V925D/ref=pd_sbs_d_sccl_1_4/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0DFTGY5YP&psc=1
+                      - generic [ref=f228e1233]:
+                        - generic [ref=f228e1234]: $204.50
+                        - generic [aria-hidden] [ref=f228e1235]:
+                          - text: $
+                          - generic [ref=f228e1236]:
+                            - text: "204"
+                            - generic [ref=f228e1237]: .
+                          - text: "50"
+              - listitem [ref=f228e1238]:
+                - generic [ref=f228e1240]:
+                  - link [aria-hidden] [ref=f228e1242] [cursor=pointer]:
+                    - /url: /Nike-HF3141-DUNK-LOW-RETRO/dp/B0DWN9Q9ZZ/ref=pd_sbs_d_sccl_1_5/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0F7QX929L&psc=1
+                  - generic [ref=f228e1245]:
+                    - link "Nike Dunk Low Retro SE Men's Shoes" [ref=f228e1246] [cursor=pointer]:
+                      - /url: /Nike-HF3141-DUNK-LOW-RETRO/dp/B0DWN9Q9ZZ/ref=pd_sbs_d_sccl_1_5/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0F7QX929L&psc=1
+                    - link "4.5 out of 5 stars, 285 ratings" [ref=f228e1251] [cursor=pointer]:
+                      - /url: /product-reviews/B0F7QX929L/ref=pd_sbs_d_sccl_1_5_cr/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0F7QX929L
+                      - generic [ref=f228e1253]: 4.5 out of 5 stars
+                      - text: "285"
+                    - link "$102.04 $352.80" [ref=f228e1258] [cursor=pointer]:
+                      - /url: /Nike-HF3141-DUNK-LOW-RETRO/dp/B0DWN9Q9ZZ/ref=pd_sbs_d_sccl_1_5/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0F7QX929L&psc=1
+                      - generic:
+                        - generic [ref=f228e1259]:
+                          - generic [ref=f228e1260]: $102.04
+                          - generic [aria-hidden] [ref=f228e1261]:
+                            - text: $
+                            - generic [ref=f228e1262]:
+                              - text: "102"
+                              - generic [ref=f228e1263]: .
+                            - text: "04"
+                        - text: "-"
+                        - generic [ref=f228e1264]:
+                          - generic [ref=f228e1265]: $352.80
+                          - generic [aria-hidden] [ref=f228e1266]:
+                            - text: $
+                            - generic [ref=f228e1267]:
+                              - text: "352"
+                              - generic [ref=f228e1268]: .
+                            - text: "80"
+              - listitem [ref=f228e1269]:
+                - generic [ref=f228e1271]:
+                  - link [aria-hidden] [ref=f228e1273] [cursor=pointer]:
+                    - /url: /Nike-Retro-Shoes-FQ8249-200-Amber/dp/B0DP1K37RM/ref=pd_sbs_d_sccl_1_6/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0D8RHHM72&psc=1
+                  - generic [ref=f228e1276]:
+                    - link "Nike Mens Nike Dunk Low Retro Se" [ref=f228e1277] [cursor=pointer]:
+                      - /url: /Nike-Retro-Shoes-FQ8249-200-Amber/dp/B0DP1K37RM/ref=pd_sbs_d_sccl_1_6/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0D8RHHM72&psc=1
+                    - link "4.5 out of 5 stars, 68 ratings" [ref=f228e1282] [cursor=pointer]:
+                      - /url: /product-reviews/B0D8RHHM72/ref=pd_sbs_d_sccl_1_6_cr/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0D8RHHM72
+                      - generic [ref=f228e1284]: 4.5 out of 5 stars
+                      - text: "68"
+                    - link "$124.90 $129.97" [ref=f228e1289] [cursor=pointer]:
+                      - /url: /Nike-Retro-Shoes-FQ8249-200-Amber/dp/B0DP1K37RM/ref=pd_sbs_d_sccl_1_6/135-7104915-2311601?pd_rd_w=ljMQv&content-id=amzn1.sym.0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_p=0cb10f30-7cd4-4985-9826-58b2c1174c19&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pd_rd_i=B0D8RHHM72&psc=1
+                      - generic:
+                        - generic [ref=f228e1290]:
+                          - generic [ref=f228e1291]: $124.90
+                          - generic [aria-hidden] [ref=f228e1292]:
+                            - text: $
+                            - generic [ref=f228e1293]:
+                              - text: "124"
+                              - generic [ref=f228e1294]: .
+                            - text: "90"
+                        - text: "-"
+                        - generic [ref=f228e1295]:
+                          - generic [ref=f228e1296]: $129.97
+                          - generic [aria-hidden] [ref=f228e1297]:
+                            - text: $
+                            - generic [ref=f228e1298]:
+                              - text: "129"
+                              - generic [ref=f228e1299]: .
+                            - text: "97"
+      - generic [ref=f228e1300]:
+        - generic [ref=f228e1302]:
+          - separator [aria-hidden] [ref=f228e1303]
+          - generic [ref=f228e1304]:
+            - heading "Alexa AI Looking for specific info?" [level=3] [ref=f228e1305]:
+              - generic [ref=f228e1307]:
+                - generic [ref=f228e1308]: Alexa AI
+                - text: Looking for specific info?
+            - generic [ref=f228e1309]:
+              - textbox "Looking for specific info?" [ref=f228e1310]:
+                - /placeholder: Ask Alexa or search reviews and Q&A
+              - button [ref=f228e1313] [cursor=pointer]:
+                - img "Submit" [ref=f228e1314]
+            - list [ref=f228e1318]:
+              - listitem [ref=f228e1319]:
+                - generic [ref=f228e1323] [cursor=pointer]:
+                  - button "Are these shoes good for running?" [ref=f228e1324]
+                  - generic [aria-hidden] [ref=f228e1325]: Are these shoes good for running?
+              - listitem [ref=f228e1326]:
+                - generic [ref=f228e1330] [cursor=pointer]:
+                  - button "Do they have a wide fit?" [ref=f228e1331]
+                  - generic [aria-hidden] [ref=f228e1332]: Do they have a wide fit?
+              - listitem [ref=f228e1333]:
+                - generic [ref=f228e1337] [cursor=pointer]:
+                  - button "What type of closure do they have?" [ref=f228e1338]
+                  - generic [aria-hidden] [ref=f228e1339]: What type of closure do they have?
+              - listitem [ref=f228e1340]:
+                - generic [ref=f228e1344] [cursor=pointer]:
+                  - button "Are they slip resistant?" [ref=f228e1345]
+                  - generic [aria-hidden] [ref=f228e1346]: Are they slip resistant?
+              - listitem [ref=f228e1347]:
+                - generic [ref=f228e1351] [cursor=pointer]:
+                  - button "Can they be worn casually?" [ref=f228e1352]
+                  - generic [aria-hidden] [ref=f228e1353]: Can they be worn casually?
+        - generic [ref=f228e1355]:
+          - separator [aria-hidden] [ref=f228e1356]
+          - heading "Product details" [level=2] [ref=f228e1357]
+          - list [ref=f228e1359]:
+            - listitem [ref=f228e1360]:
+              - generic [ref=f228e1361]: "Package Dimensions ‏ : ‎ 11.37 x 7.37 x 4.11 inches; 2.25 pounds"
+            - listitem [ref=f228e1362]:
+              - generic [ref=f228e1363]: "Item model number ‏ : ‎ M_HF5441-107"
+            - listitem [ref=f228e1364]:
+              - generic [ref=f228e1365]: "Department ‏ : ‎ mens"
+            - listitem [ref=f228e1366]:
+              - generic [ref=f228e1367]: "Date First Available ‏ : ‎ December 2, 2024"
+            - listitem [ref=f228e1368]:
+              - generic [ref=f228e1369]: "Manufacturer ‏ : ‎ NIKE"
+            - listitem [ref=f228e1370]:
+              - generic [ref=f228e1371]: "ASIN ‏ : ‎ B0DPGTQ2ZR"
+            - listitem [ref=f228e1372]:
+              - generic [ref=f228e1373]:
+                - strong [ref=f228e1374]: "Product Warranty:"
+                - text: For warranty information about this product, please
+                - link "click here" [ref=f228e1375] [cursor=pointer]:
+                  - /url: /gp/feature.html/ref=dp_warranty_request_3P?docId=1002406021
+            - listitem [ref=f228e1376]:
+              - generic [ref=f228e1377]:
+                - text: "Best Sellers Rank: #36,241 in Clothing, Shoes & Jewelry ("
+                - link "See Top 100 in Clothing, Shoes & Jewelry" [ref=f228e1378] [cursor=pointer]:
+                  - /url: /gp/bestsellers/fashion/ref=pd_zg_ts_fashion
+                - text: )
+                - list [ref=f228e1379]:
+                  - listitem [ref=f228e1380]:
+                    - generic [ref=f228e1381]:
+                      - text: "#163 in"
+                      - link "Men's Fashion Sneakers" [ref=f228e1382] [cursor=pointer]:
+                        - /url: /gp/bestsellers/fashion/679312011/ref=pd_zg_hrsr_fashion
+            - listitem [ref=f228e1383]:
+              - generic [ref=f228e1384]:
+                - text: "Customer Reviews:"
+                - generic [ref=f228e1385]:
+                  - generic "4.6 out of 5 stars" [ref=f228e1387]:
+                    - button "4.6 out of 5 stars" [ref=f228e1389] [cursor=pointer]: "4.6"
+                  - link "631 Reviews" [ref=f228e1394] [cursor=pointer]:
+                    - /url: "#averageCustomerReviewsAnchor"
+                    - text: (631)
+        - generic [ref=f228e1400]:
+          - heading "Product Videos" [level=2] [ref=f228e1402]
+          - generic [ref=f228e1407]:
+            - region "Video Player" [ref=f228e1408]:
+              - generic [ref=f228e1411]:
+                - button "Play" [ref=f228e1412] [cursor=pointer]
+                - slider "Progress Bar" [ref=f228e1415] [cursor=pointer]: .
+                - generic [ref=f228e1416]: "-0:00"
+                - generic [ref=f228e1418]:
+                  - menu
+                - button "Mute" [ref=f228e1419] [cursor=pointer]
+            - generic [ref=f228e1422]:
+              - link [ref=f228e1423] [cursor=pointer]:
+                - /url: /shop/kvflips
+              - generic [ref=f228e1424]:
+                - generic [ref=f228e1425]:
+                  - link "Kevin Reviews" [ref=f228e1426] [cursor=pointer]:
+                    - /url: /shop/kvflips
+                  - link "Click to go to amazon influencer info page" [ref=f228e1428] [cursor=pointer]:
+                    - /url: /shop/info
+                    - text: Earns commissions
+                - generic [ref=f228e1429]: My Genuine Review Of The Nike Dunk Low Blue White Shoes
+            - button "Play" [ref=f228e1430] [cursor=pointer]
+        - generic:
+          - navigation:
+            - navigation "Navigate within the product detail page":
+              - navigation "Back to top jump link":
+                - generic: Top
+              - navigation "Questions widget jump link":
+                - generic: Questions
+              - navigation "From the brand widget jump link":
+                - generic: From the Brand
+              - navigation "Customer reviews widget jump link":
+                - generic: Reviews
+              - navigation "Similar widget jump link":
+                - generic: Similar
+            - navigation "Back to top Image jump link":
+              - img "Nike Men's Dunk Low Retro Sneakers, White/Hyper Royal, 9 Medium US"
+            - navigation "Back to top title jump link":
+              - generic: Nike Mens Dunk Low Retro
+        - generic [ref=f228e1504]:
+          - heading "Product Description" [level=2] [ref=f228e1507]
+          - paragraph [ref=f228e1509]: The Nike Dunk Low Retro was designed for the court but is great for the city and returns with cool overlays and original team colors. This basketball icon evokes the atmosphere of the 80s with a high-quality leather upper and provides a perfect look that does not go unnoticed. Modern technology helps to ensure absolutely current comfort.
+      - generic [ref=f228e1511]:
+        - separator [aria-hidden] [ref=f228e1512]
+        - generic [ref=f228e1513]:
+          - 'heading "Top Brand: Nike" [level=2] [ref=f228e1514]'
+          - generic [ref=f228e1515]:
+            - generic [ref=f228e1518]:
+              - generic [ref=f228e1519]: Highly Rated
+              - generic [ref=f228e1520]: 100K+ customers rate items from this brand highly
+            - generic [ref=f228e1523]:
+              - generic [ref=f228e1524]: Trending
+              - generic [ref=f228e1525]: 100K+ orders for this brand in past 3 months
+            - generic [ref=f228e1528]:
+              - generic [ref=f228e1529]: Low Returns
+              - generic [ref=f228e1530]: Customers usually keep items from this brand
+      - generic [ref=f228e1533]:
+        - separator [aria-hidden] [ref=f228e1534]
+        - region "Related products with free delivery" [ref=f228e1535]:
+          - generic [ref=f228e1537]:
+            - heading "Related products with free delivery" [level=2] [ref=f228e1538]
+            - link "Sponsored" [ref=f228e1542] [cursor=pointer]:
+              - /url: "#sp_detail2-prime_feedbackForm"
+          - list [ref=f228e1552]:
+            - listitem [ref=f228e1553]:
+              - generic [ref=f228e1554]:
+                - link "Nike Air Max Excee Mens Shoes" [ref=f228e1555] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExNzY2ODQyNTQzMDI6Ojo6&url=%2Fdp%2FB0DLH1DVT3%2Fref%3Dsspa_dk_detail_0%3Fpsc%3D1%26pd_rd_i%3DB0DLH1DVT3%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [aria-hidden] [ref=f228e1559]: Nike Air Max Excee Mens Shoes
+                - link "4.4 out of 5 stars 8,948 ratings" [ref=f228e1561] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExNzY2ODQyNTQzMDI6Ojo6&url=%2Fdp%2FB0DLH1DVT3%2Fref%3Dsspa_dk_detail_0%3Fpsc%3D1%26pd_rd_i%3DB0DLH1DVT3%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy#customerReviews
+                  - text: 8,948
+                - link "$100.00" [ref=f228e1564] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExNzY2ODQyNTQzMDI6Ojo6&url=%2Fdp%2FB0DLH1DVT3%2Fref%3Dsspa_dk_detail_0%3Fpsc%3D1%26pd_rd_i%3DB0DLH1DVT3%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [ref=f228e1565]:
+                    - generic [ref=f228e1566]: $100.00
+                    - generic [aria-hidden] [ref=f228e1567]:
+                      - text: $
+                      - generic [ref=f228e1568]:
+                        - text: "100"
+                        - generic [ref=f228e1569]: .
+                      - text: "00"
+                - link "Prime Two-Day FREE delivery Thu, Oct 1" [ref=f228e1571] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExNzY2ODQyNTQzMDI6Ojo6&url=%2Fdp%2FB0DLH1DVT3%2Fref%3Dsspa_dk_detail_0%3Fpsc%3D1%26pd_rd_i%3DB0DLH1DVT3%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [ref=f228e1572]:
+                    - generic [ref=f228e1576]:
+                      - img "Prime" [ref=f228e1577]
+                      - text: Two-Day
+                    - generic [ref=f228e1578]: FREE delivery Thu, Oct 1
+            - listitem [ref=f228e1580]:
+              - generic [ref=f228e1581]:
+                - link "Nike Men's Air Monarch IV Training/Workout Shoes" [ref=f228e1582] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExMzk1OTc2NjQ0MDI6Ojo6&url=%2Fdp%2FB004IM1GI6%2Fref%3Dsspa_dk_detail_1%3Fpsc%3D1%26pd_rd_i%3DB004IM1GI6%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [aria-hidden] [ref=f228e1586]: Nike Men's Air Monarch IV Training/Workout Shoes
+                - link "4.4 out of 5 stars 31,873 ratings" [ref=f228e1588] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExMzk1OTc2NjQ0MDI6Ojo6&url=%2Fdp%2FB004IM1GI6%2Fref%3Dsspa_dk_detail_1%3Fpsc%3D1%26pd_rd_i%3DB004IM1GI6%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy#customerReviews
+                  - text: 31,873
+                - 'link "-30% $59.50 List: $85.00 List: null" [ref=f228e1591] [cursor=pointer]':
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExMzk1OTc2NjQ0MDI6Ojo6&url=%2Fdp%2FB004IM1GI6%2Fref%3Dsspa_dk_detail_1%3Fpsc%3D1%26pd_rd_i%3DB004IM1GI6%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - text: "-30%"
+                  - generic [ref=f228e1592]:
+                    - generic [ref=f228e1593]: $59.50
+                    - generic [aria-hidden] [ref=f228e1594]:
+                      - text: $
+                      - generic [ref=f228e1595]:
+                        - text: "59"
+                        - generic [ref=f228e1596]: .
+                      - text: "50"
+                  - generic [ref=f228e1597]: "List: $85.00"
+                  - generic [ref=f228e1598]:
+                    - text: "List:"
+                    - generic [ref=f228e1599]:
+                      - generic [ref=f228e1600]: "null"
+                      - text: $85.00
+                - link "FREE delivery Oct 14 - 20 for Prime members" [ref=f228e1602] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExMzk1OTc2NjQ0MDI6Ojo6&url=%2Fdp%2FB004IM1GI6%2Fref%3Dsspa_dk_detail_1%3Fpsc%3D1%26pd_rd_i%3DB004IM1GI6%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+            - listitem [ref=f228e1608]:
+              - generic [ref=f228e1609]:
+                - link "Nike Men's Air Max Fire Shoes" [ref=f228e1610] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExNzY2MzEzODUzMDI6Ojo6&url=%2Fdp%2FB0FBRTMKC8%2Fref%3Dsspa_dk_detail_2%3Fpsc%3D1%26pd_rd_i%3DB0FBRTMKC8%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [aria-hidden] [ref=f228e1614]: Nike Men's Air Max Fire Shoes
+                - link "4.6 out of 5 stars 1,725 ratings" [ref=f228e1616] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExNzY2MzEzODUzMDI6Ojo6&url=%2Fdp%2FB0FBRTMKC8%2Fref%3Dsspa_dk_detail_2%3Fpsc%3D1%26pd_rd_i%3DB0FBRTMKC8%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy#customerReviews
+                  - text: 1,725
+                - link "$105.00" [ref=f228e1619] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExNzY2MzEzODUzMDI6Ojo6&url=%2Fdp%2FB0FBRTMKC8%2Fref%3Dsspa_dk_detail_2%3Fpsc%3D1%26pd_rd_i%3DB0FBRTMKC8%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [ref=f228e1620]:
+                    - generic [ref=f228e1621]: $105.00
+                    - generic [aria-hidden] [ref=f228e1622]:
+                      - text: $
+                      - generic [ref=f228e1623]:
+                        - text: "105"
+                        - generic [ref=f228e1624]: .
+                      - text: "00"
+                - link "Prime Two-Day FREE delivery Thu, Oct 1" [ref=f228e1626] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExNzY2MzEzODUzMDI6Ojo6&url=%2Fdp%2FB0FBRTMKC8%2Fref%3Dsspa_dk_detail_2%3Fpsc%3D1%26pd_rd_i%3DB0FBRTMKC8%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [ref=f228e1627]:
+                    - generic [ref=f228e1631]:
+                      - img "Prime" [ref=f228e1632]
+                      - text: Two-Day
+                    - generic [ref=f228e1633]: FREE delivery Thu, Oct 1
+            - listitem [ref=f228e1635]:
+              - generic [ref=f228e1636]:
+                - link "Bruno Marc Men's Dress Oxfords Casual Derby Sneakers | Breathable Perforated Synthetic Leather, Cushioned Insole, Shock-absorbent Outfit, Fit Boardrooms Bars Daily Wear & Events" [ref=f228e1637] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDAyOTQ2NzQ4MDI1MDI6Ojo6&url=%2Fdp%2FB0BZC3S1TY%2Fref%3Dsspa_dk_detail_3%3Fpsc%3D1%26pd_rd_i%3DB0BZC3S1TY%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [aria-hidden] [ref=f228e1641]: Bruno Marc Men's Dress Oxfords Casual Derby Sneakers | Breathable Perforated Synthe...
+                - link "4.5 out of 5 stars 6,259 ratings" [ref=f228e1643] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDAyOTQ2NzQ4MDI1MDI6Ojo6&url=%2Fdp%2FB0BZC3S1TY%2Fref%3Dsspa_dk_detail_3%3Fpsc%3D1%26pd_rd_i%3DB0BZC3S1TY%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy#customerReviews
+                  - text: 6,259
+                - generic [ref=f228e1645]:
+                  - generic:
+                    - link "#1 Best Seller":
+                      - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDAyOTQ2NzQ4MDI1MDI6Ojo6&url=%2Fdp%2FB0BZC3S1TY%2Fref%3Dsspa_dk_detail_3%3Fpsc%3D1%26pd_rd_i%3DB0BZC3S1TY%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                - link "Ends in 01:05:07" [ref=f228e1648] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDAyOTQ2NzQ4MDI1MDI6Ojo6&url=%2Fdp%2FB0BZC3S1TY%2Fref%3Dsspa_dk_detail_3%3Fpsc%3D1%26pd_rd_i%3DB0BZC3S1TY%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                - 'link "-30% $39.98 List: $56.99 List: null" [ref=f228e1652] [cursor=pointer]':
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDAyOTQ2NzQ4MDI1MDI6Ojo6&url=%2Fdp%2FB0BZC3S1TY%2Fref%3Dsspa_dk_detail_3%3Fpsc%3D1%26pd_rd_i%3DB0BZC3S1TY%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - text: "-30%"
+                  - generic [ref=f228e1653]:
+                    - generic [ref=f228e1654]: $39.98
+                    - generic [aria-hidden] [ref=f228e1655]:
+                      - text: $
+                      - generic [ref=f228e1656]:
+                        - text: "39"
+                        - generic [ref=f228e1657]: .
+                      - text: "98"
+                  - generic [ref=f228e1658]: "List: $56.99"
+                  - generic [ref=f228e1659]:
+                    - text: "List:"
+                    - generic [ref=f228e1660]:
+                      - generic [ref=f228e1661]: "null"
+                      - text: $56.99
+                - link "Prime Two-Day FREE delivery Thu, Oct 1" [ref=f228e1663] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDAyOTQ2NzQ4MDI1MDI6Ojo6&url=%2Fdp%2FB0BZC3S1TY%2Fref%3Dsspa_dk_detail_3%3Fpsc%3D1%26pd_rd_i%3DB0BZC3S1TY%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [ref=f228e1664]:
+                    - generic [ref=f228e1668]:
+                      - img "Prime" [ref=f228e1669]
+                      - text: Two-Day
+                    - generic [ref=f228e1670]: FREE delivery Thu, Oct 1
+            - listitem [ref=f228e1672]:
+              - generic [ref=f228e1673]:
+                - link "Lee Men's Specter Court Sneaker | Casual Shoes" [ref=f228e1674] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExOTU5ODc5ODIxMDI6Ojo6&url=%2Fdp%2FB0GMGB4QM7%2Fref%3Dsspa_dk_detail_4%3Fpsc%3D1%26pd_rd_i%3DB0GMGB4QM7%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [aria-hidden] [ref=f228e1678]: Lee Men's Specter Court Sneaker | Casual Shoes
+                - link "4.4 out of 5 stars 654 ratings" [ref=f228e1680] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExOTU5ODc5ODIxMDI6Ojo6&url=%2Fdp%2FB0GMGB4QM7%2Fref%3Dsspa_dk_detail_4%3Fpsc%3D1%26pd_rd_i%3DB0GMGB4QM7%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy#customerReviews
+                  - text: "654"
+                - link "$54.99" [ref=f228e1683] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExOTU5ODc5ODIxMDI6Ojo6&url=%2Fdp%2FB0GMGB4QM7%2Fref%3Dsspa_dk_detail_4%3Fpsc%3D1%26pd_rd_i%3DB0GMGB4QM7%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [ref=f228e1684]:
+                    - generic [ref=f228e1685]: $54.99
+                    - generic [aria-hidden] [ref=f228e1686]:
+                      - text: $
+                      - generic [ref=f228e1687]:
+                        - text: "54"
+                        - generic [ref=f228e1688]: .
+                      - text: "99"
+                - link "Prime Two-Day FREE delivery Thu, Oct 1" [ref=f228e1690] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExOTU5ODc5ODIxMDI6Ojo6&url=%2Fdp%2FB0GMGB4QM7%2Fref%3Dsspa_dk_detail_4%3Fpsc%3D1%26pd_rd_i%3DB0GMGB4QM7%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [ref=f228e1691]:
+                    - generic [ref=f228e1695]:
+                      - img "Prime" [ref=f228e1696]
+                      - text: Two-Day
+                    - generic [ref=f228e1697]: FREE delivery Thu, Oct 1
+            - listitem [ref=f228e1699]:
+              - generic [ref=f228e1700]:
+                - link "Nike Men's Air Max Alpha Trainer 6 Workout Shoes" [ref=f228e1701] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExNzY1NjM0NzcwMDI6Ojo6&url=%2Fdp%2FB0DCW1VCJ7%2Fref%3Dsspa_dk_detail_5%3Fpsc%3D1%26pd_rd_i%3DB0DCW1VCJ7%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [aria-hidden] [ref=f228e1705]: Nike Men's Air Max Alpha Trainer 6 Workout Shoes
+                - link "4.5 out of 5 stars 2,914 ratings" [ref=f228e1707] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExNzY1NjM0NzcwMDI6Ojo6&url=%2Fdp%2FB0DCW1VCJ7%2Fref%3Dsspa_dk_detail_5%3Fpsc%3D1%26pd_rd_i%3DB0DCW1VCJ7%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy#customerReviews
+                  - text: 2,914
+                - 'link "-15% $84.99 List: $100.00 List: null" [ref=f228e1710] [cursor=pointer]':
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExNzY1NjM0NzcwMDI6Ojo6&url=%2Fdp%2FB0DCW1VCJ7%2Fref%3Dsspa_dk_detail_5%3Fpsc%3D1%26pd_rd_i%3DB0DCW1VCJ7%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - text: "-15%"
+                  - generic [ref=f228e1711]:
+                    - generic [ref=f228e1712]: $84.99
+                    - generic [aria-hidden] [ref=f228e1713]:
+                      - text: $
+                      - generic [ref=f228e1714]:
+                        - text: "84"
+                        - generic [ref=f228e1715]: .
+                      - text: "99"
+                  - generic [ref=f228e1716]: "List: $100.00"
+                  - generic [ref=f228e1717]:
+                    - text: "List:"
+                    - generic [ref=f228e1718]:
+                      - generic [ref=f228e1719]: "null"
+                      - text: $100.00
+                - link "Prime FREE delivery Fri, Oct 2" [ref=f228e1721] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDExNzY1NjM0NzcwMDI6Ojo6&url=%2Fdp%2FB0DCW1VCJ7%2Fref%3Dsspa_dk_detail_5%3Fpsc%3D1%26pd_rd_i%3DB0DCW1VCJ7%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [ref=f228e1722]:
+                    - img "Prime" [ref=f228e1725]
+                    - generic [ref=f228e1726]: FREE delivery Fri, Oct 2
+            - listitem [ref=f228e1728]:
+              - generic [ref=f228e1729]:
+                - link "K-Swiss Men's ST329 CMF Sneaker, Wide Tennis Walking Shoes Leather Upper | Court Inspired, Tennis Heritage, Comfort Soft Cushioning, Arch Support,Wide Feet fit, Chunky Silhouette, Classic Style." [ref=f228e1730] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDA5MjI0ODY4MTY3MDI6Ojo6&url=%2Fdp%2FB0BLJGBXRV%2Fref%3Dsspa_dk_detail_6%3Fpsc%3D1%26pd_rd_i%3DB0BLJGBXRV%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [aria-hidden] [ref=f228e1734]: K-Swiss Men's ST329 CMF Sneaker, Wide Tennis Walking Shoes Leather Upper | Court…
+                - link "4.6 out of 5 stars 20,503 ratings" [ref=f228e1736] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDA5MjI0ODY4MTY3MDI6Ojo6&url=%2Fdp%2FB0BLJGBXRV%2Fref%3Dsspa_dk_detail_6%3Fpsc%3D1%26pd_rd_i%3DB0BLJGBXRV%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy#customerReviews
+                  - text: 20,503
+                - link "$70.00" [ref=f228e1739] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDA5MjI0ODY4MTY3MDI6Ojo6&url=%2Fdp%2FB0BLJGBXRV%2Fref%3Dsspa_dk_detail_6%3Fpsc%3D1%26pd_rd_i%3DB0BLJGBXRV%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [ref=f228e1740]:
+                    - generic [ref=f228e1741]: $70.00
+                    - generic [aria-hidden] [ref=f228e1742]:
+                      - text: $
+                      - generic [ref=f228e1743]:
+                        - text: "70"
+                        - generic [ref=f228e1744]: .
+                      - text: "00"
+                - link "Prime FREE delivery Fri, Oct 2" [ref=f228e1746] [cursor=pointer]:
+                  - /url: /sspa/click?ie=UTF8&spc=MTo2MDYzOTY2NzY5NDQwNjMwOjE3OTA3NDc2ODk6c3BfZGV0YWlsMjozMDA5MjI0ODY4MTY3MDI6Ojo6&url=%2Fdp%2FB0BLJGBXRV%2Fref%3Dsspa_dk_detail_6%3Fpsc%3D1%26pd_rd_i%3DB0BLJGBXRV%26pd_rd_w%3D4OH3V%26content-id%3Damzn1.sym.4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_p%3D4a7f44df-467c-45a1-af5f-91661a6df2f9%26pf_rd_r%3DF9GY2YVVB2YXZ38HDWGJ%26pd_rd_wg%3D97uWr%26pd_rd_r%3Deefb065a-a83f-46f6-91ba-5d898779b1fb%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9kZXRhaWwy
+                  - generic [ref=f228e1747]:
+                    - img "Prime" [ref=f228e1750]
+                    - generic [ref=f228e1751]: FREE delivery Fri, Oct 2
+      - generic [ref=f228e1755]:
+        - iframe [ref=f228e1756]:
+          - generic [ref=f230e4]:
+            - generic [aria-hidden] [ref=f230e5]: "Click to navigate to product detail page Sponsored Ad. Product image. Branded image. Crayola Story Creator. Price: $27.99."
+            - img "Product image" [ref=f230e13]
+            - link "Click to navigate to product detail page" [ref=f230e17] [cursor=pointer]:
+              - /url: https://www.amazon.com/dp/B0GTBXW24D?aref=IOOmERrshI&aaxitk=8cb4ff4d31f490c6dac083955e764dd1&language=en_US&pd_rd_plhdr=t&ref=dacx_dp_588445214804406443_590635643957376214
+        - button "Leave feedback on Sponsored ad" [ref=f228e1758] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f228e1759]: Sponsored
+      - group [ref=f228e1765]:
+        - heading "Similar brands on Amazon" [level=2] [ref=f228e1768]
+        - button "Leave feedback on Sponsored ad" [ref=f228e1773] [cursor=pointer]: Sponsored
+        - group [ref=f228e1778]:
+          - list [ref=f228e1779]:
+            - listitem [ref=f228e1780]:
+              - generic [ref=f228e1785]:
+                - link "Sponsored video, click to navigate to featured page." [ref=f228e1790] [cursor=pointer]:
+                  - /url: https://aax-us-east-retail-direct.amazon.com/x/c/JD6OjpP_1hAVLt3MEgrZq1QAAAGg8OFBSAEAAAH2AQBvbm9fdHhuX2JpZDIgICBvbm9fdHhuX2ltcDIgICDKNuL2/clv1c_ek-ww3fyFcbaDqnuA6reL2QKkGxCaEgYnU0pY9y_l87C9-1jB_icDB91gJi72QC_JnU3745i3oNyirSKnjTgYIW0_aLrSSZJvqiSfjdhwkNXefxq1579eSw4pnsSl6H_OCqIaop5tUeAJcyIbRPG-dnXcJ2dVzSo0sJswBu16rJn3O69ax1nZUnLfBAUjypPL2KF51JCaQrdhbx7k1mk4hOnHwGOPpcXPKAAPkJm4nDw8sMOtwY9_C7cRVX-umEGM6S5tlDuavlPAT_cjQTSf6ronAOyR5naT3xvEQ8w_3AojYp-xeZaHUJ_40XV-Bg6PtM0t4i-lehaPOLbdY929x47ZuzLKWCG722rvZFz8bTcFG-wKhW8D0RgufjDXZ4ipSSUg5UShLGXguzD50S6QVEV1AKM-HM4mj5M5Oc-Rh2pKkR_0YA_IT7MJbBt_IfcJUEvtBe1ZVkR_bb6Vql_okMIxXHvnBS5HG26TkBz9XvZ_gDESnUm97FnKkUbivoenky5uj5I7pw-V4ygTzn-67orQlSoY1W3eXpxcZ7_KombGtehTd4KcrUAzpUohUR28J1eWSbuP3DGY9G8akRZiS1zSGf4xoSrVm_womCMuq4m4Qe-0aN_nhwe_rNodHRJ9iGghZ-jB8Pz6rZvp6A9ZMJKRw0KUTOOyPKl-LyzrBjRIqMyWOv-1L7wOCfX6fR24zLz0mPY5nFYh02GZp4AvXW0Yfz0SYviDA-FPCgEkbUqXSRObN4iOGkGFjg8TcL3EBnYqYKrnwWW_Z4Hk4RA5BWOWaeGoFYpy48QHI90W9y5_Zq-hjxscyfgZog1jRUaE3GMIbwnJzGV4O0v4xNEwRFSSaUWZFDV_xt0tkR2jhQYYMQc-RKmoRpeB_ya_FDbcExE7O9Obn7K4GAqSzit8xM2WXeDQk7vv9pF59UKRWdXuMuZakZaha6QdzOlAVsS2BVmpvHvwkd059GT24_dYzpiWPKTrurfqdoRiIi08r6-CWtvn0m1QyFZRYwRkNmTBLHuAWMAbgeA7zH8zRoM-L38GZ_kF8w/https://www.amazon.com/dp/B0FRL64WJ7/?_encoding=UTF8&pd_rd_i=B0FRL64WJ7&pd_rd_i=B0FRL64WJ7&ref_=sbx_be_s_sparkle_ssd_vid&pd_rd_w=ueWkm&content-id=amzn1.sym.ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_w=ueWkm&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb
+                - generic [ref=f228e1798]:
+                  - link [ref=f228e1801] [cursor=pointer]:
+                    - /url: https://aax-us-east-retail-direct.amazon.com/x/c/JD6OjpP_1hAVLt3MEgrZq1QAAAGg8OFBSAEAAAH2AQBvbm9fdHhuX2JpZDIgICBvbm9fdHhuX2ltcDIgICDKNuL2/clv1c_ek-ww3fyFcbaDqnuA6reL2QKkGxCaEgYnU0pY9y_l87C9-1jB_icDB91gJi72QC_JnU3745i3oNyirSKnjTgYIW0_aLrSSZJvqiSfjdhwkNXefxq1579eSw4pnsSl6H_OCqIaop5tUeAJcyIbRPG-dnXcJ2dVzSo0sJswBu16rJn3O69ax1nZUnLfBAUjypPL2KF51JCaQrdhbx7k1mk4hOnHwGOPpcXPKAAPkJm4nDw8sMOtwY9_C7cRVX-umEGM6S5tlDuavlPAT_cjQTSf6ronAOyR5naT3xvEQ8w_3AojYp-xeZaHUJ_40XV-Bg6PtM0t4i-lehaPOLbdY929x47ZuzLKWCG722rvZFz8bTcFG-wKhW8D0RgufjDXZ4ipSSUg5UShLGXguzD50S6QVEV1AKM-HM4mj5M5Oc-Rh2pKkR_0YA_IT7MJbBt_IfcJUEvtBe1ZVkR_bb6Vql_okMIxXHvnBS5HG26TkBz9XvZ_gDESnUm97FnKkUbivoenky5uj5I7pw-V4ygTzn-67orQlSoY1W3eXpxcZ7_KombGtehTd4KcrUAzpUohUR28J1eWSbuP3DGY9G8akRZiS1zSGf4xoSrVm_womCMuq4m4Qe-0aN_nhwe_rNodHRJ9iGghZ-jB8Pz6rZvp6A9ZMJKRw0KUTOOyPKl-LyzrBjRIqMyWOv-1L7wOCfX6fR24zLz0mPY5nFYh02GZp4AvXW0Yfz0SYviDA-FPCgEkbUqXSRObN4iOGkGFjg8TcL3EBnYqYKrnwWW_Z4Hk4RA5BWOWaeGoFYpy48QHI90W9y5_Zq-hjxscyfgZog1jRUaE3GMIbwnJzGV4O0v4xNEwRFSSaUWZFDV_xt0tkR2jhQYYMQc-RKmoRpeB_ya_FDbcExE7O9Obn7K4GAqSzit8xM2WXeDQk7vv9pF59UKRWdXuMuZakZaha6QdzOlAVsS2BVmpvHvwkd059GT24_dYzpiWPKTrurfqdoRiIi08r6-CWtvn0m1QyFZRYwRkNmTBLHuAWMAbgeA7zH8zRoM-L38GZ_kF8w/https://www.amazon.com/dp/B0FRL64WJ7/?_encoding=UTF8&pd_rd_i=B0FRL64WJ7&pd_rd_i=B0FRL64WJ7&ref_=sbx_be_s_sparkle_ssd_img&pd_rd_w=ueWkm&content-id=amzn1.sym.ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_w=ueWkm&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb
+                    - img "Jakcuz High Top Sneakers Plus Size for Men Comfortable Lightweight Mesh Running Tennis Workout Gym Training Shoes Black Size 44" [ref=f228e1803]
+                  - generic [ref=f228e1805]:
+                    - link [aria-hidden] [ref=f228e1806] [cursor=pointer]:
+                      - /url: https://aax-us-east-retail-direct.amazon.com/x/c/JD6OjpP_1hAVLt3MEgrZq1QAAAGg8OFBSAEAAAH2AQBvbm9fdHhuX2JpZDIgICBvbm9fdHhuX2ltcDIgICDKNuL2/clv1c_ek-ww3fyFcbaDqnuA6reL2QKkGxCaEgYnU0pY9y_l87C9-1jB_icDB91gJi72QC_JnU3745i3oNyirSKnjTgYIW0_aLrSSZJvqiSfjdhwkNXefxq1579eSw4pnsSl6H_OCqIaop5tUeAJcyIbRPG-dnXcJ2dVzSo0sJswBu16rJn3O69ax1nZUnLfBAUjypPL2KF51JCaQrdhbx7k1mk4hOnHwGOPpcXPKAAPkJm4nDw8sMOtwY9_C7cRVX-umEGM6S5tlDuavlPAT_cjQTSf6ronAOyR5naT3xvEQ8w_3AojYp-xeZaHUJ_40XV-Bg6PtM0t4i-lehaPOLbdY929x47ZuzLKWCG722rvZFz8bTcFG-wKhW8D0RgufjDXZ4ipSSUg5UShLGXguzD50S6QVEV1AKM-HM4mj5M5Oc-Rh2pKkR_0YA_IT7MJbBt_IfcJUEvtBe1ZVkR_bb6Vql_okMIxXHvnBS5HG26TkBz9XvZ_gDESnUm97FnKkUbivoenky5uj5I7pw-V4ygTzn-67orQlSoY1W3eXpxcZ7_KombGtehTd4KcrUAzpUohUR28J1eWSbuP3DGY9G8akRZiS1zSGf4xoSrVm_womCMuq4m4Qe-0aN_nhwe_rNodHRJ9iGghZ-jB8Pz6rZvp6A9ZMJKRw0KUTOOyPKl-LyzrBjRIqMyWOv-1L7wOCfX6fR24zLz0mPY5nFYh02GZp4AvXW0Yfz0SYviDA-FPCgEkbUqXSRObN4iOGkGFjg8TcL3EBnYqYKrnwWW_Z4Hk4RA5BWOWaeGoFYpy48QHI90W9y5_Zq-hjxscyfgZog1jRUaE3GMIbwnJzGV4O0v4xNEwRFSSaUWZFDV_xt0tkR2jhQYYMQc-RKmoRpeB_ya_FDbcExE7O9Obn7K4GAqSzit8xM2WXeDQk7vv9pF59UKRWdXuMuZakZaha6QdzOlAVsS2BVmpvHvwkd059GT24_dYzpiWPKTrurfqdoRiIi08r6-CWtvn0m1QyFZRYwRkNmTBLHuAWMAbgeA7zH8zRoM-L38GZ_kF8w/https://www.amazon.com/dp/B0FRL64WJ7/?_encoding=UTF8&pd_rd_i=B0FRL64WJ7&pd_rd_i=B0FRL64WJ7&ref_=sbx_be_s_sparkle_ssd_bkg&pd_rd_w=ueWkm&content-id=amzn1.sym.ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_w=ueWkm&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb
+                    - generic [ref=f228e1807]:
+                      - link [aria-hidden] [ref=f228e1808] [cursor=pointer]:
+                        - /url: https://aax-us-east-retail-direct.amazon.com/x/c/JD6OjpP_1hAVLt3MEgrZq1QAAAGg8OFBSAEAAAH2AQBvbm9fdHhuX2JpZDIgICBvbm9fdHhuX2ltcDIgICDKNuL2/clv1c_ek-ww3fyFcbaDqnuA6reL2QKkGxCaEgYnU0pY9y_l87C9-1jB_icDB91gJi72QC_JnU3745i3oNyirSKnjTgYIW0_aLrSSZJvqiSfjdhwkNXefxq1579eSw4pnsSl6H_OCqIaop5tUeAJcyIbRPG-dnXcJ2dVzSo0sJswBu16rJn3O69ax1nZUnLfBAUjypPL2KF51JCaQrdhbx7k1mk4hOnHwGOPpcXPKAAPkJm4nDw8sMOtwY9_C7cRVX-umEGM6S5tlDuavlPAT_cjQTSf6ronAOyR5naT3xvEQ8w_3AojYp-xeZaHUJ_40XV-Bg6PtM0t4i-lehaPOLbdY929x47ZuzLKWCG722rvZFz8bTcFG-wKhW8D0RgufjDXZ4ipSSUg5UShLGXguzD50S6QVEV1AKM-HM4mj5M5Oc-Rh2pKkR_0YA_IT7MJbBt_IfcJUEvtBe1ZVkR_bb6Vql_okMIxXHvnBS5HG26TkBz9XvZ_gDESnUm97FnKkUbivoenky5uj5I7pw-V4ygTzn-67orQlSoY1W3eXpxcZ7_KombGtehTd4KcrUAzpUohUR28J1eWSbuP3DGY9G8akRZiS1zSGf4xoSrVm_womCMuq4m4Qe-0aN_nhwe_rNodHRJ9iGghZ-jB8Pz6rZvp6A9ZMJKRw0KUTOOyPKl-LyzrBjRIqMyWOv-1L7wOCfX6fR24zLz0mPY5nFYh02GZp4AvXW0Yfz0SYviDA-FPCgEkbUqXSRObN4iOGkGFjg8TcL3EBnYqYKrnwWW_Z4Hk4RA5BWOWaeGoFYpy48QHI90W9y5_Zq-hjxscyfgZog1jRUaE3GMIbwnJzGV4O0v4xNEwRFSSaUWZFDV_xt0tkR2jhQYYMQc-RKmoRpeB_ya_FDbcExE7O9Obn7K4GAqSzit8xM2WXeDQk7vv9pF59UKRWdXuMuZakZaha6QdzOlAVsS2BVmpvHvwkd059GT24_dYzpiWPKTrurfqdoRiIi08r6-CWtvn0m1QyFZRYwRkNmTBLHuAWMAbgeA7zH8zRoM-L38GZ_kF8w/https://www.amazon.com/dp/B0FRL64WJ7/?_encoding=UTF8&pd_rd_i=B0FRL64WJ7&pd_rd_i=B0FRL64WJ7&ref_=sbx_be_s_sparkle_ssd_bkg&pd_rd_w=ueWkm&content-id=amzn1.sym.ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_w=ueWkm&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb
+                      - link "Jakcuz Men's High Top Sneakers Breathable Gym Athletic Running Walking Tennis Boy Comfortable Fashion Platform Shoes" [ref=f228e1809] [cursor=pointer]:
+                        - /url: https://aax-us-east-retail-direct.amazon.com/x/c/JD6OjpP_1hAVLt3MEgrZq1QAAAGg8OFBSAEAAAH2AQBvbm9fdHhuX2JpZDIgICBvbm9fdHhuX2ltcDIgICDKNuL2/clv1c_ek-ww3fyFcbaDqnuA6reL2QKkGxCaEgYnU0pY9y_l87C9-1jB_icDB91gJi72QC_JnU3745i3oNyirSKnjTgYIW0_aLrSSZJvqiSfjdhwkNXefxq1579eSw4pnsSl6H_OCqIaop5tUeAJcyIbRPG-dnXcJ2dVzSo0sJswBu16rJn3O69ax1nZUnLfBAUjypPL2KF51JCaQrdhbx7k1mk4hOnHwGOPpcXPKAAPkJm4nDw8sMOtwY9_C7cRVX-umEGM6S5tlDuavlPAT_cjQTSf6ronAOyR5naT3xvEQ8w_3AojYp-xeZaHUJ_40XV-Bg6PtM0t4i-lehaPOLbdY929x47ZuzLKWCG722rvZFz8bTcFG-wKhW8D0RgufjDXZ4ipSSUg5UShLGXguzD50S6QVEV1AKM-HM4mj5M5Oc-Rh2pKkR_0YA_IT7MJbBt_IfcJUEvtBe1ZVkR_bb6Vql_okMIxXHvnBS5HG26TkBz9XvZ_gDESnUm97FnKkUbivoenky5uj5I7pw-V4ygTzn-67orQlSoY1W3eXpxcZ7_KombGtehTd4KcrUAzpUohUR28J1eWSbuP3DGY9G8akRZiS1zSGf4xoSrVm_womCMuq4m4Qe-0aN_nhwe_rNodHRJ9iGghZ-jB8Pz6rZvp6A9ZMJKRw0KUTOOyPKl-LyzrBjRIqMyWOv-1L7wOCfX6fR24zLz0mPY5nFYh02GZp4AvXW0Yfz0SYviDA-FPCgEkbUqXSRObN4iOGkGFjg8TcL3EBnYqYKrnwWW_Z4Hk4RA5BWOWaeGoFYpy48QHI90W9y5_Zq-hjxscyfgZog1jRUaE3GMIbwnJzGV4O0v4xNEwRFSSaUWZFDV_xt0tkR2jhQYYMQc-RKmoRpeB_ya_FDbcExE7O9Obn7K4GAqSzit8xM2WXeDQk7vv9pF59UKRWdXuMuZakZaha6QdzOlAVsS2BVmpvHvwkd059GT24_dYzpiWPKTrurfqdoRiIi08r6-CWtvn0m1QyFZRYwRkNmTBLHuAWMAbgeA7zH8zRoM-L38GZ_kF8w/https://www.amazon.com/dp/B0FRL64WJ7/?_encoding=UTF8&pd_rd_i=B0FRL64WJ7&pd_rd_i=B0FRL64WJ7&ref_=sbx_be_s_sparkle_ssd_tt&pd_rd_w=ueWkm&content-id=amzn1.sym.ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_w=ueWkm&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb
+                    - link "Rated 4.2 out of 5 stars from 376 reviews" [ref=f228e1811] [cursor=pointer]:
+                      - /url: https://aax-us-east-retail-direct.amazon.com/x/c/JD6OjpP_1hAVLt3MEgrZq1QAAAGg8OFBSAEAAAH2AQBvbm9fdHhuX2JpZDIgICBvbm9fdHhuX2ltcDIgICDKNuL2/clv1c_ek-ww3fyFcbaDqnuA6reL2QKkGxCaEgYnU0pY9y_l87C9-1jB_icDB91gJi72QC_JnU3745i3oNyirSKnjTgYIW0_aLrSSZJvqiSfjdhwkNXefxq1579eSw4pnsSl6H_OCqIaop5tUeAJcyIbRPG-dnXcJ2dVzSo0sJswBu16rJn3O69ax1nZUnLfBAUjypPL2KF51JCaQrdhbx7k1mk4hOnHwGOPpcXPKAAPkJm4nDw8sMOtwY9_C7cRVX-umEGM6S5tlDuavlPAT_cjQTSf6ronAOyR5naT3xvEQ8w_3AojYp-xeZaHUJ_40XV-Bg6PtM0t4i-lehaPOLbdY929x47ZuzLKWCG722rvZFz8bTcFG-wKhW8D0RgufjDXZ4ipSSUg5UShLGXguzD50S6QVEV1AKM-HM4mj5M5Oc-Rh2pKkR_0YA_IT7MJbBt_IfcJUEvtBe1ZVkR_bb6Vql_okMIxXHvnBS5HG26TkBz9XvZ_gDESnUm97FnKkUbivoenky5uj5I7pw-V4ygTzn-67orQlSoY1W3eXpxcZ7_KombGtehTd4KcrUAzpUohUR28J1eWSbuP3DGY9G8akRZiS1zSGf4xoSrVm_womCMuq4m4Qe-0aN_nhwe_rNodHRJ9iGghZ-jB8Pz6rZvp6A9ZMJKRw0KUTOOyPKl-LyzrBjRIqMyWOv-1L7wOCfX6fR24zLz0mPY5nFYh02GZp4AvXW0Yfz0SYviDA-FPCgEkbUqXSRObN4iOGkGFjg8TcL3EBnYqYKrnwWW_Z4Hk4RA5BWOWaeGoFYpy48QHI90W9y5_Zq-hjxscyfgZog1jRUaE3GMIbwnJzGV4O0v4xNEwRFSSaUWZFDV_xt0tkR2jhQYYMQc-RKmoRpeB_ya_FDbcExE7O9Obn7K4GAqSzit8xM2WXeDQk7vv9pF59UKRWdXuMuZakZaha6QdzOlAVsS2BVmpvHvwkd059GT24_dYzpiWPKTrurfqdoRiIi08r6-CWtvn0m1QyFZRYwRkNmTBLHuAWMAbgeA7zH8zRoM-L38GZ_kF8w/https://www.amazon.com/dp/B0FRL64WJ7/?_encoding=UTF8&pd_rd_i=B0FRL64WJ7&pd_rd_i=B0FRL64WJ7&ref_=sbx_be_s_sparkle_ssd_rev&pd_rd_w=ueWkm&content-id=amzn1.sym.ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_w=ueWkm&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb
+                      - text: "4.2"
+                      - generic [ref=f228e1812]: 4.2 out of 5 stars
+                      - text: "376"
+                    - link "$45.99" [ref=f228e1815] [cursor=pointer]:
+                      - /url: https://aax-us-east-retail-direct.amazon.com/x/c/JD6OjpP_1hAVLt3MEgrZq1QAAAGg8OFBSAEAAAH2AQBvbm9fdHhuX2JpZDIgICBvbm9fdHhuX2ltcDIgICDKNuL2/clv1c_ek-ww3fyFcbaDqnuA6reL2QKkGxCaEgYnU0pY9y_l87C9-1jB_icDB91gJi72QC_JnU3745i3oNyirSKnjTgYIW0_aLrSSZJvqiSfjdhwkNXefxq1579eSw4pnsSl6H_OCqIaop5tUeAJcyIbRPG-dnXcJ2dVzSo0sJswBu16rJn3O69ax1nZUnLfBAUjypPL2KF51JCaQrdhbx7k1mk4hOnHwGOPpcXPKAAPkJm4nDw8sMOtwY9_C7cRVX-umEGM6S5tlDuavlPAT_cjQTSf6ronAOyR5naT3xvEQ8w_3AojYp-xeZaHUJ_40XV-Bg6PtM0t4i-lehaPOLbdY929x47ZuzLKWCG722rvZFz8bTcFG-wKhW8D0RgufjDXZ4ipSSUg5UShLGXguzD50S6QVEV1AKM-HM4mj5M5Oc-Rh2pKkR_0YA_IT7MJbBt_IfcJUEvtBe1ZVkR_bb6Vql_okMIxXHvnBS5HG26TkBz9XvZ_gDESnUm97FnKkUbivoenky5uj5I7pw-V4ygTzn-67orQlSoY1W3eXpxcZ7_KombGtehTd4KcrUAzpUohUR28J1eWSbuP3DGY9G8akRZiS1zSGf4xoSrVm_womCMuq4m4Qe-0aN_nhwe_rNodHRJ9iGghZ-jB8Pz6rZvp6A9ZMJKRw0KUTOOyPKl-LyzrBjRIqMyWOv-1L7wOCfX6fR24zLz0mPY5nFYh02GZp4AvXW0Yfz0SYviDA-FPCgEkbUqXSRObN4iOGkGFjg8TcL3EBnYqYKrnwWW_Z4Hk4RA5BWOWaeGoFYpy48QHI90W9y5_Zq-hjxscyfgZog1jRUaE3GMIbwnJzGV4O0v4xNEwRFSSaUWZFDV_xt0tkR2jhQYYMQc-RKmoRpeB_ya_FDbcExE7O9Obn7K4GAqSzit8xM2WXeDQk7vv9pF59UKRWdXuMuZakZaha6QdzOlAVsS2BVmpvHvwkd059GT24_dYzpiWPKTrurfqdoRiIi08r6-CWtvn0m1QyFZRYwRkNmTBLHuAWMAbgeA7zH8zRoM-L38GZ_kF8w/https://www.amazon.com/dp/B0FRL64WJ7/?_encoding=UTF8&pd_rd_i=B0FRL64WJ7&pd_rd_i=B0FRL64WJ7&ref_=sbx_be_s_sparkle_ssd_pce&pd_rd_w=ueWkm&content-id=amzn1.sym.ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_w=ueWkm&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb
+                      - generic [ref=f228e1816]:
+                        - generic [ref=f228e1817]: $45.99
+                        - generic [aria-hidden] [ref=f228e1818]:
+                          - text: $
+                          - generic [ref=f228e1819]: "45."
+                          - text: "99"
+            - listitem [ref=f228e1820]:
+              - generic [ref=f228e1825]:
+                - link "Sponsored video, click to navigate to featured page." [ref=f228e1830] [cursor=pointer]:
+                  - /url: https://aax-us-east-retail-direct.amazon.com/x/c/JJ2kALl3_ASU2ax-FDaCYWsAAAGg8OFBSQEAAAH2AQBvbm9fdHhuX2JpZDIgICBvbm9fdHhuX2ltcDIgICCF6Meh/clv1c_ek-ww3HyFdbWDqnuA6rWL0SKkGxDaEgcnUnh4cmJisnMS5dUUUKs9nOT1a_ElRIKPuPF2LfbW5Ly5aG24V3VkYH_CD2lnCbLwUik1MUWNR8_57_Ym3fAzmjglt1skNHRL4R87gVxxRQLqzyWgsk8a1HbuvW8lxKO0oT2Qzym27ATLLYL-VO1g9xT3jIcMhMnLdS7x2to3mpp1uY6ow2Z8PRWi661yd_qBjR2Og31bVFIerx-FWqlzsWguyYylJfllZ_gNKsAFhQaa8EWin0xYhUHXEN6S4dj1od_ORTswKlVMnHVUQU5JFLHAG9j-XVeoAHJYOkziexcxlYJwqtAiwbkuDYPYOzRsRTLxP7cwyIdvsIaTkPJ2sTXu1Cs27ppllE6LPy5yaYuN0mlFSN7t20icQ-M-FswHn9cgJJp-9QchNgj3Vqo02NlQA5N_GT866t4fC7QeRJMjf1NiS-cN0N5ew5luWmIeTAEfogBD9XZikx4u1jIG4NFDOyh5pg5RuyoGs-4M6G80c0OiL_iPHnupwE0nmBpTo4cXJrahBktuEb--0P1HtE3qetvcRTPLGN4JnivwDbb521nLkszthiEOtvs8cP_02d3mLSFayWzilpYs8quyROORlbFwuQjDHaw-h0epmu_eaY_skLsTnUQ2c8v3HpnGixS9jki5ih0_Y6IX-Wr53G0beUGx6mMz7Ntwv_RmmixgZoLv0vMSkaQ9gNgrfpnwwl6f1FTIDmJsXWaGy9_YtnbDreJNlQKSJ0eOg_Awp5thmbOztyEz2vWC7_2dAlaTbKSNmEjjhDSbm-akyquXNu-Q9Sj1xUDk5PlTUEKg7e0ykRzebvpo8z7gibHl6orxY0QWKUL08K9a7kNQaKp4zvfeADkM2lzfghF4y6Tcprwbk8djZNemPdxERS9RbgfYz4tNhzRClublEYC-D77V2nbvH2hP59pkCJTOgVIIsExnCznvZ26dZ-SnAPraaMLAuFnbZ1kCzMsh6Ci_pHMSyZGeI1MmlOLSbyPp0JYr-xoV9Kwv4noE2DjQzHi/https://www.amazon.com/dp/B0FQN5QY61/?_encoding=UTF8&pd_rd_i=B0FQN5QY61&pd_rd_i=B0FQN5QY61&ref_=sbx_be_s_sparkle_ssd_vid&pd_rd_w=ueWkm&content-id=amzn1.sym.ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_w=ueWkm&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb
+                - generic [ref=f228e1838]:
+                  - link [ref=f228e1841] [cursor=pointer]:
+                    - /url: https://aax-us-east-retail-direct.amazon.com/x/c/JJ2kALl3_ASU2ax-FDaCYWsAAAGg8OFBSQEAAAH2AQBvbm9fdHhuX2JpZDIgICBvbm9fdHhuX2ltcDIgICCF6Meh/clv1c_ek-ww3HyFdbWDqnuA6rWL0SKkGxDaEgcnUnh4cmJisnMS5dUUUKs9nOT1a_ElRIKPuPF2LfbW5Ly5aG24V3VkYH_CD2lnCbLwUik1MUWNR8_57_Ym3fAzmjglt1skNHRL4R87gVxxRQLqzyWgsk8a1HbuvW8lxKO0oT2Qzym27ATLLYL-VO1g9xT3jIcMhMnLdS7x2to3mpp1uY6ow2Z8PRWi661yd_qBjR2Og31bVFIerx-FWqlzsWguyYylJfllZ_gNKsAFhQaa8EWin0xYhUHXEN6S4dj1od_ORTswKlVMnHVUQU5JFLHAG9j-XVeoAHJYOkziexcxlYJwqtAiwbkuDYPYOzRsRTLxP7cwyIdvsIaTkPJ2sTXu1Cs27ppllE6LPy5yaYuN0mlFSN7t20icQ-M-FswHn9cgJJp-9QchNgj3Vqo02NlQA5N_GT866t4fC7QeRJMjf1NiS-cN0N5ew5luWmIeTAEfogBD9XZikx4u1jIG4NFDOyh5pg5RuyoGs-4M6G80c0OiL_iPHnupwE0nmBpTo4cXJrahBktuEb--0P1HtE3qetvcRTPLGN4JnivwDbb521nLkszthiEOtvs8cP_02d3mLSFayWzilpYs8quyROORlbFwuQjDHaw-h0epmu_eaY_skLsTnUQ2c8v3HpnGixS9jki5ih0_Y6IX-Wr53G0beUGx6mMz7Ntwv_RmmixgZoLv0vMSkaQ9gNgrfpnwwl6f1FTIDmJsXWaGy9_YtnbDreJNlQKSJ0eOg_Awp5thmbOztyEz2vWC7_2dAlaTbKSNmEjjhDSbm-akyquXNu-Q9Sj1xUDk5PlTUEKg7e0ykRzebvpo8z7gibHl6orxY0QWKUL08K9a7kNQaKp4zvfeADkM2lzfghF4y6Tcprwbk8djZNemPdxERS9RbgfYz4tNhzRClublEYC-D77V2nbvH2hP59pkCJTOgVIIsExnCznvZ26dZ-SnAPraaMLAuFnbZ1kCzMsh6Ci_pHMSyZGeI1MmlOLSbyPp0JYr-xoV9Kwv4noE2DjQzHi/https://www.amazon.com/dp/B0FQN5QY61/?_encoding=UTF8&pd_rd_i=B0FQN5QY61&pd_rd_i=B0FQN5QY61&ref_=sbx_be_s_sparkle_ssd_img&pd_rd_w=ueWkm&content-id=amzn1.sym.ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_w=ueWkm&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb
+                    - img "Nike Men's Precision 8 Low, White/Black-Black, 10.5" [ref=f228e1843]
+                  - generic [ref=f228e1845]:
+                    - link [aria-hidden] [ref=f228e1846] [cursor=pointer]:
+                      - /url: https://aax-us-east-retail-direct.amazon.com/x/c/JJ2kALl3_ASU2ax-FDaCYWsAAAGg8OFBSQEAAAH2AQBvbm9fdHhuX2JpZDIgICBvbm9fdHhuX2ltcDIgICCF6Meh/clv1c_ek-ww3HyFdbWDqnuA6rWL0SKkGxDaEgcnUnh4cmJisnMS5dUUUKs9nOT1a_ElRIKPuPF2LfbW5Ly5aG24V3VkYH_CD2lnCbLwUik1MUWNR8_57_Ym3fAzmjglt1skNHRL4R87gVxxRQLqzyWgsk8a1HbuvW8lxKO0oT2Qzym27ATLLYL-VO1g9xT3jIcMhMnLdS7x2to3mpp1uY6ow2Z8PRWi661yd_qBjR2Og31bVFIerx-FWqlzsWguyYylJfllZ_gNKsAFhQaa8EWin0xYhUHXEN6S4dj1od_ORTswKlVMnHVUQU5JFLHAG9j-XVeoAHJYOkziexcxlYJwqtAiwbkuDYPYOzRsRTLxP7cwyIdvsIaTkPJ2sTXu1Cs27ppllE6LPy5yaYuN0mlFSN7t20icQ-M-FswHn9cgJJp-9QchNgj3Vqo02NlQA5N_GT866t4fC7QeRJMjf1NiS-cN0N5ew5luWmIeTAEfogBD9XZikx4u1jIG4NFDOyh5pg5RuyoGs-4M6G80c0OiL_iPHnupwE0nmBpTo4cXJrahBktuEb--0P1HtE3qetvcRTPLGN4JnivwDbb521nLkszthiEOtvs8cP_02d3mLSFayWzilpYs8quyROORlbFwuQjDHaw-h0epmu_eaY_skLsTnUQ2c8v3HpnGixS9jki5ih0_Y6IX-Wr53G0beUGx6mMz7Ntwv_RmmixgZoLv0vMSkaQ9gNgrfpnwwl6f1FTIDmJsXWaGy9_YtnbDreJNlQKSJ0eOg_Awp5thmbOztyEz2vWC7_2dAlaTbKSNmEjjhDSbm-akyquXNu-Q9Sj1xUDk5PlTUEKg7e0ykRzebvpo8z7gibHl6orxY0QWKUL08K9a7kNQaKp4zvfeADkM2lzfghF4y6Tcprwbk8djZNemPdxERS9RbgfYz4tNhzRClublEYC-D77V2nbvH2hP59pkCJTOgVIIsExnCznvZ26dZ-SnAPraaMLAuFnbZ1kCzMsh6Ci_pHMSyZGeI1MmlOLSbyPp0JYr-xoV9Kwv4noE2DjQzHi/https://www.amazon.com/dp/B0FQN5QY61/?_encoding=UTF8&pd_rd_i=B0FQN5QY61&pd_rd_i=B0FQN5QY61&ref_=sbx_be_s_sparkle_ssd_bkg&pd_rd_w=ueWkm&content-id=amzn1.sym.ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_w=ueWkm&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb
+                    - generic [ref=f228e1847]:
+                      - link [aria-hidden] [ref=f228e1848] [cursor=pointer]:
+                        - /url: https://aax-us-east-retail-direct.amazon.com/x/c/JJ2kALl3_ASU2ax-FDaCYWsAAAGg8OFBSQEAAAH2AQBvbm9fdHhuX2JpZDIgICBvbm9fdHhuX2ltcDIgICCF6Meh/clv1c_ek-ww3HyFdbWDqnuA6rWL0SKkGxDaEgcnUnh4cmJisnMS5dUUUKs9nOT1a_ElRIKPuPF2LfbW5Ly5aG24V3VkYH_CD2lnCbLwUik1MUWNR8_57_Ym3fAzmjglt1skNHRL4R87gVxxRQLqzyWgsk8a1HbuvW8lxKO0oT2Qzym27ATLLYL-VO1g9xT3jIcMhMnLdS7x2to3mpp1uY6ow2Z8PRWi661yd_qBjR2Og31bVFIerx-FWqlzsWguyYylJfllZ_gNKsAFhQaa8EWin0xYhUHXEN6S4dj1od_ORTswKlVMnHVUQU5JFLHAG9j-XVeoAHJYOkziexcxlYJwqtAiwbkuDYPYOzRsRTLxP7cwyIdvsIaTkPJ2sTXu1Cs27ppllE6LPy5yaYuN0mlFSN7t20icQ-M-FswHn9cgJJp-9QchNgj3Vqo02NlQA5N_GT866t4fC7QeRJMjf1NiS-cN0N5ew5luWmIeTAEfogBD9XZikx4u1jIG4NFDOyh5pg5RuyoGs-4M6G80c0OiL_iPHnupwE0nmBpTo4cXJrahBktuEb--0P1HtE3qetvcRTPLGN4JnivwDbb521nLkszthiEOtvs8cP_02d3mLSFayWzilpYs8quyROORlbFwuQjDHaw-h0epmu_eaY_skLsTnUQ2c8v3HpnGixS9jki5ih0_Y6IX-Wr53G0beUGx6mMz7Ntwv_RmmixgZoLv0vMSkaQ9gNgrfpnwwl6f1FTIDmJsXWaGy9_YtnbDreJNlQKSJ0eOg_Awp5thmbOztyEz2vWC7_2dAlaTbKSNmEjjhDSbm-akyquXNu-Q9Sj1xUDk5PlTUEKg7e0ykRzebvpo8z7gibHl6orxY0QWKUL08K9a7kNQaKp4zvfeADkM2lzfghF4y6Tcprwbk8djZNemPdxERS9RbgfYz4tNhzRClublEYC-D77V2nbvH2hP59pkCJTOgVIIsExnCznvZ26dZ-SnAPraaMLAuFnbZ1kCzMsh6Ci_pHMSyZGeI1MmlOLSbyPp0JYr-xoV9Kwv4noE2DjQzHi/https://www.amazon.com/dp/B0FQN5QY61/?_encoding=UTF8&pd_rd_i=B0FQN5QY61&pd_rd_i=B0FQN5QY61&ref_=sbx_be_s_sparkle_ssd_bkg&pd_rd_w=ueWkm&content-id=amzn1.sym.ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_w=ueWkm&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb
+                      - link "Nike Unisex Adult Precision 8 Low Basketball Shoes" [ref=f228e1849] [cursor=pointer]:
+                        - /url: https://aax-us-east-retail-direct.amazon.com/x/c/JJ2kALl3_ASU2ax-FDaCYWsAAAGg8OFBSQEAAAH2AQBvbm9fdHhuX2JpZDIgICBvbm9fdHhuX2ltcDIgICCF6Meh/clv1c_ek-ww3HyFdbWDqnuA6rWL0SKkGxDaEgcnUnh4cmJisnMS5dUUUKs9nOT1a_ElRIKPuPF2LfbW5Ly5aG24V3VkYH_CD2lnCbLwUik1MUWNR8_57_Ym3fAzmjglt1skNHRL4R87gVxxRQLqzyWgsk8a1HbuvW8lxKO0oT2Qzym27ATLLYL-VO1g9xT3jIcMhMnLdS7x2to3mpp1uY6ow2Z8PRWi661yd_qBjR2Og31bVFIerx-FWqlzsWguyYylJfllZ_gNKsAFhQaa8EWin0xYhUHXEN6S4dj1od_ORTswKlVMnHVUQU5JFLHAG9j-XVeoAHJYOkziexcxlYJwqtAiwbkuDYPYOzRsRTLxP7cwyIdvsIaTkPJ2sTXu1Cs27ppllE6LPy5yaYuN0mlFSN7t20icQ-M-FswHn9cgJJp-9QchNgj3Vqo02NlQA5N_GT866t4fC7QeRJMjf1NiS-cN0N5ew5luWmIeTAEfogBD9XZikx4u1jIG4NFDOyh5pg5RuyoGs-4M6G80c0OiL_iPHnupwE0nmBpTo4cXJrahBktuEb--0P1HtE3qetvcRTPLGN4JnivwDbb521nLkszthiEOtvs8cP_02d3mLSFayWzilpYs8quyROORlbFwuQjDHaw-h0epmu_eaY_skLsTnUQ2c8v3HpnGixS9jki5ih0_Y6IX-Wr53G0beUGx6mMz7Ntwv_RmmixgZoLv0vMSkaQ9gNgrfpnwwl6f1FTIDmJsXWaGy9_YtnbDreJNlQKSJ0eOg_Awp5thmbOztyEz2vWC7_2dAlaTbKSNmEjjhDSbm-akyquXNu-Q9Sj1xUDk5PlTUEKg7e0ykRzebvpo8z7gibHl6orxY0QWKUL08K9a7kNQaKp4zvfeADkM2lzfghF4y6Tcprwbk8djZNemPdxERS9RbgfYz4tNhzRClublEYC-D77V2nbvH2hP59pkCJTOgVIIsExnCznvZ26dZ-SnAPraaMLAuFnbZ1kCzMsh6Ci_pHMSyZGeI1MmlOLSbyPp0JYr-xoV9Kwv4noE2DjQzHi/https://www.amazon.com/dp/B0FQN5QY61/?_encoding=UTF8&pd_rd_i=B0FQN5QY61&pd_rd_i=B0FQN5QY61&ref_=sbx_be_s_sparkle_ssd_tt&pd_rd_w=ueWkm&content-id=amzn1.sym.ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_w=ueWkm&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb
+                    - link "Rated 4.5 out of 5 stars from 103 reviews" [ref=f228e1851] [cursor=pointer]:
+                      - /url: https://aax-us-east-retail-direct.amazon.com/x/c/JJ2kALl3_ASU2ax-FDaCYWsAAAGg8OFBSQEAAAH2AQBvbm9fdHhuX2JpZDIgICBvbm9fdHhuX2ltcDIgICCF6Meh/clv1c_ek-ww3HyFdbWDqnuA6rWL0SKkGxDaEgcnUnh4cmJisnMS5dUUUKs9nOT1a_ElRIKPuPF2LfbW5Ly5aG24V3VkYH_CD2lnCbLwUik1MUWNR8_57_Ym3fAzmjglt1skNHRL4R87gVxxRQLqzyWgsk8a1HbuvW8lxKO0oT2Qzym27ATLLYL-VO1g9xT3jIcMhMnLdS7x2to3mpp1uY6ow2Z8PRWi661yd_qBjR2Og31bVFIerx-FWqlzsWguyYylJfllZ_gNKsAFhQaa8EWin0xYhUHXEN6S4dj1od_ORTswKlVMnHVUQU5JFLHAG9j-XVeoAHJYOkziexcxlYJwqtAiwbkuDYPYOzRsRTLxP7cwyIdvsIaTkPJ2sTXu1Cs27ppllE6LPy5yaYuN0mlFSN7t20icQ-M-FswHn9cgJJp-9QchNgj3Vqo02NlQA5N_GT866t4fC7QeRJMjf1NiS-cN0N5ew5luWmIeTAEfogBD9XZikx4u1jIG4NFDOyh5pg5RuyoGs-4M6G80c0OiL_iPHnupwE0nmBpTo4cXJrahBktuEb--0P1HtE3qetvcRTPLGN4JnivwDbb521nLkszthiEOtvs8cP_02d3mLSFayWzilpYs8quyROORlbFwuQjDHaw-h0epmu_eaY_skLsTnUQ2c8v3HpnGixS9jki5ih0_Y6IX-Wr53G0beUGx6mMz7Ntwv_RmmixgZoLv0vMSkaQ9gNgrfpnwwl6f1FTIDmJsXWaGy9_YtnbDreJNlQKSJ0eOg_Awp5thmbOztyEz2vWC7_2dAlaTbKSNmEjjhDSbm-akyquXNu-Q9Sj1xUDk5PlTUEKg7e0ykRzebvpo8z7gibHl6orxY0QWKUL08K9a7kNQaKp4zvfeADkM2lzfghF4y6Tcprwbk8djZNemPdxERS9RbgfYz4tNhzRClublEYC-D77V2nbvH2hP59pkCJTOgVIIsExnCznvZ26dZ-SnAPraaMLAuFnbZ1kCzMsh6Ci_pHMSyZGeI1MmlOLSbyPp0JYr-xoV9Kwv4noE2DjQzHi/https://www.amazon.com/dp/B0FQN5QY61/?_encoding=UTF8&pd_rd_i=B0FQN5QY61&pd_rd_i=B0FQN5QY61&ref_=sbx_be_s_sparkle_ssd_rev&pd_rd_w=ueWkm&content-id=amzn1.sym.ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_w=ueWkm&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb
+                      - text: "4.5"
+                      - generic [ref=f228e1852]: 4.5 out of 5 stars
+                      - text: "103"
+                    - link "$75.00" [ref=f228e1855] [cursor=pointer]:
+                      - /url: https://aax-us-east-retail-direct.amazon.com/x/c/JJ2kALl3_ASU2ax-FDaCYWsAAAGg8OFBSQEAAAH2AQBvbm9fdHhuX2JpZDIgICBvbm9fdHhuX2ltcDIgICCF6Meh/clv1c_ek-ww3HyFdbWDqnuA6rWL0SKkGxDaEgcnUnh4cmJisnMS5dUUUKs9nOT1a_ElRIKPuPF2LfbW5Ly5aG24V3VkYH_CD2lnCbLwUik1MUWNR8_57_Ym3fAzmjglt1skNHRL4R87gVxxRQLqzyWgsk8a1HbuvW8lxKO0oT2Qzym27ATLLYL-VO1g9xT3jIcMhMnLdS7x2to3mpp1uY6ow2Z8PRWi661yd_qBjR2Og31bVFIerx-FWqlzsWguyYylJfllZ_gNKsAFhQaa8EWin0xYhUHXEN6S4dj1od_ORTswKlVMnHVUQU5JFLHAG9j-XVeoAHJYOkziexcxlYJwqtAiwbkuDYPYOzRsRTLxP7cwyIdvsIaTkPJ2sTXu1Cs27ppllE6LPy5yaYuN0mlFSN7t20icQ-M-FswHn9cgJJp-9QchNgj3Vqo02NlQA5N_GT866t4fC7QeRJMjf1NiS-cN0N5ew5luWmIeTAEfogBD9XZikx4u1jIG4NFDOyh5pg5RuyoGs-4M6G80c0OiL_iPHnupwE0nmBpTo4cXJrahBktuEb--0P1HtE3qetvcRTPLGN4JnivwDbb521nLkszthiEOtvs8cP_02d3mLSFayWzilpYs8quyROORlbFwuQjDHaw-h0epmu_eaY_skLsTnUQ2c8v3HpnGixS9jki5ih0_Y6IX-Wr53G0beUGx6mMz7Ntwv_RmmixgZoLv0vMSkaQ9gNgrfpnwwl6f1FTIDmJsXWaGy9_YtnbDreJNlQKSJ0eOg_Awp5thmbOztyEz2vWC7_2dAlaTbKSNmEjjhDSbm-akyquXNu-Q9Sj1xUDk5PlTUEKg7e0ykRzebvpo8z7gibHl6orxY0QWKUL08K9a7kNQaKp4zvfeADkM2lzfghF4y6Tcprwbk8djZNemPdxERS9RbgfYz4tNhzRClublEYC-D77V2nbvH2hP59pkCJTOgVIIsExnCznvZ26dZ-SnAPraaMLAuFnbZ1kCzMsh6Ci_pHMSyZGeI1MmlOLSbyPp0JYr-xoV9Kwv4noE2DjQzHi/https://www.amazon.com/dp/B0FQN5QY61/?_encoding=UTF8&pd_rd_i=B0FQN5QY61&pd_rd_i=B0FQN5QY61&ref_=sbx_be_s_sparkle_ssd_pce&pd_rd_w=ueWkm&content-id=amzn1.sym.ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb&pf_rd_p=ccb770a9-35d1-4af6-8af2-bcbd12656fbb&pf_rd_r=F9GY2YVVB2YXZ38HDWGJ&pd_rd_wg=97uWr&pd_rd_w=ueWkm&pd_rd_r=eefb065a-a83f-46f6-91ba-5d898779b1fb
+                      - generic [ref=f228e1856]:
+                        - generic [ref=f228e1857]: $75.00
+                        - generic [aria-hidden] [ref=f228e1858]:
+                          - text: $
+                          - generic [ref=f228e1859]: "75."
+                          - text: "00"
+      - generic "Top reviews" [ref=f228e1862]:
+        - separator [aria-hidden] [ref=f228e1863]
+        - generic [ref=f228e1865]:
+          - generic [ref=f228e1866]:
+            - generic [ref=f228e1871]:
+              - heading "Customer reviews" [level=2] [ref=f228e1873]
+              - generic [ref=f228e1875]:
+                - generic [ref=f228e1877]:
+                  - generic [ref=f228e1878]: 4.6 out of 5 stars
+                  - generic [aria-hidden] [ref=f228e1883]: 4.6 out of 5
+                - generic [ref=f228e1884]: 631 global ratings
+              - list [ref=f228e1889]:
+                - listitem [ref=f228e1890]:
+                  - link "83 percent of reviews have 5 stars" [ref=f228e1893] [cursor=pointer]:
+                    - /url: /portal/customer-reviews/B0F8J7KSR1/ref=acr_dp_hist_5?ie=UTF8&filterByStar=five_star&reviewerType=all_reviews#reviews-filter-bar
+                    - generic [aria-hidden] [ref=f228e1894]: 5 star
+                    - progressbar [aria-hidden] [ref=f228e1896]
+                    - generic [aria-hidden] [ref=f228e1897]: 83%
+                - listitem [ref=f228e1898]:
+                  - link "8 percent of reviews have 4 stars" [ref=f228e1901] [cursor=pointer]:
+                    - /url: /portal/customer-reviews/B0F8J7KSR1/ref=acr_dp_hist_4?ie=UTF8&filterByStar=four_star&reviewerType=all_reviews#reviews-filter-bar
+                    - generic [aria-hidden] [ref=f228e1902]: 4 star
+                    - progressbar [aria-hidden] [ref=f228e1904]
+                    - generic [aria-hidden] [ref=f228e1905]: 8%
+                - listitem [ref=f228e1906]:
+                  - link "2 percent of reviews have 3 stars" [ref=f228e1909] [cursor=pointer]:
+                    - /url: /portal/customer-reviews/B0F8J7KSR1/ref=acr_dp_hist_3?ie=UTF8&filterByStar=three_star&reviewerType=all_reviews#reviews-filter-bar
+                    - generic [aria-hidden] [ref=f228e1910]: 3 star
+                    - progressbar [aria-hidden] [ref=f228e1912]
+                    - generic [aria-hidden] [ref=f228e1913]: 2%
+                - listitem [ref=f228e1914]:
+                  - link "1 percent of reviews have 2 stars" [ref=f228e1917] [cursor=pointer]:
+                    - /url: /portal/customer-reviews/B0F8J7KSR1/ref=acr_dp_hist_2?ie=UTF8&filterByStar=two_star&reviewerType=all_reviews#reviews-filter-bar
+                    - generic [aria-hidden] [ref=f228e1918]: 2 star
+                    - progressbar [aria-hidden] [ref=f228e1920]
+                    - generic [aria-hidden] [ref=f228e1921]: 1%
+                - listitem [ref=f228e1922]:
+                  - link "6 percent of reviews have 1 stars" [ref=f228e1925] [cursor=pointer]:
+                    - /url: /portal/customer-reviews/B0F8J7KSR1/ref=acr_dp_hist_1?ie=UTF8&filterByStar=one_star&reviewerType=all_reviews#reviews-filter-bar
+                    - generic [aria-hidden] [ref=f228e1926]: 1 star
+                    - progressbar [aria-hidden] [ref=f228e1928]
+                    - generic [aria-hidden] [ref=f228e1929]: 6%
+              - button "How customer reviews and ratings work" [ref=f228e1934] [cursor=pointer]
+            - separator [aria-hidden] [ref=f228e1936]
+            - generic [ref=f228e1939]:
+              - iframe [ref=f228e1940]:
+                - generic "Sponsored Ad" [ref=f231e2]:
+                  - insertion [ref=f231e3]:
+                    - iframe [ref=f231e4]:
+                      - link [ref=f234e4] [cursor=pointer]:
+                        - /url: https://adclick.g.doubleclick.net/pcs/click?xai=AKAOjstjvf8AGRqXDL8tdXrC17zh3X2tgGLflXrjTa0kEcXjAAYPg0CY1BmMVk0qW1geudYpe8EnrsgaxUc-jXzK4YeQMa3TdraMyzq0Wv6CU35gRXi-orCduvxnDUhnMiI22pCXRIFq-Gc0uvb-_vhM_SRcm74c4b9Z-tgtadFI_sxli_C49kH5SlbOwdnqA-6pZacevXPeY7fzZeMq3ctYk7GAlTGNmnbSkH061oCryrJYDvlQ1dlp1HF3t987FgJ1bUSzH3nkhpRwbhd8Rz6dE5vhmLPMW1Sk2OX7c5vqAoAQGBDmbCMRJ9FmjkCda-E-ZKaHoMPVMLiMFsVlw-wgqLV5Fm9JecEA5XWWEU0pF0KbIjNHLk0ZRxG_DcFBV05EM4eJaZ3kju2rQf_Um6el2KVPajALslr7ojElUxmd0sBGY2-XqbGoVgtX0YW7hagngr2mZdzoTXAguagpY5eErjI9aRbVjfgmhXMlsDGE1udvN3NFVX7YmaghHaDOxEw_-5fjfnoom7a9mDFZQef9DpuovHIzqeCSCkhaHKS3xMCp&sai=AMfl-YSNHH7YobyB1XJDH5mcp-xGH7B_cw2_ohAh2VDWURY-_pNTYtV2n-Qgwc1Oy1kwBFzCZB_YPT7_5g14RkpOicmTGeAMlbF3GXrJ0FDNFgpF4PeI6qmjMOKSqlTscwJjHzGCPIP4YX_tkFzgnrFU1UlnvngS4aMp26pYOfdDkr6xqXL3CCHpcCg25LFH_GFEa4dsyNxsF0SeIgW2mp4Nbud8jz5AbJzn3ObTaqUIIBPG5JdO9h7Maou72s17veUxo2Z1G_Dr9McwqjnGUcpZhwIHJbFwrux3DSzQ2pe9b9xoC6aRANRcYf5RbPQfgBGCca9Ds54NIuScyapQV4pV3V1In2icNw&sig=Cg0ArKJSzEUelDgdn2_l&cry=1&fbs_aeid=%5Bgw_fbsaeid%5D&urlfix=1&adurl=https://aax-events-cell01-cf.us-east.ono.axp.amazon-adsystem.com/x/c/RJci1GJ4m8ryloU7Zw_Ta58AAAGg8OFA-wEAAAH0BABvbm9fdHhuX2JpZDYgICBvbm9fdHhuX2ltcDEgICDewEmj/clv1c_ek-gAfUyHeDC7ntXCKCGaFK9SVSXG64wYtOGB5VycODOeioP5qt9QpNbae9zS6yXPeXM6Ut26t-wOQqMSNv1q-sl_av2ul1ayCWq5HjpD7DwpZltWpD9A-uUFJGG-Tb33YzGZRINeIZzx3pKS6oPsJMGOYFJ8FevEkvwkfxqpRID71OVF_1y3LMpEBV2oSB1sEbZLrduOuVjMEaJT7J6ghf5S-fTUoB9HEVnsnr_KK4DxuA47QhLfjQy_xO5RoT_kq-3bOMeE80-yj0HLBv8Ymc6UTvz9BDo4dUOVRcqWSYG0-y-bwFaJ_yrwKrvZ7fBkhO9Nlcxz8tlnb8GxvzFPBq9_5rJTbz4anREoZbEPuNXC-478AEZ1n05kyqBr0mi9lB24UucULwl-RYJlFnjZSIRWFxWS4DSZ1N0GEQcBc5XMTKZ-VmFqpSk1GhgHd2-uYCJrnqOdMC661wINjLbfBLX0gD7amaljiFQ48aAfCk-PbJLzP3lG8YIx-d1KGJRSQMrKhkvlXvVwevWm8sDQbbQkEK-SVbzfaIe0YxuLRcF8tTRL54oVW7t_QOnZ_V_22iTiUUmyeSHeCk81CvXZyXhXEmsW3hB90T2oL4gRf1vE_8O8faKLC-Spx_WwUL-iU80OmbbyJXih0CUx_COBHMyj9CpPuRtcWcLTrIoVKHIJ3xyV8cJC-w1uMlekOvA_XPiphmXP-rKsP1Oc1NS76HCOq32DQcdxcwLM5o4dSqJKqPkb24Qs4CWbYs-LQ8e--0nHdeQfTf_G153ivL1Oq1tLtTbxGmSnsPUQJiFhTUbEQxJRyz8AsCJYVYnKtqmj14/https://lets.shop/2635/starbucksfrapp/%3Futm_source%3DAmazon%26utm_medium%3DDisplay%26utm_campaign%3DPBNA_US_2026_Starbucks_Starbucks_Frap_Frapp_POLV_Awareness_Programmatic_Reach_PEB_FPC_032_No_POLV_X%26dclid%3D%25edclid!%26gad_source%3D7%26gad_campaignid%3D24260575593
+                        - img "Advertisement" [ref=f234e5]
+              - button "Leave feedback on Sponsored ad" [ref=f228e1942] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f228e1943]: Sponsored
+          - generic [ref=f228e1948]:
+            - generic [ref=f228e1952]:
+              - heading "Customers say" [level=3] [ref=f228e1953]
+              - generic [ref=f228e1954]: Customers find these basketball shoes to be better than advertised, with a comfortable fit and perfect size. They appreciate the value for money, describing them as great shoes for the price.
+              - generic [ref=f228e1956]:
+                - generic [ref=f228e1957]:
+                  - generic [ref=f228e1958]: AI Generated from the text of customer reviews
+                  - generic [aria-hidden] [ref=f228e1960]: Generated from the text of customer reviews
+                - heading "Select to learn more" [level=4] [ref=f228e1961]
+                - tablist "Select to learn more" [ref=f228e1962]:
+                  - generic [ref=f228e1963]:
+                    - tab "Positive aspect, quality, 34 mentions" [ref=f228e1967]:
+                      - button "Quality(34)" [ref=f228e1968] [cursor=pointer]
+                    - tab "Positive aspect, fit, 13 mentions" [ref=f228e1977]:
+                      - button "Fit(13)" [ref=f228e1978] [cursor=pointer]
+                    - tab "Positive aspect, comfort, 10 mentions" [ref=f228e1987]:
+                      - button "Comfort(10)" [ref=f228e1988] [cursor=pointer]
+                    - tab "Positive aspect, size, 7 mentions" [ref=f228e1997]:
+                      - button "Size(7)" [ref=f228e1998] [cursor=pointer]
+                    - tab "Positive aspect, value for money, 5 mentions" [ref=f228e2007]:
+                      - button "Value for money(5)" [ref=f228e2008] [cursor=pointer]
+            - generic [ref=f228e2017]:
+              - generic [ref=f228e2018]:
+                - heading "Top reviews from the United States" [level=3] [ref=f228e2019]
+                - list [ref=f228e2020]:
+                  - generic [ref=f228e2024] [cursor=pointer]:
+                    - button "Translate all reviews to English" [ref=f228e2025]
+                    - generic [aria-hidden] [ref=f228e2026]: Translate all reviews to English
+                  - listitem [ref=f228e2027]:
+                    - generic [ref=f228e2030]:
+                      - link "Rondo 711" [ref=f228e2032] [cursor=pointer]:
+                        - /url: /gp/profile/amzn1.account.AGNCTXMXD22RNT3GGUUGVBAWQSEA?ref=cm_cr_dp_d_bdcrb_top
+                      - generic [ref=f228e2038]: 5 out of 5 stars
+                      - link [ref=f228e2041] [cursor=pointer]:
+                        - /url: /portal/customer-reviews/srp/-/RP4KZ96QEXR92/ref=cm_cr_dp_d_rvw_ttl?_encoding=UTF8&ie=UTF8
+                        - heading "Comfortable, Stylish, and Definitely not an old man's Nike" [level=5] [ref=f228e2042]
+                      - generic [ref=f228e2043]: Reviewed in the United States on September 7, 2026
+                      - generic [ref=f228e2044]:
+                        - 'link "Size: 10 Color: White/White/Light Smoke Grey" [ref=f228e2045] [cursor=pointer]':
+                          - /url: /portal/customer-reviews/B0DP2TSZ56/ref=cm_cr_dp_d_rvw_fmt?_encoding=UTF8&formatType=current_format
+                          - generic [ref=f228e2046]: "Size: 10"
+                          - text: "Color: White/White/Light Smoke Grey"
+                        - link "Verified Purchase" [ref=f228e2049] [cursor=pointer]:
+                          - /url: /gp/help/customer/display.html/ref=cm_cr_dp_d_rvw_avp?ie=UTF8&nodeId=G8UYX7LALQC8V9KA
+                      - generic [ref=f228e2058]:
+                        - paragraph [ref=f228e2059]: Absolutely love these shoes. They’re extremely comfortable, look great, and I get compliments on them all the time. They have a modern, stylish look—definitely not an old man’s Nike! 😂
+                        - paragraph
+                        - paragraph [ref=f228e2060]: For the price, I’m really impressed with the comfort and quality. I can wear them all day without any issues, and they look just as good with jeans as they do with shorts.
+                        - paragraph
+                        - paragraph [ref=f228e2061]: Great shoes for the money. I’d definitely buy them again.
+                      - generic [ref=f228e2063]:
+                        - generic [ref=f228e2067] [cursor=pointer]:
+                          - button "Helpful" [ref=f228e2068]
+                          - generic [ref=f228e2070]: Helpful
+                        - button "Report Review" [ref=f228e2073] [cursor=pointer]: Report
+                  - listitem [ref=f228e2074]:
+                    - generic [ref=f228e2077]:
+                      - link "Yasmine Underwood" [ref=f228e2079] [cursor=pointer]:
+                        - /url: /gp/profile/amzn1.account.AECLB3WFZFOA65XBDACSXT5M24ZA?ref=cm_cr_dp_d_bdcrb_top
+                      - generic [ref=f228e2085]: 5 out of 5 stars
+                      - link [ref=f228e2088] [cursor=pointer]:
+                        - /url: /portal/customer-reviews/srp/-/R3N8NROYE8P7I7/ref=cm_cr_dp_d_rvw_ttl?_encoding=UTF8&ie=UTF8
+                        - heading "Very nice!" [level=5] [ref=f228e2089]
+                      - generic [ref=f228e2090]: Reviewed in the United States on September 8, 2026
+                      - generic [ref=f228e2091]:
+                        - 'link "Size: 10.5 Color: Pale Ivory/Wheat" [ref=f228e2092] [cursor=pointer]':
+                          - /url: /portal/customer-reviews/B0DVJFWJV5/ref=cm_cr_dp_d_rvw_fmt?_encoding=UTF8&formatType=current_format
+                          - generic [ref=f228e2093]: "Size: 10.5"
+                          - text: "Color: Pale Ivory/Wheat"
+                        - link "Verified Purchase" [ref=f228e2096] [cursor=pointer]:
+                          - /url: /gp/help/customer/display.html/ref=cm_cr_dp_d_rvw_avp?ie=UTF8&nodeId=G8UYX7LALQC8V9KA
+                      - paragraph [ref=f228e2106]: So nice, my husband wears them all the time! I want to get him more in different colors!
+                      - generic [ref=f228e2108]:
+                        - generic [ref=f228e2112] [cursor=pointer]:
+                          - button "Helpful" [ref=f228e2113]
+                          - generic [ref=f228e2115]: Helpful
+                        - button "Report Review" [ref=f228e2118] [cursor=pointer]: Report
+                  - listitem [ref=f228e2119]:
+                    - generic [ref=f228e2122]:
+                      - link "Reinaldo Rodriguez" [ref=f228e2124] [cursor=pointer]:
+                        - /url: /gp/profile/amzn1.account.AEE4KENIN3M5BNQOO453RC3I5I2A?ref=cm_cr_dp_d_bdcrb_top
+                      - generic [ref=f228e2130]: 5 out of 5 stars
+                      - link [ref=f228e2133] [cursor=pointer]:
+                        - /url: /portal/customer-reviews/srp/-/R2PXBM2R8VX5RM/ref=cm_cr_dp_d_rvw_ttl?_encoding=UTF8&ie=UTF8
+                        - heading "Good price" [level=5] [ref=f228e2134]
+                      - generic [ref=f228e2135]: Reviewed in the United States on August 15, 2026
+                      - generic [ref=f228e2136]:
+                        - 'link "Size: 11 Color: White Midnight Navy White" [ref=f228e2137] [cursor=pointer]':
+                          - /url: /portal/customer-reviews/B0DP2TGGVK/ref=cm_cr_dp_d_rvw_fmt?_encoding=UTF8&formatType=current_format
+                          - generic [ref=f228e2138]: "Size: 11"
+                          - text: "Color: White Midnight Navy White"
+                        - link "Verified Purchase" [ref=f228e2141] [cursor=pointer]:
+                          - /url: /gp/help/customer/display.html/ref=cm_cr_dp_d_rvw_avp?ie=UTF8&nodeId=G8UYX7LALQC8V9KA
+                      - paragraph [ref=f228e2151]: Good fit for the price
+                      - generic [ref=f228e2153]:
+                        - generic [ref=f228e2157] [cursor=pointer]:
+                          - button "Helpful" [ref=f228e2158]
+                          - generic [ref=f228e2160]: Helpful
+                        - button "Report Review" [ref=f228e2163] [cursor=pointer]: Report
+                  - listitem [ref=f228e2164]:
+                    - generic [ref=f228e2167]:
+                      - link "Wanda E." [ref=f228e2169] [cursor=pointer]:
+                        - /url: /gp/profile/amzn1.account.AGQN7JS2WMZCEYBM73SMB3PSDHNQ?ref=cm_cr_dp_d_bdcrb_top
+                      - generic [ref=f228e2175]: 5 out of 5 stars
+                      - link [ref=f228e2178] [cursor=pointer]:
+                        - /url: /portal/customer-reviews/srp/-/R3G58SB9VJY6JM/ref=cm_cr_dp_d_rvw_ttl?_encoding=UTF8&ie=UTF8
+                        - heading "Nice shoe" [level=5] [ref=f228e2179]
+                      - generic [ref=f228e2180]: Reviewed in the United States on September 10, 2026
+                      - generic [ref=f228e2181]:
+                        - 'link "Size: 11 Color: White Light Smoke Grey White 105" [ref=f228e2182] [cursor=pointer]':
+                          - /url: /portal/customer-reviews/B0DP2W3TH3/ref=cm_cr_dp_d_rvw_fmt?_encoding=UTF8&formatType=current_format
+                          - generic [ref=f228e2183]: "Size: 11"
+                          - text: "Color: White Light Smoke Grey White 105"
+                        - link "Verified Purchase" [ref=f228e2186] [cursor=pointer]:
+                          - /url: /gp/help/customer/display.html/ref=cm_cr_dp_d_rvw_avp?ie=UTF8&nodeId=G8UYX7LALQC8V9KA
+                      - paragraph [ref=f228e2196]: Nice
+                      - generic [ref=f228e2198]:
+                        - generic [ref=f228e2202] [cursor=pointer]:
+                          - button "Helpful" [ref=f228e2203]
+                          - generic [ref=f228e2205]: Helpful
+                        - button "Report Review" [ref=f228e2208] [cursor=pointer]: Report
+                  - listitem [ref=f228e2209]:
+                    - generic [ref=f228e2212]:
+                      - link "Darwin Guios" [ref=f228e2214] [cursor=pointer]:
+                        - /url: /gp/profile/amzn1.account.AFYCPNCPD3XPCN5I5UNVFVQWSSRQ?ref=cm_cr_dp_d_bdcrb_top
+                      - generic [ref=f228e2220]: 5 out of 5 stars
+                      - link [ref=f228e2223] [cursor=pointer]:
+                        - /url: /portal/customer-reviews/srp/-/RH9PPXBFQUZ0J/ref=cm_cr_dp_d_rvw_ttl?_encoding=UTF8&ie=UTF8
+                        - heading "Thank you" [level=5] [ref=f228e2224]
+                      - generic [ref=f228e2225]: Reviewed in the United States on September 7, 2026
+                      - link "Verified Purchase" [ref=f228e2229] [cursor=pointer]:
+                        - /url: /gp/help/customer/display.html/ref=cm_cr_dp_d_rvw_avp?ie=UTF8&nodeId=G8UYX7LALQC8V9KA
+                      - paragraph [ref=f228e2239]: Good product
+                      - generic [ref=f228e2241]:
+                        - generic [ref=f228e2245] [cursor=pointer]:
+                          - button "Helpful" [ref=f228e2246]
+                          - generic [ref=f228e2248]: Helpful
+                        - button "Report Review" [ref=f228e2251] [cursor=pointer]: Report
+                  - listitem [ref=f228e2252]:
+                    - generic [ref=f228e2255]:
+                      - link "Anti" [ref=f228e2257] [cursor=pointer]:
+                        - /url: /gp/profile/amzn1.account.AGPUPI5ZLWORLRFZBZ3QOAAY2NPA?ref=cm_cr_dp_d_bdcrb_top
+                      - generic [ref=f228e2263]: 4 out of 5 stars
+                      - link [ref=f228e2266] [cursor=pointer]:
+                        - /url: /portal/customer-reviews/srp/-/R1G0XQM3Y2PTCC/ref=cm_cr_dp_d_rvw_ttl?_encoding=UTF8&ie=UTF8
+                        - heading "Good shoe" [level=5] [ref=f228e2267]
+                      - generic [ref=f228e2268]: Reviewed in the United States on January 14, 2026
+                      - generic [ref=f228e2269]:
+                        - 'link "Size: 10 Color: White Midnight Navy White" [ref=f228e2270] [cursor=pointer]':
+                          - /url: /portal/customer-reviews/B0DP2WL6TJ/ref=cm_cr_dp_d_rvw_fmt?_encoding=UTF8&formatType=current_format
+                          - generic [ref=f228e2271]: "Size: 10"
+                          - text: "Color: White Midnight Navy White"
+                        - link "Verified Purchase" [ref=f228e2274] [cursor=pointer]:
+                          - /url: /gp/help/customer/display.html/ref=cm_cr_dp_d_rvw_avp?ie=UTF8&nodeId=G8UYX7LALQC8V9KA
+                      - paragraph [ref=f228e2284]: Shoes are fine. Clean and comfortable. The box came with the lid torn off (which is a little inconvenient since I like keeping them in the box) but the shoes are what I ordered.
+                      - generic [ref=f228e2286]:
+                        - button [ref=f228e2287] [cursor=pointer]:
+                          - img "Good shoe" [ref=f228e2288]
+                        - button [ref=f228e2289] [cursor=pointer]:
+                          - img "Good shoe" [ref=f228e2290]
+                      - generic [ref=f228e2291]: One person found this helpful
+                      - generic [ref=f228e2293]:
+                        - generic [ref=f228e2297] [cursor=pointer]:
+                          - button "Helpful" [ref=f228e2298]
+                          - generic [ref=f228e2300]: Helpful
+                        - button "Report Review" [ref=f228e2303] [cursor=pointer]: Report
+                  - listitem [ref=f228e2304]:
+                    - generic [ref=f228e2307]:
+                      - link "Richard Feria" [ref=f228e2309] [cursor=pointer]:
+                        - /url: /gp/profile/amzn1.account.AEHD6T5C2DCPO3OJH2I2AZ7DHQMQ?ref=cm_cr_dp_d_bdcrb_top
+                      - generic [ref=f228e2315]: 5 out of 5 stars
+                      - link [ref=f228e2318] [cursor=pointer]:
+                        - /url: /portal/customer-reviews/srp/-/RK9ZEXZOGL1QX/ref=cm_cr_dp_d_rvw_ttl?_encoding=UTF8&ie=UTF8
+                        - heading "Lo mejor" [level=5] [ref=f228e2319]
+                      - generic [ref=f228e2320]: Reviewed in the United States on September 8, 2026
+                      - generic [ref=f228e2321]:
+                        - 'link "Size: 10 Color: White Hyper Royal" [ref=f228e2322] [cursor=pointer]':
+                          - /url: /portal/customer-reviews/B0F8J9J7LQ/ref=cm_cr_dp_d_rvw_fmt?_encoding=UTF8&formatType=current_format
+                          - generic [ref=f228e2323]: "Size: 10"
+                          - text: "Color: White Hyper Royal"
+                        - link "Verified Purchase" [ref=f228e2326] [cursor=pointer]:
+                          - /url: /gp/help/customer/display.html/ref=cm_cr_dp_d_rvw_avp?ie=UTF8&nodeId=G8UYX7LALQC8V9KA
+                      - paragraph [ref=f228e2336]: Buen producto, llego a tiempo,buena calidad
+                      - generic [ref=f228e2338]:
+                        - generic [ref=f228e2342] [cursor=pointer]:
+                          - button "Helpful" [ref=f228e2343]
+                          - generic [ref=f228e2345]: Helpful
+                        - button "Report Review" [ref=f228e2348] [cursor=pointer]: Report
+                      - link "Translate review to English" [ref=f228e2351] [cursor=pointer]:
+                        - /url: javascript:void(0)
+                  - listitem [ref=f228e2352]:
+                    - generic [ref=f228e2355]:
+                      - link "Amazon Customer" [ref=f228e2357] [cursor=pointer]:
+                        - /url: /gp/profile/amzn1.account.AHJF3PHIXJL6GXCURX25ZAVJNOBA?ref=cm_cr_dp_d_bdcrb_top
+                      - generic [ref=f228e2363]: 5 out of 5 stars
+                      - link [ref=f228e2366] [cursor=pointer]:
+                        - /url: /portal/customer-reviews/srp/-/R2QWCZL64TUH3Y/ref=cm_cr_dp_d_rvw_ttl?_encoding=UTF8&ie=UTF8
+                        - heading "Love them and color was exactly what we needed" [level=5] [ref=f228e2367]
+                      - generic [ref=f228e2368]: Reviewed in the United States on July 19, 2026
+                      - generic [ref=f228e2369]:
+                        - 'link "Size: 11.5 Color: White Hyper Royal" [ref=f228e2370] [cursor=pointer]':
+                          - /url: /portal/customer-reviews/B0F8J6FB8M/ref=cm_cr_dp_d_rvw_fmt?_encoding=UTF8&formatType=current_format
+                          - generic [ref=f228e2371]: "Size: 11.5"
+                          - text: "Color: White Hyper Royal"
+                        - link "Verified Purchase" [ref=f228e2374] [cursor=pointer]:
+                          - /url: /gp/help/customer/display.html/ref=cm_cr_dp_d_rvw_avp?ie=UTF8&nodeId=G8UYX7LALQC8V9KA
+                      - paragraph [ref=f228e2384]: True to size
+                      - generic [ref=f228e2386]:
+                        - generic [ref=f228e2390] [cursor=pointer]:
+                          - button "Helpful" [ref=f228e2391]
+                          - generic [ref=f228e2393]: Helpful
+                        - button "Report Review" [ref=f228e2396] [cursor=pointer]: Report
+              - link "See more reviews" [ref=f228e2398] [cursor=pointer]:
+                - /url: /portal/customer-reviews/B0F8J7KSR1/ref=cm_cr_dp_d_show_all_top?_encoding=UTF8&ie=UTF8&reviewerType=all_reviews
+              - generic [ref=f228e2400]:
+                - heading "Top reviews from other countries" [level=3] [ref=f228e2401]
+                - list [ref=f228e2402]:
+                  - generic [ref=f228e2406] [cursor=pointer]:
+                    - button "Translate all reviews to English" [ref=f228e2407]
+                    - generic [aria-hidden] [ref=f228e2408]: Translate all reviews to English
+                  - listitem [ref=f228e2409]:
+                    - generic [ref=f228e2412]:
+                      - generic [ref=f228e2413]: PERRY OKWABENG
+                      - generic [ref=f228e2420]: 5 out of 5 stars
+                      - heading "Nice Finishing" [level=5] [ref=f228e2423]
+                      - generic [ref=f228e2424]: Reviewed in Germany on September 10, 2026
+                      - generic [ref=f228e2425]:
+                        - 'link "Size: 9.5 Color: White Light Smoke Grey White 105" [ref=f228e2426] [cursor=pointer]':
+                          - /url: /portal/customer-reviews/B0DP2V5PPN/ref=cm_cr_dp_d_rvw_fmt?_encoding=UTF8&formatType=current_format
+                          - generic [ref=f228e2427]: "Size: 9.5"
+                          - text: "Color: White Light Smoke Grey White 105"
+                        - link "Verified Purchase" [ref=f228e2430] [cursor=pointer]:
+                          - /url: /gp/help/customer/display.html/ref=cm_cr_dp_d_rvw_avp?ie=UTF8&nodeId=G8UYX7LALQC8V9KA
+                      - paragraph [ref=f228e2440]: Beautiful Nike
+                      - button "Report Review" [ref=f228e2444] [cursor=pointer]: Report
+                  - listitem [ref=f228e2445]:
+                    - generic [ref=f228e2448]:
+                      - generic [ref=f228e2449]: Alfredo
+                      - generic [ref=f228e2456]: 1 out of 5 stars
+                      - heading "2 scarpe destre" [level=5] [ref=f228e2459]
+                      - generic [ref=f228e2460]: Reviewed in Italy on January 28, 2026
+                      - generic [ref=f228e2461]:
+                        - 'link "Size: 11 Color: White Light Smoke Grey White 105" [ref=f228e2462] [cursor=pointer]':
+                          - /url: /portal/customer-reviews/B0DP2W3TH3/ref=cm_cr_dp_d_rvw_fmt?_encoding=UTF8&formatType=current_format
+                          - generic [ref=f228e2463]: "Size: 11"
+                          - text: "Color: White Light Smoke Grey White 105"
+                        - link "Verified Purchase" [ref=f228e2466] [cursor=pointer]:
+                          - /url: /gp/help/customer/display.html/ref=cm_cr_dp_d_rvw_avp?ie=UTF8&nodeId=G8UYX7LALQC8V9KA
+                      - generic [ref=f228e2474]:
+                        - generic [ref=f228e2476]:
+                          - region "Video Player" [ref=f228e2477]: .
+                          - button "Play video" [ref=f228e2479] [cursor=pointer]
+                        - generic [ref=f228e2483]:
+                          - paragraph [ref=f228e2484]: Sono arrivate 2 scarpe destre e in una scatola non della Nike
+                          - paragraph [ref=f228e2485]: Ovviamente devo fare il reso non posso richiedere il cambio e addio offerta.
+                          - paragraph [ref=f228e2486]: Oppure l'offerta è perché erano 2 scarpe destre? Ma non era specificato!
+                      - button "Report Review" [ref=f228e2490] [cursor=pointer]: Report
+                      - link "Translate review to English" [ref=f228e2493] [cursor=pointer]:
+                        - /url: javascript:void(0)
+                  - listitem [ref=f228e2494]:
+                    - generic [ref=f228e2497]:
+                      - generic [ref=f228e2498]: Client d'Amazon
+                      - generic [ref=f228e2505]: 5 out of 5 stars
+                      - heading "Basket top" [level=5] [ref=f228e2508]
+                      - generic [ref=f228e2509]: Reviewed in France on September 13, 2025
+                      - generic [ref=f228e2510]:
+                        - 'link "Size: 11.5 Color: White Light Smoke Grey White 105" [ref=f228e2511] [cursor=pointer]':
+                          - /url: /portal/customer-reviews/B0DP2XM6TL/ref=cm_cr_dp_d_rvw_fmt?_encoding=UTF8&formatType=current_format
+                          - generic [ref=f228e2512]: "Size: 11.5"
+                          - text: "Color: White Light Smoke Grey White 105"
+                        - link "Verified Purchase" [ref=f228e2515] [cursor=pointer]:
+                          - /url: /gp/help/customer/display.html/ref=cm_cr_dp_d_rvw_avp?ie=UTF8&nodeId=G8UYX7LALQC8V9KA
+                      - paragraph [ref=f228e2525]: Belle basket conforme à la description. Bonne taille. Mon fils est ravi il les trouve très confortable et ne font pas mal derrière même le premier jour.
+                      - button "Report Review" [ref=f228e2529] [cursor=pointer]: Report
+                      - link "Translate review to English" [ref=f228e2532] [cursor=pointer]:
+                        - /url: javascript:void(0)
+                  - listitem [ref=f228e2533]:
+                    - generic [ref=f228e2536]:
+                      - generic [ref=f228e2537]: Jessenia
+                      - generic [ref=f228e2544]: 3 out of 5 stars
+                      - heading "Talla incorrecta" [level=5] [ref=f228e2547]
+                      - generic [ref=f228e2548]: Reviewed in Mexico on October 31, 2025
+                      - generic [ref=f228e2549]:
+                        - 'link "Size: 9 Color: White Black White" [ref=f228e2550] [cursor=pointer]':
+                          - /url: /portal/customer-reviews/B08QBXWBVR/ref=cm_cr_dp_d_rvw_fmt?_encoding=UTF8&formatType=current_format
+                          - generic [ref=f228e2551]: "Size: 9"
+                          - text: "Color: White Black White"
+                        - link "Verified Purchase" [ref=f228e2554] [cursor=pointer]:
+                          - /url: /gp/help/customer/display.html/ref=cm_cr_dp_d_rvw_avp?ie=UTF8&nodeId=G8UYX7LALQC8V9KA
+                      - paragraph [ref=f228e2564]: Es talla 10.5 US, 29cm
+                      - button "Report Review" [ref=f228e2568] [cursor=pointer]: Report
+                      - link "Translate review to English" [ref=f228e2571] [cursor=pointer]:
+                        - /url: javascript:void(0)
+                  - listitem [ref=f228e2572]:
+                    - generic [ref=f228e2575]:
+                      - generic [ref=f228e2576]: olokor michael okpowaregu
+                      - generic [ref=f228e2583]: 5 out of 5 stars
+                      - heading "Perfect" [level=5] [ref=f228e2586]
+                      - generic [ref=f228e2587]: Reviewed in Canada on July 15, 2026
+                      - generic [ref=f228e2588]:
+                        - 'link "Size: 11 Color: White Black White" [ref=f228e2589] [cursor=pointer]':
+                          - /url: /portal/customer-reviews/B0DP2TX224/ref=cm_cr_dp_d_rvw_fmt?_encoding=UTF8&formatType=current_format
+                          - generic [ref=f228e2590]: "Size: 11"
+                          - text: "Color: White Black White"
+                        - link "Verified Purchase" [ref=f228e2593] [cursor=pointer]:
+                          - /url: /gp/help/customer/display.html/ref=cm_cr_dp_d_rvw_avp?ie=UTF8&nodeId=G8UYX7LALQC8V9KA
+                      - paragraph [ref=f228e2603]: 10 out of ten
+                      - button "Report Review" [ref=f228e2607] [cursor=pointer]: Report
+              - link "See more reviews" [ref=f228e2609] [cursor=pointer]:
+                - /url: /portal/customer-reviews/B0F8J7KSR1/ref=cm_cr_dp_d_show_all_top?_encoding=UTF8&ie=UTF8&reviewerType=all_reviews
+      - generic [ref=f228e2622]:
+        - iframe [ref=f228e2623]:
+          - generic "Sponsored Ad" [ref=f232e2]:
+            - insertion [ref=f232e3]:
+              - iframe [ref=f232e4]:
+                - link [ref=f233e4] [cursor=pointer]:
+                  - /url: https://adclick.g.doubleclick.net/pcs/click?xai=AKAOjst8Ebjm-NnkiPqBrmUS5WPuL5pnHMz2haHqeMeDjK9_CtfUKTxq49j4J2guxFaacTs9fCX8WTQTHmJOh9eu5D4zH4X6VZzqpufbUc_XKDvAT0rme5lRsR2spmz1uIHh_VAGoG9_CwDdOOXhOvTann1-YDr79v5d_Zlms7D0_1m4wQoQpeghKA1Sc6I1cWSmbkSEexDAJtDey5T4VaW4mBFVQ9WnYyRJL_d04uXYiJMwOn7AbZpK8Tc0bzFUz-OXNw0rZRJ72td6Yvd4ZoY_FtyHVhaBCWz2Gn8IwZRuB_mQfGAH238vR5SwrAlxoHz1et32w2xp9cLdTV3_m2CK8h18oXqI-Tfu54yElF7CylC8-xNtq3d1Cb-JDO-oqmAFsY915Ui_RYh23s5CCCr7bb_79UY-ZPIbUsC1uisLadiR4w3B1hqVIYKnfhTJ2Oolj0VI756bY8YGCzqEsCj6pLUA0twUs2nGyBtB3P5_YSjIeGbJuIu9Mg3V815cKstJhQtzIBXRpNUcJRN7biKUWCvLMKlGLctfsiHrqbQq19W8&sai=AMfl-YThehQDjVbSGyn5SS4VhDYZ-6LpFF0TWLiiBr_NKEAEflJoVJnI07aNzs3DMoSmeW_lLvGSHaB-kgd7hCHB9JZIuVCrOb1Vo3SCfufXvTKXnpKA9psWxGzoHw8D5WePp5WpvFf6mf3zvJxfOiSuVhjEV6TZ4yhPxsc4Y-xknbud4Pp9e5wBtuaB84SWAkL8HR6ry6TU2NasBsrkSDcHHOOtIImdc2ruWCvU_McRJ7odQ55GGxdRR3mMn2UsSAXOko_VvZwOUTXemmsIwvdgUzhbrcZIgvAgMy-Jzd6Bnjw5EuCXq8uKyWd28DHJRPFcYRuBPE-tjj_orngM-MpcHj7I51SWIA&sig=Cg0ArKJSzAkaU8nRHyWq&cry=1&fbs_aeid=%5Bgw_fbsaeid%5D&urlfix=1&adurl=https://aax-events-cell01-cf.us-east.ono.axp.amazon-adsystem.com/x/c/RD7jZ7g96shmlMwsVPWE7hYAAAGg8OFCkwEAAAH0AQBvbm9fdHhuX2JpZDQgICBvbm9fdHhuX2ltcDEgICAhADE8/clv1c_ek-gAXcxHeDC7ntXCKCGaJo5GD7RKmxrg2kbVjQqaC5UzeiiMQSWfuDv3gSTirJLS42BGReU_0NkphsZwhuKF_laTiyBqwn8al-Q6cVEQn09KTD3JC8iLPfN-D1b5LY7W4WCKr-CJpKbjKK47o2y8DnwQwjCsBnoajSQeDs2eDTc7-jQ7bzeKs8Q8Khiyhek1QKA6r8JXfqeJ85DBd7ncAgq3z1Y4vI67JJUcy9u29RaEG8EGWhLHDxmzwvJ6qq1EkhcZbUvE8w-yh0BbBv8Ent2NZzM_EPCCKe8eDmqkARiHUt1yCxaJ_2rIOr_a08tlIsn4Dpl8F0CMkrYJVZqu0O1u6Km4DiwSQCmmezQk8jytjBb0AGZF-KoCGEiWIFg9nCSFuS1XLitwAYPrGfn5WMZKFwB5v7SZdF1mIdfBf7fUjxW-FmEq9SE1GxYHd2-ueCJrogBOpsOons4ot3HRTBrL5L5RYb-gQTYkm7L6GkNNezhktPn21DeZ3O9crtf_x-suypr5V2UH2v13-CP0C_Br9JW58W0tCywb4vWCSNq47oorsRYrvusTrnzwxCcnqwaRxMoT_FCy18_0LzuR-joTL2HGM8PrbMoz__-hqrylQqNlJx-zB-QKKhSl8UPSWTXX7ZqW1UmVV1pNFtZzZfqPpNRgtcNtYEFFcgdWYZVeOjcp_oy1xJtbwGFh6fmv_QJtzWm_u52XCYNU-l4lBIy9dVvl6JE1mneugd4o3hVFXneDNJds-9jfI4_45O2rRMeEC-OLy8EZFYiqMJVIau8tNf_OLQJEn_4rZL9xa7Wzbv-uEDG36bHhx7J9i_rJA/https://lets.shop/2635/starbucksfrapp/%3Futm_source%3DAmazon%26utm_medium%3DDisplay%26utm_campaign%3DPBNA_US_2026_Starbucks_Starbucks_Frap_Frapp_POLV_Awareness_Programmatic_Reach_PEB_FPC_032_No_POLV_X%26dclid%3D%25edclid!%26gad_source%3D7%26gad_campaignid%3D24260575590
+                  - img "Advertisement" [ref=f233e5]
+        - button "Leave feedback on Sponsored ad" [ref=f228e2625] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f228e2626]: Sponsored
+  - complementary "Your recently viewed items and featured recommendations"
+  - generic [ref=f228e2628]:
+    - button "Back to top" [ref=f228e2629] [cursor=pointer]
+    - generic [ref=f228e2631]:
+      - generic [ref=f228e2632]:
+        - heading "Get to Know Us" [level=6] [ref=f228e2633]
+        - list [ref=f228e2634]:
+          - listitem [ref=f228e2635]:
+            - link "Careers" [ref=f228e2636] [cursor=pointer]:
+              - /url: https://www.amazon.jobs
+          - listitem [ref=f228e2637]:
+            - link "Amazon Newsletter" [ref=f228e2638] [cursor=pointer]:
+              - /url: https://www.aboutamazon.com/subscribe?utm_source=amazon_com&utm_medium=amazonfooter&utm_campaign=newslettersubscribers&utm_term=amazonnewssignup
+          - listitem [ref=f228e2639]:
+            - link "About Amazon" [ref=f228e2640] [cursor=pointer]:
+              - /url: https://www.aboutamazon.com/?utm_source=gateway&utm_medium=footer&token=about
+          - listitem [ref=f228e2641]:
+            - link "Accessibility" [ref=f228e2642] [cursor=pointer]:
+              - /url: https://www.amazon.com/b?node=15701038011&ie=UTF8
+          - listitem [ref=f228e2643]:
+            - link "Sustainability" [ref=f228e2644] [cursor=pointer]:
+              - /url: https://sustainability.aboutamazon.com/?utm_source=gateway&utm_medium=footer&ref_=susty_footer
+          - listitem [ref=f228e2645]:
+            - link "Press Center" [ref=f228e2646] [cursor=pointer]:
+              - /url: https://www.amazon.com/pr
+          - listitem [ref=f228e2647]:
+            - link "Investor Relations" [ref=f228e2648] [cursor=pointer]:
+              - /url: https://www.amazon.com/ir
+          - listitem [ref=f228e2649]:
+            - link "Amazon Devices" [ref=f228e2650] [cursor=pointer]:
+              - /url: /gp/browse.html?node=2102313011&ref_=footer_devices
+          - listitem [ref=f228e2651]:
+            - link "Amazon Science" [ref=f228e2652] [cursor=pointer]:
+              - /url: https://www.amazon.science
+      - generic [ref=f228e2654]:
+        - heading "Make Money with Us" [level=6] [ref=f228e2655]
+        - list [ref=f228e2656]:
+          - listitem [ref=f228e2657]:
+            - link "Sell on Amazon" [ref=f228e2658] [cursor=pointer]:
+              - /url: https://sell.amazon.com/?ld=AZFSSOA_FTSELL-C&ref_=footer_soa
+          - listitem [ref=f228e2659]:
+            - link "Sell apps on Amazon" [ref=f228e2660] [cursor=pointer]:
+              - /url: https://developer.amazon.com
+          - listitem [ref=f228e2661]:
+            - link "Supply to Amazon" [ref=f228e2662] [cursor=pointer]:
+              - /url: https://supply.amazon.com
+          - listitem [ref=f228e2663]:
+            - link "Protect & Build Your Brand" [ref=f228e2664] [cursor=pointer]:
+              - /url: https://sell.amazon.com/brand-registry?ld=AZUSSOA_ABR-FT
+          - listitem [ref=f228e2665]:
+            - link "Become an Affiliate" [ref=f228e2666] [cursor=pointer]:
+              - /url: https://affiliate-program.amazon.com/
+          - listitem [ref=f228e2667]:
+            - link "Become a Delivery Driver" [ref=f228e2668] [cursor=pointer]:
+              - /url: https://dspjobhub.com/
+          - listitem [ref=f228e2669]:
+            - link "Start a Package Delivery Business" [ref=f228e2670] [cursor=pointer]:
+              - /url: https://logistics.amazon.com/marketing?utm_source=amzn&utm_medium=footer&utm_campaign=home
+          - listitem [ref=f228e2671]:
+            - link "Advertise Your Products" [ref=f228e2672] [cursor=pointer]:
+              - /url: https://advertising.amazon.com/?ref=ext_amzn_ftr
+          - listitem [ref=f228e2673]:
+            - link "Self-Publish with Us" [ref=f228e2674] [cursor=pointer]:
+              - /url: /gp/seller-account/mm-summary-page.html?ld=AZFooterSelfPublish&topic=200260520&ref_=footer_publishing
+          - listitem [ref=f228e2675]:
+            - link "Become an Amazon Hub Partner" [ref=f228e2676] [cursor=pointer]:
+              - /url: https://www.amazon.com/b?node=216188543011
+          - listitem [ref=f228e2677]:
+            - text: ›
+            - link "See More Ways to Make Money" [ref=f228e2678] [cursor=pointer]:
+              - /url: /b/?node=18190131011&ld=AZUSSOA-seemore&ref_=footer_seemore
+      - generic [ref=f228e2680]:
+        - heading "Amazon Payment Products" [level=6] [ref=f228e2681]
+        - list [ref=f228e2682]:
+          - listitem [ref=f228e2683]:
+            - link "Amazon Visa" [ref=f228e2684] [cursor=pointer]:
+              - /url: /iss/credit/rewardscardmember?plattr=CBFOOT&ref_=footer_cbcc
+          - listitem [ref=f228e2685]:
+            - link "Amazon Store Card" [ref=f228e2686] [cursor=pointer]:
+              - /url: /credit/storecard/member?plattr=PLCCFOOT&ref_=footer_plcc
+          - listitem [ref=f228e2687]:
+            - link "Amazon Secured Card" [ref=f228e2688] [cursor=pointer]:
+              - /url: /dp/product/B084KP3NG6?plattr=SCFOOT&ref_=footer_ACB
+          - listitem [ref=f228e2689]:
+            - link "Amazon Business Card" [ref=f228e2690] [cursor=pointer]:
+              - /url: /dp/B0DVBL912R?plattr=ACOMFO&ie=UTF-8
+          - listitem [ref=f228e2691]:
+            - link "Shop with Points" [ref=f228e2692] [cursor=pointer]:
+              - /url: https://www.amazon.com/hp/shopwithpoints/servicing
+          - listitem [ref=f228e2693]:
+            - link "Credit Card Marketplace" [ref=f228e2694] [cursor=pointer]:
+              - /url: /gp/browse.html?node=3561432011&ref_=footer_ccmp
+          - listitem [ref=f228e2695]:
+            - link "Reload Your Balance" [ref=f228e2696] [cursor=pointer]:
+              - /url: /gp/browse.html?node=10232440011&ref_=footer_reload_us
+          - listitem [ref=f228e2697]:
+            - link "Gift Cards" [ref=f228e2698] [cursor=pointer]:
+              - /url: https://www.amazon.com/b/?node=2238192011&ref=shop_footer_payments_gc_desktop
+          - listitem [ref=f228e2699]:
+            - link "Amazon Currency Converter" [ref=f228e2700] [cursor=pointer]:
+              - /url: /gp/browse.html?node=388305011&ref_=footer_tfx
+      - generic [ref=f228e2702]:
+        - heading "Let Us Help You" [level=6] [ref=f228e2703]
+        - list [ref=f228e2704]:
+          - listitem [ref=f228e2705]:
+            - link "Your Account" [ref=f228e2706] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/css/homepage.html?ref_=footer_ya
+          - listitem [ref=f228e2707]:
+            - link "Your Orders" [ref=f228e2708] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/css/order-history?ref_=footer_yo
+          - listitem [ref=f228e2709]:
+            - link "Shipping Rates & Policies" [ref=f228e2710] [cursor=pointer]:
+              - /url: /gp/help/customer/display.html?nodeId=468520&ref_=footer_shiprates
+          - listitem [ref=f228e2711]:
+            - link "Amazon Prime" [ref=f228e2712] [cursor=pointer]:
+              - /url: /gp/prime?ref_=footer_prime
+          - listitem [ref=f228e2713]:
+            - link "Returns & Replacements" [ref=f228e2714] [cursor=pointer]:
+              - /url: /gp/css/returns/homepage.html?ref_=footer_hy_f_4
+          - listitem [ref=f228e2715]:
+            - link "Manage Your Content and Devices" [ref=f228e2716] [cursor=pointer]:
+              - /url: /hz/mycd/myx?ref_=footer_myk
+          - listitem [ref=f228e2717]:
+            - link "Recalls and Product Safety Alerts" [ref=f228e2718] [cursor=pointer]:
+              - /url: https://www.amazon.com/product-safety-alerts?ref_=footer_bsx_ypsa
+          - listitem [ref=f228e2719]:
+            - link "Registry & Gift List" [ref=f228e2720] [cursor=pointer]:
+              - /url: /registries?ref_=nav_footer_registry_giftlist_desktop
+          - listitem [ref=f228e2721]:
+            - link "Help" [ref=f228e2722] [cursor=pointer]:
+              - /url: /gp/help/customer/display.html?nodeId=508510&ref_=footer_gw_m_b_he
+    - generic [ref=f228e2724]:
+      - link "Amazon US Home" [ref=f228e2727] [cursor=pointer]:
+        - /url: /?ref_=footer_logo
+      - generic [ref=f228e2730]:
+        - generic [ref=f228e2731]:
+          - link "Choose a language for shopping. Current selection is English." [ref=f228e2732] [cursor=pointer]:
+            - /url: /customer-preferences/edit?ie=UTF8&preferencesReturnUrl=%2F&ref_=footer_lang
+            - generic [ref=f228e2734]: English
+          - button "Expand to Change Language or Country" [ref=f228e2735] [cursor=pointer]
+        - button "Choose a country/region for shopping. The current selection is United States." [ref=f228e2736] [cursor=pointer]:
+          - generic [ref=f228e2738]: United States
+    - navigation "More on Amazon" [ref=f228e2739]:
+      - generic "More on Amazon" [ref=f228e2740]:
+        - list [ref=f228e2741]:
+          - listitem [ref=f228e2742]:
+            - link [ref=f228e2743] [cursor=pointer]:
+              - /url: https://music.amazon.com?ref=dm_aff_amz_com
+              - heading "Amazon Music" [level=5] [ref=f228e2744]
+              - generic [ref=f228e2745]: Stream millionsof songs
+          - listitem [aria-hidden] [ref=f228e2746]
+          - listitem [ref=f228e2747]:
+            - link [ref=f228e2748] [cursor=pointer]:
+              - /url: https://advertising.amazon.com/?ref=footer_advtsing_amzn_com
+              - heading "Amazon Ads" [level=5] [ref=f228e2749]
+              - generic [ref=f228e2750]: Reach customerswherever theyspend their time
+          - listitem [aria-hidden] [ref=f228e2751]
+          - listitem [ref=f228e2752]:
+            - link [ref=f228e2753] [cursor=pointer]:
+              - /url: https://www.6pm.com
+              - heading "6pm" [level=5] [ref=f228e2754]
+              - generic [ref=f228e2755]: Score dealson fashion brands
+          - listitem [aria-hidden] [ref=f228e2756]
+          - listitem [ref=f228e2757]:
+            - link [ref=f228e2758] [cursor=pointer]:
+              - /url: https://www.abebooks.com
+              - heading "AbeBooks" [level=5] [ref=f228e2759]
+              - generic [ref=f228e2760]: Books, art& collectibles
+          - listitem [aria-hidden] [ref=f228e2761]
+          - listitem [ref=f228e2762]:
+            - link [ref=f228e2763] [cursor=pointer]:
+              - /url: https://www.acx.com/
+              - heading "ACX" [level=5] [ref=f228e2764]
+              - generic [ref=f228e2765]: Audiobook PublishingMade Easy
+          - listitem [aria-hidden] [ref=f228e2766]
+          - listitem [ref=f228e2767]:
+            - link "Sell on Amazon Start a Selling Account" [ref=f228e2768] [cursor=pointer]:
+              - /url: https://sell.amazon.com/?ld=AZUSSOA-footer-aff&ref_=footer_sell
+              - heading "Sell on Amazon" [level=5] [ref=f228e2769]
+              - generic [ref=f228e2770]: Start a Selling Account
+          - listitem [aria-hidden] [ref=f228e2771]
+          - listitem [ref=f228e2772]:
+            - link [ref=f228e2773] [cursor=pointer]:
+              - /url: https://www.veeqo.com/?utm_source=amazon&utm_medium=website&utm_campaign=footer
+              - heading "Veeqo" [level=5] [ref=f228e2774]
+              - generic [ref=f228e2775]: Shipping SoftwareInventory Management
+        - list [ref=f228e2776]:
+          - listitem [ref=f228e2777]:
+            - link [ref=f228e2778] [cursor=pointer]:
+              - /url: /business?ref_=footer_retail_b2b
+              - heading "Amazon Business" [level=5] [ref=f228e2779]
+              - generic [ref=f228e2780]: Everything ForYour Business
+          - listitem [aria-hidden] [ref=f228e2781]
+          - listitem [ref=f228e2782]:
+            - link [ref=f228e2783] [cursor=pointer]:
+              - /url: /fmc/grocery-gateway?almBrandId=fe16aGPfFs46S&ref_=footer_groceries
+              - heading "Groceries at Amazon" [level=5] [ref=f228e2784]
+              - generic [ref=f228e2785]: Groceries & MoreRight To Your Door
+          - listitem [aria-hidden] [ref=f228e2786]
+          - listitem [ref=f228e2787]:
+            - link [ref=f228e2788] [cursor=pointer]:
+              - /url: /gp/browse.html?node=20338496011&ref_=footer_amazonglobal
+              - heading "AmazonGlobal" [level=5] [ref=f228e2789]
+              - generic [ref=f228e2790]: Ship OrdersInternationally
+          - listitem [aria-hidden] [ref=f228e2791]
+          - listitem [ref=f228e2792]:
+            - link [ref=f228e2793] [cursor=pointer]:
+              - /url: /services?ref_=footer_services
+              - heading "Home Services" [level=5] [ref=f228e2794]
+              - generic [ref=f228e2795]: Experienced ProsHappiness Guarantee
+          - listitem [aria-hidden] [ref=f228e2796]
+          - listitem [ref=f228e2797]:
+            - link [ref=f228e2798] [cursor=pointer]:
+              - /url: https://aws.amazon.com/what-is-cloud-computing/?sc_channel=EL&sc_campaign=amazonfooter
+              - heading "Amazon Web Services" [level=5] [ref=f228e2799]
+              - generic [ref=f228e2800]: Scalable CloudComputing Services
+          - listitem [aria-hidden] [ref=f228e2801]
+          - listitem [ref=f228e2802]:
+            - link [ref=f228e2803] [cursor=pointer]:
+              - /url: https://www.audible.com
+              - heading "Audible" [level=5] [ref=f228e2804]
+              - generic [ref=f228e2805]: Listen to Books & OriginalAudio Performances
+          - listitem [aria-hidden] [ref=f228e2806]
+          - listitem [ref=f228e2807]:
+            - link [ref=f228e2808] [cursor=pointer]:
+              - /url: https://www.boxofficemojo.com/?ref_=amzn_nav_ftr
+              - heading "Box Office Mojo" [level=5] [ref=f228e2809]
+              - generic [ref=f228e2810]: Find MovieBox Office Data
+        - list [ref=f228e2811]:
+          - listitem [ref=f228e2812]:
+            - link [ref=f228e2813] [cursor=pointer]:
+              - /url: https://www.goodreads.com
+              - heading "Goodreads" [level=5] [ref=f228e2814]
+              - generic [ref=f228e2815]: Book reviews& recommendations
+          - listitem [aria-hidden] [ref=f228e2816]
+          - listitem [ref=f228e2817]:
+            - link [ref=f228e2818] [cursor=pointer]:
+              - /url: https://www.imdb.com
+              - heading "IMDb" [level=5] [ref=f228e2819]
+              - generic [ref=f228e2820]: Movies, TV& Celebrities
+          - listitem [aria-hidden] [ref=f228e2821]
+          - listitem [ref=f228e2822]:
+            - link [ref=f228e2823] [cursor=pointer]:
+              - /url: https://pro.imdb.com?ref_=amzn_nav_ftr
+              - heading "IMDbPro" [level=5] [ref=f228e2824]
+              - generic [ref=f228e2825]: Get Info EntertainmentProfessionals Need
+          - listitem [aria-hidden] [ref=f228e2826]
+          - listitem [ref=f228e2827]:
+            - link [ref=f228e2828] [cursor=pointer]:
+              - /url: https://kdp.amazon.com
+              - heading "Kindle Direct Publishing" [level=5] [ref=f228e2829]
+              - generic [ref=f228e2830]: Indie Digital & Print PublishingMade Easy
+          - listitem [aria-hidden] [ref=f228e2831]
+          - listitem [ref=f228e2832]:
+            - link [ref=f228e2833] [cursor=pointer]:
+              - /url: /gp/browse.html?node=13234696011&ref_=_gno_p_foot
+              - heading "Amazon Photos" [level=5] [ref=f228e2834]
+              - generic [ref=f228e2835]: Unlimited Photo StorageFree With Prime
+          - listitem [aria-hidden] [ref=f228e2836]
+          - listitem [ref=f228e2837]:
+            - link [ref=f228e2838] [cursor=pointer]:
+              - /url: https://videodirect.amazon.com/home/landing
+              - heading "Prime Video Direct" [level=5] [ref=f228e2839]
+              - generic [ref=f228e2840]: Video DistributionMade Easy
+          - listitem [aria-hidden] [ref=f228e2841]
+          - listitem [ref=f228e2842]:
+            - link [ref=f228e2843] [cursor=pointer]:
+              - /url: https://www.shopbop.com
+              - heading "Shopbop" [level=5] [ref=f228e2844]
+              - generic [ref=f228e2845]: DesignerFashion Brands
+        - list [ref=f228e2846]:
+          - listitem [ref=f228e2847]:
+            - link [ref=f228e2848] [cursor=pointer]:
+              - /url: /gp/browse.html?node=10158976011&ref_=footer_wrhsdls
+              - heading "Amazon Resale" [level=5] [ref=f228e2849]
+              - generic [ref=f228e2850]: Great Deals onQuality Used Products
+          - listitem [aria-hidden] [ref=f228e2851]
+          - listitem [ref=f228e2852]:
+            - link [ref=f228e2853] [cursor=pointer]:
+              - /url: https://www.wholefoodsmarket.com
+              - heading "Whole Foods Market" [level=5] [ref=f228e2854]
+              - generic [ref=f228e2855]: America’s HealthiestGrocery Store
+          - listitem [aria-hidden] [ref=f228e2856]
+          - listitem [ref=f228e2857]:
+            - link [ref=f228e2858] [cursor=pointer]:
+              - /url: https://www.woot.com/
+              - heading "Woot!" [level=5] [ref=f228e2859]
+              - generic [ref=f228e2860]: Deals and Shenanigans
+          - listitem [aria-hidden] [ref=f228e2861]
+          - listitem [ref=f228e2862]:
+            - link [ref=f228e2863] [cursor=pointer]:
+              - /url: https://www.zappos.com
+              - heading "Zappos" [level=5] [ref=f228e2864]
+              - generic [ref=f228e2865]: Shoes &Clothing
+          - listitem [aria-hidden] [ref=f228e2866]
+          - listitem [ref=f228e2867]:
+            - link [ref=f228e2868] [cursor=pointer]:
+              - /url: https://ring.com
+              - heading "Ring" [level=5] [ref=f228e2869]
+              - generic [ref=f228e2870]: Smart HomeSecurity Systems
+          - listitem [aria-hidden] [ref=f228e2871]
+          - listitem [ref=f228e2872]:
+            - link [ref=f228e2873] [cursor=pointer]:
+              - /url: https://eero.com/
+              - heading "eero WiFi" [level=5] [ref=f228e2874]
+              - generic [ref=f228e2875]: Stream 4K Videoin Every Room
+          - listitem [aria-hidden] [ref=f228e2876]
+          - listitem [ref=f228e2877]:
+            - link [ref=f228e2878] [cursor=pointer]:
+              - /url: https://blinkforhome.com/?ref=nav_footer
+              - heading "Blink" [level=5] [ref=f228e2879]
+              - generic [ref=f228e2880]: Smart Securityfor Every Home
+        - list [ref=f228e2881]:
+          - listitem [aria-hidden] [ref=f228e2882]
+          - listitem [aria-hidden] [ref=f228e2883]
+          - listitem [aria-hidden] [ref=f228e2884]
+          - listitem [aria-hidden] [ref=f228e2885]
+          - listitem [ref=f228e2886]:
+            - link [ref=f228e2887] [cursor=pointer]:
+              - /url: https://shop.ring.com/pages/neighbors-app
+              - heading "Neighbors App" [level=5] [ref=f228e2888]
+              - generic [ref=f228e2889]: Real-Time Crime& Safety Alerts
+          - listitem [aria-hidden] [ref=f228e2890]
+          - listitem [ref=f228e2891]:
+            - link "PillPack Pharmacy Simplified" [ref=f228e2892] [cursor=pointer]:
+              - /url: https://www.pillpack.com
+              - heading "PillPack" [level=5] [ref=f228e2893]
+              - generic [ref=f228e2894]: Pharmacy Simplified
+          - listitem [aria-hidden] [ref=f228e2895]
+          - listitem [ref=f228e2896]:
+            - link [ref=f228e2897] [cursor=pointer]:
+              - /url: /gp/browse.html?node=12653393011&ref_=footer_usrenew
+              - heading "Amazon Renewed" [level=5] [ref=f228e2898]
+              - generic [ref=f228e2899]: Refurbished techyou can trust
+          - listitem [aria-hidden] [ref=f228e2900]
+          - listitem [aria-hidden] [ref=f228e2901]
+          - listitem [aria-hidden] [ref=f228e2902]
+          - listitem [aria-hidden] [ref=f228e2903]
+    - generic [ref=f228e2904]:
+      - list [ref=f228e2905]:
+        - listitem [ref=f228e2906]:
+          - link "Conditions of Use" [ref=f228e2907] [cursor=pointer]:
+            - /url: /gp/help/customer/display.html?nodeId=508088&ref_=footer_cou
+        - listitem [ref=f228e2908]:
+          - link "Privacy Notice" [ref=f228e2909] [cursor=pointer]:
+            - /url: /gp/help/customer/display.html?nodeId=GX7NJQ4ZB8MHFRNJ&ref_=footer_privacy
+        - listitem [ref=f228e2910]:
+          - link "Consumer Health Data Privacy Disclosure" [ref=f228e2911] [cursor=pointer]:
+            - /url: /gp/help/customer/display.html?ie=UTF8&nodeId=TnACMrGVghHocjL8KB&ref_=footer_consumer_health_data_privacy
+        - listitem [ref=f228e2912]:
+          - link "Your Ads Privacy Choices" [ref=f228e2913] [cursor=pointer]:
+            - /url: /privacyprefs?ref_=footer_iba
+        - listitem [ref=f228e2914]
+      - generic [ref=f228e2916]: © 1996-2026, Amazon.com, Inc. or its affiliates

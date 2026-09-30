@@ -1,0 +1,1302 @@
+- generic [ref=f261e2]:
+  - navigation "Shortcuts menu" [ref=f261e3]:
+    - heading "Skip to" [level=2] [ref=f261e4]
+    - list "Skip to" [ref=f261e5]:
+      - listitem [ref=f261e6]:
+        - link "main content" [ref=f261e7] [cursor=pointer]:
+          - /url: "#skippedLink"
+          - text: Main content
+    - separator [aria-hidden] [ref=f261e8]
+    - heading "Keyboard shortcuts" [level=2] [ref=f261e9]
+    - list "Keyboard shortcuts" [ref=f261e10]:
+      - listitem [ref=f261e11]:
+        - link "Search, option, forward slash" [ref=f261e12] [cursor=pointer]:
+          - /url: javascript:void(0)
+          - generic [aria-hidden] [ref=f261e13]:
+            - generic [ref=f261e14]: Search
+            - generic [ref=f261e15]:
+              - generic [ref=f261e16]: opt
+              - generic [ref=f261e17]: +
+              - generic [ref=f261e18]: /
+      - listitem [ref=f261e19]:
+        - link "Cart, shift, option, c" [ref=f261e20] [cursor=pointer]:
+          - /url: javascript:void(0)
+          - generic [aria-hidden] [ref=f261e21]:
+            - generic [ref=f261e22]: Cart
+            - generic [ref=f261e23]:
+              - generic [ref=f261e24]: shift
+              - generic [ref=f261e25]: +
+              - generic [ref=f261e26]: opt
+              - generic [ref=f261e27]: +
+              - generic [ref=f261e28]: C
+      - listitem [ref=f261e29]:
+        - link "Home, shift, option, h" [ref=f261e30] [cursor=pointer]:
+          - /url: javascript:void(0)
+          - generic [aria-hidden] [ref=f261e31]:
+            - generic [ref=f261e32]: Home
+            - generic [ref=f261e33]:
+              - generic [ref=f261e34]: shift
+              - generic [ref=f261e35]: +
+              - generic [ref=f261e36]: opt
+              - generic [ref=f261e37]: +
+              - generic [ref=f261e38]: H
+      - listitem [ref=f261e39]:
+        - link "Your orders, shift, option, o" [ref=f261e40] [cursor=pointer]:
+          - /url: javascript:void(0)
+          - generic [aria-hidden] [ref=f261e41]:
+            - generic [ref=f261e42]: Orders
+            - generic [ref=f261e43]:
+              - generic [ref=f261e44]: shift
+              - generic [ref=f261e45]: +
+              - generic [ref=f261e46]: opt
+              - generic [ref=f261e47]: +
+              - generic [ref=f261e48]: O
+      - listitem [ref=f261e49]:
+        - button "Show/hide shortcuts, shift, option, z" [ref=f261e50] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f261e51]:
+            - generic [ref=f261e52]: Show/Hide shortcuts
+            - generic [ref=f261e53]:
+              - generic [ref=f261e54]: shift
+              - generic [ref=f261e55]: +
+              - generic [ref=f261e56]: opt
+              - generic [ref=f261e57]: +
+              - generic [ref=f261e58]: Z
+    - generic [ref=f261e59]: To move between items, use your keyboard's up or down arrows.
+  - banner [ref=f261e65]:
+    - navigation "Primary" [ref=f261e66]:
+      - generic [ref=f261e67]:
+        - generic [ref=f261e68]:
+          - generic [ref=f261e69]:
+            - link "Amazon Prime" [ref=f261e70] [cursor=pointer]:
+              - /url: /ref=nav_logo
+            - generic:
+              - link:
+                - /url: /ref=nav_logo_prime
+          - button "Deliver to Kevin Sunnyvale 94085‌" [ref=f261e73] [cursor=pointer]:
+            - generic [ref=f261e75]:
+              - generic [ref=f261e76]: Deliver to Kevin
+              - generic [ref=f261e77]: Sunnyvale 94085‌
+        - search [ref=f261e80]:
+          - generic [ref=f261e83]:
+            - generic [ref=f261e84]: All
+            - combobox "Select the department you want to search in" [ref=f261e87] [cursor=pointer]:
+              - option "All Departments" [selected]
+              - option "Alexa Skills"
+              - option "Amazon Autos"
+              - option "Amazon Devices"
+              - option "Amazon Fresh"
+              - option "Amazon Global Store"
+              - option "Amazon Haul"
+              - option "Amazon One Medical"
+              - option "Amazon Pharmacy"
+              - option "Amazon Resale"
+              - option "Appliances"
+              - option "Apps & Games"
+              - option "Arts, Crafts & Sewing"
+              - option "Audible Books & Originals"
+              - option "Automotive Parts & Accessories"
+              - option "Baby"
+              - option "Beauty & Personal Care"
+              - option "Books"
+              - option "CDs & Vinyl"
+              - option "Cell Phones & Accessories"
+              - option "Clothing, Shoes & Jewelry"
+              - option "Women's Clothing, Shoes & Jewelry"
+              - option "Men's Clothing, Shoes & Jewelry"
+              - option "Girl's Clothing, Shoes & Jewelry"
+              - option "Boy's Clothing, Shoes & Jewelry"
+              - option "Baby Clothing, Shoes & Jewelry"
+              - option "Collectibles & Fine Art"
+              - option "Computers"
+              - option "Credit and Payment Cards"
+              - option "Digital Music"
+              - option "Electronics"
+              - option "FoodMaxx"
+              - option "Garden & Outdoor"
+              - option "Gift Cards"
+              - option "Grocery & Gourmet Food"
+              - option "Handmade"
+              - option "Health, Household & Baby Care"
+              - option "Home & Business Services"
+              - option "Home & Kitchen"
+              - option "Industrial & Scientific"
+              - option "Just for Prime"
+              - option "Kindle Store"
+              - option "Luggage & Travel Gear"
+              - option "Luxury Stores"
+              - option "Magazine Subscriptions"
+              - option "Movies & TV"
+              - option "Musical Instruments"
+              - option "Office Products"
+              - option "Pet Food Express"
+              - option "Pet Supplies"
+              - option "Premium Beauty"
+              - option "Prime Video"
+              - option "Same-Day Store"
+              - option "Smart Home"
+              - option "Software"
+              - option "Sousa's Wine & Liquors"
+              - option "Sports & Outdoors"
+              - option "Subscribe & Save"
+              - option "Subscription Boxes"
+              - option "Tools & Home Improvement"
+              - option "Toys & Games"
+              - option "Under $10"
+              - option "Video Games"
+              - option "Whole Foods Market"
+          - searchbox "Search Amazon" [ref=f261e90]
+          - generic "Go" [ref=f261e93] [cursor=pointer]:
+            - button "Go" [ref=f261e94]
+        - generic [ref=f261e96]:
+          - generic [ref=f261e97]:
+            - link "Choose a language for shopping in Amazon United States. The current selection is English (EN)." [ref=f261e98] [cursor=pointer]:
+              - /url: /customer-preferences/edit?ie=UTF8&preferencesReturnUrl=%2F&ref_=topnav_lang
+              - generic [ref=f261e101]:
+                - img "United States" [ref=f261e102]
+                - generic [ref=f261e103]: EN
+            - button "Expand to Change Language or Country" [ref=f261e104] [cursor=pointer]
+          - generic [ref=f261e105]:
+            - link "Hello, Kevin Account & Lists" [ref=f261e106] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/css/homepage.html?ref_=nav_youraccount_btn
+              - generic [ref=f261e107]: Hello, Kevin
+              - generic [ref=f261e109]: Account & Lists
+            - button "Expand Account and Lists" [ref=f261e110] [cursor=pointer]
+          - link "Returns & Orders" [ref=f261e111] [cursor=pointer]:
+            - /url: /gp/css/order-history?ref_=nav_orders_first
+            - generic [ref=f261e112]: Returns
+            - generic [ref=f261e113]: "& Orders"
+          - link "1 item in cart" [ref=f261e114] [cursor=pointer]:
+            - /url: /gp/cart/view.html?ref_=nav_cart
+            - generic [aria-hidden] [ref=f261e116]: "1"
+            - generic [aria-hidden] [ref=f261e119]: Cart
+      - generic [ref=f261e121]:
+        - generic [ref=f261e122]:
+          - button "Open All Categories Menu" [ref=f261e123] [cursor=pointer]:
+            - generic [ref=f261e125]: All
+          - button "Open Alexa panel" [ref=f261e126] [cursor=pointer]
+        - list [ref=f261e131]:
+          - listitem [ref=f261e132]:
+            - link "Early Prime Deals" [ref=f261e134] [cursor=pointer]:
+              - /url: /primebigdealdays?ref_=nav_cs_td_pbdd_dt_cr
+          - listitem [ref=f261e135]:
+            - link "Buy Again" [ref=f261e137] [cursor=pointer]:
+              - /url: /gp/buyagain?ie=UTF8&ref_=nav_cs_buy_again
+          - listitem [ref=f261e138]:
+            - link "Prime Video" [ref=f261e140] [cursor=pointer]:
+              - /url: /gp/video/storefront?ref_=nav_cs_prime_video
+          - listitem [ref=f261e141]:
+            - link "Customer Service" [ref=f261e143] [cursor=pointer]:
+              - /url: /hz/contact-us/foresight/hubgateway?ref_=nav_cs_fs_hybridhub_navbar_c
+          - listitem [ref=f261e144]:
+            - link "Kindle Books" [ref=f261e146] [cursor=pointer]:
+              - /url: /Kindle-eBooks/b/?ie=UTF8&node=154606011&ref_=nav_cs_kindle_books
+          - listitem [ref=f261e147]:
+            - link "Books" [ref=f261e149] [cursor=pointer]:
+              - /url: /books-used-books-textbooks/b/?ie=UTF8&node=283155&ref_=nav_cs_books
+          - listitem [ref=f261e150]:
+            - link "Subscribe & Save" [ref=f261e152] [cursor=pointer]:
+              - /url: /auto-deliveries/landing?ref_=nav_cs_sns
+          - listitem [ref=f261e153]:
+            - generic [ref=f261e154]:
+              - link "Browsing History" [ref=f261e155] [cursor=pointer]:
+                - /url: /gp/history?ref_=nav_cs_timeline
+              - button "Browsing History Details" [ref=f261e156] [cursor=pointer]
+          - listitem [ref=f261e157]:
+            - link "Coupons" [ref=f261e159] [cursor=pointer]:
+              - /url: /coupons?ref_=nav_cs_coupons
+          - listitem [ref=f261e160]:
+            - link "TV & Video" [ref=f261e162] [cursor=pointer]:
+              - /url: /tvs/b/?ie=UTF8&node=172659&ref_=nav_cs_tv
+          - listitem [ref=f261e163]:
+            - link "Registry" [ref=f261e165] [cursor=pointer]:
+              - /url: /gp/browse.html?node=16115931011&ref_=nav_cs_registry
+          - listitem [ref=f261e166]:
+            - generic [ref=f261e167]:
+              - link "Gift Cards" [ref=f261e168] [cursor=pointer]:
+                - /url: /gift-cards/b/?ie=UTF8&node=2238192011&ref_=nav_cs_gc
+              - button "Gift Cards Details" [ref=f261e169] [cursor=pointer]
+          - listitem [ref=f261e170]:
+            - link "Best Sellers" [ref=f261e172] [cursor=pointer]:
+              - /url: /gp/bestsellers/?ref_=nav_cs_bestsellers
+          - listitem [ref=f261e173]:
+            - link "Amazon Basics" [ref=f261e175] [cursor=pointer]:
+              - /url: /Amazon_Basics?channel=discovbar&field-lbr_brands_browse-bin=AmazonBasics&ref_=nav_cs_amazonbasics
+          - listitem [ref=f261e176]:
+            - generic [ref=f261e177]:
+              - link "Home Improvement" [ref=f261e178] [cursor=pointer]:
+                - /url: /Tools-and-Home-Improvement/b/?ie=UTF8&node=228013&ref_=nav_cs_hi
+              - button "Home Improvement Details" [ref=f261e179] [cursor=pointer]
+          - listitem [ref=f261e180]:
+            - link "Whole Foods" [ref=f261e182] [cursor=pointer]:
+              - /url: /alm/storefront?almBrandId=VUZHIFdob2xlIEZvb2Rz&ref_=nav_cs_whole_foods
+          - listitem [ref=f261e183]:
+            - link "Groceries" [ref=f261e185] [cursor=pointer]:
+              - /url: /fmc/grocery-gateway?gsc=fe16aGPfFs46S&ref_=nav_cs_groceries
+          - listitem [ref=f261e186]:
+            - link "Pharmacy" [ref=f261e188] [cursor=pointer]:
+              - /url: https://pharmacy.amazon.com/?nodl=0&ref_=nav_cs_pharmacy
+          - listitem [ref=f261e189]:
+            - link "Automotive" [ref=f261e191] [cursor=pointer]:
+              - /url: /automotive-auto-truck-replacements-parts/b/?ie=UTF8&node=15684181&ref_=nav_cs_automotive
+          - listitem [ref=f261e192]:
+            - generic [ref=f261e193]:
+              - link "Music" [ref=f261e194] [cursor=pointer]:
+                - /url: /music/player?ref_=nav_cs_musicFlyout
+              - button "Music Details" [ref=f261e195] [cursor=pointer]
+          - listitem [ref=f261e196]:
+            - link "New Releases" [ref=f261e198] [cursor=pointer]:
+              - /url: /gp/new-releases/?ref_=nav_cs_newreleases
+          - listitem [ref=f261e199]:
+            - link "Livestreams" [ref=f261e201] [cursor=pointer]:
+              - /url: /live?ref_=nav_cs_amazonlive
+          - listitem [ref=f261e202]:
+            - link "Home Audio & Theater" [ref=f261e204] [cursor=pointer]:
+              - /url: /Home-Audio-Electronics/b/?ie=UTF8&node=667846011&ref_=nav_cs_home_audio
+          - listitem [ref=f261e205]:
+            - link "Works with Alexa" [ref=f261e207] [cursor=pointer]:
+              - /url: /gp/browse.html?node=73846268011&ref_=nav_cs_wwa
+          - listitem [ref=f261e208]:
+            - link "Same-Day Delivery" [ref=f261e210] [cursor=pointer]:
+              - /url: /fmc/ssd-storefront?gsc=fe16aGPfFs46S&ref_=nav_cs_SSD_nav_storefront
+          - listitem [ref=f261e211]:
+            - link "Everyday" [ref=f261e213] [cursor=pointer]:
+              - /url: /everyday-essentials?ref_=nav_cs_ee
+          - listitem [ref=f261e214]:
+            - link "Household, Health & Baby Care" [ref=f261e216] [cursor=pointer]:
+              - /url: /health-personal-care-nutrition-fitness/b/?ie=UTF8&node=3760901&ref_=nav_cs_hpc
+          - listitem [ref=f261e217]:
+            - link "Amazon Haul" [ref=f261e219] [cursor=pointer]:
+              - /url: /haul/store?ref_=nav_cs_hul_disb
+          - listitem [ref=f261e220]:
+            - link "Health AI" [ref=f261e222] [cursor=pointer]:
+              - /url: https://health.amazon.com/health-ai?ref_=nav_cs_health_ai
+          - listitem [ref=f261e223]:
+            - link "Sell" [ref=f261e225] [cursor=pointer]:
+              - /url: /b/?_encoding=UTF8&ld=AZUSSOA-sell&node=12766669011&ref_=nav_cs_sell
+        - link "Prime Big Deal Days is October 6-7" [ref=f261e228] [cursor=pointer]:
+          - /url: /primebigdealdays/?_encoding=UTF8&ref_=nav_swm_2026_Event_PBDD&pf_rd_p=03097195-e931-4c0c-8295-df27feb46091&pf_rd_s=nav-sitewide-msg-text&pf_rd_t=4201&pf_rd_i=navbar-4201&pf_rd_m=ATVPDKIKX0DER&pf_rd_r=W686RSY0FGX00T2N6N5D
+      - dialog [ref=f261e229]:
+        - generic [ref=f261e232]:
+          - generic [ref=f261e236]:
+            - heading "Subtotal" [level=1] [ref=f261e238]
+            - heading "$103.83" [level=2] [ref=f261e241]
+          - link "Go to Cart" [ref=f261e247] [cursor=pointer]:
+            - /url: /cart?ref_=ox_ewc_ret_gtc_dsk_us
+          - list [ref=f261e252]:
+            - listitem [ref=f261e253]:
+              - generic [ref=f261e255]:
+                - generic [ref=f261e256]:
+                  - link [ref=f261e258] [cursor=pointer]:
+                    - /url: /gp/product/B0F8J5VN94/ref=ewc_pr_img_1?smid=A1O6NUN76TUX6X&psc=1
+                    - img "Nike Men's Dunk Low Retro Sneakers, White/Hyper Royal, 10.5 Medium US" [ref=f261e259]
+                  - generic [ref=f261e260]: $103.83
+                  - generic [ref=f261e261]: Only 1 left in stock - order soon.
+                - group "Quantity is 1" [ref=f261e267]:
+                  - generic [aria-hidden] [ref=f261e268]: Quantity is 1
+                  - generic [ref=f261e270]:
+                    - button "Delete Nike Men&#39;s Dunk Low Retro Sneakers, White/Hyper Royal, 10.5 Medium US" [ref=f261e271] [cursor=pointer]
+                    - generic [ref=f261e273]: "1"
+                    - generic [ref=f261e276]: "1"
+                    - button "Increase quantity by one, Quantity is 1, Nike Men&#39;s Dunk Low Retro Sneakers, White/Hyper Royal, 10.5 Medium US" [ref=f261e278] [cursor=pointer]
+  - generic [ref=f261e283]:
+    - generic [ref=f261e284]:
+      - generic [ref=f261e285]:
+        - link [ref=f261e288] [cursor=pointer]:
+          - /url: /gp/product/B0F8J5VN94/ref=sw_img_1?smid=&psc=1
+          - img "Nike Men&#39;s Dunk Low Retro Sneakers, White/Hyper Royal, 10.5 Medium US" [ref=f261e289]
+        - generic [ref=f261e290]:
+          - heading "Added to cart" [active] [level=1] [ref=f261e297]
+          - list [ref=f261e299]:
+            - listitem [ref=f261e300]:
+              - generic [ref=f261e301]: "Size: 10.5"
+            - listitem [ref=f261e302]:
+              - generic [ref=f261e303]: "Color: White Hyper Royal"
+      - generic [ref=f261e305]:
+        - generic [ref=f261e306]:
+          - heading "Cart Subtotal:" [ref=f261e307]
+          - generic [ref=f261e309]:
+            - generic [ref=f261e310]: $103.83
+            - generic [aria-hidden] [ref=f261e311]:
+              - text: $
+              - generic [ref=f261e312]:
+                - text: "103"
+                - generic [ref=f261e313]: .
+              - text: "83"
+        - generic [ref=f261e318] [cursor=pointer]:
+          - button "Proceed to checkout (1 item) Check out Amazon Cart" [ref=f261e319]: Proceed to checkout
+          - generic [ref=f261e321]: Proceed to checkout (1 item)
+        - link "Go to Cart" [ref=f261e325] [cursor=pointer]:
+          - /url: /cart?ref_=sw_gtc
+    - generic [ref=f261e326]:
+      - group [ref=f261e332]:
+        - generic [ref=f261e333]:
+          - heading "Recommended for you based on Nike Mens Dunk Low Retro" [level=1] [ref=f261e335]
+          - generic [ref=f261e336]: Page 1 of 10
+        - generic [ref=f261e340]:
+          - button "Previous page" [ref=f261e342] [cursor=pointer]
+          - group [ref=f261e347]:
+            - list [ref=f261e348]:
+              - listitem [ref=f261e349]:
+                - generic [ref=f261e350]:
+                  - generic [ref=f261e351]:
+                    - link [ref=f261e352] [cursor=pointer]:
+                      - /url: /Nike-Womens-Dunk-Nature-Sneaker/dp/B0FJDGNB2P/ref=sw_img_d_crh_rh_mrairec_reranked?_encoding=UTF8&pd_rd_i=B0FJDGNB2P&pd_rd_w=ABAYb&content-id=amzn1.sym.32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_p=32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_r=W686RSY0FGX00T2N6N5D&pd_rd_wg=m4Aul&pd_rd_r=4ed73946-1530-4016-bf96-0ca10ab9c0b3
+                      - img "Nike Women's Dunk Low Next Nature Sneaker" [ref=f261e354]
+                    - generic [ref=f261e355]:
+                      - link "Nike Women's Dunk Low Next Nature Sneaker" [ref=f261e356] [cursor=pointer]:
+                        - /url: /Nike-Womens-Dunk-Nature-Sneaker/dp/B0FJDGNB2P/ref=sw_ttl_d_crh_rh_mrairec_reranked?_encoding=UTF8&pd_rd_i=B0FJDGNB2P&pd_rd_w=ABAYb&content-id=amzn1.sym.32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_p=32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_r=W686RSY0FGX00T2N6N5D&pd_rd_wg=m4Aul&pd_rd_r=4ed73946-1530-4016-bf96-0ca10ab9c0b3
+                        - generic [ref=f261e357]:
+                          - generic [ref=f261e358]: Nike Women's Dunk Low Next Nature Sneaker
+                          - generic [aria-hidden] [ref=f261e359]: Nike Women's Dunk Low Next Nature Sneaker
+                      - link "4.5 out of 5 stars (468)" [ref=f261e361] [cursor=pointer]:
+                        - /url: /product-reviews/B0FJDGNB2P/ref=sw_cr_d_crh_rh_mrairec_reranked?_encoding=UTF8&pd_rd_i=B0FJDGNB2P&pd_rd_w=ABAYb&content-id=amzn1.sym.32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_p=32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_r=W686RSY0FGX00T2N6N5D&pd_rd_wg=m4Aul&pd_rd_r=4ed73946-1530-4016-bf96-0ca10ab9c0b3
+                        - generic [ref=f261e362]: 4.5 out of 5 stars
+                        - text: (468)
+                      - generic [ref=f261e364]:
+                        - generic:
+                          - generic [ref=f261e365]:
+                            - generic [ref=f261e366]: $69.01
+                            - generic [aria-hidden] [ref=f261e367]:
+                              - text: $
+                              - generic [ref=f261e368]:
+                                - text: "69"
+                                - generic [ref=f261e369]: .
+                              - text: "01"
+                          - text: "-"
+                          - generic [ref=f261e370]:
+                            - generic [ref=f261e371]: $295.96
+                            - generic [aria-hidden] [ref=f261e372]:
+                              - text: $
+                              - generic [ref=f261e373]:
+                                - text: "295"
+                                - generic [ref=f261e374]: .
+                              - text: "96"
+                  - link "See buying options" [ref=f261e379] [cursor=pointer]:
+                    - /url: /Nike-Womens-Dunk-Nature-Sneaker/dp/B0FJDGNB2P/ref=sw_atc_o_d_crh_rh_mrairec_reranked?_encoding=UTF8&pd_rd_i=B0FJDGNB2P&pd_rd_w=ABAYb&content-id=amzn1.sym.32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_p=32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_r=W686RSY0FGX00T2N6N5D&pd_rd_wg=m4Aul&pd_rd_r=4ed73946-1530-4016-bf96-0ca10ab9c0b3
+              - listitem [ref=f261e380]:
+                - generic [ref=f261e381]:
+                  - generic [ref=f261e382]:
+                    - link [ref=f261e383] [cursor=pointer]:
+                      - /url: /Jordan-Shoes-Neutral-Summit-Infrared/dp/B0GJ6ZXTHL/ref=sw_img_d_crh_rh_mrairec_reranked_1?_encoding=UTF8&pd_rd_i=B0GJ6ZXTHL&pd_rd_w=ABAYb&content-id=amzn1.sym.32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_p=32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_r=W686RSY0FGX00T2N6N5D&pd_rd_wg=m4Aul&pd_rd_r=4ed73946-1530-4016-bf96-0ca10ab9c0b3
+                      - img "Air Jordan 1 Low Men's Shoes (Neutral Grey/Summit White/Infrared 23/Black)" [ref=f261e385]
+                    - generic [ref=f261e386]:
+                      - link "Air Jordan 1 Low Men's Shoes (Neutral Grey/Summit White/Infrared 23/Black)" [ref=f261e387] [cursor=pointer]:
+                        - /url: /Jordan-Shoes-Neutral-Summit-Infrared/dp/B0GJ6ZXTHL/ref=sw_ttl_d_crh_rh_mrairec_reranked_1?_encoding=UTF8&pd_rd_i=B0GJ6ZXTHL&pd_rd_w=ABAYb&content-id=amzn1.sym.32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_p=32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_r=W686RSY0FGX00T2N6N5D&pd_rd_wg=m4Aul&pd_rd_r=4ed73946-1530-4016-bf96-0ca10ab9c0b3
+                        - generic [ref=f261e388]:
+                          - generic [ref=f261e389]: Air Jordan 1 Low Men's Shoes (Neutral Grey/Summit White/Infrared 23/Black)
+                          - generic [aria-hidden] [ref=f261e390]: Air Jordan 1 Low Men's Shoes (Neutral Grey/Summit Whit…
+                      - link "4.7 out of 5 stars (48)" [ref=f261e392] [cursor=pointer]:
+                        - /url: /product-reviews/B0GJ6ZXTHL/ref=sw_cr_d_crh_rh_mrairec_reranked_1?_encoding=UTF8&pd_rd_i=B0GJ6ZXTHL&pd_rd_w=ABAYb&content-id=amzn1.sym.32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_p=32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_r=W686RSY0FGX00T2N6N5D&pd_rd_wg=m4Aul&pd_rd_r=4ed73946-1530-4016-bf96-0ca10ab9c0b3
+                        - generic [ref=f261e393]: 4.7 out of 5 stars
+                        - text: (48)
+                      - generic [ref=f261e395]:
+                        - generic:
+                          - generic [ref=f261e396]:
+                            - generic [ref=f261e397]: $96.55
+                            - generic [aria-hidden] [ref=f261e398]:
+                              - text: $
+                              - generic [ref=f261e399]:
+                                - text: "96"
+                                - generic [ref=f261e400]: .
+                              - text: "55"
+                          - text: "-"
+                          - generic [ref=f261e401]:
+                            - generic [ref=f261e402]: $215.48
+                            - generic [aria-hidden] [ref=f261e403]:
+                              - text: $
+                              - generic [ref=f261e404]:
+                                - text: "215"
+                                - generic [ref=f261e405]: .
+                              - text: "48"
+                  - link "See buying options" [ref=f261e410] [cursor=pointer]:
+                    - /url: /Jordan-Shoes-Neutral-Summit-Infrared/dp/B0GJ6ZXTHL/ref=sw_atc_o_d_crh_rh_mrairec_reranked_1?_encoding=UTF8&pd_rd_i=B0GJ6ZXTHL&pd_rd_w=ABAYb&content-id=amzn1.sym.32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_p=32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_r=W686RSY0FGX00T2N6N5D&pd_rd_wg=m4Aul&pd_rd_r=4ed73946-1530-4016-bf96-0ca10ab9c0b3
+              - listitem [ref=f261e411]:
+                - generic [ref=f261e412]:
+                  - generic [ref=f261e413]:
+                    - link [ref=f261e414] [cursor=pointer]:
+                      - /url: /Nike-Air-Jordan-Mens-Shoes/dp/B0H47289YN/ref=sw_img_d_crh_rh_mrairec_reranked_2?_encoding=UTF8&pd_rd_i=B0H47289YN&pd_rd_w=ABAYb&content-id=amzn1.sym.32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_p=32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_r=W686RSY0FGX00T2N6N5D&pd_rd_wg=m4Aul&pd_rd_r=4ed73946-1530-4016-bf96-0ca10ab9c0b3
+                      - img "Nike Air Jordan 1 Low Mens Shoes" [ref=f261e416]
+                    - generic [ref=f261e417]:
+                      - link "Nike Air Jordan 1 Low Mens Shoes" [ref=f261e418] [cursor=pointer]:
+                        - /url: /Nike-Air-Jordan-Mens-Shoes/dp/B0H47289YN/ref=sw_ttl_d_crh_rh_mrairec_reranked_2?_encoding=UTF8&pd_rd_i=B0H47289YN&pd_rd_w=ABAYb&content-id=amzn1.sym.32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_p=32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_r=W686RSY0FGX00T2N6N5D&pd_rd_wg=m4Aul&pd_rd_r=4ed73946-1530-4016-bf96-0ca10ab9c0b3
+                        - generic [ref=f261e419]:
+                          - generic [ref=f261e420]: Nike Air Jordan 1 Low Mens Shoes
+                          - generic [aria-hidden] [ref=f261e421]: Nike Air Jordan 1 Low Mens Shoes
+                      - link "4.6 out of 5 stars (33)" [ref=f261e423] [cursor=pointer]:
+                        - /url: /product-reviews/B0H47289YN/ref=sw_cr_d_crh_rh_mrairec_reranked_2?_encoding=UTF8&pd_rd_i=B0H47289YN&pd_rd_w=ABAYb&content-id=amzn1.sym.32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_p=32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_r=W686RSY0FGX00T2N6N5D&pd_rd_wg=m4Aul&pd_rd_r=4ed73946-1530-4016-bf96-0ca10ab9c0b3
+                        - generic [ref=f261e424]: 4.6 out of 5 stars
+                        - text: (33)
+                      - generic [ref=f261e426]:
+                        - generic:
+                          - generic [ref=f261e427]:
+                            - generic [ref=f261e428]: $98.50
+                            - generic [aria-hidden] [ref=f261e429]:
+                              - text: $
+                              - generic [ref=f261e430]:
+                                - text: "98"
+                                - generic [ref=f261e431]: .
+                              - text: "50"
+                          - text: "-"
+                          - generic [ref=f261e432]:
+                            - generic [ref=f261e433]: $167.05
+                            - generic [aria-hidden] [ref=f261e434]:
+                              - text: $
+                              - generic [ref=f261e435]:
+                                - text: "167"
+                                - generic [ref=f261e436]: .
+                              - text: "05"
+                  - link "See buying options" [ref=f261e441] [cursor=pointer]:
+                    - /url: /Nike-Air-Jordan-Mens-Shoes/dp/B0H47289YN/ref=sw_atc_o_d_crh_rh_mrairec_reranked_2?_encoding=UTF8&pd_rd_i=B0H47289YN&pd_rd_w=ABAYb&content-id=amzn1.sym.32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_p=32492244-68a4-4cd2-a213-fe1fafba26c1&pf_rd_r=W686RSY0FGX00T2N6N5D&pd_rd_wg=m4Aul&pd_rd_r=4ed73946-1530-4016-bf96-0ca10ab9c0b3
+          - button "Next page" [ref=f261e443] [cursor=pointer]
+      - 'generic "Kevin, pay $103.83 $0.00 for this order. Get a $150 Amazon Gift Card upon approval for Prime Visa. Current total: $103.83 Gift Card savings: - $150.00 Cost after savings: $0.00 Savings remaining: $46.17 Find out how" [ref=f261e450]':
+        - generic [ref=f261e451]:
+          - generic [ref=f261e456]:
+            - generic [ref=f261e457]:
+              - text: Kevin, pay
+              - generic [ref=f261e458]: $103.83
+              - generic [ref=f261e459]: $0.00
+              - text: for this order.
+            - text: Get a $150 Amazon Gift Card upon approval for Prime Visa.
+          - table [ref=f261e462]:
+            - rowgroup [ref=f261e463]:
+              - row [ref=f261e464]:
+                - cell "Current total:" [ref=f261e465]
+                - cell "$103.83" [ref=f261e466]
+              - row [ref=f261e467]:
+                - cell "Gift Card savings:" [ref=f261e468]
+                - cell "- $150.00" [ref=f261e469]
+              - row [ref=f261e471]:
+                - cell "Cost after savings:" [ref=f261e472]
+                - cell "$0.00" [ref=f261e473]
+              - row [ref=f261e474]:
+                - cell "Savings remaining:" [ref=f261e475]
+                - cell "$46.17" [ref=f261e476]
+          - button [ref=f261e482] [cursor=pointer]: Find out how
+        - link "Kevin, pay $103.83 $0.00 for this order. Get a $150 Amazon Gift Card upon approval for Prime Visa." [ref=f261e483] [cursor=pointer]:
+          - /url: /dp/product/BT00LN946S?pr=521prime&inc=0355d35b-30fb-4d77-bbd5-d3a91cc22f5d&ts=81yss4w1vepaxohe39tggn775eqex9g&place=sw&plattr=CBCC_SW_Desk_PRIME_StackedImage_launch_V4&imp=1e1266db-b82f-4709-8036-82ae27f8734a&mru=%2Fcart
+    - generic [ref=f261e484]:
+      - group [ref=f261e489]:
+        - generic [ref=f261e490]:
+          - heading "Based on what you added" [level=1] [ref=f261e492]
+          - generic [ref=f261e493]: Page 1 of 5
+        - button "Leave feedback on Sponsored ad" [ref=f261e500] [cursor=pointer]: Sponsored
+        - generic [ref=f261e503]:
+          - button "Previous page" [ref=f261e505] [cursor=pointer]
+          - group [ref=f261e510]:
+            - list [ref=f261e511]:
+              - listitem [ref=f261e512]:
+                - generic [ref=f261e513]:
+                  - generic [ref=f261e514]:
+                    - link [ref=f261e515] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MToyNTQxMzU2MzM4MDIwMTkwOjE3OTA3NDc4MzQ6c3BfaHVjX21yYWlfY29tcDozMDExMDMyMjQ3NjMzMDI6OjA6Og==&url=%2FVALSOLE-Orthopedic-Slippers-Support-Fasciitis%2Fdp%2FB0FVKX8GXB%2Fref%3Dsw_img_d_sspa_dk_huc_pt_comp%3F_encoding%3DUTF8%26pd_rd_i%3DB0FVKX8GXB%26pd_rd_w%3DXUcoV%26content-id%3Damzn1.sym.a091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_p%3Da091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaV9jb21w
+                      - img "VALSOLE Orthopedic Slippers for Women and Men,Arch Support House Shoes, 220+ Lbs Plantar Fasciitis Flat Feet Slippers, Comfor" [ref=f261e517]
+                    - generic [ref=f261e518]:
+                      - link "VALSOLE Orthopedic Slippers for Women and Men,Arch Support House Shoes, 220+ Lbs Plantar Fasciitis Flat Feet Slippers, Comfort Slippers for Indoor Outdoor" [ref=f261e519] [cursor=pointer]:
+                        - /url: /sspa/click?ie=UTF8&spc=MToyNTQxMzU2MzM4MDIwMTkwOjE3OTA3NDc4MzQ6c3BfaHVjX21yYWlfY29tcDozMDExMDMyMjQ3NjMzMDI6OjA6Og==&url=%2FVALSOLE-Orthopedic-Slippers-Support-Fasciitis%2Fdp%2FB0FVKX8GXB%2Fref%3Dsw_ttl_d_sspa_dk_huc_pt_comp%3F_encoding%3DUTF8%26pd_rd_i%3DB0FVKX8GXB%26pd_rd_w%3DXUcoV%26content-id%3Damzn1.sym.a091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_p%3Da091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaV9jb21w
+                        - generic [ref=f261e520]:
+                          - generic [ref=f261e521]: VALSOLE Orthopedic Slippers for Women and Men,Arch Support House Shoes, 220+ Lbs Plantar Fasciitis Flat Feet Slippers, Comfort Slippers for Indoor Outdoor
+                          - generic [aria-hidden] [ref=f261e522]: VALSOLE Orthopedic Slippers for Women and Men,Arch S…
+                      - link "4.3 out of 5 stars (246)" [ref=f261e524] [cursor=pointer]:
+                        - /url: /sspa/click?ie=UTF8&spc=MToyNTQxMzU2MzM4MDIwMTkwOjE3OTA3NDc4MzQ6c3BfaHVjX21yYWlfY29tcDozMDExMDMyMjQ3NjMzMDI6OjA6Og==&url=%2Fproduct-reviews%2FB0FVKX8GXB%2Fref%3Dsw_cr_d_sspa_dk_huc_pt_comp%3F_encoding%3DUTF8%26pd_rd_i%3DB0FVKX8GXB%26pd_rd_w%3DXUcoV%26content-id%3Damzn1.sym.a091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_p%3Da091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaV9jb21w
+                        - generic [ref=f261e525]: 4.3 out of 5 stars
+                        - text: (246)
+                      - generic [ref=f261e528]:
+                        - generic [ref=f261e529]: $69.99
+                        - generic [aria-hidden] [ref=f261e530]:
+                          - text: $
+                          - generic [ref=f261e531]:
+                            - text: "69"
+                            - generic [ref=f261e532]: .
+                          - text: "99"
+                      - generic [ref=f261e535]:
+                        - generic [ref=f261e539]:
+                          - img "Prime" [ref=f261e540]
+                          - text: Two-Day
+                        - generic [ref=f261e541]: FREE delivery Thu, Oct 1
+                  - generic [ref=f261e551] [cursor=pointer]:
+                    - button "Add to cart, VALSOLE Orthopedic Slippers for Women and Men,Arch Support House Shoes, 220+ Lbs Plantar Fasciitis Flat Feet Slippers, Comfort Slippers for Indoor Outdoor" [ref=f261e552]
+                    - generic [aria-hidden] [ref=f261e553]: Add to cart
+              - listitem [ref=f261e554]:
+                - generic [ref=f261e555]:
+                  - generic [ref=f261e556]:
+                    - link [ref=f261e557] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MToyNTQxMzU2MzM4MDIwMTkwOjE3OTA3NDc4MzQ6c3BfaHVjX21yYWlfY29tcDoyMDAwMzE0MDgxMTAyNDE6OjE6Og==&url=%2FWHISPER-DEER-Invisible-Sneaker-Non-Slip%2Fdp%2FB08BTW36WX%2Fref%3Dsw_img_d_sspa_dk_huc_pt_comp_1%3F_encoding%3DUTF8%26pd_rd_i%3DB08BTW36WX%26pd_rd_w%3DXUcoV%26content-id%3Damzn1.sym.a091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_p%3Da091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaV9jb21w
+                      - img "No Show Socks Men Cotton Invisible Low Cut Non Slip Grip Soft Daily Wear | Premium soft knit · Silicone heel pad · Stretch el" [ref=f261e559]
+                    - generic [ref=f261e560]:
+                      - link "No Show Socks Men Cotton Invisible Low Cut Non Slip Grip Soft Daily Wear | Premium soft knit · Silicone heel pad · Stretch elastic cuff · Moisture control · For loafers sneakers daily wear · Easy care" [ref=f261e561] [cursor=pointer]:
+                        - /url: /sspa/click?ie=UTF8&spc=MToyNTQxMzU2MzM4MDIwMTkwOjE3OTA3NDc4MzQ6c3BfaHVjX21yYWlfY29tcDoyMDAwMzE0MDgxMTAyNDE6OjE6Og==&url=%2FWHISPER-DEER-Invisible-Sneaker-Non-Slip%2Fdp%2FB08BTW36WX%2Fref%3Dsw_ttl_d_sspa_dk_huc_pt_comp_1%3F_encoding%3DUTF8%26pd_rd_i%3DB08BTW36WX%26pd_rd_w%3DXUcoV%26content-id%3Damzn1.sym.a091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_p%3Da091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaV9jb21w
+                        - generic [ref=f261e562]:
+                          - generic [ref=f261e563]: No Show Socks Men Cotton Invisible Low Cut Non Slip Grip Soft Daily Wear | Premium soft knit · Silicone heel pad · Stretch elastic cuff · Moisture control · For loafers sneakers daily wear · Easy care
+                          - generic [aria-hidden] [ref=f261e564]: No Show Socks Men Cotton Invisible Low Cut Non Slip G…
+                      - link "4.5 out of 5 stars (5.8K)" [ref=f261e566] [cursor=pointer]:
+                        - /url: /sspa/click?ie=UTF8&spc=MToyNTQxMzU2MzM4MDIwMTkwOjE3OTA3NDc4MzQ6c3BfaHVjX21yYWlfY29tcDoyMDAwMzE0MDgxMTAyNDE6OjE6Og==&url=%2Fproduct-reviews%2FB08BTW36WX%2Fref%3Dsw_cr_d_sspa_dk_huc_pt_comp_1%3F_encoding%3DUTF8%26pd_rd_i%3DB08BTW36WX%26pd_rd_w%3DXUcoV%26content-id%3Damzn1.sym.a091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_p%3Da091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaV9jb21w
+                        - generic [ref=f261e567]: 4.5 out of 5 stars
+                        - text: (5.8K)
+                      - generic [ref=f261e570]:
+                        - generic [ref=f261e571]: $19.99
+                        - generic [aria-hidden] [ref=f261e572]:
+                          - text: $
+                          - generic [ref=f261e573]:
+                            - text: "19"
+                            - generic [ref=f261e574]: .
+                          - text: "99"
+                      - generic [ref=f261e577]:
+                        - generic [ref=f261e581]:
+                          - img "Prime" [ref=f261e582]
+                          - text: Two-Day
+                        - generic [ref=f261e583]: FREE delivery Thu, Oct 1
+                  - generic [ref=f261e593] [cursor=pointer]:
+                    - button "Add to cart, No Show Socks Men Cotton Invisible Low Cut Non Slip Grip Soft Daily Wear | Premium soft knit · Silicone heel pad · Stretch elastic cuff · Moisture control · For loafers sneakers daily wear · Easy care" [ref=f261e594]
+                    - generic [aria-hidden] [ref=f261e595]: Add to cart
+              - listitem [ref=f261e596]:
+                - generic [ref=f261e597]:
+                  - generic [ref=f261e598]:
+                    - link [ref=f261e599] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MToyNTQxMzU2MzM4MDIwMTkwOjE3OTA3NDc4MzQ6c3BfaHVjX21yYWlfY29tcDozMDA2ODEzOTU2MTUyMDI6OjI6Og==&url=%2FKuaiLu-Leather-Comfort-Orthotic-Fasciitis%2Fdp%2FB0D4YC1R7K%2Fref%3Dsw_img_d_sspa_dk_huc_pt_comp_2%3F_encoding%3DUTF8%26pd_rd_i%3DB0D4YC1R7K%26pd_rd_w%3DXUcoV%26content-id%3Damzn1.sym.a091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_p%3Da091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaV9jb21w
+                      - img "KuaiLu Mens Sport Flip Flops Orthotic Thong Sandals With Arch Support | Comfortable Toe Post Beach Pool Slides For Plantar Fa" [ref=f261e601]
+                    - generic [ref=f261e602]:
+                      - link "KuaiLu Mens Sport Flip Flops Orthotic Thong Sandals With Arch Support | Comfortable Toe Post Beach Pool Slides For Plantar Fasciitis Outdoor Summer" [ref=f261e603] [cursor=pointer]:
+                        - /url: /sspa/click?ie=UTF8&spc=MToyNTQxMzU2MzM4MDIwMTkwOjE3OTA3NDc4MzQ6c3BfaHVjX21yYWlfY29tcDozMDA2ODEzOTU2MTUyMDI6OjI6Og==&url=%2FKuaiLu-Leather-Comfort-Orthotic-Fasciitis%2Fdp%2FB0D4YC1R7K%2Fref%3Dsw_ttl_d_sspa_dk_huc_pt_comp_2%3F_encoding%3DUTF8%26pd_rd_i%3DB0D4YC1R7K%26pd_rd_w%3DXUcoV%26content-id%3Damzn1.sym.a091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_p%3Da091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaV9jb21w
+                        - generic [ref=f261e604]:
+                          - generic [ref=f261e605]: KuaiLu Mens Sport Flip Flops Orthotic Thong Sandals With Arch Support | Comfortable Toe Post Beach Pool Slides For Plantar Fasciitis Outdoor Summer
+                          - generic [aria-hidden] [ref=f261e606]: KuaiLu Mens Sport Flip Flops Orthotic Thong Sandals Wit…
+                      - link "4.2 out of 5 stars (10.1K)" [ref=f261e608] [cursor=pointer]:
+                        - /url: /sspa/click?ie=UTF8&spc=MToyNTQxMzU2MzM4MDIwMTkwOjE3OTA3NDc4MzQ6c3BfaHVjX21yYWlfY29tcDozMDA2ODEzOTU2MTUyMDI6OjI6Og==&url=%2Fproduct-reviews%2FB0D4YC1R7K%2Fref%3Dsw_cr_d_sspa_dk_huc_pt_comp_2%3F_encoding%3DUTF8%26pd_rd_i%3DB0D4YC1R7K%26pd_rd_w%3DXUcoV%26content-id%3Damzn1.sym.a091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_p%3Da091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaV9jb21w
+                        - generic [ref=f261e609]: 4.2 out of 5 stars
+                        - text: (10.1K)
+                      - generic [ref=f261e612]:
+                        - generic [ref=f261e613]: $35.99
+                        - generic [aria-hidden] [ref=f261e614]:
+                          - text: $
+                          - generic [ref=f261e615]:
+                            - text: "35"
+                            - generic [ref=f261e616]: .
+                          - text: "99"
+                      - generic [ref=f261e619]:
+                        - generic [ref=f261e623]:
+                          - img "Prime" [ref=f261e624]
+                          - text: Two-Day
+                        - generic [ref=f261e625]: FREE delivery Thu, Oct 1
+                  - generic [ref=f261e635] [cursor=pointer]:
+                    - button "Add to cart, KuaiLu Mens Sport Flip Flops Orthotic Thong Sandals With Arch Support | Comfortable Toe Post Beach Pool Slides For Plantar Fasciitis Outdoor Summer" [ref=f261e636]
+                    - generic [aria-hidden] [ref=f261e637]: Add to cart
+              - listitem [ref=f261e638]:
+                - generic [ref=f261e639]:
+                  - generic [ref=f261e640]:
+                    - link [ref=f261e641] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MToyNTQxMzU2MzM4MDIwMTkwOjE3OTA3NDc4MzQ6c3BfaHVjX21yYWlfY29tcDozMDA0MjkzNDI0MDk2MDI6OjM6Og==&url=%2FCWVLC-Cushioned-Compression-Socks-Lime-green%2Fdp%2FB09C1K6XNY%2Fref%3Dsw_img_d_sspa_dk_huc_pt_comp_3%3F_encoding%3DUTF8%26pd_rd_i%3DB09C1K6XNY%26pd_rd_w%3DXUcoV%26content-id%3Damzn1.sym.a091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_p%3Da091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaV9jb21w
+                      - img "CWVLC Cushioned Athletic Ankle Compression Socks for Women Men 3/6 Pairs | Arch Support, Moisture-Wicking, Anti-Blister, for" [ref=f261e643]
+                    - generic [ref=f261e644]:
+                      - link "CWVLC Cushioned Athletic Ankle Compression Socks for Women Men 3/6 Pairs | Arch Support, Moisture-Wicking, Anti-Blister, for Running, Pickleball, Tennis, Golf, Walking, Hiking" [ref=f261e645] [cursor=pointer]:
+                        - /url: /sspa/click?ie=UTF8&spc=MToyNTQxMzU2MzM4MDIwMTkwOjE3OTA3NDc4MzQ6c3BfaHVjX21yYWlfY29tcDozMDA0MjkzNDI0MDk2MDI6OjM6Og==&url=%2FCWVLC-Cushioned-Compression-Socks-Lime-green%2Fdp%2FB09C1K6XNY%2Fref%3Dsw_ttl_d_sspa_dk_huc_pt_comp_3%3F_encoding%3DUTF8%26pd_rd_i%3DB09C1K6XNY%26pd_rd_w%3DXUcoV%26content-id%3Damzn1.sym.a091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_p%3Da091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaV9jb21w
+                        - generic [ref=f261e646]:
+                          - generic [ref=f261e647]: CWVLC Cushioned Athletic Ankle Compression Socks for Women Men 3/6 Pairs | Arch Support, Moisture-Wicking, Anti-Blister, for Running, Pickleball, Tennis, Golf, Walking, Hiking
+                          - generic [aria-hidden] [ref=f261e648]: CWVLC Cushioned Athletic Ankle Compression Socks fo…
+                      - link "4.5 out of 5 stars (16.7K)" [ref=f261e650] [cursor=pointer]:
+                        - /url: /sspa/click?ie=UTF8&spc=MToyNTQxMzU2MzM4MDIwMTkwOjE3OTA3NDc4MzQ6c3BfaHVjX21yYWlfY29tcDozMDA0MjkzNDI0MDk2MDI6OjM6Og==&url=%2Fproduct-reviews%2FB09C1K6XNY%2Fref%3Dsw_cr_d_sspa_dk_huc_pt_comp_3%3F_encoding%3DUTF8%26pd_rd_i%3DB09C1K6XNY%26pd_rd_w%3DXUcoV%26content-id%3Damzn1.sym.a091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_p%3Da091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaV9jb21w
+                        - generic [ref=f261e651]: 4.5 out of 5 stars
+                        - text: (16.7K)
+                      - generic [ref=f261e654]:
+                        - generic [ref=f261e655]: $23.51
+                        - generic [aria-hidden] [ref=f261e656]:
+                          - text: $
+                          - generic [ref=f261e657]:
+                            - text: "23"
+                            - generic [ref=f261e658]: .
+                          - text: "51"
+                      - generic [ref=f261e661]:
+                        - generic [ref=f261e665]:
+                          - img "Prime" [ref=f261e666]
+                          - text: Two-Day
+                        - generic [ref=f261e667]: FREE delivery Thu, Oct 1
+                  - generic [ref=f261e677] [cursor=pointer]:
+                    - button "Add to cart, CWVLC Cushioned Athletic Ankle Compression Socks for Women Men 3/6 Pairs | Arch Support, Moisture-Wicking, Anti-Blister, for Running, Pickleball, Tennis, Golf, Walking, Hiking" [ref=f261e678]
+                    - generic [aria-hidden] [ref=f261e679]: Add to cart
+              - listitem [ref=f261e680]:
+                - generic [ref=f261e681]:
+                  - generic [ref=f261e682]:
+                    - link [ref=f261e683] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MToyNTQxMzU2MzM4MDIwMTkwOjE3OTA3NDc4MzQ6c3BfaHVjX21yYWlfY29tcDoyMDAwODY2MjUwMDEwOTg6OjQ6Og==&url=%2FOrthotic-Inserts-Self-Adhesive-Fasciitis-Over-Pronation%2Fdp%2FB07WDWSMWP%2Fref%3Dsw_img_d_sspa_dk_huc_pt_comp_4%3F_encoding%3DUTF8%26pd_rd_i%3DB07WDWSMWP%26pd_rd_w%3DXUcoV%26content-id%3Damzn1.sym.a091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_p%3Da091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaV9jb21w
+                      - img "Dr. Foot's 3/4 Length Orthotic Inserts, Self-Adhesive Half Shoe Insoles for Flat Feet, Plantar Fasciitis, Fallen Arches, Over" [ref=f261e685]
+                    - generic [ref=f261e686]:
+                      - link "Dr. Foot's 3/4 Length Orthotic Inserts, Self-Adhesive Half Shoe Insoles for Flat Feet, Plantar Fasciitis, Fallen Arches, Over-Pronation, Heel Spurs, Feet Fatigue (Large)" [ref=f261e687] [cursor=pointer]:
+                        - /url: /sspa/click?ie=UTF8&spc=MToyNTQxMzU2MzM4MDIwMTkwOjE3OTA3NDc4MzQ6c3BfaHVjX21yYWlfY29tcDoyMDAwODY2MjUwMDEwOTg6OjQ6Og==&url=%2FOrthotic-Inserts-Self-Adhesive-Fasciitis-Over-Pronation%2Fdp%2FB07WDWSMWP%2Fref%3Dsw_ttl_d_sspa_dk_huc_pt_comp_4%3F_encoding%3DUTF8%26pd_rd_i%3DB07WDWSMWP%26pd_rd_w%3DXUcoV%26content-id%3Damzn1.sym.a091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_p%3Da091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaV9jb21w
+                        - generic [ref=f261e688]:
+                          - generic [ref=f261e689]: Dr. Foot's 3/4 Length Orthotic Inserts, Self-Adhesive Half Shoe Insoles for Flat Feet, Plantar Fasciitis, Fallen Arches, Over-Pronation, Heel Spurs, Feet Fatigue (Large)
+                          - generic [aria-hidden] [ref=f261e690]: Dr. Foot's 3/4 Length Orthotic Inserts, Self-Adhesive Half S…
+                      - link "4.1 out of 5 stars (762)" [ref=f261e692] [cursor=pointer]:
+                        - /url: /sspa/click?ie=UTF8&spc=MToyNTQxMzU2MzM4MDIwMTkwOjE3OTA3NDc4MzQ6c3BfaHVjX21yYWlfY29tcDoyMDAwODY2MjUwMDEwOTg6OjQ6Og==&url=%2Fproduct-reviews%2FB07WDWSMWP%2Fref%3Dsw_cr_d_sspa_dk_huc_pt_comp_4%3F_encoding%3DUTF8%26pd_rd_i%3DB07WDWSMWP%26pd_rd_w%3DXUcoV%26content-id%3Damzn1.sym.a091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_p%3Da091d80d-7b57-4259-8ab4-4d4b1199cd5b%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaV9jb21w
+                        - generic [ref=f261e693]: 4.1 out of 5 stars
+                        - text: (762)
+                      - generic [ref=f261e696]:
+                        - generic [ref=f261e697]: $13.99
+                        - generic [aria-hidden] [ref=f261e698]:
+                          - text: $
+                          - generic [ref=f261e699]:
+                            - text: "13"
+                            - generic [ref=f261e700]: .
+                          - text: "99"
+                      - generic [ref=f261e703]:
+                        - generic [ref=f261e707]:
+                          - img "Prime" [ref=f261e708]
+                          - text: Two-Day
+                        - generic [ref=f261e709]: FREE delivery Thu, Oct 1
+                  - generic [ref=f261e719] [cursor=pointer]:
+                    - button "Add to cart, Dr. Foot's 3/4 Length Orthotic Inserts, Self-Adhesive Half Shoe Insoles for Flat Feet, Plantar Fasciitis, Fallen Arches, Over-Pronation, Heel Spurs, Feet Fatigue (Large)" [ref=f261e720]
+                    - generic [aria-hidden] [ref=f261e721]: Add to cart
+          - button "Next page" [ref=f261e723] [cursor=pointer]
+      - generic [ref=f261e730]:
+        - iframe [ref=f261e731]:
+          - generic [ref=f262e4]:
+            - generic [aria-hidden] [ref=f262e5]: "Click to navigate to product detail page Sponsored Ad. Product image. Branded image. CallToU 2 Way Intercom for Elderly Monitoring, Red | 3300FT Range, Rechargeable 1000mAh Battery, VOX, Ideal for Caregivers & Emergencies. Price: $52.99."
+            - link "Click to navigate to product detail page" [ref=f262e17] [cursor=pointer]:
+              - /url: https://aax-events-cell01-cf.us-east.ono.axp.amazon-adsystem.com/x/c/RIOIhfHRLKmmfY0ZOmyp_TYAAAGg8ON5hAEAAAH0AUFvbm9fdHhuX2JpZDcgICBvbm9fdHhuX2ltcDEgICBh0VzU/clv1c_ek-4wnHyKsTWTHkGdGGvSSigBjaVI9ZMdsT66fOwnAg5F0Avp3D3eADwvhi5oIs1oRIakVVL322DNQEV4gOA3PNE_2kbOFK4gyAD6y6JnbkpC5ssWmiCgWtaSNrDGxqS1xIanaxXvwVL1ueTuddKflUD5avQDkzmUuRywz3ixjZ_vgqXpFwo6xCCLuA-8LgW0mFuzXcCAU3FprXyLg3qVLqlIUAiDXU1moq-vGQI47Id5_oygaH-Oxnvtc1Qf4ws3a-QKV81_oQiq2Hq0OVP-qsD9aNM7NFEQUagqNdayAaovOoPXKuOpnnXnMGpuvJmeRgWFIYKdV4rMrEhQ-_EQR1yddUxFJC24kLLZOrsBnqTQVllNDlDCPi9GLdOSZO5KmSetKoqe_CMgnCRuXrgoaMOMRTyQU3dwER7EZtidaJWg6gg7yZNrQGNTCYNWHuGz74J81XBopcrKBbG7xunQbi1FMXChkyvzBHppJmH5zoVqkyFPx2n0OVWREYwS9SwwZo6P-OMSuCuZnZgLOuAuawpuwKvapg8N289nIBSFh-RJQ3V1rlyvxhJZibs5JbCo2iofo7wxGpr-ITlqDfUnl8w1P3WsEtt9o5Txlt9oixj2Y6_6b9Kmd4s-K2Wwl_j2CYizwABh65PmJTX5kVU6eGxMlD4KrJ6BfhFFTAHqLhmZPPYTLdv_zvNFCt7gsay1g0AtBwtUPmWEYSsosJz02w3Yfw9W2IiOvn1LZcDZ4A8CZn1hKDgNSe4nxMGe0PkW6kbQYxxqoJcgzO3eK8ziQX65UwjRb3iluIqITQNyL08QOZGGF1LVPOPxS_lAC1B6JxvbVthE7SGwF0588O_9s7m5igK97hFh1_B6z3YLvjmzUEtLcz7Sv--H_1l3se69nr8J5Iky8FjjX3g6ltEwUGmfcLcZpj4A6XrBD_xoFYezh8WN4nLrcpYZW7az9saT6Ek4eTzczCjMEpFteAo0cvU6z8u-DOTlF75FUV9B6xUfce8dOOVwPAfdKjhGxtjZffvJp4763gbmt95GVQ2rAv5Zg461EFUE-tOaqribl7_tfBCKNxMlSvi1C50rEB3SsSc70JBzxqErs_UqHsx_abU1NgX9tqJc9vScXsU8CoK9ct_o1W2EjSsjqCgKqqwG3A0G6Hka6S4ronsH9YCkbYMRBWypX2elZyfPYrrfIAuG0EVj9NBM12iO_GgXiWr0Q/http://www.amazon.com/dp/B0FG21L2KP/ref=syn_sd_onsite_desktop_0?ie=UTF8&psc=1&pd_rd_plhdr=t&aref=8RClY5fKKE
+        - button "Leave feedback on Sponsored ad" [ref=f261e733] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f261e734]: Sponsored
+      - group [ref=f261e740]:
+        - heading "Products related to Nike Mens Dunk Low Retro" [level=1] [ref=f261e743]
+        - button "Leave feedback on Sponsored ad" [ref=f261e749] [cursor=pointer]: Sponsored
+        - group [ref=f261e754]:
+          - list [ref=f261e755]:
+            - listitem [ref=f261e756]:
+              - generic [ref=f261e757]:
+                - generic [ref=f261e758]:
+                  - link [ref=f261e759] [cursor=pointer]:
+                    - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAxMjk3MTU1ODYwNDAyOjowOjo=&url=%2FKuaiLu-Leather-Comfort-Orthotic-Fasciitis%2Fdp%2FB08YQZH1YQ%2Fref%3Dsw_img_d_sspa_dk_huc_pt_expsub%3F_encoding%3DUTF8%26pd_rd_i%3DB08YQZH1YQ%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                    - img "KuaiLu Mens Sport Flip Flops Orthotic Thong Sandals With Arch Support | Comfortable Toe Post Beach Pool Slides For Plantar Fa" [ref=f261e761]
+                  - generic [ref=f261e762]:
+                    - link "KuaiLu Mens Sport Flip Flops Orthotic Thong Sandals With Arch Support | Comfortable Toe Post Beach Pool Slides For Plantar Fasciitis Outdoor Summer" [ref=f261e763] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAxMjk3MTU1ODYwNDAyOjowOjo=&url=%2FKuaiLu-Leather-Comfort-Orthotic-Fasciitis%2Fdp%2FB08YQZH1YQ%2Fref%3Dsw_ttl_d_sspa_dk_huc_pt_expsub%3F_encoding%3DUTF8%26pd_rd_i%3DB08YQZH1YQ%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e764]:
+                        - generic [ref=f261e765]: KuaiLu Mens Sport Flip Flops Orthotic Thong Sandals With Arch Support | Comfortable Toe Post Beach Pool Slides For Plantar Fasciitis Outdoor Summer
+                        - generic [aria-hidden] [ref=f261e766]: KuaiLu Mens Sport Flip Flops Orthotic Thong Sandals Wit…
+                    - link "4.2 out of 5 stars (10.1K)" [ref=f261e768] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAxMjk3MTU1ODYwNDAyOjowOjo=&url=%2Fproduct-reviews%2FB08YQZH1YQ%2Fref%3Dsw_cr_d_sspa_dk_huc_pt_expsub%3F_encoding%3DUTF8%26pd_rd_i%3DB08YQZH1YQ%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e769]: 4.2 out of 5 stars
+                      - text: (10.1K)
+                    - generic [ref=f261e772]:
+                      - generic [ref=f261e773]: $27.99
+                      - generic [aria-hidden] [ref=f261e774]:
+                        - text: $
+                        - generic [ref=f261e775]:
+                          - text: "27"
+                          - generic [ref=f261e776]: .
+                        - text: "99"
+                    - generic [ref=f261e779]:
+                      - generic [ref=f261e783]:
+                        - img "Prime" [ref=f261e784]
+                        - text: Two-Day
+                      - generic [ref=f261e785]: FREE delivery Thu, Oct 1
+                - generic [ref=f261e795] [cursor=pointer]:
+                  - button "Add to cart, KuaiLu Mens Sport Flip Flops Orthotic Thong Sandals With Arch Support | Comfortable Toe Post Beach Pool Slides For Plantar Fasciitis Outdoor Summer" [ref=f261e796]
+                  - generic [aria-hidden] [ref=f261e797]: Add to cart
+            - listitem [ref=f261e798]:
+              - generic [ref=f261e799]:
+                - generic [ref=f261e800]:
+                  - link [ref=f261e801] [cursor=pointer]:
+                    - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwNDU4MjQxNDk0MjAyOjoxOjo=&url=%2FVILOCY-Sneakers-Comfortable-Breathable-Lightweight%2Fdp%2FB0DG8PYNVD%2Fref%3Dsw_img_d_sspa_dk_huc_pt_expsub_1%3F_encoding%3DUTF8%26pd_rd_i%3DB0DG8PYNVD%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                    - img "VILOCY Mens Slip On Casual Dress Shoes Hands Free Fashion Sneakers Mesh Tennis Walking Work Shoes Comfortable Breathable Ligh" [ref=f261e803]
+                  - generic [ref=f261e804]:
+                    - link "VILOCY Mens Slip On Casual Dress Shoes Hands Free Fashion Sneakers Mesh Tennis Walking Work Shoes Comfortable Breathable Lightweight Non Slip" [ref=f261e805] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwNDU4MjQxNDk0MjAyOjoxOjo=&url=%2FVILOCY-Sneakers-Comfortable-Breathable-Lightweight%2Fdp%2FB0DG8PYNVD%2Fref%3Dsw_ttl_d_sspa_dk_huc_pt_expsub_1%3F_encoding%3DUTF8%26pd_rd_i%3DB0DG8PYNVD%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e806]:
+                        - generic [ref=f261e807]: VILOCY Mens Slip On Casual Dress Shoes Hands Free Fashion Sneakers Mesh Tennis Walking Work Shoes Comfortable Breathable Lightweight Non Slip
+                        - generic [aria-hidden] [ref=f261e808]: VILOCY Mens Slip On Casual Dress Shoes Hands Free Fas…
+                    - link "4.4 out of 5 stars (2.3K)" [ref=f261e810] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwNDU4MjQxNDk0MjAyOjoxOjo=&url=%2Fproduct-reviews%2FB0DG8PYNVD%2Fref%3Dsw_cr_d_sspa_dk_huc_pt_expsub_1%3F_encoding%3DUTF8%26pd_rd_i%3DB0DG8PYNVD%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e811]: 4.4 out of 5 stars
+                      - text: (2.3K)
+                    - generic [ref=f261e814]:
+                      - generic [ref=f261e815]: $41.99
+                      - generic [aria-hidden] [ref=f261e816]:
+                        - text: $
+                        - generic [ref=f261e817]:
+                          - text: "41"
+                          - generic [ref=f261e818]: .
+                        - text: "99"
+                    - generic [ref=f261e821]:
+                      - generic [ref=f261e825]:
+                        - img "Prime" [ref=f261e826]
+                        - text: Two-Day
+                      - generic [ref=f261e827]: FREE delivery Thu, Oct 1
+                - generic [ref=f261e837] [cursor=pointer]:
+                  - button "Add to cart, VILOCY Mens Slip On Casual Dress Shoes Hands Free Fashion Sneakers Mesh Tennis Walking Work Shoes Comfortable Breathable Lightweight Non Slip" [ref=f261e838]
+                  - generic [aria-hidden] [ref=f261e839]: Add to cart
+            - listitem [ref=f261e840]:
+              - generic [ref=f261e841]:
+                - generic [ref=f261e842]:
+                  - link [ref=f261e843] [cursor=pointer]:
+                    - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MjAwMDY4NTY2NDQ3MjcxOjoyOjo=&url=%2FChopben-Sneakers-Breathable-Athletic-Lightweight%2Fdp%2FB081YQDHTN%2Fref%3Dsw_img_d_sspa_dk_huc_pt_expsub_2%3F_encoding%3DUTF8%26pd_rd_i%3DB081YQDHTN%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                    - img "Chopben Men's Running Shoes Blade Non Slip Fashion Sneakers Breathable Mesh Soft Sole Casual Athletic Walking Shoes" [ref=f261e845]
+                  - generic [ref=f261e846]:
+                    - link "Chopben Men's Running Shoes Blade Non Slip Fashion Sneakers Breathable Mesh Soft Sole Casual Athletic Walking Shoes" [ref=f261e847] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MjAwMDY4NTY2NDQ3MjcxOjoyOjo=&url=%2FChopben-Sneakers-Breathable-Athletic-Lightweight%2Fdp%2FB081YQDHTN%2Fref%3Dsw_ttl_d_sspa_dk_huc_pt_expsub_2%3F_encoding%3DUTF8%26pd_rd_i%3DB081YQDHTN%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e848]:
+                        - generic [ref=f261e849]: Chopben Men's Running Shoes Blade Non Slip Fashion Sneakers Breathable Mesh Soft Sole Casual Athletic Walking Shoes
+                        - generic [aria-hidden] [ref=f261e850]: Chopben Men's Running Shoes Blade Non Slip Fashio…
+                    - link "4.2 out of 5 stars (8.4K)" [ref=f261e852] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MjAwMDY4NTY2NDQ3MjcxOjoyOjo=&url=%2Fproduct-reviews%2FB081YQDHTN%2Fref%3Dsw_cr_d_sspa_dk_huc_pt_expsub_2%3F_encoding%3DUTF8%26pd_rd_i%3DB081YQDHTN%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e853]: 4.2 out of 5 stars
+                      - text: (8.4K)
+                    - generic [ref=f261e856]:
+                      - generic [ref=f261e857]: $39.99
+                      - generic [aria-hidden] [ref=f261e858]:
+                        - text: $
+                        - generic [ref=f261e859]:
+                          - text: "39"
+                          - generic [ref=f261e860]: .
+                        - text: "99"
+                    - generic [ref=f261e863]:
+                      - generic [ref=f261e867]:
+                        - img "Prime" [ref=f261e868]
+                        - text: Two-Day
+                      - generic [ref=f261e869]: FREE delivery Thu, Oct 1
+                - generic [ref=f261e879] [cursor=pointer]:
+                  - button "Add to cart, Chopben Men's Running Shoes Blade Non Slip Fashion Sneakers Breathable Mesh Soft Sole Casual Athletic Walking Shoes" [ref=f261e880]
+                  - generic [aria-hidden] [ref=f261e881]: Add to cart
+            - listitem [ref=f261e882]:
+              - generic [ref=f261e883]:
+                - generic [ref=f261e884]:
+                  - link [ref=f261e885] [cursor=pointer]:
+                    - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwNjc3Mjc4MjIwOTAyOjozOjo=&url=%2FSneakers-Business-Oxfords-Breathable-Comfortable%2Fdp%2FB0DBPWDWWZ%2Fref%3Dsw_img_d_sspa_dk_huc_pt_expsub_3%3F_encoding%3DUTF8%26pd_rd_i%3DB0DBPWDWWZ%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                    - img "VILOCY Men's Casual Dress Sneakers Tennis Walking Shoes | Lace-Up Breathable Lightweight Comfortable Office Knit Mesh Oxfords" [ref=f261e887]
+                  - generic [ref=f261e888]:
+                    - link "VILOCY Men's Casual Dress Sneakers Tennis Walking Shoes | Lace-Up Breathable Lightweight Comfortable Office Knit Mesh Oxfords Work&Weekend Shoes" [ref=f261e889] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwNjc3Mjc4MjIwOTAyOjozOjo=&url=%2FSneakers-Business-Oxfords-Breathable-Comfortable%2Fdp%2FB0DBPWDWWZ%2Fref%3Dsw_ttl_d_sspa_dk_huc_pt_expsub_3%3F_encoding%3DUTF8%26pd_rd_i%3DB0DBPWDWWZ%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e890]:
+                        - generic [ref=f261e891]: VILOCY Men's Casual Dress Sneakers Tennis Walking Shoes | Lace-Up Breathable Lightweight Comfortable Office Knit Mesh Oxfords Work&Weekend Shoes
+                        - generic [aria-hidden] [ref=f261e892]: VILOCY Men's Casual Dress Sneakers Tennis Walking Sh…
+                    - link "4.5 out of 5 stars (13.4K)" [ref=f261e894] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwNjc3Mjc4MjIwOTAyOjozOjo=&url=%2Fproduct-reviews%2FB0DBPWDWWZ%2Fref%3Dsw_cr_d_sspa_dk_huc_pt_expsub_3%3F_encoding%3DUTF8%26pd_rd_i%3DB0DBPWDWWZ%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e895]: 4.5 out of 5 stars
+                      - text: (13.4K)
+                    - generic [ref=f261e898]:
+                      - generic [ref=f261e899]: $45.99
+                      - generic [aria-hidden] [ref=f261e900]:
+                        - text: $
+                        - generic [ref=f261e901]:
+                          - text: "45"
+                          - generic [ref=f261e902]: .
+                        - text: "99"
+                    - generic [ref=f261e905]:
+                      - generic [ref=f261e909]:
+                        - img "Prime" [ref=f261e910]
+                        - text: Two-Day
+                      - generic [ref=f261e911]: FREE delivery Thu, Oct 1
+                - generic [ref=f261e921] [cursor=pointer]:
+                  - button "Add to cart, VILOCY Men's Casual Dress Sneakers Tennis Walking Shoes | Lace-Up Breathable Lightweight Comfortable Office Knit Mesh Oxfords Work&Weekend Shoes" [ref=f261e922]
+                  - generic [aria-hidden] [ref=f261e923]: Add to cart
+            - listitem [ref=f261e924]:
+              - generic [ref=f261e925]:
+                - generic [ref=f261e926]:
+                  - link [ref=f261e927] [cursor=pointer]:
+                    - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwMDg0NzQ2MDE4MTAyOjo0Ojo=&url=%2FFeethit-Breathable-Lightweight-Comfortable-Sneakers%2Fdp%2FB08HLXM2RB%2Fref%3Dsw_img_d_sspa_dk_huc_pt_expsub_4%3F_encoding%3DUTF8%26pd_rd_i%3DB08HLXM2RB%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                    - img "Feethit Mens Slip On Running Shoes Men Walking Shoes Fashion Sneakers | Fashion Sneakers, Breathable, Lightweight, Comfortabl" [ref=f261e929]
+                  - generic [ref=f261e930]:
+                    - link "Feethit Mens Slip On Running Shoes Men Walking Shoes Fashion Sneakers | Fashion Sneakers, Breathable, Lightweight, Comfortable, Non Slip" [ref=f261e931] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwMDg0NzQ2MDE4MTAyOjo0Ojo=&url=%2FFeethit-Breathable-Lightweight-Comfortable-Sneakers%2Fdp%2FB08HLXM2RB%2Fref%3Dsw_ttl_d_sspa_dk_huc_pt_expsub_4%3F_encoding%3DUTF8%26pd_rd_i%3DB08HLXM2RB%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e932]:
+                        - generic [ref=f261e933]: Feethit Mens Slip On Running Shoes Men Walking Shoes Fashion Sneakers | Fashion Sneakers, Breathable, Lightweight, Comfortable, Non Slip
+                        - generic [aria-hidden] [ref=f261e934]: Feethit Mens Slip On Running Shoes Men Walking Shoes F…
+                    - link "4.1 out of 5 stars (8.6K)" [ref=f261e936] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwMDg0NzQ2MDE4MTAyOjo0Ojo=&url=%2Fproduct-reviews%2FB08HLXM2RB%2Fref%3Dsw_cr_d_sspa_dk_huc_pt_expsub_4%3F_encoding%3DUTF8%26pd_rd_i%3DB08HLXM2RB%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e937]: 4.1 out of 5 stars
+                      - text: (8.6K)
+                    - generic [ref=f261e940]:
+                      - generic [ref=f261e941]: $35.99
+                      - generic [aria-hidden] [ref=f261e942]:
+                        - text: $
+                        - generic [ref=f261e943]:
+                          - text: "35"
+                          - generic [ref=f261e944]: .
+                        - text: "99"
+                    - generic [ref=f261e947]:
+                      - generic [ref=f261e951]:
+                        - img "Prime" [ref=f261e952]
+                        - text: Two-Day
+                      - generic [ref=f261e953]: FREE delivery Thu, Oct 1
+                - generic [ref=f261e963] [cursor=pointer]:
+                  - button "Add to cart, Feethit Mens Slip On Running Shoes Men Walking Shoes Fashion Sneakers | Fashion Sneakers, Breathable, Lightweight, Comfortable, Non Slip" [ref=f261e964]
+                  - generic [aria-hidden] [ref=f261e965]: Add to cart
+            - listitem [ref=f261e966]:
+              - generic [ref=f261e967]:
+                - generic [ref=f261e968]:
+                  - link [ref=f261e969] [cursor=pointer]:
+                    - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwODcxOTkzMjk4NDAyOjo1Ojo=&url=%2FVILOCY-Sneakers-Comfortable-Lightweight-Breathable%2Fdp%2FB0FDF15W3M%2Fref%3Dsw_img_d_sspa_dk_huc_pt_expsub_5%3F_encoding%3DUTF8%26pd_rd_i%3DB0FDF15W3M%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                    - img "VILOCY Men's Slip on Casual Dress Tennis Walking Shoes Ease in Laceless Fashion Sneakers Breeze Business Oxfords" [ref=f261e971]
+                  - generic [ref=f261e972]:
+                    - link "VILOCY Men's Slip on Casual Dress Tennis Walking Shoes Ease in Laceless Fashion Sneakers Breeze Business Oxfords" [ref=f261e973] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwODcxOTkzMjk4NDAyOjo1Ojo=&url=%2FVILOCY-Sneakers-Comfortable-Lightweight-Breathable%2Fdp%2FB0FDF15W3M%2Fref%3Dsw_ttl_d_sspa_dk_huc_pt_expsub_5%3F_encoding%3DUTF8%26pd_rd_i%3DB0FDF15W3M%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e974]:
+                        - generic [ref=f261e975]: VILOCY Men's Slip on Casual Dress Tennis Walking Shoes Ease in Laceless Fashion Sneakers Breeze Business Oxfords
+                        - generic [aria-hidden] [ref=f261e976]: VILOCY Men's Slip on Casual Dress Tennis Walking Shoes…
+                    - link "4.5 out of 5 stars (825)" [ref=f261e978] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwODcxOTkzMjk4NDAyOjo1Ojo=&url=%2Fproduct-reviews%2FB0FDF15W3M%2Fref%3Dsw_cr_d_sspa_dk_huc_pt_expsub_5%3F_encoding%3DUTF8%26pd_rd_i%3DB0FDF15W3M%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e979]: 4.5 out of 5 stars
+                      - text: (825)
+                    - generic [ref=f261e982]:
+                      - generic [ref=f261e983]: $43.99
+                      - generic [aria-hidden] [ref=f261e984]:
+                        - text: $
+                        - generic [ref=f261e985]:
+                          - text: "43"
+                          - generic [ref=f261e986]: .
+                        - text: "99"
+                    - generic [ref=f261e989]:
+                      - generic [ref=f261e993]:
+                        - img "Prime" [ref=f261e994]
+                        - text: Two-Day
+                      - generic [ref=f261e995]: FREE delivery Thu, Oct 1
+                - generic [ref=f261e1005] [cursor=pointer]:
+                  - button "Add to cart, VILOCY Men's Slip on Casual Dress Tennis Walking Shoes Ease in Laceless Fashion Sneakers Breeze Business Oxfords" [ref=f261e1006]
+                  - generic [aria-hidden] [ref=f261e1007]: Add to cart
+            - listitem [ref=f261e1008]:
+              - generic [ref=f261e1009]:
+                - generic [ref=f261e1010]:
+                  - link [ref=f261e1011] [cursor=pointer]:
+                    - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MjAwMDU4OTQ5Mjk2MDk4Ojo2Ojo=&url=%2FBusy-Socks-Cushioning-Compression-Fit-Seamless%2Fdp%2FB09ZY9486Z%2Fref%3Dsw_img_d_sspa_dk_huc_pt_expsub_6%3F_encoding%3DUTF8%26pd_rd_i%3DB09ZY9486Z%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                    - img "Busy Socks 3 Pack Merino Wool Blend Crew Hiking Running Thick Cushion Socks | Thick Cushioned Warm Soft Comfort Fit Outdoor A" [ref=f261e1013]
+                  - generic [ref=f261e1014]:
+                    - link "Busy Socks 3 Pack Merino Wool Blend Crew Hiking Running Thick Cushion Socks | Thick Cushioned Warm Soft Comfort Fit Outdoor Athletic Boot Socks for Men Women Walking Trekking Camping Basketball Sport" [ref=f261e1015] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MjAwMDU4OTQ5Mjk2MDk4Ojo2Ojo=&url=%2FBusy-Socks-Cushioning-Compression-Fit-Seamless%2Fdp%2FB09ZY9486Z%2Fref%3Dsw_ttl_d_sspa_dk_huc_pt_expsub_6%3F_encoding%3DUTF8%26pd_rd_i%3DB09ZY9486Z%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e1016]:
+                        - generic [ref=f261e1017]: Busy Socks 3 Pack Merino Wool Blend Crew Hiking Running Thick Cushion Socks | Thick Cushioned Warm Soft Comfort Fit Outdoor Athletic Boot Socks for Men Women Walking Trekking Camping Basketball Sport
+                        - generic [aria-hidden] [ref=f261e1018]: Busy Socks 3 Pack Merino Wool Blend Crew Hiking Ru…
+                    - link "4.4 out of 5 stars (246)" [ref=f261e1020] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MjAwMDU4OTQ5Mjk2MDk4Ojo2Ojo=&url=%2Fproduct-reviews%2FB09ZY9486Z%2Fref%3Dsw_cr_d_sspa_dk_huc_pt_expsub_6%3F_encoding%3DUTF8%26pd_rd_i%3DB09ZY9486Z%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e1021]: 4.4 out of 5 stars
+                      - text: (246)
+                    - generic [ref=f261e1024]:
+                      - generic [ref=f261e1025]: $19.99
+                      - generic [aria-hidden] [ref=f261e1026]:
+                        - text: $
+                        - generic [ref=f261e1027]:
+                          - text: "19"
+                          - generic [ref=f261e1028]: .
+                        - text: "99"
+                    - generic [ref=f261e1031]:
+                      - generic [ref=f261e1035]:
+                        - img "Prime" [ref=f261e1036]
+                        - text: Two-Day
+                      - generic [ref=f261e1037]: FREE delivery Thu, Oct 1
+                - generic [ref=f261e1047] [cursor=pointer]:
+                  - button "Add to cart, Busy Socks 3 Pack Merino Wool Blend Crew Hiking Running Thick Cushion Socks | Thick Cushioned Warm Soft Comfort Fit Outdoor Athletic Boot Socks for Men Women Walking Trekking Camping Basketball Sport" [ref=f261e1048]
+                  - generic [aria-hidden] [ref=f261e1049]: Add to cart
+            - listitem [ref=f261e1050]:
+              - generic [ref=f261e1051]:
+                - generic [ref=f261e1052]:
+                  - link [ref=f261e1053] [cursor=pointer]:
+                    - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwODc3MDQ3ODgwNjAyOjo3Ojo=&url=%2FFashion-Sneakers-Business-Oxfords-Lightweight%2Fdp%2FB0DJCZMCZ3%2Fref%3Dsw_img_d_sspa_dk_huc_pt_expsub_7%3F_encoding%3DUTF8%26pd_rd_i%3DB0DJCZMCZ3%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                    - img "Mens Boat Loafers Slip-on Casual Mesh Walking Shoes Business Oxfords Sneakers Work Lightweight Comfortable Soft Sole" [ref=f261e1055]
+                  - generic [ref=f261e1056]:
+                    - link "Mens Boat Loafers Slip-on Casual Mesh Walking Shoes Business Oxfords Sneakers Work Lightweight Comfortable Soft Sole" [ref=f261e1057] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwODc3MDQ3ODgwNjAyOjo3Ojo=&url=%2FFashion-Sneakers-Business-Oxfords-Lightweight%2Fdp%2FB0DJCZMCZ3%2Fref%3Dsw_ttl_d_sspa_dk_huc_pt_expsub_7%3F_encoding%3DUTF8%26pd_rd_i%3DB0DJCZMCZ3%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e1058]:
+                        - generic [ref=f261e1059]: Mens Boat Loafers Slip-on Casual Mesh Walking Shoes Business Oxfords Sneakers Work Lightweight Comfortable Soft Sole
+                        - generic [aria-hidden] [ref=f261e1060]: Mens Boat Loafers Slip-on Casual Mesh Walking Shoes…
+                    - link "4.4 out of 5 stars (630)" [ref=f261e1062] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwODc3MDQ3ODgwNjAyOjo3Ojo=&url=%2Fproduct-reviews%2FB0DJCZMCZ3%2Fref%3Dsw_cr_d_sspa_dk_huc_pt_expsub_7%3F_encoding%3DUTF8%26pd_rd_i%3DB0DJCZMCZ3%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e1063]: 4.4 out of 5 stars
+                      - text: (630)
+                    - generic [ref=f261e1066]:
+                      - generic [ref=f261e1067]: $29.99
+                      - generic [aria-hidden] [ref=f261e1068]:
+                        - text: $
+                        - generic [ref=f261e1069]:
+                          - text: "29"
+                          - generic [ref=f261e1070]: .
+                        - text: "99"
+                    - generic [ref=f261e1073]:
+                      - generic [ref=f261e1077]:
+                        - img "Prime" [ref=f261e1078]
+                        - text: Two-Day
+                      - generic [ref=f261e1079]: FREE delivery Thu, Oct 1
+                - generic [ref=f261e1089] [cursor=pointer]:
+                  - button "Add to cart, Mens Boat Loafers Slip-on Casual Mesh Walking Shoes Business Oxfords Sneakers Work Lightweight Comfortable Soft Sole" [ref=f261e1090]
+                  - generic [aria-hidden] [ref=f261e1091]: Add to cart
+            - listitem [ref=f261e1092]:
+              - generic [ref=f261e1093]:
+                - generic [ref=f261e1094]:
+                  - link [ref=f261e1095] [cursor=pointer]:
+                    - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwODUzNDIzNDQzODAyOjo4Ojo=&url=%2FNAVYSPORT-Quarter-Cotton-Running-Training%2Fdp%2FB0CWDX3395%2Fref%3Dsw_img_d_sspa_dk_huc_pt_expsub_8%3F_encoding%3DUTF8%26pd_rd_i%3DB0CWDX3395%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                    - img "NAVYSPORT Men's Quarter Socks 9-12 10-13 Cotton Socks for Running, Training, Casual Wear, Pack of 6 (9-12 10-13, White)" [ref=f261e1097]
+                  - generic [ref=f261e1098]:
+                    - link "NAVYSPORT Men's Quarter Socks 9-12 10-13 Cotton Socks for Running, Training, Casual Wear, Pack of 6 (9-12 10-13, White)" [ref=f261e1099] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwODUzNDIzNDQzODAyOjo4Ojo=&url=%2FNAVYSPORT-Quarter-Cotton-Running-Training%2Fdp%2FB0CWDX3395%2Fref%3Dsw_ttl_d_sspa_dk_huc_pt_expsub_8%3F_encoding%3DUTF8%26pd_rd_i%3DB0CWDX3395%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e1100]:
+                        - generic [ref=f261e1101]: NAVYSPORT Men's Quarter Socks 9-12 10-13 Cotton Socks for Running, Training, Casual Wear, Pack of 6 (9-12 10-13, White)
+                        - generic [aria-hidden] [ref=f261e1102]: NAVYSPORT Men's Quarter Socks 9-12 10-13 Cotton So…
+                    - link "4.0 out of 5 stars (6)" [ref=f261e1104] [cursor=pointer]:
+                      - /url: /sspa/click?ie=UTF8&spc=MTo4NzgzNTg3ODA1MTMyMzk4OjE3OTA3NDc4MzQ6c3BfaHVjX21yYWk6MzAwODUzNDIzNDQzODAyOjo4Ojo=&url=%2Fproduct-reviews%2FB0CWDX3395%2Fref%3Dsw_cr_d_sspa_dk_huc_pt_expsub_8%3F_encoding%3DUTF8%26pd_rd_i%3DB0CWDX3395%26pd_rd_w%3DFwmE1%26content-id%3Damzn1.sym.2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_p%3D2639c351-e11e-4b77-adfb-3860b01e7cb1%26pf_rd_r%3DW686RSY0FGX00T2N6N5D%26pd_rd_wg%3Dm4Aul%26pd_rd_r%3D4ed73946-1530-4016-bf96-0ca10ab9c0b3%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9odWNfbXJhaQ%3D%3D
+                      - generic [ref=f261e1105]: 4.0 out of 5 stars
+                      - text: (6)
+                    - generic [ref=f261e1108]:
+                      - generic [ref=f261e1109]: $12.99
+                      - generic [aria-hidden] [ref=f261e1110]:
+                        - text: $
+                        - generic [ref=f261e1111]:
+                          - text: "12"
+                          - generic [ref=f261e1112]: .
+                        - text: "99"
+                    - generic [ref=f261e1115]:
+                      - generic [ref=f261e1119]:
+                        - img "Prime" [ref=f261e1120]
+                        - text: Two-Day
+                      - generic [ref=f261e1121]: FREE delivery Thu, Oct 1
+                - generic [ref=f261e1131] [cursor=pointer]:
+                  - button "Add to cart, NAVYSPORT Men's Quarter Socks 9-12 10-13 Cotton Socks for Running, Training, Casual Wear, Pack of 6 (9-12 10-13, White)" [ref=f261e1132]
+                  - generic [aria-hidden] [ref=f261e1133]: Add to cart
+  - complementary "Your recently viewed items and featured recommendations"
+  - generic [ref=f261e1134]:
+    - button "Back to top" [ref=f261e1135] [cursor=pointer]
+    - generic [ref=f261e1137]:
+      - generic [ref=f261e1138]:
+        - heading "Get to Know Us" [level=6] [ref=f261e1139]
+        - list [ref=f261e1140]:
+          - listitem [ref=f261e1141]:
+            - link "Careers" [ref=f261e1142] [cursor=pointer]:
+              - /url: https://www.amazon.jobs
+          - listitem [ref=f261e1143]:
+            - link "Amazon Newsletter" [ref=f261e1144] [cursor=pointer]:
+              - /url: https://www.aboutamazon.com/subscribe?utm_source=amazon_com&utm_medium=amazonfooter&utm_campaign=newslettersubscribers&utm_term=amazonnewssignup
+          - listitem [ref=f261e1145]:
+            - link "About Amazon" [ref=f261e1146] [cursor=pointer]:
+              - /url: https://www.aboutamazon.com/?utm_source=gateway&utm_medium=footer&token=about
+          - listitem [ref=f261e1147]:
+            - link "Accessibility" [ref=f261e1148] [cursor=pointer]:
+              - /url: https://www.amazon.com/b?node=15701038011&ie=UTF8
+          - listitem [ref=f261e1149]:
+            - link "Sustainability" [ref=f261e1150] [cursor=pointer]:
+              - /url: https://sustainability.aboutamazon.com/?utm_source=gateway&utm_medium=footer&ref_=susty_footer
+          - listitem [ref=f261e1151]:
+            - link "Press Center" [ref=f261e1152] [cursor=pointer]:
+              - /url: https://www.amazon.com/pr
+          - listitem [ref=f261e1153]:
+            - link "Investor Relations" [ref=f261e1154] [cursor=pointer]:
+              - /url: https://www.amazon.com/ir
+          - listitem [ref=f261e1155]:
+            - link "Amazon Devices" [ref=f261e1156] [cursor=pointer]:
+              - /url: /gp/browse.html?node=2102313011&ref_=footer_devices
+          - listitem [ref=f261e1157]:
+            - link "Amazon Science" [ref=f261e1158] [cursor=pointer]:
+              - /url: https://www.amazon.science
+      - generic [ref=f261e1160]:
+        - heading "Make Money with Us" [level=6] [ref=f261e1161]
+        - list [ref=f261e1162]:
+          - listitem [ref=f261e1163]:
+            - link "Sell on Amazon" [ref=f261e1164] [cursor=pointer]:
+              - /url: https://sell.amazon.com/?ld=AZFSSOA_FTSELL-C&ref_=footer_soa
+          - listitem [ref=f261e1165]:
+            - link "Sell apps on Amazon" [ref=f261e1166] [cursor=pointer]:
+              - /url: https://developer.amazon.com
+          - listitem [ref=f261e1167]:
+            - link "Supply to Amazon" [ref=f261e1168] [cursor=pointer]:
+              - /url: https://supply.amazon.com
+          - listitem [ref=f261e1169]:
+            - link "Protect & Build Your Brand" [ref=f261e1170] [cursor=pointer]:
+              - /url: https://sell.amazon.com/brand-registry?ld=AZUSSOA_ABR-FT
+          - listitem [ref=f261e1171]:
+            - link "Become an Affiliate" [ref=f261e1172] [cursor=pointer]:
+              - /url: https://affiliate-program.amazon.com/
+          - listitem [ref=f261e1173]:
+            - link "Become a Delivery Driver" [ref=f261e1174] [cursor=pointer]:
+              - /url: https://dspjobhub.com/
+          - listitem [ref=f261e1175]:
+            - link "Start a Package Delivery Business" [ref=f261e1176] [cursor=pointer]:
+              - /url: https://logistics.amazon.com/marketing?utm_source=amzn&utm_medium=footer&utm_campaign=home
+          - listitem [ref=f261e1177]:
+            - link "Advertise Your Products" [ref=f261e1178] [cursor=pointer]:
+              - /url: https://advertising.amazon.com/?ref=ext_amzn_ftr
+          - listitem [ref=f261e1179]:
+            - link "Self-Publish with Us" [ref=f261e1180] [cursor=pointer]:
+              - /url: /gp/seller-account/mm-summary-page.html?ld=AZFooterSelfPublish&topic=200260520&ref_=footer_publishing
+          - listitem [ref=f261e1181]:
+            - link "Become an Amazon Hub Partner" [ref=f261e1182] [cursor=pointer]:
+              - /url: https://www.amazon.com/b?node=216188543011
+          - listitem [ref=f261e1183]:
+            - text: ›
+            - link "See More Ways to Make Money" [ref=f261e1184] [cursor=pointer]:
+              - /url: /b/?node=18190131011&ld=AZUSSOA-seemore&ref_=footer_seemore
+      - generic [ref=f261e1186]:
+        - heading "Amazon Payment Products" [level=6] [ref=f261e1187]
+        - list [ref=f261e1188]:
+          - listitem [ref=f261e1189]:
+            - link "Amazon Visa" [ref=f261e1190] [cursor=pointer]:
+              - /url: /iss/credit/rewardscardmember?plattr=CBFOOT&ref_=footer_cbcc
+          - listitem [ref=f261e1191]:
+            - link "Amazon Store Card" [ref=f261e1192] [cursor=pointer]:
+              - /url: /credit/storecard/member?plattr=PLCCFOOT&ref_=footer_plcc
+          - listitem [ref=f261e1193]:
+            - link "Amazon Secured Card" [ref=f261e1194] [cursor=pointer]:
+              - /url: /dp/product/B084KP3NG6?plattr=SCFOOT&ref_=footer_ACB
+          - listitem [ref=f261e1195]:
+            - link "Amazon Business Card" [ref=f261e1196] [cursor=pointer]:
+              - /url: /dp/B0DVBL912R?plattr=ACOMFO&ie=UTF-8
+          - listitem [ref=f261e1197]:
+            - link "Shop with Points" [ref=f261e1198] [cursor=pointer]:
+              - /url: https://www.amazon.com/hp/shopwithpoints/servicing
+          - listitem [ref=f261e1199]:
+            - link "Credit Card Marketplace" [ref=f261e1200] [cursor=pointer]:
+              - /url: /gp/browse.html?node=3561432011&ref_=footer_ccmp
+          - listitem [ref=f261e1201]:
+            - link "Reload Your Balance" [ref=f261e1202] [cursor=pointer]:
+              - /url: /gp/browse.html?node=10232440011&ref_=footer_reload_us
+          - listitem [ref=f261e1203]:
+            - link "Gift Cards" [ref=f261e1204] [cursor=pointer]:
+              - /url: https://www.amazon.com/b/?node=2238192011&ref=shop_footer_payments_gc_desktop
+          - listitem [ref=f261e1205]:
+            - link "Amazon Currency Converter" [ref=f261e1206] [cursor=pointer]:
+              - /url: /gp/browse.html?node=388305011&ref_=footer_tfx
+      - generic [ref=f261e1208]:
+        - heading "Let Us Help You" [level=6] [ref=f261e1209]
+        - list [ref=f261e1210]:
+          - listitem [ref=f261e1211]:
+            - link "Your Account" [ref=f261e1212] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/css/homepage.html?ref_=footer_ya
+          - listitem [ref=f261e1213]:
+            - link "Your Orders" [ref=f261e1214] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/css/order-history?ref_=footer_yo
+          - listitem [ref=f261e1215]:
+            - link "Shipping Rates & Policies" [ref=f261e1216] [cursor=pointer]:
+              - /url: /gp/help/customer/display.html?nodeId=468520&ref_=footer_shiprates
+          - listitem [ref=f261e1217]:
+            - link "Amazon Prime" [ref=f261e1218] [cursor=pointer]:
+              - /url: /gp/prime?ref_=footer_prime
+          - listitem [ref=f261e1219]:
+            - link "Returns & Replacements" [ref=f261e1220] [cursor=pointer]:
+              - /url: /gp/css/returns/homepage.html?ref_=footer_hy_f_4
+          - listitem [ref=f261e1221]:
+            - link "Manage Your Content and Devices" [ref=f261e1222] [cursor=pointer]:
+              - /url: /hz/mycd/myx?ref_=footer_myk
+          - listitem [ref=f261e1223]:
+            - link "Recalls and Product Safety Alerts" [ref=f261e1224] [cursor=pointer]:
+              - /url: https://www.amazon.com/product-safety-alerts?ref_=footer_bsx_ypsa
+          - listitem [ref=f261e1225]:
+            - link "Registry & Gift List" [ref=f261e1226] [cursor=pointer]:
+              - /url: /registries?ref_=nav_footer_registry_giftlist_desktop
+          - listitem [ref=f261e1227]:
+            - link "Help" [ref=f261e1228] [cursor=pointer]:
+              - /url: /gp/help/customer/display.html?nodeId=508510&ref_=footer_gw_m_b_he
+    - generic [ref=f261e1230]:
+      - link "Amazon US Home" [ref=f261e1233] [cursor=pointer]:
+        - /url: /?ref_=footer_logo
+      - generic [ref=f261e1236]:
+        - generic [ref=f261e1237]:
+          - link "Choose a language for shopping. Current selection is English." [ref=f261e1238] [cursor=pointer]:
+            - /url: /customer-preferences/edit?ie=UTF8&preferencesReturnUrl=%2F&ref_=footer_lang
+            - generic [ref=f261e1240]: English
+          - button "Expand to Change Language or Country" [ref=f261e1241] [cursor=pointer]
+        - button "Choose a country/region for shopping. The current selection is United States." [ref=f261e1242] [cursor=pointer]:
+          - generic [ref=f261e1244]: United States
+    - navigation "More on Amazon" [ref=f261e1245]:
+      - generic "More on Amazon" [ref=f261e1246]:
+        - list [ref=f261e1247]:
+          - listitem [ref=f261e1248]:
+            - link [ref=f261e1249] [cursor=pointer]:
+              - /url: https://music.amazon.com?ref=dm_aff_amz_com
+              - heading "Amazon Music" [level=5] [ref=f261e1250]
+              - generic [ref=f261e1251]: Stream millionsof songs
+          - listitem [aria-hidden] [ref=f261e1252]
+          - listitem [ref=f261e1253]:
+            - link [ref=f261e1254] [cursor=pointer]:
+              - /url: https://advertising.amazon.com/?ref=footer_advtsing_amzn_com
+              - heading "Amazon Ads" [level=5] [ref=f261e1255]
+              - generic [ref=f261e1256]: Reach customerswherever theyspend their time
+          - listitem [aria-hidden] [ref=f261e1257]
+          - listitem [ref=f261e1258]:
+            - link [ref=f261e1259] [cursor=pointer]:
+              - /url: https://www.6pm.com
+              - heading "6pm" [level=5] [ref=f261e1260]
+              - generic [ref=f261e1261]: Score dealson fashion brands
+          - listitem [aria-hidden] [ref=f261e1262]
+          - listitem [ref=f261e1263]:
+            - link [ref=f261e1264] [cursor=pointer]:
+              - /url: https://www.abebooks.com
+              - heading "AbeBooks" [level=5] [ref=f261e1265]
+              - generic [ref=f261e1266]: Books, art& collectibles
+          - listitem [aria-hidden] [ref=f261e1267]
+          - listitem [ref=f261e1268]:
+            - link [ref=f261e1269] [cursor=pointer]:
+              - /url: https://www.acx.com/
+              - heading "ACX" [level=5] [ref=f261e1270]
+              - generic [ref=f261e1271]: Audiobook PublishingMade Easy
+          - listitem [aria-hidden] [ref=f261e1272]
+          - listitem [ref=f261e1273]:
+            - link "Sell on Amazon Start a Selling Account" [ref=f261e1274] [cursor=pointer]:
+              - /url: https://sell.amazon.com/?ld=AZUSSOA-footer-aff&ref_=footer_sell
+              - heading "Sell on Amazon" [level=5] [ref=f261e1275]
+              - generic [ref=f261e1276]: Start a Selling Account
+          - listitem [aria-hidden] [ref=f261e1277]
+          - listitem [ref=f261e1278]:
+            - link [ref=f261e1279] [cursor=pointer]:
+              - /url: https://www.veeqo.com/?utm_source=amazon&utm_medium=website&utm_campaign=footer
+              - heading "Veeqo" [level=5] [ref=f261e1280]
+              - generic [ref=f261e1281]: Shipping SoftwareInventory Management
+        - list [ref=f261e1282]:
+          - listitem [ref=f261e1283]:
+            - link [ref=f261e1284] [cursor=pointer]:
+              - /url: /business?ref_=footer_retail_b2b
+              - heading "Amazon Business" [level=5] [ref=f261e1285]
+              - generic [ref=f261e1286]: Everything ForYour Business
+          - listitem [aria-hidden] [ref=f261e1287]
+          - listitem [ref=f261e1288]:
+            - link [ref=f261e1289] [cursor=pointer]:
+              - /url: /fmc/grocery-gateway?almBrandId=fe16aGPfFs46S&ref_=footer_groceries
+              - heading "Groceries at Amazon" [level=5] [ref=f261e1290]
+              - generic [ref=f261e1291]: Groceries & MoreRight To Your Door
+          - listitem [aria-hidden] [ref=f261e1292]
+          - listitem [ref=f261e1293]:
+            - link [ref=f261e1294] [cursor=pointer]:
+              - /url: /gp/browse.html?node=20338496011&ref_=footer_amazonglobal
+              - heading "AmazonGlobal" [level=5] [ref=f261e1295]
+              - generic [ref=f261e1296]: Ship OrdersInternationally
+          - listitem [aria-hidden] [ref=f261e1297]
+          - listitem [ref=f261e1298]:
+            - link [ref=f261e1299] [cursor=pointer]:
+              - /url: /services?ref_=footer_services
+              - heading "Home Services" [level=5] [ref=f261e1300]
+              - generic [ref=f261e1301]: Experienced ProsHappiness Guarantee
+          - listitem [aria-hidden] [ref=f261e1302]
+          - listitem [ref=f261e1303]:
+            - link [ref=f261e1304] [cursor=pointer]:
+              - /url: https://aws.amazon.com/what-is-cloud-computing/?sc_channel=EL&sc_campaign=amazonfooter
+              - heading "Amazon Web Services" [level=5] [ref=f261e1305]
+              - generic [ref=f261e1306]: Scalable CloudComputing Services
+          - listitem [aria-hidden] [ref=f261e1307]
+          - listitem [ref=f261e1308]:
+            - link [ref=f261e1309] [cursor=pointer]:
+              - /url: https://www.audible.com
+              - heading "Audible" [level=5] [ref=f261e1310]
+              - generic [ref=f261e1311]: Listen to Books & OriginalAudio Performances
+          - listitem [aria-hidden] [ref=f261e1312]
+          - listitem [ref=f261e1313]:
+            - link [ref=f261e1314] [cursor=pointer]:
+              - /url: https://www.boxofficemojo.com/?ref_=amzn_nav_ftr
+              - heading "Box Office Mojo" [level=5] [ref=f261e1315]
+              - generic [ref=f261e1316]: Find MovieBox Office Data
+        - list [ref=f261e1317]:
+          - listitem [ref=f261e1318]:
+            - link [ref=f261e1319] [cursor=pointer]:
+              - /url: https://www.goodreads.com
+              - heading "Goodreads" [level=5] [ref=f261e1320]
+              - generic [ref=f261e1321]: Book reviews& recommendations
+          - listitem [aria-hidden] [ref=f261e1322]
+          - listitem [ref=f261e1323]:
+            - link [ref=f261e1324] [cursor=pointer]:
+              - /url: https://www.imdb.com
+              - heading "IMDb" [level=5] [ref=f261e1325]
+              - generic [ref=f261e1326]: Movies, TV& Celebrities
+          - listitem [aria-hidden] [ref=f261e1327]
+          - listitem [ref=f261e1328]:
+            - link [ref=f261e1329] [cursor=pointer]:
+              - /url: https://pro.imdb.com?ref_=amzn_nav_ftr
+              - heading "IMDbPro" [level=5] [ref=f261e1330]
+              - generic [ref=f261e1331]: Get Info EntertainmentProfessionals Need
+          - listitem [aria-hidden] [ref=f261e1332]
+          - listitem [ref=f261e1333]:
+            - link [ref=f261e1334] [cursor=pointer]:
+              - /url: https://kdp.amazon.com
+              - heading "Kindle Direct Publishing" [level=5] [ref=f261e1335]
+              - generic [ref=f261e1336]: Indie Digital & Print PublishingMade Easy
+          - listitem [aria-hidden] [ref=f261e1337]
+          - listitem [ref=f261e1338]:
+            - link [ref=f261e1339] [cursor=pointer]:
+              - /url: /gp/browse.html?node=13234696011&ref_=_gno_p_foot
+              - heading "Amazon Photos" [level=5] [ref=f261e1340]
+              - generic [ref=f261e1341]: Unlimited Photo StorageFree With Prime
+          - listitem [aria-hidden] [ref=f261e1342]
+          - listitem [ref=f261e1343]:
+            - link [ref=f261e1344] [cursor=pointer]:
+              - /url: https://videodirect.amazon.com/home/landing
+              - heading "Prime Video Direct" [level=5] [ref=f261e1345]
+              - generic [ref=f261e1346]: Video DistributionMade Easy
+          - listitem [aria-hidden] [ref=f261e1347]
+          - listitem [ref=f261e1348]:
+            - link [ref=f261e1349] [cursor=pointer]:
+              - /url: https://www.shopbop.com
+              - heading "Shopbop" [level=5] [ref=f261e1350]
+              - generic [ref=f261e1351]: DesignerFashion Brands
+        - list [ref=f261e1352]:
+          - listitem [ref=f261e1353]:
+            - link [ref=f261e1354] [cursor=pointer]:
+              - /url: /gp/browse.html?node=10158976011&ref_=footer_wrhsdls
+              - heading "Amazon Resale" [level=5] [ref=f261e1355]
+              - generic [ref=f261e1356]: Great Deals onQuality Used Products
+          - listitem [aria-hidden] [ref=f261e1357]
+          - listitem [ref=f261e1358]:
+            - link [ref=f261e1359] [cursor=pointer]:
+              - /url: https://www.wholefoodsmarket.com
+              - heading "Whole Foods Market" [level=5] [ref=f261e1360]
+              - generic [ref=f261e1361]: America’s HealthiestGrocery Store
+          - listitem [aria-hidden] [ref=f261e1362]
+          - listitem [ref=f261e1363]:
+            - link [ref=f261e1364] [cursor=pointer]:
+              - /url: https://www.woot.com/
+              - heading "Woot!" [level=5] [ref=f261e1365]
+              - generic [ref=f261e1366]: Deals and Shenanigans
+          - listitem [aria-hidden] [ref=f261e1367]
+          - listitem [ref=f261e1368]:
+            - link [ref=f261e1369] [cursor=pointer]:
+              - /url: https://www.zappos.com
+              - heading "Zappos" [level=5] [ref=f261e1370]
+              - generic [ref=f261e1371]: Shoes &Clothing
+          - listitem [aria-hidden] [ref=f261e1372]
+          - listitem [ref=f261e1373]:
+            - link [ref=f261e1374] [cursor=pointer]:
+              - /url: https://ring.com
+              - heading "Ring" [level=5] [ref=f261e1375]
+              - generic [ref=f261e1376]: Smart HomeSecurity Systems
+          - listitem [aria-hidden] [ref=f261e1377]
+          - listitem [ref=f261e1378]:
+            - link [ref=f261e1379] [cursor=pointer]:
+              - /url: https://eero.com/
+              - heading "eero WiFi" [level=5] [ref=f261e1380]
+              - generic [ref=f261e1381]: Stream 4K Videoin Every Room
+          - listitem [aria-hidden] [ref=f261e1382]
+          - listitem [ref=f261e1383]:
+            - link [ref=f261e1384] [cursor=pointer]:
+              - /url: https://blinkforhome.com/?ref=nav_footer
+              - heading "Blink" [level=5] [ref=f261e1385]
+              - generic [ref=f261e1386]: Smart Securityfor Every Home
+        - list [ref=f261e1387]:
+          - listitem [aria-hidden] [ref=f261e1388]
+          - listitem [aria-hidden] [ref=f261e1389]
+          - listitem [aria-hidden] [ref=f261e1390]
+          - listitem [aria-hidden] [ref=f261e1391]
+          - listitem [ref=f261e1392]:
+            - link [ref=f261e1393] [cursor=pointer]:
+              - /url: https://shop.ring.com/pages/neighbors-app
+              - heading "Neighbors App" [level=5] [ref=f261e1394]
+              - generic [ref=f261e1395]: Real-Time Crime& Safety Alerts
+          - listitem [aria-hidden] [ref=f261e1396]
+          - listitem [ref=f261e1397]:
+            - link "PillPack Pharmacy Simplified" [ref=f261e1398] [cursor=pointer]:
+              - /url: https://www.pillpack.com
+              - heading "PillPack" [level=5] [ref=f261e1399]
+              - generic [ref=f261e1400]: Pharmacy Simplified
+          - listitem [aria-hidden] [ref=f261e1401]
+          - listitem [ref=f261e1402]:
+            - link [ref=f261e1403] [cursor=pointer]:
+              - /url: /gp/browse.html?node=12653393011&ref_=footer_usrenew
+              - heading "Amazon Renewed" [level=5] [ref=f261e1404]
+              - generic [ref=f261e1405]: Refurbished techyou can trust
+          - listitem [aria-hidden] [ref=f261e1406]
+          - listitem [aria-hidden] [ref=f261e1407]
+          - listitem [aria-hidden] [ref=f261e1408]
+          - listitem [aria-hidden] [ref=f261e1409]
+    - generic [ref=f261e1410]:
+      - list [ref=f261e1411]:
+        - listitem [ref=f261e1412]:
+          - link "Conditions of Use" [ref=f261e1413] [cursor=pointer]:
+            - /url: /gp/help/customer/display.html?nodeId=508088&ref_=footer_cou
+        - listitem [ref=f261e1414]:
+          - link "Privacy Notice" [ref=f261e1415] [cursor=pointer]:
+            - /url: /gp/help/customer/display.html?nodeId=GX7NJQ4ZB8MHFRNJ&ref_=footer_privacy
+        - listitem [ref=f261e1416]:
+          - link "Consumer Health Data Privacy Disclosure" [ref=f261e1417] [cursor=pointer]:
+            - /url: /gp/help/customer/display.html?ie=UTF8&nodeId=TnACMrGVghHocjL8KB&ref_=footer_consumer_health_data_privacy
+        - listitem [ref=f261e1418]:
+          - link "Your Ads Privacy Choices" [ref=f261e1419] [cursor=pointer]:
+            - /url: /privacyprefs?ref_=footer_iba
+        - listitem [ref=f261e1420]
+      - generic [ref=f261e1422]: © 1996-2026, Amazon.com, Inc. or its affiliates

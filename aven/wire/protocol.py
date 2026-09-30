@@ -92,6 +92,9 @@ def entry_as_dict(entry: Entry) -> dict[str, Any]:
         "output": entry.output,
         "ts": entry.ts,
         "approved_by": entry.approved_by,
+        # Which tool call this was, so a surface that drew the call as it
+        # happened knows which row to change when it is decided.
+        "call_id": entry.call_id,
         # Whether a checkbox may offer "don't ask again" for this one. False for
         # anything that spends money or cannot be recalled.
         "can_undo": entry.undo is not None,

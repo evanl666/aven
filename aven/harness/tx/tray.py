@@ -68,6 +68,12 @@ class Entry:
     # takes it from here.
     origin_message_id: str | None = None
 
+    # Which tool call. A surface that drew the call as it happened has a row for
+    # it somewhere, and needs to know which row to change when this is decided -
+    # otherwise the line goes on saying "waiting for you" after it was approved
+    # and ran. The tool name is not enough: the same tool is often called twice.
+    call_id: str | None = None
+
     # Set when a standing approval let this run without being asked. Recorded
     # rather than implied: a transcript has to show plainly that this was not a
     # fresh decision. See harness/tx/standing.py.
@@ -91,7 +97,11 @@ class Tray:
     # -- during the run -----------------------------------------------------
 
     def execute(
-        self, tool: Tool, args: dict[str, Any], origin_message_id: str | None = None
+        self,
+        tool: Tool,
+        args: dict[str, Any],
+        origin_message_id: str | None = None,
+        call_id: str | None = None,
     ) -> tuple[str, bool]:
         """Run the call or stage it, and say what to tell the model.
 
@@ -139,6 +149,7 @@ class Tray:
                         state="pending",
                         apply=lambda: tool(**args),
                         origin_message_id=origin_message_id,
+                        call_id=call_id,
                     )
                 )
                 return f"staged, waiting for the user to approve: {preview}", True
@@ -158,6 +169,7 @@ class Tray:
                     output=result.output,
                     undo=result.undo,
                     origin_message_id=origin_message_id,
+                    call_id=call_id,
                     approved_by=str(granted),
                 )
             )
@@ -175,6 +187,7 @@ class Tray:
                 output=result.output,
                 undo=result.undo,
                 origin_message_id=origin_message_id,
+                call_id=call_id,
             )
         )
         return result.output, False

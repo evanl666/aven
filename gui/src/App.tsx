@@ -92,6 +92,42 @@ export default function App() {
     ]);
   }, []);
 
+  /**
+   * Bring the rows in the conversation up to date with a decision.
+   *
+   * A staged call drew its row when it was staged, and `tool_end` is not coming
+   * again - it happened once, before anybody decided. Without this the line
+   * goes on saying "waiting for you" after the thing has run, which is the one
+   * claim this interface must never get wrong.
+   *
+   * Matched on the call id rather than the tool name: the same tool is often
+   * called twice in a turn, and marking the wrong one done would be worse than
+   * marking none.
+   */
+  const settle = useCallback(
+    (entries: Entry[], became: "done" | "discarded") => {
+      const decided = new Map(
+        entries.filter((e) => e.call_id).map((e) => [e.call_id as string, e]),
+      );
+      if (decided.size === 0) return;
+
+      setBubbles((before) =>
+        before.map((bubble) => {
+          if (bubble.kind !== "tool") return bubble;
+          const entry = decided.get(bubble.call.id);
+          if (!entry) return bubble;
+          return {
+            ...bubble,
+            staged: false,
+            failed: became === "discarded" ? false : entry.state === "failed",
+            decided: became,
+          };
+        }),
+      );
+    },
+    [],
+  );
+
   const absorb = useCallback((state: State) => {
     if (state.version !== EXPECTS_VERSION) {
       setTrouble(
@@ -347,6 +383,10 @@ export default function App() {
       // and whether the thing they were actually worried about was one of
       // them. These are the lines they just read and decided on.
       const done = (reply.data.committed ?? []) as Entry[];
+      // The row drawn when the call was staged still reads "waiting for you".
+      // Nothing else is going to correct it: `tool_end` happened once, before
+      // anybody decided.
+      settle(done, "done");
       if (done.length)
         say({
           kind: "notice",
@@ -367,6 +407,7 @@ export default function App() {
     attempt(async () => {
       const reply = await agent.send({ type: "discard" });
       setTray(reply.data.tray);
+      settle((reply.data.dropped ?? []) as Entry[], "discarded");
       say({
         kind: "notice",
         text:

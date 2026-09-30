@@ -35,6 +35,8 @@ export type Bubble =
       staged: boolean;
       failed: boolean;
       detail: Detail | null;
+      /** Set once somebody decided about a staged call. */
+      decided?: "done" | "discarded";
     }
   | { kind: "notice"; text: string; at: number; bad?: boolean };
 
@@ -183,16 +185,32 @@ export function Chat({
                   </div>
                 )}
               </div>
+              {/*
+               * One click approves what fits on the line above it. Anything
+               * carrying a detail does not fit - `browser_evaluate` is twenty
+               * lines of JavaScript about to run in a page you are signed in
+               * to, and the argument *is* the decision. Offering "approve all"
+               * for that would be offering to approve something unread, which
+               * is the habit this whole design exists to avoid.
+               */}
               <div className="choices">
-                <button
-                  className="pill go"
-                  onClick={() => onApprove(waiting.map((e) => e.id))}
-                >
-                  Approve all
-                </button>
-                <button className="pill quiet" onClick={onSeeWaiting}>
-                  Review
-                </button>
+                {waiting.some((e) => e.detail) ? (
+                  <button className="pill go" onClick={onSeeWaiting}>
+                    Read and decide
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      className="pill go"
+                      onClick={() => onApprove(waiting.map((e) => e.id))}
+                    >
+                      Approve all
+                    </button>
+                    <button className="pill quiet" onClick={onSeeWaiting}>
+                      Review
+                    </button>
+                  </>
+                )}
                 <button className="pill quiet" onClick={onDiscard}>
                   Discard
                 </button>
@@ -262,20 +280,31 @@ export function Chat({
 }
 
 function ToolRow({ bubble }: { bubble: Extract<Bubble, { kind: "tool" }> }) {
+  const dropped = bubble.decided === "discarded";
   const mark = bubble.failed
     ? "✗"
-    : bubble.staged
-      ? "⏸"
-      : bubble.done
-        ? "✓"
-        : "·";
-  const state = bubble.failed ? " failed" : bubble.staged ? " staged" : "";
+    : dropped
+      ? "✗"
+      : bubble.staged
+        ? "⏸"
+        : bubble.done
+          ? "✓"
+          : "·";
+  const state = bubble.failed
+    ? " failed"
+    : dropped
+      ? " dropped"
+      : bubble.staged
+        ? " staged"
+        : "";
   return (
     <div className={`toolrow${state}`}>
       <span className="mark">{mark}</span>
       <span>
         {bubble.call.name}({brief(bubble.call.args)})
         {bubble.staged && " — waiting for you"}
+        {bubble.decided === "done" && " — approved, ran"}
+        {dropped && " — discarded, never ran"}
       </span>
     </div>
   );

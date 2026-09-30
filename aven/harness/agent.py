@@ -325,7 +325,7 @@ async def _execute(
         # Tools are ordinary blocking functions - shutil.move, osascript. Run
         # them off the event loop so a slow one cannot freeze the interface.
         output, staged = await asyncio.to_thread(
-            tray.execute, found, call.args, origin
+            tray.execute, found, call.args, origin, call.id
         )
     except Exception as exc:
         return failure(f"{type(exc).__name__}: {exc}")

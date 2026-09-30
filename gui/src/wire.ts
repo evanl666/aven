@@ -39,6 +39,8 @@ export interface Entry {
   ts: number;
   /** Set when a standing approval let this run without being asked. */
   approved_by: string | null;
+  /** Which tool call this was, so the row drawn for it can be updated. */
+  call_id: string | null;
   can_undo: boolean;
 }
 

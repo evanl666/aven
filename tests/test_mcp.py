@@ -477,3 +477,62 @@ def test_other_peoples_keys_are_withheld_too(monkeypatch):
     passed = _child_environment({})
 
     assert not any(name in passed for name in WITHHELD)
+
+
+# --- what a person is shown before approving ---------------------------------
+
+LONG_JS = """() => {
+  const t = s => (document.querySelector(s)?.innerText || '').trim();
+  return JSON.stringify({ title: t('#productTitle') }, null, 1);
+}"""
+
+
+def test_a_long_argument_is_clipped_on_the_line():
+    """An argument can be a whole program. `repr` of twenty lines of JavaScript
+    is one line of escaped backslashes that nobody can read and nobody should
+    be asked to approve."""
+    from aven.toolkit.mcp import _one_line
+
+    said = _one_line("browser", "browser_evaluate", {"function": LONG_JS})
+
+    assert len(said) < 120
+    assert "\\n" not in said, "escaped newlines are what made it unreadable"
+
+
+def test_the_full_argument_is_there_to_read_underneath():
+    """For the calls that matter the argument *is* the decision. Approving
+    browser_evaluate without reading it is approving nothing in particular."""
+    from aven.harness.tools import Body
+    from aven.toolkit.mcp import _in_full
+
+    shown = _in_full("browser_evaluate", {"function": LONG_JS})
+
+    assert isinstance(shown, Body)
+    assert "document.querySelector" in shown.text
+    assert shown.text.count("\n") >= 3, "laid out, not on one line"
+
+
+def test_a_short_call_gets_no_card():
+    """A card repeating what was just read is noise, and noise is what stops
+    people reading."""
+    from aven.toolkit.mcp import _in_full
+
+    assert _in_full("browser_click", {"element": "Add to cart"}) is None
+    assert _in_full("browser_snapshot", {}) is None
+
+
+def test_the_tool_carries_both(started):
+    peek = next(t for t in started().tools() if t.name == "toy_peek")
+
+    assert "toy: peek(" in peek.preview({"at": "x"})
+    assert peek.detail_for({"at": LONG_JS}) is not None
+
+
+def test_drawing_a_call_never_raises(started):
+    """A detail is a courtesy to whoever draws the approval surface. One that
+    can break the run is not a courtesy."""
+    peek = next(t for t in started().tools() if t.name == "toy_peek")
+    awkward = {"at": None, "n": object(), "deep": {"nested": [1, 2, 3]}}
+
+    assert isinstance(peek.preview(awkward), str)
+    peek.detail_for(awkward)  # None or a Body; what matters is that it returns

@@ -95,10 +95,21 @@ const tray = {
     },
     {
       id: "2",
-      preview: "Delete 12 files from ~/Downloads/March ⚠ this cannot be undone",
+      preview:
+        "browser: browser_evaluate(function='() => { const t = s => (do…')",
       risk: "irreversible",
       state: "staged",
-      detail: null,
+      detail: {
+        kind: "body",
+        title: "browser_evaluate",
+        text: [
+          "function:",
+          "    () => {",
+          "      const t = s => (document.querySelector(s)?.innerText || '').trim();",
+          "      return JSON.stringify({ title: t('#productTitle') }, null, 1);",
+          "    }",
+        ].join("\n"),
+      },
       output: "",
       approved_by: null,
     },

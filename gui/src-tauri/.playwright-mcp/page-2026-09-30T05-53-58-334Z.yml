@@ -1,0 +1,958 @@
+- generic [ref=f225e2]:
+  - navigation "Shortcuts menu" [ref=f225e3]:
+    - heading "Skip to" [level=2] [ref=f225e4]
+    - list "Skip to" [ref=f225e5]:
+      - listitem [ref=f225e6]:
+        - link "main content" [ref=f225e7] [cursor=pointer]:
+          - /url: "#skippedLink"
+          - text: Main content
+    - separator [aria-hidden] [ref=f225e8]
+    - heading "Keyboard shortcuts" [level=2] [ref=f225e9]
+    - list "Keyboard shortcuts" [ref=f225e10]:
+      - listitem [ref=f225e11]:
+        - link "Search, option, forward slash" [ref=f225e12] [cursor=pointer]:
+          - /url: javascript:void(0)
+          - generic [aria-hidden] [ref=f225e13]:
+            - generic [ref=f225e14]: Search
+            - generic [ref=f225e15]:
+              - generic [ref=f225e16]: opt
+              - generic [ref=f225e17]: +
+              - generic [ref=f225e18]: /
+      - listitem [ref=f225e19]:
+        - link "Cart, shift, option, c" [ref=f225e20] [cursor=pointer]:
+          - /url: javascript:void(0)
+          - generic [aria-hidden] [ref=f225e21]:
+            - generic [ref=f225e22]: Cart
+            - generic [ref=f225e23]:
+              - generic [ref=f225e24]: shift
+              - generic [ref=f225e25]: +
+              - generic [ref=f225e26]: opt
+              - generic [ref=f225e27]: +
+              - generic [ref=f225e28]: C
+      - listitem [ref=f225e29]:
+        - link "Home, shift, option, h" [ref=f225e30] [cursor=pointer]:
+          - /url: javascript:void(0)
+          - generic [aria-hidden] [ref=f225e31]:
+            - generic [ref=f225e32]: Home
+            - generic [ref=f225e33]:
+              - generic [ref=f225e34]: shift
+              - generic [ref=f225e35]: +
+              - generic [ref=f225e36]: opt
+              - generic [ref=f225e37]: +
+              - generic [ref=f225e38]: H
+      - listitem [ref=f225e39]:
+        - link "Your orders, shift, option, o" [ref=f225e40] [cursor=pointer]:
+          - /url: javascript:void(0)
+          - generic [aria-hidden] [ref=f225e41]:
+            - generic [ref=f225e42]: Orders
+            - generic [ref=f225e43]:
+              - generic [ref=f225e44]: shift
+              - generic [ref=f225e45]: +
+              - generic [ref=f225e46]: opt
+              - generic [ref=f225e47]: +
+              - generic [ref=f225e48]: O
+      - listitem [ref=f225e49]:
+        - button "Show/hide shortcuts, shift, option, z" [ref=f225e50] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f225e51]:
+            - generic [ref=f225e52]: Show/Hide shortcuts
+            - generic [ref=f225e53]:
+              - generic [ref=f225e54]: shift
+              - generic [ref=f225e55]: +
+              - generic [ref=f225e56]: opt
+              - generic [ref=f225e57]: +
+              - generic [ref=f225e58]: Z
+    - generic [ref=f225e59]: To move between items, use your keyboard's up or down arrows.
+  - banner [ref=f225e65]:
+    - navigation "Primary" [ref=f225e66]:
+      - generic [ref=f225e67]:
+        - generic [ref=f225e68]:
+          - generic [ref=f225e69]:
+            - link "Amazon Prime" [ref=f225e70] [cursor=pointer]:
+              - /url: /ref=nav_logo
+            - generic:
+              - link:
+                - /url: /ref=nav_logo_prime
+          - button "Deliver to Kevin Sunnyvale 94085‌" [ref=f225e73] [cursor=pointer]:
+            - generic [ref=f225e75]:
+              - generic [ref=f225e76]: Deliver to Kevin
+              - generic [ref=f225e77]: Sunnyvale 94085‌
+        - search [ref=f225e80]:
+          - generic [ref=f225e83]:
+            - generic [ref=f225e84]: All
+            - combobox "Select the department you want to search in" [ref=f225e87] [cursor=pointer]:
+              - option "All Departments" [selected]
+              - option "Alexa Skills"
+              - option "Amazon Autos"
+              - option "Amazon Devices"
+              - option "Amazon Fresh"
+              - option "Amazon Global Store"
+              - option "Amazon Haul"
+              - option "Amazon One Medical"
+              - option "Amazon Pharmacy"
+              - option "Amazon Resale"
+              - option "Appliances"
+              - option "Apps & Games"
+              - option "Arts, Crafts & Sewing"
+              - option "Audible Books & Originals"
+              - option "Automotive Parts & Accessories"
+              - option "Baby"
+              - option "Beauty & Personal Care"
+              - option "Books"
+              - option "CDs & Vinyl"
+              - option "Cell Phones & Accessories"
+              - option "Clothing, Shoes & Jewelry"
+              - option "Women's Clothing, Shoes & Jewelry"
+              - option "Men's Clothing, Shoes & Jewelry"
+              - option "Girl's Clothing, Shoes & Jewelry"
+              - option "Boy's Clothing, Shoes & Jewelry"
+              - option "Baby Clothing, Shoes & Jewelry"
+              - option "Collectibles & Fine Art"
+              - option "Computers"
+              - option "Credit and Payment Cards"
+              - option "Digital Music"
+              - option "Electronics"
+              - option "FoodMaxx"
+              - option "Garden & Outdoor"
+              - option "Gift Cards"
+              - option "Grocery & Gourmet Food"
+              - option "Handmade"
+              - option "Health, Household & Baby Care"
+              - option "Home & Business Services"
+              - option "Home & Kitchen"
+              - option "Industrial & Scientific"
+              - option "Just for Prime"
+              - option "Kindle Store"
+              - option "Luggage & Travel Gear"
+              - option "Luxury Stores"
+              - option "Magazine Subscriptions"
+              - option "Movies & TV"
+              - option "Musical Instruments"
+              - option "Office Products"
+              - option "Pet Food Express"
+              - option "Pet Supplies"
+              - option "Premium Beauty"
+              - option "Prime Video"
+              - option "Same-Day Store"
+              - option "Smart Home"
+              - option "Software"
+              - option "Sousa's Wine & Liquors"
+              - option "Sports & Outdoors"
+              - option "Subscribe & Save"
+              - option "Subscription Boxes"
+              - option "Tools & Home Improvement"
+              - option "Toys & Games"
+              - option "Under $10"
+              - option "Video Games"
+              - option "Whole Foods Market"
+          - searchbox "Search Amazon" [ref=f225e90]
+          - generic "Go" [ref=f225e93] [cursor=pointer]:
+            - button "Go" [ref=f225e94]
+        - generic [ref=f225e96]:
+          - generic [ref=f225e97]:
+            - link "Choose a language for shopping in Amazon United States. The current selection is English (EN)." [ref=f225e98] [cursor=pointer]:
+              - /url: /customer-preferences/edit?ie=UTF8&preferencesReturnUrl=%2F&ref_=topnav_lang
+              - generic [ref=f225e101]:
+                - img "United States" [ref=f225e102]
+                - generic [ref=f225e103]: EN
+            - button "Expand to Change Language or Country" [ref=f225e104] [cursor=pointer]
+          - generic [ref=f225e105]:
+            - link "Hello, Kevin Account & Lists" [ref=f225e106] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/css/homepage.html?ref_=nav_youraccount_btn
+              - generic [ref=f225e107]: Hello, Kevin
+              - generic [ref=f225e109]: Account & Lists
+            - button "Expand Account and Lists" [ref=f225e110] [cursor=pointer]
+          - link "Returns & Orders" [ref=f225e111] [cursor=pointer]:
+            - /url: /gp/css/order-history?ref_=nav_orders_first
+            - generic [ref=f225e112]: Returns
+            - generic [ref=f225e113]: "& Orders"
+          - link "0 items in cart" [ref=f225e114] [cursor=pointer]:
+            - /url: /gp/cart/view.html?ref_=nav_cart
+            - generic [aria-hidden] [ref=f225e116]: "0"
+            - generic [aria-hidden] [ref=f225e119]: Cart
+      - generic [ref=f225e120]:
+        - generic [ref=f225e121]:
+          - button "Open All Categories Menu" [ref=f225e122] [cursor=pointer]:
+            - generic [ref=f225e124]: All
+          - button "Open Alexa panel" [ref=f225e125] [cursor=pointer]
+        - list [ref=f225e130]:
+          - listitem [ref=f225e131]:
+            - link "Early Prime Deals" [ref=f225e133] [cursor=pointer]:
+              - /url: /primebigdealdays?ref_=nav_cs_td_pbdd_dt_cr
+          - listitem [ref=f225e134]:
+            - link "Buy Again" [ref=f225e136] [cursor=pointer]:
+              - /url: /gp/buyagain?ie=UTF8&ref_=nav_cs_buy_again
+          - listitem [ref=f225e137]:
+            - link "Prime Video" [ref=f225e139] [cursor=pointer]:
+              - /url: /gp/video/storefront?ref_=nav_cs_prime_video
+          - listitem [ref=f225e140]:
+            - link "Customer Service" [ref=f225e142] [cursor=pointer]:
+              - /url: /hz/contact-us/foresight/hubgateway?ref_=nav_cs_fs_hybridhub_navbar_c
+          - listitem [ref=f225e143]:
+            - link "Kindle Books" [ref=f225e145] [cursor=pointer]:
+              - /url: /Kindle-eBooks/b/?ie=UTF8&node=154606011&ref_=nav_cs_kindle_books
+          - listitem [ref=f225e146]:
+            - link "Books" [ref=f225e148] [cursor=pointer]:
+              - /url: /books-used-books-textbooks/b/?ie=UTF8&node=283155&ref_=nav_cs_books
+          - listitem [ref=f225e149]:
+            - link "Subscribe & Save" [ref=f225e151] [cursor=pointer]:
+              - /url: /auto-deliveries/landing?ref_=nav_cs_sns
+          - listitem [ref=f225e152]:
+            - generic [ref=f225e153]:
+              - link "Browsing History" [ref=f225e154] [cursor=pointer]:
+                - /url: /gp/history?ref_=nav_cs_timeline
+              - button "Browsing History Details" [ref=f225e155] [cursor=pointer]
+          - listitem [ref=f225e156]:
+            - link "Coupons" [ref=f225e158] [cursor=pointer]:
+              - /url: /coupons?ref_=nav_cs_coupons
+          - listitem [ref=f225e159]:
+            - link "TV & Video" [ref=f225e161] [cursor=pointer]:
+              - /url: /tvs/b/?ie=UTF8&node=172659&ref_=nav_cs_tv
+          - listitem [ref=f225e162]:
+            - link "Registry" [ref=f225e164] [cursor=pointer]:
+              - /url: /gp/browse.html?node=16115931011&ref_=nav_cs_registry
+          - listitem [ref=f225e165]:
+            - generic [ref=f225e166]:
+              - link "Gift Cards" [ref=f225e167] [cursor=pointer]:
+                - /url: /gift-cards/b/?ie=UTF8&node=2238192011&ref_=nav_cs_gc
+              - button "Gift Cards Details" [ref=f225e168] [cursor=pointer]
+          - listitem [ref=f225e169]:
+            - link "Best Sellers" [ref=f225e171] [cursor=pointer]:
+              - /url: /gp/bestsellers/?ref_=nav_cs_bestsellers
+          - listitem [ref=f225e172]:
+            - link "Amazon Basics" [ref=f225e174] [cursor=pointer]:
+              - /url: /Amazon_Basics?channel=discovbar&field-lbr_brands_browse-bin=AmazonBasics&ref_=nav_cs_amazonbasics
+          - listitem [ref=f225e175]:
+            - generic [ref=f225e176]:
+              - link "Home Improvement" [ref=f225e177] [cursor=pointer]:
+                - /url: /Tools-and-Home-Improvement/b/?ie=UTF8&node=228013&ref_=nav_cs_hi
+              - button "Home Improvement Details" [ref=f225e178] [cursor=pointer]
+          - listitem [ref=f225e179]:
+            - link "Whole Foods" [ref=f225e181] [cursor=pointer]:
+              - /url: /alm/storefront?almBrandId=VUZHIFdob2xlIEZvb2Rz&ref_=nav_cs_whole_foods
+          - listitem [ref=f225e182]:
+            - link "Groceries" [ref=f225e184] [cursor=pointer]:
+              - /url: /fmc/grocery-gateway?gsc=fe16aGPfFs46S&ref_=nav_cs_groceries
+          - listitem [ref=f225e185]:
+            - link "Pharmacy" [ref=f225e187] [cursor=pointer]:
+              - /url: https://pharmacy.amazon.com/?nodl=0&ref_=nav_cs_pharmacy
+          - listitem [ref=f225e188]:
+            - link "Automotive" [ref=f225e190] [cursor=pointer]:
+              - /url: /automotive-auto-truck-replacements-parts/b/?ie=UTF8&node=15684181&ref_=nav_cs_automotive
+          - listitem [ref=f225e191]:
+            - generic [ref=f225e192]:
+              - link "Music" [ref=f225e193] [cursor=pointer]:
+                - /url: /music/player?ref_=nav_cs_musicFlyout
+              - button "Music Details" [ref=f225e194] [cursor=pointer]
+          - listitem [ref=f225e195]:
+            - link "New Releases" [ref=f225e197] [cursor=pointer]:
+              - /url: /gp/new-releases/?ref_=nav_cs_newreleases
+          - listitem [ref=f225e198]:
+            - link "Livestreams" [ref=f225e200] [cursor=pointer]:
+              - /url: /live?ref_=nav_cs_amazonlive
+          - listitem [ref=f225e201]:
+            - link "Home Audio & Theater" [ref=f225e203] [cursor=pointer]:
+              - /url: /Home-Audio-Electronics/b/?ie=UTF8&node=667846011&ref_=nav_cs_home_audio
+          - listitem [ref=f225e204]:
+            - link "Works with Alexa" [ref=f225e206] [cursor=pointer]:
+              - /url: /gp/browse.html?node=73846268011&ref_=nav_cs_wwa
+          - listitem [ref=f225e207]:
+            - link "Same-Day Delivery" [ref=f225e209] [cursor=pointer]:
+              - /url: /fmc/ssd-storefront?gsc=fe16aGPfFs46S&ref_=nav_cs_SSD_nav_storefront
+          - listitem [ref=f225e210]:
+            - link "Everyday" [ref=f225e212] [cursor=pointer]:
+              - /url: /everyday-essentials?ref_=nav_cs_ee
+          - listitem [ref=f225e213]:
+            - link "Household, Health & Baby Care" [ref=f225e215] [cursor=pointer]:
+              - /url: /health-personal-care-nutrition-fitness/b/?ie=UTF8&node=3760901&ref_=nav_cs_hpc
+          - listitem [ref=f225e216]:
+            - link "Amazon Haul" [ref=f225e218] [cursor=pointer]:
+              - /url: /haul/store?ref_=nav_cs_hul_disb
+          - listitem [ref=f225e219]:
+            - link "Health AI" [ref=f225e221] [cursor=pointer]:
+              - /url: https://health.amazon.com/health-ai?ref_=nav_cs_health_ai
+          - listitem [ref=f225e222]:
+            - link "Sell" [ref=f225e224] [cursor=pointer]:
+              - /url: /b/?_encoding=UTF8&ld=AZUSSOA-sell&node=12766669011&ref_=nav_cs_sell
+        - link "Prime Big Deal Days is October 6-7" [ref=f225e227] [cursor=pointer]:
+          - /url: /primebigdealdays/?_encoding=UTF8&ref_=nav_swm_2026_Event_PBDD&pf_rd_p=03097195-e931-4c0c-8295-df27feb46091&pf_rd_s=nav-sitewide-msg-text&pf_rd_t=4201&pf_rd_i=navbar-4201&pf_rd_m=ATVPDKIKX0DER&pf_rd_r=0BV2HYKFCGRKGMDZQSEH
+  - generic [ref=f225e230]:
+    - heading "Your Account" [level=1] [ref=f225e232]
+    - list [ref=f225e233]:
+      - listitem [ref=f225e234]:
+        - link "Your Orders Track, return, cancel an order, download invoice or buy again" [ref=f225e237] [cursor=pointer]:
+          - /url: https://www.amazon.com/gp/your-account/order-history?ref_=ya_d_c_yo
+          - generic [ref=f225e242]:
+            - heading "Your Orders" [level=2] [ref=f225e243]
+            - generic [ref=f225e244]: Track, return, cancel an order, download invoice or buy again
+      - listitem [ref=f225e245]:
+        - link "Login & security Edit login, name, and mobile number" [ref=f225e248] [cursor=pointer]:
+          - /url: https://www.amazon.com/ap/cnep?openid.return_to=https%3A%2F%2Fwww.amazon.com%2Fyour-account&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0
+          - generic [ref=f225e253]:
+            - heading "Login & security" [level=2] [ref=f225e254]
+            - generic [ref=f225e255]: Edit login, name, and mobile number
+      - listitem [ref=f225e256]:
+        - link "Prime Manage your membership, view benefits, and payment settings" [ref=f225e259] [cursor=pointer]:
+          - /url: https://www.amazon.com/gp/primecentral?ref_=ya_d_c_prime
+          - generic [ref=f225e264]:
+            - heading "Prime" [level=2] [ref=f225e265]
+            - generic [ref=f225e266]: Manage your membership, view benefits, and payment settings
+    - list [ref=f225e267]:
+      - listitem [ref=f225e268]:
+        - link "Your Addresses Edit, remove or set default address" [ref=f225e271] [cursor=pointer]:
+          - /url: https://www.amazon.com/a/addresses?ref_=ya_d_c_addr
+          - generic [ref=f225e276]:
+            - heading "Your Addresses" [level=2] [ref=f225e277]
+            - generic [ref=f225e278]: Edit, remove or set default address
+      - listitem [ref=f225e279]:
+        - link "Your business account Save 35% (up to $125) on your first orders by 10/12. Register now. T&Cs apply." [ref=f225e282] [cursor=pointer]:
+          - /url: https://www.amazon.com/ab/incentives/reg/nt?ABevent=PBDD26&campaignId=c5a303fc-689c-4faf-abb7-c3dbe9bc2fd7&ref_=ab_reg_inct_yap_promo
+          - generic [ref=f225e287]:
+            - heading "Your business account" [level=2] [ref=f225e288]
+            - generic [ref=f225e289]: Save 35% (up to $125) on your first orders by 10/12. Register now. T&Cs apply.
+      - listitem [ref=f225e290]:
+        - link "Gift cards View balance or redeem a card, and purchase a new Gift Card" [ref=f225e293] [cursor=pointer]:
+          - /url: https://www.amazon.com/gp/css/gc/balance?ref_=ya_d_c_gc
+          - generic [ref=f225e298]:
+            - heading "Gift cards" [level=2] [ref=f225e299]
+            - generic [ref=f225e300]: View balance or redeem a card, and purchase a new Gift Card
+    - list [ref=f225e301]:
+      - listitem [ref=f225e302]:
+        - link "Your Payments View all transactions, manage payment methods and settings" [ref=f225e305] [cursor=pointer]:
+          - /url: https://www.amazon.com/cpe/yourpayments/wallet?ref_=ya_d_c_pmt_mpo
+          - generic [ref=f225e310]:
+            - heading "Your Payments" [level=2] [ref=f225e311]
+            - generic [ref=f225e312]: View all transactions, manage payment methods and settings
+      - listitem [ref=f225e313]:
+        - link "Your Amazon Family Manage profiles, sharing, and permissions in one place" [ref=f225e316] [cursor=pointer]:
+          - /url: https://www.amazon.com/hz/profilepicker/amazonfamily?ref_=ya_your_amazon_family_rich-card
+          - generic [ref=f225e321]:
+            - heading "Your Amazon Family" [level=2] [ref=f225e322]
+            - generic [ref=f225e323]: Manage profiles, sharing, and permissions in one place
+      - listitem [ref=f225e324]:
+        - link "Digital Services and Device Support Troubleshoot device issues, manage or cancel digital subscriptions" [ref=f225e327] [cursor=pointer]:
+          - /url: https://www.amazon.com/gp/help/customer/display.html?ref_=ya_d_c_dev&nodeId=200127470
+          - generic [ref=f225e332]:
+            - heading "Digital Services and Device Support" [level=2] [ref=f225e333]
+            - generic [ref=f225e334]: Troubleshoot device issues, manage or cancel digital subscriptions
+    - list [ref=f225e335]:
+      - listitem [ref=f225e336]:
+        - link "Your Lists View, modify, and share your lists, or create new ones" [ref=f225e339] [cursor=pointer]:
+          - /url: https://www.amazon.com/hz/wishlist/ls?ref_=ya_d_c_lists
+          - generic [ref=f225e344]:
+            - heading "Your Lists" [level=2] [ref=f225e345]
+            - generic [ref=f225e346]: View, modify, and share your lists, or create new ones
+      - listitem [ref=f225e347]:
+        - link "Customer Service Browse self service options, help articles or contact us" [ref=f225e350] [cursor=pointer]:
+          - /url: https://www.amazon.com/hz/contact-us?ref_=ya_d_c_contactcs
+          - generic [ref=f225e355]:
+            - heading "Customer Service" [level=2] [ref=f225e356]
+            - generic [ref=f225e357]: Browse self service options, help articles or contact us
+      - listitem [ref=f225e358]:
+        - link "Your Messages View or respond to messages from Amazon, Sellers and Buyers" [ref=f225e361] [cursor=pointer]:
+          - /url: https://www.amazon.com/gp/message?ref_=ya_d_l_msg_center#!/inbox
+          - generic [ref=f225e366]:
+            - heading "Your Messages" [level=2] [ref=f225e367]
+            - generic [ref=f225e368]: View or respond to messages from Amazon, Sellers and Buyers
+    - separator [ref=f225e369]
+    - generic [ref=f225e370]:
+      - generic [ref=f225e373]:
+        - heading "Ordering and shopping preferences" [level=2] [ref=f225e374]
+        - list [ref=f225e375]:
+          - listitem [ref=f225e376]:
+            - link "About You" [ref=f225e378] [cursor=pointer]:
+              - /url: https://www.amazon.com/slc/hub?useAiMode=1&ref_=ya_d_ph_ayp_1&disablePicker=1&shoppingAs=1
+          - listitem [ref=f225e379]:
+            - link "Your Addresses" [ref=f225e381] [cursor=pointer]:
+              - /url: https://www.amazon.com/a/addresses?ref_=ya_d_l_addr
+          - listitem [ref=f225e382]:
+            - link "Amazon credit cards" [ref=f225e384] [cursor=pointer]:
+              - /url: https://www.amazon.com/credit/landing?ref_=ya_d_l_amazon_cc
+          - listitem [ref=f225e385]:
+            - link "Your Amazon Day" [ref=f225e387] [cursor=pointer]:
+              - /url: https://www.amazon.com/AmazonDay/?ref_=ya_d_l_yad
+          - listitem [ref=f225e388]:
+            - link "Your Payments" [ref=f225e390] [cursor=pointer]:
+              - /url: https://www.amazon.com/cpe/managepaymentmethods?ref_=ya_d_l_pmt_mpo
+          - listitem [ref=f225e391]:
+            - link "Your Transactions" [ref=f225e393] [cursor=pointer]:
+              - /url: https://www.amazon.com/cpe/yourpayments/transactions?ref_=ya_d_l_pmt_mpo
+          - listitem [ref=f225e394]:
+            - link "Your Shopping preferences" [ref=f225e396] [cursor=pointer]:
+              - /url: https://www.amazon.com/slc/hub?ref_=ya_d_l_slph
+          - listitem [ref=f225e397]:
+            - link "Your Content" [ref=f225e399] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/profile?ref_=ya_d_l_profile
+          - listitem [ref=f225e400]:
+            - link "1-Click settings" [ref=f225e402] [cursor=pointer]:
+              - /url: https://www.amazon.com/cpe/manageoneclick?ref_=ya_d_l_change_1_click
+          - listitem [ref=f225e403]:
+            - link "Amazon Key settings" [ref=f225e405] [cursor=pointer]:
+              - /url: https://www.amazon.com/key-delivery?ref_=ya_d_l_amazon_key_settings
+          - listitem [ref=f225e406]:
+            - link "Whole Foods Market settings" [ref=f225e408] [cursor=pointer]:
+              - /url: https://www.amazon.com/wwgs/customer-contact-preferences/wwgs-contact-preferences?ref_=ya_d_l_wwgs
+          - listitem [ref=f225e409]:
+            - link "Language preferences" [ref=f225e411] [cursor=pointer]:
+              - /url: /customer-preferences/edit?ref_=ya_manage_lop&preferencesReturnUrl=%2Fgp%2Fcss%2Fhomepage.html
+          - listitem [ref=f225e412]:
+            - link "Manage saved IDs" [ref=f225e414] [cursor=pointer]:
+              - /url: https://www.amazon.com/aee/kyc/savedId/display?ref_=ya_d_l_kyc
+          - listitem [ref=f225e415]:
+            - link "Coupons" [ref=f225e417] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/browse?node=13285418011&ref_=ya_d_l_coupons
+          - listitem [ref=f225e418]:
+            - link "Product Vouchers" [ref=f225e420] [cursor=pointer]:
+              - /url: https://www.amazon.com/gc/pv/balance?ref_=ya_d_l_pv_bal
+          - listitem [ref=f225e421]:
+            - link "VAT registration number" [ref=f225e423] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/vatRegistration/manage?ref_=ya_d_l_manage_vat
+          - listitem [ref=f225e424]:
+            - link "Recalls and Product Safety Alerts" [ref=f225e426] [cursor=pointer]:
+              - /url: https://www.amazon.com/your-product-safety-alerts?ref_=ya_desktop_bsx_ypsa
+      - generic [ref=f225e429]:
+        - heading "Digital content and devices" [level=2] [ref=f225e430]
+        - list [ref=f225e431]:
+          - listitem [ref=f225e432]:
+            - link "All things Alexa" [ref=f225e434] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/browse?node=17934671011&ref_=ya_d_c_alexa
+          - listitem [ref=f225e435]:
+            - link "Content Library" [ref=f225e437] [cursor=pointer]:
+              - /url: https://www.amazon.com/hz/mycd/myx?pageType=content&ref_=ya_d_l_manage_kindle
+          - listitem [ref=f225e438]:
+            - link "Devices" [ref=f225e440] [cursor=pointer]:
+              - /url: https://www.amazon.com/hz/mycd/digital-console/alldevices?pageType=devices&ref_=ya_d_l_manage_devices
+          - listitem [ref=f225e441]:
+            - link "Manage Digital Delivery" [ref=f225e443] [cursor=pointer]:
+              - /url: https://www.amazon.com/gg/links?pageType=content&ref_=ya_d_l_man_dd
+          - listitem [ref=f225e444]:
+            - link "Your apps" [ref=f225e446] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/mas/your-account/myapps?ref_=ya_d_l_mas_digilocker
+          - listitem [ref=f225e447]:
+            - link "Prime Video settings" [ref=f225e449] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/video/ontv/settings?ref_=ya_d_l_manage_instant_video
+          - listitem [ref=f225e450]:
+            - link "Amazon Music settings" [ref=f225e452] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/dmusic/player/settings?ref_=ya_d_l_mp3_settings
+          - listitem [ref=f225e453]:
+            - link "Manage Amazon Drive and photos" [ref=f225e455] [cursor=pointer]:
+              - /url: https://www.amazon.com/clouddrive/manage?ref_=ya_d_l_adrive
+          - listitem [ref=f225e456]:
+            - link "Twitch settings" [ref=f225e458] [cursor=pointer]:
+              - /url: https://twitch.amazon.com/manage?ref_=ya_d_l_twitch_acct
+          - listitem [ref=f225e459]:
+            - link "Audible settings" [ref=f225e461] [cursor=pointer]:
+              - /url: https://www.amazon.com/hz/audible/settings?ref_=adbl_ya_set_dig_cnt
+          - listitem [ref=f225e462]:
+            - link "Amazon Coins" [ref=f225e464] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/coins/account?ref_=ya_d_l_amazon_coins
+          - listitem [ref=f225e465]:
+            - link "Digital gifts you've received" [ref=f225e467] [cursor=pointer]:
+              - /url: https://www.amazon.com/hz/mycd/digital-console/contentlist/receivedGifts/?ref_=ya_d_l_digital_gifts
+          - listitem [ref=f225e468]:
+            - link "Digital and device forum" [ref=f225e470] [cursor=pointer]:
+              - /url: https://www.amazon.com/r?ref_=ya_d_l_frm_a&dest=https%3A%2F%2Fwww.amazonforum.com&aid=7SRwRFJ5Q7uMVs1gifnLYQ
+          - listitem [ref=f225e471]:
+            - link "Comixology settings" [ref=f225e473] [cursor=pointer]:
+              - /url: https://www.amazon.com/comixology/account?pageType=content&ref_=ya_d_l_cmx_gc
+          - listitem [ref=f225e474]:
+            - link "Verify AI Generated Content" [ref=f225e476] [cursor=pointer]:
+              - /url: https://www.amazon.com/aicontent/verify
+      - generic [ref=f225e479]:
+        - heading "Memberships and subscriptions" [level=2] [ref=f225e480]
+        - list [ref=f225e481]:
+          - listitem [ref=f225e482]:
+            - link "Kindle Unlimited" [ref=f225e484] [cursor=pointer]:
+              - /url: https://www.amazon.com/kindle-dbs/ku/ku-central?ref_=ya_d_l_kindle_unlimited
+          - listitem [ref=f225e485]:
+            - link "Prime Video Channels" [ref=f225e487] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/video/subscriptions/manage?ref_=ya_d_l_myvs
+          - listitem [ref=f225e488]:
+            - link "Music Unlimited" [ref=f225e490] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/dmusic/player/settings?ref_=ya_d_l_music_unlimited
+          - listitem [ref=f225e491]:
+            - link "Subscribe & Save" [ref=f225e493] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/subscribe-and-save/manager/viewsubscriptions?ref_=ya_d_l_subscribe_save
+          - listitem [ref=f225e494]:
+            - link "Amazon Kids+" [ref=f225e496] [cursor=pointer]:
+              - /url: https://www.amazon.com/Amazon-FreeTime-Unlimited-Monthly-Subscription/dp/B01I499BNA?ref_=ya_d_l_freetime
+          - listitem [ref=f225e497]:
+            - link "Audible membership" [ref=f225e499] [cursor=pointer]:
+              - /url: https://www.amazon.com/hz/audible/settings?ref_=adbl_ya_set_mem_sub
+          - listitem [ref=f225e500]:
+            - link "Auto Buy" [ref=f225e502] [cursor=pointer]:
+              - /url: https://www.amazon.com/buying-rules?ref_=ya_d_l_rsi_br_brh_ya
+          - listitem [ref=f225e503]:
+            - link "Magazine subscriptions" [ref=f225e505] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/magazines-subscription-manager/manager?ref_=ya_d_l_msm_os
+          - listitem [ref=f225e506]:
+            - link "One Medical membership for Prime members" [ref=f225e508] [cursor=pointer]:
+              - /url: https://health.amazon.com/prime/onemedical/settings?ref_=ya_d_l_om_mem
+          - listitem [ref=f225e509]:
+            - link "Other subscriptions" [ref=f225e511] [cursor=pointer]:
+              - /url: https://www.amazon.com/hz5/yourmembershipsandsubscriptions?ref_=ya_d_l_mng_subscriptions
+    - generic [ref=f225e512]:
+      - generic [ref=f225e515]:
+        - heading "Communication and content" [level=2] [ref=f225e516]
+        - list [ref=f225e517]:
+          - listitem [ref=f225e518]:
+            - link "Email subscriptions" [ref=f225e520] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/gss/manage?ref_=ya_d_l_amazon_delivers&ie=UTF8
+          - listitem [ref=f225e521]:
+            - link "Advertising preferences" [ref=f225e523] [cursor=pointer]:
+              - /url: https://www.amazon.com/adprefs?ref_=ya_d_l_advert_prefs
+          - listitem [ref=f225e524]:
+            - link "Communication preferences" [ref=f225e526] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/cpc/homepage?ref_=ya_d_l_comm_prefs
+          - listitem [ref=f225e527]:
+            - link "Shipment updates via text" [ref=f225e529] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/css/texttrace/view.html?ref_=ya_d_l_texttrace
+          - listitem [ref=f225e530]:
+            - link "Alexa shopping notifications" [ref=f225e532] [cursor=pointer]:
+              - /url: https://www.amazon.com/alexashopping/notification/?ref_=ya_d_l_asns
+          - listitem [ref=f225e533]:
+            - link "Videos you've uploaded" [ref=f225e535] [cursor=pointer]:
+              - /url: https://www.amazon.com/creatorhub?ref_=ya_d_l_my_videos
+          - listitem [ref=f225e536]:
+            - link "Purchase Reminders" [ref=f225e538] [cursor=pointer]:
+              - /url: https://www.amazon.com/purchase-reminders?ref_=rsi_pr_prh_ya
+      - generic [ref=f225e541]:
+        - heading "Shopping programs and rentals" [level=2] [ref=f225e542]
+        - list [ref=f225e543]:
+          - listitem [ref=f225e544]:
+            - link "Buy now, pay over time" [ref=f225e546] [cursor=pointer]:
+              - /url: https://www.amazon.com/dp/B08YJ6TLLR?ref_=ya_bnpl&ref_=ya_seal
+          - listitem [ref=f225e547]:
+            - link "Manage Your Amazon Family" [ref=f225e549] [cursor=pointer]:
+              - /url: https://www.amazon.com/hz/profilepicker/amazonfamily?ref_=ya_d_l_myaf
+          - listitem [ref=f225e550]:
+            - link "Rentals by Amazon" [ref=f225e552] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/rental/your-account?ref_=ya_d_l_rentals
+          - listitem [ref=f225e553]:
+            - link "No-Rush rewards summary" [ref=f225e555] [cursor=pointer]:
+              - /url: https://www.amazon.com/norushcredits?ref_=ya_d_l_payment_methods_norushcredit
+          - listitem [ref=f225e556]:
+            - link "Teens Program" [ref=f225e558] [cursor=pointer]:
+              - /url: https://www.amazon.com/cr/teensProgram?ref_=ya_d_l_tjoinlp
+          - listitem [ref=f225e559]:
+            - link "Pets" [ref=f225e561] [cursor=pointer]:
+              - /url: https://www.amazon.com/yourpets?ref_=ya_d_l_pet_profile
+          - listitem [ref=f225e562]:
+            - link "Shop with Points" [ref=f225e564] [cursor=pointer]:
+              - /url: https://www.amazon.com/hp/shopwithpoints/account/?ref_=ya_d_l_swp
+          - listitem [ref=f225e565]:
+            - link "Amazon Second Chance" [ref=f225e567] [cursor=pointer]:
+              - /url: https://www.amazon.com/amazonsecondchance?ref_=your_acct_asc
+          - listitem [ref=f225e568]:
+            - link "Benefits balance" [ref=f225e570] [cursor=pointer]:
+              - /url: https://www.amazon.com/benefitsbalance?ref_=a2bm_ya_all_bbpg_dsk
+          - listitem [ref=f225e571]:
+            - link "Your credit & benefit balances" [ref=f225e573] [cursor=pointer]:
+              - /url: https://www.amazon.com/pb/summary
+      - generic [ref=f225e576]:
+        - heading "Other programs" [level=2] [ref=f225e577]
+        - list [ref=f225e578]:
+          - listitem [ref=f225e579]:
+            - link "Account Linking" [ref=f225e581] [cursor=pointer]:
+              - /url: /accountlink/home?ref_=ya_d_l_your_account
+          - listitem [ref=f225e582]:
+            - link "Your seller account" [ref=f225e584] [cursor=pointer]:
+              - /url: https://sellercentral.amazon.com/home?ref_=ya_d_l_seller
+          - listitem [ref=f225e585]:
+            - link "Amazon Pay" [ref=f225e587] [cursor=pointer]:
+              - /url: https://pay.amazon.com/us/shopper?ref_=ya_d_l_payments_acct
+          - listitem [ref=f225e588]:
+            - link "Manage your trade-ins" [ref=f225e590] [cursor=pointer]:
+              - /url: https://www.amazon.com/tradein/ya?ref_=ya_d_l_tradein
+          - listitem [ref=f225e591]:
+            - link "Amazon Web Services" [ref=f225e593] [cursor=pointer]:
+              - /url: https://aws.amazon.com/?ref_=ya_d_l_websvcs_acct
+          - listitem [ref=f225e594]:
+            - link "Amazon tax exemption program" [ref=f225e596] [cursor=pointer]:
+              - /url: https://www.amazon.com/atep/taxexemption?ref_=ya_d_l_tax_exemption
+          - listitem [ref=f225e597]:
+            - link "Your Interests" [ref=f225e599] [cursor=pointer]:
+              - /url: /yourinterests?ref_=ya_d_l_cix_cim
+          - listitem [ref=f225e600]:
+            - link "Amazon Pharmacy" [ref=f225e602] [cursor=pointer]:
+              - /url: https://pharmacy.amazon.com/?ref_=ya_d_l_pharmacy
+          - listitem [ref=f225e603]:
+            - link "Health Benefits Connector" [ref=f225e605] [cursor=pointer]:
+              - /url: https://health.amazon.com/health-condition-programs?ref_=ya_d_l_hbc
+          - listitem [ref=f225e606]:
+            - link "One Medical Pay-per-visit" [ref=f225e608] [cursor=pointer]:
+              - /url: https://health.amazon.com/onemedical/ppv?ref_=ya_d_l_ppv
+    - generic [ref=f225e612]:
+      - heading "Manage your data" [level=2] [ref=f225e613]
+      - list [ref=f225e614]:
+        - listitem [ref=f225e615]:
+          - link "Request your data" [ref=f225e617] [cursor=pointer]:
+            - /url: https://www.amazon.com/hz/privacy-central/data-requests/preview.html
+        - listitem [ref=f225e618]:
+          - link "Data Access and Requests" [ref=f225e620] [cursor=pointer]:
+            - /url: https://www.amazon.com/privacy-center/data-access
+        - listitem [ref=f225e621]:
+          - link "Manage apps & services with data access" [ref=f225e623] [cursor=pointer]:
+            - /url: https://www.amazon.com/ap/adam?ref_=ya_d_l_iba
+        - listitem [ref=f225e624]:
+          - link "Close Your Amazon Account" [ref=f225e626] [cursor=pointer]:
+            - /url: https://www.amazon.com/privacy/data-deletion
+        - listitem [ref=f225e627]:
+          - link "Privacy Notice" [ref=f225e629] [cursor=pointer]:
+            - /url: https://www.amazon.com/gp/help/customer/display.html?nodeId=201909010
+        - listitem [ref=f225e630]:
+          - link "Protect yourself from scams" [ref=f225e632] [cursor=pointer]:
+            - /url: https://www.amazon.com/gp/help/customer/display.html?nodeId=G4YFYCCNUSENA23B
+  - complementary "Your recently viewed items and featured recommendations"
+  - generic [ref=f225e635]:
+    - button "Back to top" [ref=f225e636] [cursor=pointer]
+    - generic [ref=f225e638]:
+      - generic [ref=f225e639]:
+        - heading "Get to Know Us" [level=6] [ref=f225e640]
+        - list [ref=f225e641]:
+          - listitem [ref=f225e642]:
+            - link "Careers" [ref=f225e643] [cursor=pointer]:
+              - /url: https://www.amazon.jobs
+          - listitem [ref=f225e644]:
+            - link "Amazon Newsletter" [ref=f225e645] [cursor=pointer]:
+              - /url: https://www.aboutamazon.com/subscribe?utm_source=amazon_com&utm_medium=amazonfooter&utm_campaign=newslettersubscribers&utm_term=amazonnewssignup
+          - listitem [ref=f225e646]:
+            - link "About Amazon" [ref=f225e647] [cursor=pointer]:
+              - /url: https://www.aboutamazon.com/?utm_source=gateway&utm_medium=footer&token=about
+          - listitem [ref=f225e648]:
+            - link "Accessibility" [ref=f225e649] [cursor=pointer]:
+              - /url: https://www.amazon.com/b?node=15701038011&ie=UTF8
+          - listitem [ref=f225e650]:
+            - link "Sustainability" [ref=f225e651] [cursor=pointer]:
+              - /url: https://sustainability.aboutamazon.com/?utm_source=gateway&utm_medium=footer&ref_=susty_footer
+          - listitem [ref=f225e652]:
+            - link "Press Center" [ref=f225e653] [cursor=pointer]:
+              - /url: https://www.amazon.com/pr
+          - listitem [ref=f225e654]:
+            - link "Investor Relations" [ref=f225e655] [cursor=pointer]:
+              - /url: https://www.amazon.com/ir
+          - listitem [ref=f225e656]:
+            - link "Amazon Devices" [ref=f225e657] [cursor=pointer]:
+              - /url: /gp/browse.html?node=2102313011&ref_=footer_devices
+          - listitem [ref=f225e658]:
+            - link "Amazon Science" [ref=f225e659] [cursor=pointer]:
+              - /url: https://www.amazon.science
+      - generic [ref=f225e661]:
+        - heading "Make Money with Us" [level=6] [ref=f225e662]
+        - list [ref=f225e663]:
+          - listitem [ref=f225e664]:
+            - link "Sell on Amazon" [ref=f225e665] [cursor=pointer]:
+              - /url: https://sell.amazon.com/?ld=AZFSSOA_FTSELL-C&ref_=footer_soa
+          - listitem [ref=f225e666]:
+            - link "Sell apps on Amazon" [ref=f225e667] [cursor=pointer]:
+              - /url: https://developer.amazon.com
+          - listitem [ref=f225e668]:
+            - link "Supply to Amazon" [ref=f225e669] [cursor=pointer]:
+              - /url: https://supply.amazon.com
+          - listitem [ref=f225e670]:
+            - link "Protect & Build Your Brand" [ref=f225e671] [cursor=pointer]:
+              - /url: https://sell.amazon.com/brand-registry?ld=AZUSSOA_ABR-FT
+          - listitem [ref=f225e672]:
+            - link "Become an Affiliate" [ref=f225e673] [cursor=pointer]:
+              - /url: https://affiliate-program.amazon.com/
+          - listitem [ref=f225e674]:
+            - link "Become a Delivery Driver" [ref=f225e675] [cursor=pointer]:
+              - /url: https://dspjobhub.com/
+          - listitem [ref=f225e676]:
+            - link "Start a Package Delivery Business" [ref=f225e677] [cursor=pointer]:
+              - /url: https://logistics.amazon.com/marketing?utm_source=amzn&utm_medium=footer&utm_campaign=home
+          - listitem [ref=f225e678]:
+            - link "Advertise Your Products" [ref=f225e679] [cursor=pointer]:
+              - /url: https://advertising.amazon.com/?ref=ext_amzn_ftr
+          - listitem [ref=f225e680]:
+            - link "Self-Publish with Us" [ref=f225e681] [cursor=pointer]:
+              - /url: /gp/seller-account/mm-summary-page.html?ld=AZFooterSelfPublish&topic=200260520&ref_=footer_publishing
+          - listitem [ref=f225e682]:
+            - link "Become an Amazon Hub Partner" [ref=f225e683] [cursor=pointer]:
+              - /url: https://www.amazon.com/b?node=216188543011
+          - listitem [ref=f225e684]:
+            - text: ›
+            - link "See More Ways to Make Money" [ref=f225e685] [cursor=pointer]:
+              - /url: /b/?node=18190131011&ld=AZUSSOA-seemore&ref_=footer_seemore
+      - generic [ref=f225e687]:
+        - heading "Amazon Payment Products" [level=6] [ref=f225e688]
+        - list [ref=f225e689]:
+          - listitem [ref=f225e690]:
+            - link "Amazon Visa" [ref=f225e691] [cursor=pointer]:
+              - /url: /iss/credit/rewardscardmember?plattr=CBFOOT&ref_=footer_cbcc
+          - listitem [ref=f225e692]:
+            - link "Amazon Store Card" [ref=f225e693] [cursor=pointer]:
+              - /url: /credit/storecard/member?plattr=PLCCFOOT&ref_=footer_plcc
+          - listitem [ref=f225e694]:
+            - link "Amazon Secured Card" [ref=f225e695] [cursor=pointer]:
+              - /url: /dp/product/B084KP3NG6?plattr=SCFOOT&ref_=footer_ACB
+          - listitem [ref=f225e696]:
+            - link "Amazon Business Card" [ref=f225e697] [cursor=pointer]:
+              - /url: /dp/B0DVBL912R?plattr=ACOMFO&ie=UTF-8
+          - listitem [ref=f225e698]:
+            - link "Shop with Points" [ref=f225e699] [cursor=pointer]:
+              - /url: https://www.amazon.com/hp/shopwithpoints/servicing
+          - listitem [ref=f225e700]:
+            - link "Credit Card Marketplace" [ref=f225e701] [cursor=pointer]:
+              - /url: /gp/browse.html?node=3561432011&ref_=footer_ccmp
+          - listitem [ref=f225e702]:
+            - link "Reload Your Balance" [ref=f225e703] [cursor=pointer]:
+              - /url: /gp/browse.html?node=10232440011&ref_=footer_reload_us
+          - listitem [ref=f225e704]:
+            - link "Gift Cards" [ref=f225e705] [cursor=pointer]:
+              - /url: https://www.amazon.com/b/?node=2238192011&ref=shop_footer_payments_gc_desktop
+          - listitem [ref=f225e706]:
+            - link "Amazon Currency Converter" [ref=f225e707] [cursor=pointer]:
+              - /url: /gp/browse.html?node=388305011&ref_=footer_tfx
+      - generic [ref=f225e709]:
+        - heading "Let Us Help You" [level=6] [ref=f225e710]
+        - list [ref=f225e711]:
+          - listitem [ref=f225e712]:
+            - link "Your Account" [ref=f225e713] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/css/homepage.html?ref_=footer_ya
+          - listitem [ref=f225e714]:
+            - link "Your Orders" [ref=f225e715] [cursor=pointer]:
+              - /url: https://www.amazon.com/gp/css/order-history?ref_=footer_yo
+          - listitem [ref=f225e716]:
+            - link "Shipping Rates & Policies" [ref=f225e717] [cursor=pointer]:
+              - /url: /gp/help/customer/display.html?nodeId=468520&ref_=footer_shiprates
+          - listitem [ref=f225e718]:
+            - link "Amazon Prime" [ref=f225e719] [cursor=pointer]:
+              - /url: /gp/prime?ref_=footer_prime
+          - listitem [ref=f225e720]:
+            - link "Returns & Replacements" [ref=f225e721] [cursor=pointer]:
+              - /url: /gp/css/returns/homepage.html?ref_=footer_hy_f_4
+          - listitem [ref=f225e722]:
+            - link "Manage Your Content and Devices" [ref=f225e723] [cursor=pointer]:
+              - /url: /hz/mycd/myx?ref_=footer_myk
+          - listitem [ref=f225e724]:
+            - link "Recalls and Product Safety Alerts" [ref=f225e725] [cursor=pointer]:
+              - /url: https://www.amazon.com/product-safety-alerts?ref_=footer_bsx_ypsa
+          - listitem [ref=f225e726]:
+            - link "Registry & Gift List" [ref=f225e727] [cursor=pointer]:
+              - /url: /registries?ref_=nav_footer_registry_giftlist_desktop
+          - listitem [ref=f225e728]:
+            - link "Help" [ref=f225e729] [cursor=pointer]:
+              - /url: /gp/help/customer/display.html?nodeId=508510&ref_=footer_gw_m_b_he
+    - generic [ref=f225e731]:
+      - link "Amazon US Home" [ref=f225e734] [cursor=pointer]:
+        - /url: /?ref_=footer_logo
+      - generic [ref=f225e737]:
+        - generic [ref=f225e738]:
+          - link "Choose a language for shopping. Current selection is English." [ref=f225e739] [cursor=pointer]:
+            - /url: /customer-preferences/edit?ie=UTF8&preferencesReturnUrl=%2F&ref_=footer_lang
+            - generic [ref=f225e741]: English
+          - button "Expand to Change Language or Country" [ref=f225e742] [cursor=pointer]
+        - button "Choose a country/region for shopping. The current selection is United States." [ref=f225e743] [cursor=pointer]:
+          - generic [ref=f225e745]: United States
+    - navigation "More on Amazon" [ref=f225e746]:
+      - generic "More on Amazon" [ref=f225e747]:
+        - list [ref=f225e748]:
+          - listitem [ref=f225e749]:
+            - link [ref=f225e750] [cursor=pointer]:
+              - /url: https://music.amazon.com?ref=dm_aff_amz_com
+              - heading "Amazon Music" [level=5] [ref=f225e751]
+              - generic [ref=f225e752]: Stream millionsof songs
+          - listitem [aria-hidden] [ref=f225e753]
+          - listitem [ref=f225e754]:
+            - link [ref=f225e755] [cursor=pointer]:
+              - /url: https://advertising.amazon.com/?ref=footer_advtsing_amzn_com
+              - heading "Amazon Ads" [level=5] [ref=f225e756]
+              - generic [ref=f225e757]: Reach customerswherever theyspend their time
+          - listitem [aria-hidden] [ref=f225e758]
+          - listitem [ref=f225e759]:
+            - link [ref=f225e760] [cursor=pointer]:
+              - /url: https://www.6pm.com
+              - heading "6pm" [level=5] [ref=f225e761]
+              - generic [ref=f225e762]: Score dealson fashion brands
+          - listitem [aria-hidden] [ref=f225e763]
+          - listitem [ref=f225e764]:
+            - link [ref=f225e765] [cursor=pointer]:
+              - /url: https://www.abebooks.com
+              - heading "AbeBooks" [level=5] [ref=f225e766]
+              - generic [ref=f225e767]: Books, art& collectibles
+          - listitem [aria-hidden] [ref=f225e768]
+          - listitem [ref=f225e769]:
+            - link [ref=f225e770] [cursor=pointer]:
+              - /url: https://www.acx.com/
+              - heading "ACX" [level=5] [ref=f225e771]
+              - generic [ref=f225e772]: Audiobook PublishingMade Easy
+          - listitem [aria-hidden] [ref=f225e773]
+          - listitem [ref=f225e774]:
+            - link "Sell on Amazon Start a Selling Account" [ref=f225e775] [cursor=pointer]:
+              - /url: https://sell.amazon.com/?ld=AZUSSOA-footer-aff&ref_=footer_sell
+              - heading "Sell on Amazon" [level=5] [ref=f225e776]
+              - generic [ref=f225e777]: Start a Selling Account
+          - listitem [aria-hidden] [ref=f225e778]
+          - listitem [ref=f225e779]:
+            - link [ref=f225e780] [cursor=pointer]:
+              - /url: https://www.veeqo.com/?utm_source=amazon&utm_medium=website&utm_campaign=footer
+              - heading "Veeqo" [level=5] [ref=f225e781]
+              - generic [ref=f225e782]: Shipping SoftwareInventory Management
+        - list [ref=f225e783]:
+          - listitem [ref=f225e784]:
+            - link [ref=f225e785] [cursor=pointer]:
+              - /url: /business?ref_=footer_retail_b2b
+              - heading "Amazon Business" [level=5] [ref=f225e786]
+              - generic [ref=f225e787]: Everything ForYour Business
+          - listitem [aria-hidden] [ref=f225e788]
+          - listitem [ref=f225e789]:
+            - link [ref=f225e790] [cursor=pointer]:
+              - /url: /fmc/grocery-gateway?almBrandId=fe16aGPfFs46S&ref_=footer_groceries
+              - heading "Groceries at Amazon" [level=5] [ref=f225e791]
+              - generic [ref=f225e792]: Groceries & MoreRight To Your Door
+          - listitem [aria-hidden] [ref=f225e793]
+          - listitem [ref=f225e794]:
+            - link [ref=f225e795] [cursor=pointer]:
+              - /url: /gp/browse.html?node=20338496011&ref_=footer_amazonglobal
+              - heading "AmazonGlobal" [level=5] [ref=f225e796]
+              - generic [ref=f225e797]: Ship OrdersInternationally
+          - listitem [aria-hidden] [ref=f225e798]
+          - listitem [ref=f225e799]:
+            - link [ref=f225e800] [cursor=pointer]:
+              - /url: /services?ref_=footer_services
+              - heading "Home Services" [level=5] [ref=f225e801]
+              - generic [ref=f225e802]: Experienced ProsHappiness Guarantee
+          - listitem [aria-hidden] [ref=f225e803]
+          - listitem [ref=f225e804]:
+            - link [ref=f225e805] [cursor=pointer]:
+              - /url: https://aws.amazon.com/what-is-cloud-computing/?sc_channel=EL&sc_campaign=amazonfooter
+              - heading "Amazon Web Services" [level=5] [ref=f225e806]
+              - generic [ref=f225e807]: Scalable CloudComputing Services
+          - listitem [aria-hidden] [ref=f225e808]
+          - listitem [ref=f225e809]:
+            - link [ref=f225e810] [cursor=pointer]:
+              - /url: https://www.audible.com
+              - heading "Audible" [level=5] [ref=f225e811]
+              - generic [ref=f225e812]: Listen to Books & OriginalAudio Performances
+          - listitem [aria-hidden] [ref=f225e813]
+          - listitem [ref=f225e814]:
+            - link [ref=f225e815] [cursor=pointer]:
+              - /url: https://www.boxofficemojo.com/?ref_=amzn_nav_ftr
+              - heading "Box Office Mojo" [level=5] [ref=f225e816]
+              - generic [ref=f225e817]: Find MovieBox Office Data
+        - list [ref=f225e818]:
+          - listitem [ref=f225e819]:
+            - link [ref=f225e820] [cursor=pointer]:
+              - /url: https://www.goodreads.com
+              - heading "Goodreads" [level=5] [ref=f225e821]
+              - generic [ref=f225e822]: Book reviews& recommendations
+          - listitem [aria-hidden] [ref=f225e823]
+          - listitem [ref=f225e824]:
+            - link [ref=f225e825] [cursor=pointer]:
+              - /url: https://www.imdb.com
+              - heading "IMDb" [level=5] [ref=f225e826]
+              - generic [ref=f225e827]: Movies, TV& Celebrities
+          - listitem [aria-hidden] [ref=f225e828]
+          - listitem [ref=f225e829]:
+            - link [ref=f225e830] [cursor=pointer]:
+              - /url: https://pro.imdb.com?ref_=amzn_nav_ftr
+              - heading "IMDbPro" [level=5] [ref=f225e831]
+              - generic [ref=f225e832]: Get Info EntertainmentProfessionals Need
+          - listitem [aria-hidden] [ref=f225e833]
+          - listitem [ref=f225e834]:
+            - link [ref=f225e835] [cursor=pointer]:
+              - /url: https://kdp.amazon.com
+              - heading "Kindle Direct Publishing" [level=5] [ref=f225e836]
+              - generic [ref=f225e837]: Indie Digital & Print PublishingMade Easy
+          - listitem [aria-hidden] [ref=f225e838]
+          - listitem [ref=f225e839]:
+            - link [ref=f225e840] [cursor=pointer]:
+              - /url: /gp/browse.html?node=13234696011&ref_=_gno_p_foot
+              - heading "Amazon Photos" [level=5] [ref=f225e841]
+              - generic [ref=f225e842]: Unlimited Photo StorageFree With Prime
+          - listitem [aria-hidden] [ref=f225e843]
+          - listitem [ref=f225e844]:
+            - link [ref=f225e845] [cursor=pointer]:
+              - /url: https://videodirect.amazon.com/home/landing
+              - heading "Prime Video Direct" [level=5] [ref=f225e846]
+              - generic [ref=f225e847]: Video DistributionMade Easy
+          - listitem [aria-hidden] [ref=f225e848]
+          - listitem [ref=f225e849]:
+            - link [ref=f225e850] [cursor=pointer]:
+              - /url: https://www.shopbop.com
+              - heading "Shopbop" [level=5] [ref=f225e851]
+              - generic [ref=f225e852]: DesignerFashion Brands
+        - list [ref=f225e853]:
+          - listitem [ref=f225e854]:
+            - link [ref=f225e855] [cursor=pointer]:
+              - /url: /gp/browse.html?node=10158976011&ref_=footer_wrhsdls
+              - heading "Amazon Resale" [level=5] [ref=f225e856]
+              - generic [ref=f225e857]: Great Deals onQuality Used Products
+          - listitem [aria-hidden] [ref=f225e858]
+          - listitem [ref=f225e859]:
+            - link [ref=f225e860] [cursor=pointer]:
+              - /url: https://www.wholefoodsmarket.com
+              - heading "Whole Foods Market" [level=5] [ref=f225e861]
+              - generic [ref=f225e862]: America’s HealthiestGrocery Store
+          - listitem [aria-hidden] [ref=f225e863]
+          - listitem [ref=f225e864]:
+            - link [ref=f225e865] [cursor=pointer]:
+              - /url: https://www.woot.com/
+              - heading "Woot!" [level=5] [ref=f225e866]
+              - generic [ref=f225e867]: Deals and Shenanigans
+          - listitem [aria-hidden] [ref=f225e868]
+          - listitem [ref=f225e869]:
+            - link [ref=f225e870] [cursor=pointer]:
+              - /url: https://www.zappos.com
+              - heading "Zappos" [level=5] [ref=f225e871]
+              - generic [ref=f225e872]: Shoes &Clothing
+          - listitem [aria-hidden] [ref=f225e873]
+          - listitem [ref=f225e874]:
+            - link [ref=f225e875] [cursor=pointer]:
+              - /url: https://ring.com
+              - heading "Ring" [level=5] [ref=f225e876]
+              - generic [ref=f225e877]: Smart HomeSecurity Systems
+          - listitem [aria-hidden] [ref=f225e878]
+          - listitem [ref=f225e879]:
+            - link [ref=f225e880] [cursor=pointer]:
+              - /url: https://eero.com/
+              - heading "eero WiFi" [level=5] [ref=f225e881]
+              - generic [ref=f225e882]: Stream 4K Videoin Every Room
+          - listitem [aria-hidden] [ref=f225e883]
+          - listitem [ref=f225e884]:
+            - link [ref=f225e885] [cursor=pointer]:
+              - /url: https://blinkforhome.com/?ref=nav_footer
+              - heading "Blink" [level=5] [ref=f225e886]
+              - generic [ref=f225e887]: Smart Securityfor Every Home
+        - list [ref=f225e888]:
+          - listitem [aria-hidden] [ref=f225e889]
+          - listitem [aria-hidden] [ref=f225e890]
+          - listitem [aria-hidden] [ref=f225e891]
+          - listitem [aria-hidden] [ref=f225e892]
+          - listitem [ref=f225e893]:
+            - link [ref=f225e894] [cursor=pointer]:
+              - /url: https://shop.ring.com/pages/neighbors-app
+              - heading "Neighbors App" [level=5] [ref=f225e895]
+              - generic [ref=f225e896]: Real-Time Crime& Safety Alerts
+          - listitem [aria-hidden] [ref=f225e897]
+          - listitem [ref=f225e898]:
+            - link "PillPack Pharmacy Simplified" [ref=f225e899] [cursor=pointer]:
+              - /url: https://www.pillpack.com
+              - heading "PillPack" [level=5] [ref=f225e900]
+              - generic [ref=f225e901]: Pharmacy Simplified
+          - listitem [aria-hidden] [ref=f225e902]
+          - listitem [ref=f225e903]:
+            - link [ref=f225e904] [cursor=pointer]:
+              - /url: /gp/browse.html?node=12653393011&ref_=footer_usrenew
+              - heading "Amazon Renewed" [level=5] [ref=f225e905]
+              - generic [ref=f225e906]: Refurbished techyou can trust
+          - listitem [aria-hidden] [ref=f225e907]
+          - listitem [aria-hidden] [ref=f225e908]
+          - listitem [aria-hidden] [ref=f225e909]
+          - listitem [aria-hidden] [ref=f225e910]
+    - generic [ref=f225e911]:
+      - list [ref=f225e912]:
+        - listitem [ref=f225e913]:
+          - link "Conditions of Use" [ref=f225e914] [cursor=pointer]:
+            - /url: /gp/help/customer/display.html?nodeId=508088&ref_=footer_cou
+        - listitem [ref=f225e915]:
+          - link "Privacy Notice" [ref=f225e916] [cursor=pointer]:
+            - /url: /gp/help/customer/display.html?nodeId=GX7NJQ4ZB8MHFRNJ&ref_=footer_privacy
+        - listitem [ref=f225e917]:
+          - link "Consumer Health Data Privacy Disclosure" [ref=f225e918] [cursor=pointer]:
+            - /url: /gp/help/customer/display.html?ie=UTF8&nodeId=TnACMrGVghHocjL8KB&ref_=footer_consumer_health_data_privacy
+        - listitem [ref=f225e919]:
+          - link "Your Ads Privacy Choices" [ref=f225e920] [cursor=pointer]:
+            - /url: /privacyprefs?ref_=footer_iba
+        - listitem [ref=f225e921]
+      - generic [ref=f225e923]: © 1996-2026, Amazon.com, Inc. or its affiliates
