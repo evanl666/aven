@@ -69,6 +69,8 @@ class Conversation:
         compactor: Any = None,
         sessions_dir: Any = None,
         connections: Connections | None = None,
+        browse: Callable[[str], tuple[list[Any], str]] | None = None,
+        install: Callable[[str, str], Any] | None = None,
         has_key: Callable[[], bool] | None = None,
         keep_key: Callable[[str], None] | None = None,
         keeps: str = "",
@@ -90,6 +92,11 @@ class Conversation:
         # Injected rather than reached for, so the dispatcher has no opinion
         # about where this machine keeps secrets - and a test can drive the
         # whole flow without touching a keychain.
+        # Both injected: the dispatcher has no opinion about where a registry
+        # lives or where a config file is, and a test can drive the whole flow
+        # without either.
+        self.browse = browse
+        self.install = install
         self.has_key = has_key or (lambda: True)
         self.keep_key = keep_key
         # Where a key would be kept, in words. A screen that asks for a secret
@@ -367,6 +374,57 @@ class Conversation:
 
         self.box.bring_in(group)
         self.emit({"type": "connector", **self._connector_state(group, "ready")})
+
+    async def _do_browse(self, command: dict[str, Any]) -> dict[str, Any]:
+        """Search the public registry for something to connect.
+
+        Off the event loop: it may reach the network, and a settings pane that
+        freezes the conversation while it looks something up is a settings pane
+        nobody opens twice.
+        """
+        query = str(command.get("query", "")).strip()
+        if not query:
+            return {"query": "", "found": [], "where": "", "servers": []}
+        if self.browse is None:
+            raise RuntimeError("this conversation cannot search the registry")
+
+        found, where = await asyncio.to_thread(self.browse, query)
+        return {
+            "query": query,
+            "where": where,
+            "servers": [protocol.listing_as_dict(one) for one in found],
+        }
+
+    async def _do_add(self, command: dict[str, Any]) -> dict[str, Any]:
+        """Add a connector, by the name the registry knows it by.
+
+        A name and not a command line. The difference is the point: a name is
+        looked up in something the person just searched and read, where a
+        command line would be whatever the caller said it was - and this ends
+        in aven starting a process.
+
+        Deliberately not a tool. The model can ask for a group it has been given
+        and nothing else; choosing what aven may reach is the person's, the same
+        way signing in is.
+        """
+        name = str(command.get("name", "")).strip()
+        called = str(command.get("as", "")).strip()
+        if not name:
+            raise ValueError("which server?")
+        if self.install is None:
+            raise RuntimeError("this conversation cannot add connectors")
+
+        connector = await asyncio.to_thread(self.install, name, called)
+        # Into the live box as well as the file, so it can be used now rather
+        # than after a restart nobody was told they needed.
+        self.connections.held[connector.name] = connector
+        self.box.groups[connector.name] = connector.tools
+        self.describe[connector.name] = connector.about
+
+        return {
+            **self._connector_state(connector.name, self.connections.state(connector.name)),
+            "added": connector.name,
+        }
 
     async def _do_disconnect(self, command: dict[str, Any]) -> dict[str, Any]:
         """Sign out, and take the tools back out of play.

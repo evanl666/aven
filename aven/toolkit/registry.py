@@ -46,6 +46,14 @@ CACHE = "registry.json"
 # server published this morning is findable this afternoon.
 FRESH = 24 * 60 * 60
 
+# Measured, not guessed. Three consecutive requests to the registry took 25s
+# (timeout), 17.5s (answered) and 25s (timeout), while github.com and the npm
+# registry answered in a tenth of a second from the same machine. So: a limit
+# comfortably above a slow success, and a second attempt, because one in three
+# succeeding means two attempts get most of the way there.
+PATIENCE = 30
+TRIES = 2
+
 
 class Offline(Exception):
     """The registry could not be reached and nothing was cached."""
@@ -142,13 +150,22 @@ def _fetch(query: str, limit: int) -> list[dict[str, Any]]:
     request = urllib.request.Request(
         f"{WHERE}?{asking}", headers={"Accept": "application/json"}
     )
-    try:
-        with urllib.request.urlopen(request, timeout=20) as answer:
-            body = json.loads(answer.read().decode())
-    except (urllib.error.URLError, TimeoutError, ValueError) as unreachable:
-        raise Offline(str(unreachable)) from unreachable
 
-    return [row["server"] for row in body.get("servers", []) if "server" in row]
+    last: Exception | None = None
+    for attempt in range(TRIES):
+        try:
+            with urllib.request.urlopen(request, timeout=PATIENCE) as answer:
+                body = json.loads(answer.read().decode())
+            return [row["server"] for row in body.get("servers", []) if "server" in row]
+        except (urllib.error.URLError, TimeoutError, ValueError) as unreachable:
+            last = unreachable
+            if attempt + 1 < TRIES:
+                # Short, because this is somebody waiting at a search box, and
+                # the failure being retried is a slow server rather than a rate
+                # limit that wants backing off from.
+                time.sleep(1)
+
+    raise Offline(str(last)) from last
 
 
 def _listing(server: dict[str, Any]) -> Listing:
@@ -190,6 +207,21 @@ def _listing(server: dict[str, Any]) -> Listing:
         args=args,
         needs=needs,
     )
+
+
+def by_name(name: str, *, home: Path) -> Listing | None:
+    """One listing, out of whatever a recent search left in the cache.
+
+    Adding a connector takes a name rather than a command line. The difference
+    matters: a name is looked up in something a person just searched and read,
+    and a command line is whatever the caller says it is. Keeping the executable
+    out of the request is worth the extra lookup.
+    """
+    for held in _cached(home).values():
+        for row in held.get("rows", []):
+            if row.get("name") == name:
+                return _listing(row)
+    return None
 
 
 # --- printing it ------------------------------------------------------------

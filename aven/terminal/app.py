@@ -345,6 +345,8 @@ async def serve_rpc(*, session, model, tools, compactor, policy, standing, args,
         session=session, model=model, box=box, describe=describe,
         policy=policy, standing=standing, compactor=compactor,
         sessions_dir=sessions_dir, connections=connections,
+        browse=lambda query: registry.search(query, home=HOME),
+        install=lambda name, called: _install(name, called),
         has_key=key_is_available,
         # Bound to this model, so a key supplied while the window is open
         # reaches the client that is about to be used rather than only the one
@@ -401,6 +403,24 @@ def key_is_available() -> bool:
         os.environ["ANTHROPIC_API_KEY"] = str(held["key"])
         return True
     return False
+
+
+def _install(name: str, called: str):
+    """Write one registry entry into connectors.toml and build it.
+
+    Both halves. Writing it without building it means a restart nobody was told
+    about; building it without writing it means a connector that vanishes when
+    the window closes.
+    """
+    from aven.toolkit.connectors import append, one_mcp, read
+
+    listing = registry.by_name(name, home=HOME)
+    if listing is None:
+        raise KeyError(f"{name!r} is not in anything recently searched")
+
+    local = append(HOME, listing, called)
+    said, _ = read(HOME)
+    return one_mcp(local, (said.get("mcp") or {})[local])
 
 
 def look_up(query: str) -> int:

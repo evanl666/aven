@@ -397,6 +397,39 @@ body {
   border-color: var(--accent);
 }
 
+/* --- finding something to connect --------------------------------------- */
+
+.finder {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0 4px;
+}
+
+.seek {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13.5px;
+}
+
+.seek:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* The publisher is the one thing on a result a person can reason about, so it
+   gets its own line and is never shortened. */
+.connector .who {
+  margin-top: 2px;
+  color: var(--ink-soft);
+  font-size: 12.5px;
+}
+
 /* --- markdown inside a bubble ------------------------------------------- */
 /*
  * A reply is prose, so it is set as prose: first and last margins collapsed so

@@ -69,6 +69,31 @@ export interface Connector {
   trouble: string | null;
 }
 
+/**
+ * One result from the public MCP registry.
+ *
+ * `publisher` is the field this exists for. The registry verifies who owns a
+ * namespace, so it is a fact rather than an endorsement — `com.stripe/mcp` is
+ * published by stripe.com and `io.github.someone/stripe-thing` is not. A row
+ * showing only "Stripe tools" would hide exactly that.
+ *
+ * `runs` is the second. Adding a connector means letting aven start somebody's
+ * program, or send a credential to an address. Both belong next to the button,
+ * not behind an icon.
+ */
+export interface Listed {
+  name: string;
+  description: string;
+  publisher: string;
+  /** A short local name, which every tool of this server gets prefixed with. */
+  suggested: string;
+  remote: boolean;
+  /** The URL it would talk to, or the command it would run. */
+  runs: string;
+  /** Environment variables it says it cannot work without. */
+  needs: string[];
+}
+
 export interface SessionInfo {
   path: string;
   name: string | null;

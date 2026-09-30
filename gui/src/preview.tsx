@@ -225,6 +225,32 @@ createRoot(document.getElementById("root")!).render(
         onDisconnect={() => {}}
         keeps="the macOS login keychain"
         onKey={async () => {}}
+        onBrowse={async () => ({
+          where: "live",
+          servers: [
+            {
+              name: "com.stripe/mcp",
+              description:
+                "MCP server integrating with Stripe - tools for customers, products, payments, and more.",
+              publisher: "stripe.com",
+              suggested: "stripe",
+              remote: true,
+              runs: "https://mcp.stripe.com",
+              needs: [],
+            },
+            {
+              name: "io.github.someone/stripe-helper",
+              description: "Unofficial helper around the Stripe API.",
+              publisher: "github.com/someone",
+              suggested: "stripe_helper",
+              remote: false,
+              runs: "npx -y stripe-helper-mcp",
+              needs: ["STRIPE_SECRET_KEY"],
+            },
+          ],
+        })}
+        onAdd={async () => {}}
+        start="stripe"
         roots={["/Users/evan/Downloads"]}
         pending={2}
         onAddFolders={() => {}}

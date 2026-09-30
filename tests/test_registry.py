@@ -252,3 +252,66 @@ def test_nothing_found_says_so_rather_than_printing_an_empty_list(answers, tmp_p
 
     assert found == []
     assert "Nothing in the registry" in registry.found("nonsense", found, where)
+
+
+# --- a registry that is slow and flaky ---------------------------------------
+
+
+def test_one_failure_is_retried_rather_than_reported(monkeypatch, tmp_path):
+    """Measured, not imagined: three consecutive requests to the registry took
+    25s (timeout), 17.5s (answered) and 25s (timeout), from a machine where
+    github.com answered in a tenth of a second. One attempt would report a
+    working registry as down two times in three."""
+    import urllib.error
+
+    tries = []
+
+    class Once:
+        def __init__(self, body):
+            self.body = body
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        def read(self):
+            return json.dumps(self.body).encode()
+
+    def flaky(request, timeout=None):
+        tries.append(timeout)
+        if len(tries) == 1:
+            raise TimeoutError("the read operation timed out")
+        return Once({"servers": [{"server": REMOTE}]})
+
+    monkeypatch.setattr("urllib.request.urlopen", flaky)
+    monkeypatch.setattr(registry.time, "sleep", lambda _: None)
+
+    found, where = search("stripe", home=tmp_path)
+
+    assert len(tries) == 2, "it gave up after one"
+    assert found[0].name == "com.stripe/mcp"
+    assert where == "live"
+
+
+def test_it_gives_up_rather_than_retrying_forever(monkeypatch, tmp_path):
+    tries = []
+
+    def never(request, timeout=None):
+        tries.append(1)
+        raise TimeoutError("timed out")
+
+    monkeypatch.setattr("urllib.request.urlopen", never)
+    monkeypatch.setattr(registry.time, "sleep", lambda _: None)
+
+    with pytest.raises(Offline):
+        search("stripe", home=tmp_path)
+
+    assert len(tries) == registry.TRIES
+
+
+def test_the_timeout_leaves_room_for_a_slow_answer():
+    """17.5s was a real successful response. A limit below that would turn the
+    registry's good days into failures."""
+    assert registry.PATIENCE > 17.5
