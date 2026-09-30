@@ -25,10 +25,9 @@
  * says so instead of pretending to a list.
  */
 
-import { Browse } from "./Browse";
 import { Folders } from "./Folders";
 import { KeyRow } from "./Key";
-import type { Connector, Listed } from "./wire";
+import type { Connector } from "./wire";
 
 interface Props {
   connectors: Connector[];
@@ -39,10 +38,6 @@ interface Props {
   /** Where the API key is kept, and how to replace it. */
   keeps: string;
   onKey: (key: string) => Promise<void>;
-  onBrowse: (query: string) => Promise<{ servers: Listed[]; where: string }>;
-  onAdd: (name: string) => Promise<void>;
-  /** A search to run on mount. Only the design harness uses it today. */
-  start?: string;
   roots: string[];
   pending: number;
   onAddFolders: () => void;
@@ -57,9 +52,6 @@ export function Connections({
   onDisconnect,
   keeps,
   onKey,
-  onBrowse,
-  onAdd,
-  start,
   roots,
   pending,
   onAddFolders,
@@ -93,8 +85,8 @@ export function Connections({
           {connectors.length === 0 && (
             <div className="card empty">
               Nothing to connect yet. Services go in{" "}
-              <code>~/.aven/connectors.toml</code> — a Google account, or any
-              MCP server.
+              <code>~/.aven/connectors.toml</code>; run{" "}
+              <code>aven --connectors &lt;name&gt;</code> to find one.
             </div>
           )}
 
@@ -111,13 +103,6 @@ export function Connections({
               ))}
             </div>
           )}
-
-          <Browse
-            onBrowse={onBrowse}
-            onAdd={onAdd}
-            taken={connectors.map((c) => c.name)}
-            start={start}
-          />
 
           {standing.length > 0 && (
             <div className="card">

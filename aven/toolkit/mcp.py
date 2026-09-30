@@ -71,6 +71,40 @@ from aven.harness.tools import Risk, Tool, ToolResult
 PATIENCE = 60
 START = 90
 
+# Kept out of a server's environment unless its config asks for it by name.
+#
+# A local MCP server runs as you, with your files and your network. aven's
+# approval tray governs what the *model* asks a server to do; it governs
+# nothing about what the server's own process does, which begins the moment it
+# starts. That is worth knowing and mostly cannot be fixed from here.
+#
+# What can be fixed is what is handed over for free. aven puts the API key into
+# its own environment so the SDK can read it, and a child inheriting the whole
+# environment was therefore given a working key by aven itself - to a server
+# that has no use for one. A server that genuinely needs a credential gets it
+# through `[mcp.<name>.env]`, where somebody wrote it down on purpose.
+WITHHELD = (
+    "ANTHROPIC_API_KEY",
+    "ANTHROPIC_AUTH_TOKEN",
+    "OPENAI_API_KEY",
+    "AWS_SECRET_ACCESS_KEY",
+    "AWS_SESSION_TOKEN",
+    "GITHUB_TOKEN",
+    "GH_TOKEN",
+)
+
+
+def _child_environment(asked: dict[str, str]) -> dict[str, str]:
+    """The environment a server is started with.
+
+    Inherited, minus the credentials above, plus whatever its own config names.
+    Anything listed in the config wins: somebody writing `GITHUB_TOKEN` under
+    `[mcp.x.env]` means that server should have it.
+    """
+    passed = {k: v for k, v in os.environ.items() if k not in WITHHELD}
+    passed.update(asked)
+    return passed
+
 # The revision of MCP this speaks. Sent on initialize; a server that cannot do
 # it says so rather than guessing.
 SPEAKS = "2024-11-05"
@@ -254,7 +288,7 @@ class Server(Talks):
                 text=True,
                 bufsize=1,  # line buffered: a whole record or nothing
                 cwd=self.spec.cwd,
-                env={**os.environ, **self.spec.env} if self.spec.env else None,
+                env=_child_environment(self.spec.env),
             )
         except (OSError, ValueError) as problem:
             raise Unreachable(f"could not start {self.spec.name}: {problem}") from problem

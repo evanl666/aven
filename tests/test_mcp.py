@@ -429,3 +429,51 @@ def test_a_merely_similar_name_still_gets_the_prefix():
     server = Server(Spec(name="browser", command="x"))
 
     assert server._named("browserify") == "browser_browserify"
+
+
+# --- what a server is handed ---------------------------------------------
+
+
+def test_a_server_is_not_given_the_api_key(monkeypatch):
+    """aven puts the key in its own environment so the SDK can read it. A child
+    inheriting that environment was therefore handed a working key by aven
+    itself, to a server with no use for one.
+
+    This is the part that can be fixed. What a local server does once it is
+    running cannot be, from here: it is a process with your files and your
+    network, and the approval tray covers what the model asks of it, not what
+    it does by itself."""
+    from aven.toolkit.mcp import _child_environment
+
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-real")
+    monkeypatch.setenv("PATH", "/usr/bin")
+
+    passed = _child_environment({})
+
+    assert "ANTHROPIC_API_KEY" not in passed
+    assert passed["PATH"] == "/usr/bin", "and everything it needs still arrives"
+
+
+def test_a_credential_named_in_the_config_is_given(monkeypatch):
+    """Somebody writing GITHUB_TOKEN under [mcp.x.env] means that server should
+    have it. The rule is about what is handed over for free."""
+    from aven.toolkit.mcp import _child_environment
+
+    monkeypatch.setenv("GITHUB_TOKEN", "from-the-shell")
+
+    passed = _child_environment({"GITHUB_TOKEN": "written-down"})
+
+    assert passed["GITHUB_TOKEN"] == "written-down"
+
+
+def test_other_peoples_keys_are_withheld_too(monkeypatch):
+    """Not only ours. A server started by aven should not inherit the whole
+    drawer because it happened to be opened."""
+    from aven.toolkit.mcp import WITHHELD, _child_environment
+
+    for name in WITHHELD:
+        monkeypatch.setenv(name, "secret")
+
+    passed = _child_environment({})
+
+    assert not any(name in passed for name in WITHHELD)

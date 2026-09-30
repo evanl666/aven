@@ -94,51 +94,6 @@ def build(
     return built, trouble
 
 
-def append(home: Path, listing: Any, called: str = "") -> str:
-    """Write one more `[mcp.*]` table into connectors.toml, and say what it is called.
-
-    Appended as text rather than parsed, edited and re-serialised. A round trip
-    through a TOML writer would come back without the comments, and the comments
-    are half of why this file is one a person can keep - they say what each
-    setting is for and that the risks are theirs to change.
-    """
-    from aven.toolkit.registry import as_toml
-
-    local = (called or listing.suggested).strip()
-    if not local or not all(c.isalnum() or c == "_" for c in local):
-        raise ValueError(f"{local!r} is not usable as a name")
-
-    said, _ = read(home)
-    if local in (said.get("mcp") or {}):
-        raise ValueError(f"there is already a connector called {local!r}")
-
-    path = Path(home) / CONFIG
-    block = as_toml(listing, local)
-    before = path.read_text(encoding="utf-8") if path.exists() else ""
-    if before and not before.endswith("\n"):
-        before += "\n"
-
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        f"{before}\n# {listing.name} - published by {listing.publisher}\n{block}\n",
-        encoding="utf-8",
-    )
-    return local
-
-
-def one_mcp(name: str, settings: dict[str, Any]) -> Connector:
-    """A single connector from one already-parsed `[mcp.<name>]` table.
-
-    Split out so a connector can be added while aven is running, taking the same
-    path as one read at startup. Two ways of building the same thing would drift,
-    and the one that drifted would be the one nobody tested.
-    """
-    made = _mcp({name: settings})
-    if not made or isinstance(made[0][1], str):
-        raise ValueError(made[0][1] if made else f"mcp.{name}: nothing to build")
-    return made[0][1]
-
-
 def _google(said: Any, vault: Vault) -> list[tuple[str, Connector | str]]:
     if not isinstance(said, dict):
         return []

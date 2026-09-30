@@ -25,7 +25,6 @@ import {
   EXPECTS_VERSION,
   type Connector,
   type Entry,
-  type Listed,
   type State,
   type Tray,
   type Usage,
@@ -443,25 +442,6 @@ export default function App() {
     absorb(reply.data as State);
   };
 
-  /**
-   * Search the registry. Not wrapped in `attempt`: this one reports inside the
-   * pane that asked, where the answer belongs, rather than as a line in a
-   * conversation somebody is not looking at.
-   */
-  const onBrowse = async (query: string) => {
-    const reply = await agent.send({ type: "browse", query });
-    return { servers: reply.data.servers as Listed[], where: reply.data.where };
-  };
-
-  const onAdd = async (name: string) => {
-    const reply = await agent.send({ type: "add", name });
-    setConnectors(reply.data.connectors);
-    say({
-      kind: "notice",
-      text: `Added ${reply.data.added}. Connect it when you want its tools in play.`,
-    });
-  };
-
   const onConnect = (name: string) =>
     attempt(async () => {
       const reply = await agent.send({ type: "connect", group: name });
@@ -588,8 +568,6 @@ export default function App() {
             onDisconnect={onDisconnect}
             keeps={keeps}
             onKey={onKey}
-            onBrowse={onBrowse}
-            onAdd={onAdd}
             roots={roots}
             pending={tray.pending.length}
             onAddFolders={onAddFolders}

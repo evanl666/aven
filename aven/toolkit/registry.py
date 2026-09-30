@@ -209,20 +209,6 @@ def _listing(server: dict[str, Any]) -> Listing:
     )
 
 
-def by_name(name: str, *, home: Path) -> Listing | None:
-    """One listing, out of whatever a recent search left in the cache.
-
-    Adding a connector takes a name rather than a command line. The difference
-    matters: a name is looked up in something a person just searched and read,
-    and a command line is whatever the caller says it is. Keeping the executable
-    out of the request is worth the extra lookup.
-    """
-    for held in _cached(home).values():
-        for row in held.get("rows", []):
-            if row.get("name") == name:
-                return _listing(row)
-    return None
-
 
 # --- printing it ------------------------------------------------------------
 

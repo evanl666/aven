@@ -228,8 +228,8 @@ One server is one connector. This is the answer to "connect anything": writing a
 connector by hand costs an OAuth flow and an API wrapper per service, and
 pointing at an MCP server costs four lines.
 
-`aven --connectors <anything>` searches the public MCP registry — some nine
-thousand servers — and prints the config to paste:
+`aven --connectors <anything>` searches the public MCP registry and prints the
+config to paste:
 
 ```
 $ aven --connectors stripe
@@ -246,6 +246,18 @@ url = "https://mcp.stripe.com"
 ownership the registry verified, so `stripe.com` is a fact; whether that is the
 party you meant is yours to judge. A search for `stripe` also returns servers
 published by strangers, and the difference is visible rather than labelled.
+
+**The config is printed rather than written.** Pasting it is a deliberate act,
+and what you paste is what you read — there is no button here that installs
+somebody's server in one click. That matters because of the next paragraph.
+
+**A local server is a program running as you.** The approval tray governs what
+the model asks a server to do. It governs nothing about what the server's own
+process does, which starts the moment it does: your files, your network, before
+any tool is called. aven withholds credentials it holds — the API key it keeps
+for itself is not passed on — but that is the limit of what it can do from
+outside. Prefer a `url =` server where one exists: it runs on somebody else's
+machine and sees only what you send it.
 
 Two ways to reach one:
 

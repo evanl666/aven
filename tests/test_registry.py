@@ -199,7 +199,9 @@ def test_a_cache_that_cannot_be_written_is_only_a_slower_search(answers, tmp_pat
 
 
 def test_the_printed_config_is_toml_aven_can_read_back(answers, tmp_path):
-    """The whole point is pasting it."""
+    """The whole point is that somebody pastes it. A listing that printed
+    something the config reader rejects would be found out one person at a
+    time."""
     import tomllib
 
     from aven.harness.vault import Nowhere

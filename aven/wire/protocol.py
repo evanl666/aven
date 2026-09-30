@@ -220,26 +220,6 @@ def connectors_as_dict(
     return listed
 
 
-def listing_as_dict(listing: Any) -> dict[str, Any]:
-    """One registry result, as a pane that offers to add it draws it.
-
-    `publisher` is the field this exists for. The registry verifies who owns a
-    namespace, so it is a fact rather than an endorsement - and a row that said
-    only "Stripe tools" would hide that the publisher is somebody who is not
-    Stripe.
-    """
-    return {
-        "name": listing.name,
-        "description": listing.description,
-        "publisher": listing.publisher,
-        "suggested": listing.suggested,
-        "remote": listing.remote,
-        # What it would run, so somebody can see it before agreeing to it.
-        "runs": listing.url or " ".join([listing.command, *listing.args]).strip(),
-        "needs": list(listing.needs),
-    }
-
-
 def card_as_dict(card: Card) -> dict[str, Any]:
     return {
         "path": str(card.path),
