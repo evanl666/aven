@@ -126,3 +126,19 @@ def test_read_run_pairs_results_with_the_logs(tmp_path):
     alpha, beta = read_run(run)
     assert alpha.resolved and alpha.requests == 3 and alpha.total_input == 500
     assert not beta.resolved and not beta.measured
+
+
+def test_a_run_still_going_gets_a_sentence_not_a_traceback(tmp_path, capsys):
+    """The commonest way to run this is too early, by accident."""
+    from evals.terminal_bench.score import Unfinished, main
+
+    going = tmp_path / "2026-01-01__00-00-00"
+    going.mkdir()
+
+    with pytest.raises(Unfinished):
+        read_run(going)
+
+    assert main([str(going)]) == 1
+    out, err = capsys.readouterr()
+    assert out == "", "a failure must not print a half table"
+    assert "still going" in err

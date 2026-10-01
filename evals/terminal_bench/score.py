@@ -122,8 +122,22 @@ def usage_in(log: Path) -> tuple[int, int, int, int, int] | None:
     return tuple(int(n) for n in found[-1])  # type: ignore[return-value]
 
 
+class Unfinished(Exception):
+    """There is no results.json, so there is nothing to score yet."""
+
+
 def read_run(where: Path) -> list[Task]:
-    results = json.loads((where / "results.json").read_text(encoding="utf-8"))
+    summary = where / "results.json"
+    if not summary.is_file():
+        # The ordinary case while a run is still going, so it gets a sentence
+        # rather than a traceback. Terminal-Bench writes this file once, at the
+        # end; a run in progress has the directory and not the file.
+        raise Unfinished(
+            f"{where} has no results.json - the run is still going, or it died "
+            "before writing one"
+        )
+
+    results = json.loads(summary.read_text(encoding="utf-8"))
 
     tasks: list[Task] = []
     for row in results.get("results", []):
@@ -221,8 +235,14 @@ def main(argv: list[str] | None = None) -> int:
             return 1
         where = runs[-1]
 
+    try:
+        tasks = read_run(where)
+    except Unfinished as why:
+        print(why, file=sys.stderr)
+        return 1
+
     print(f"{where}\n")
-    print(report(read_run(where)))
+    print(report(tasks))
     return 0
 
 
