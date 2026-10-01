@@ -44,3 +44,30 @@ disadvantage on this benchmark and the right behaviour everywhere else.
 So: useful as a check that the basics hold up, misleading as evidence that the
 design works. The claims this project actually makes need their own
 adversarial evals, which do not exist yet.
+
+## Cost, which is the number that measures the harness
+
+```bash
+python evals/terminal_bench/score.py          # the newest run
+python evals/terminal_bench/score.py runs/2026-09-30__22-59-56
+```
+
+Accuracy is mostly a statement about the model: given a working shell, it
+either knows how to fix the pipeline or it does not. Cost is mostly a statement
+about the harness, because the harness is what decides how many tokens it takes
+to get there — how long the tool descriptions are, whether the prefix stays
+byte-identical so it can be read from cache at a tenth of the price, whether a
+40,000-character page sits in the conversation ten turns after anybody needed
+it. Every economy aven claims shows up here and nowhere else.
+
+Three numbers to read:
+
+- **cost per solved task**, not per task. An agent that gives up cheaply has an
+  excellent cost per task.
+- **cache hit rate**. On a multi-turn task nearly all input should be a cache
+  read. A low rate means something upstream is changing bytes between turns,
+  and it is a 10x price difference on the largest number in the run.
+- **output tokens**, the one thing that can be neither cached nor offloaded.
+
+The prices are a table in the script, not something the run records, so they
+are printed with the results and can be checked against the invoice.
