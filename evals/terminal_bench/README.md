@@ -71,3 +71,26 @@ Three numbers to read:
 
 The prices are a table in the script, not something the run records, so they
 are printed with the results and can be checked against the invoice.
+
+## Running a slice, defensibly
+
+```bash
+python evals/terminal_bench/sample.py 30            # which tasks, and why
+FLAGS=$(python evals/terminal_bench/sample.py 30 --args)
+sh -c "tb run -d terminal-bench-core==0.1.1 \
+  --agent-import-path evals.terminal_bench.aven_agent:AvenAgent \
+  --model anthropic/claude-haiku-4-5-20251001 $FLAGS --n-concurrent 3"
+```
+
+(`sh -c` because zsh does not word-split an unquoted `$FLAGS`, so the thirty
+`-t` flags arrive as one pattern and `tb` matches no tasks at all.)
+
+A sampled score is worth nothing if the sample could have been chosen after
+seeing the results. `sample.py` is what makes that checkable: the mix of
+difficulties matches the whole set, the tasks within a difficulty are taken at
+even spacing through the sorted names, and there is no seed — a seed is one
+more thing somebody can try several of. The same `n` always gives the same
+tasks.
+
+A sampled score estimates what the full set would say, with the error of thirty
+draws rather than eighty. It is not comparable to a published 80-task number.
