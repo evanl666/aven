@@ -46,17 +46,44 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-# Per million tokens, in dollars. An assumption, not a measurement - the run
-# does not record what it was charged, so this table is the one thing here that
-# can be out of date without anything failing. Printed with the results for
-# that reason, and overridable, so a number from this script can always be
-# checked against what the invoice actually said.
-PRICES = {
-    "input": 3.00,
-    "output": 15.00,
-    "cache_write": 3.75,  # 1.25x input
-    "cache_read": 0.30,  # 0.1x input
+# Per million tokens, in dollars, by model. An assumption, not a measurement -
+# the run records how many tokens it used and never what it was charged, so
+# this table is the one thing here that can be out of date without anything
+# failing. Printed with the results for that reason, so a number from this
+# script can always be checked against what the invoice actually said.
+#
+# Keyed by a fragment of the model name, matched longest-first, because the
+# name in run_metadata.json carries a provider prefix and sometimes a date
+# suffix: "anthropic/claude-haiku-4-5-20251001".
+#
+# cache_write is 1.25x input and cache_read is 0.1x, which is why a run with a
+# low hit rate costs so much more than the same run with a high one.
+BY_MODEL = {
+    "haiku-4-5": {"input": 1.00, "output": 5.00, "cache_write": 1.25, "cache_read": 0.10},
+    "sonnet-5": {"input": 3.00, "output": 15.00, "cache_write": 3.75, "cache_read": 0.30},
+    "opus-5": {"input": 15.00, "output": 75.00, "cache_write": 18.75, "cache_read": 1.50},
 }
+
+# What a Task costs with. Module-level because Task.cost is a property and the
+# alternative is threading a price table through every row; set once, from the
+# run's own metadata, before anything is priced.
+#
+# Defaults to the most expensive table in the book. A missing price has to
+# overstate the bill, never understate it: a number that is too low is one
+# somebody acts on.
+PRICES = dict(BY_MODEL["opus-5"])
+
+
+def prices_for(model: str) -> tuple[dict[str, float], str]:
+    """The price table for a model name, and what to say about the choice."""
+    for fragment in sorted(BY_MODEL, key=len, reverse=True):
+        if fragment in model:
+            return dict(BY_MODEL[fragment]), f"prices for {fragment}"
+    return (
+        dict(BY_MODEL["opus-5"]),
+        f"NO PRICES FOR {model!r} - billed here at the most expensive table in "
+        "the book, so every cost below is an upper bound, not the bill",
+    )
 
 # The line Usage.__str__ produces, as it reaches the log. Written against the
 # English catalogue: an eval run is machine-to-machine and sets no --lang.
@@ -126,6 +153,19 @@ class Unfinished(Exception):
     """There is no results.json, so there is nothing to score yet."""
 
 
+# What the chosen price table is, for printing. Set by read_run.
+PRICED = "prices not chosen yet"
+
+
+def model_of(where: Path) -> str:
+    """Which model the run used, as the run itself recorded it."""
+    try:
+        meta = json.loads((where / "run_metadata.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return ""
+    return str(meta.get("model_name") or "")
+
+
 def read_run(where: Path) -> list[Task]:
     summary = where / "results.json"
     if not summary.is_file():
@@ -138,6 +178,12 @@ def read_run(where: Path) -> list[Task]:
         )
 
     results = json.loads(summary.read_text(encoding="utf-8"))
+
+    # The prices come from the run, not from whoever is reading it. A Haiku run
+    # scored with Sonnet's table reports a bill three times the real one, and
+    # nothing about the output would look wrong.
+    global PRICES, PRICED
+    PRICES, PRICED = prices_for(model_of(where))
 
     tasks: list[Task] = []
     for row in results.get("results", []):
@@ -203,7 +249,7 @@ def report(tasks: list[Task]) -> str:
         f"  cache hit rate      {(read / went_in if went_in else 0):.0%}"
         "   (input served at a tenth of the price)",
         "",
-        "  prices assumed, per million tokens: "
+        f"  {PRICED}, per million tokens: "
         + ", ".join(f"{k} ${v}" for k, v in PRICES.items()),
     ]
     if len(measured) < len(tasks):

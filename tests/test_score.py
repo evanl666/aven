@@ -142,3 +142,77 @@ def test_a_run_still_going_gets_a_sentence_not_a_traceback(tmp_path, capsys):
     out, err = capsys.readouterr()
     assert out == "", "a failure must not print a half table"
     assert "still going" in err
+
+
+# --- prices ------------------------------------------------------------------
+#
+# The cost column is only as good as the table behind it, and a wrong table is
+# invisible: every number still looks like money.
+
+
+def test_the_table_comes_from_the_model_the_run_used():
+    from evals.terminal_bench.score import prices_for
+
+    haiku, said = prices_for("anthropic/claude-haiku-4-5-20251001")
+    assert haiku["input"] == 1.00 and "haiku" in said
+
+    sonnet, said = prices_for("anthropic/claude-sonnet-5")
+    assert sonnet["input"] == 3.00 and "sonnet" in said
+
+    assert haiku["input"] < sonnet["input"], "pricing a Haiku run as Sonnet triples the bill"
+
+
+def test_an_unknown_model_overstates_rather_than_understates():
+    """A bill that is too low is the one somebody acts on."""
+    from evals.terminal_bench.score import BY_MODEL, prices_for
+
+    unknown, said = prices_for("some-model-released-after-this-was-written")
+    assert "NO PRICES" in said
+    assert unknown["input"] == max(p["input"] for p in BY_MODEL.values())
+
+
+def test_cache_read_is_a_tenth_and_cache_write_is_a_quarter_more():
+    """The whole reason the hit rate is worth printing."""
+    from evals.terminal_bench.score import BY_MODEL
+
+    for name, price in BY_MODEL.items():
+        assert price["cache_read"] == pytest.approx(price["input"] * 0.1), name
+        assert price["cache_write"] == pytest.approx(price["input"] * 1.25), name
+
+
+def test_scoring_a_run_prices_it_with_that_runs_model(tmp_path):
+    from evals.terminal_bench.score import report
+
+    run = tmp_path / "2026-01-01__00-00-00"
+    (run / "alpha" / "t" / "sessions").mkdir(parents=True)
+    (run / "alpha" / "t" / "sessions" / "agent.log").write_text(
+        "  3 requests · in 1000000 (cache read 0 · wrote 0) · out 0\n", encoding="utf-8"
+    )
+    (run / "results.json").write_text(
+        '{"results": [{"task_id": "alpha", "is_resolved": true}]}', encoding="utf-8"
+    )
+    (run / "run_metadata.json").write_text(
+        '{"model_name": "anthropic/claude-haiku-4-5-20251001"}', encoding="utf-8"
+    )
+
+    (alpha,) = read_run(run)
+    assert alpha.cost == pytest.approx(1.00), "a million fresh input tokens of Haiku"
+    assert "haiku" in report([alpha])
+
+
+def test_a_more_specific_model_name_wins_over_one_it_contains(monkeypatch):
+    """Why the fragments are matched longest-first.
+
+    Nothing in today's table overlaps, so this ordering is insurance against
+    the next name rather than something the current names need. Tested anyway:
+    insurance nobody checks is the kind that is quietly removed.
+    """
+    import evals.terminal_bench.score as score
+
+    monkeypatch.setattr(score, "BY_MODEL", {
+        "sonnet-5": {"input": 3.0, "output": 15.0, "cache_write": 3.75, "cache_read": 0.3},
+        "sonnet-5-mini": {"input": 0.5, "output": 2.5, "cache_write": 0.625, "cache_read": 0.05},
+    })
+
+    mini, said = score.prices_for("anthropic/claude-sonnet-5-mini")
+    assert mini["input"] == 0.5, f"matched the shorter fragment: {said}"
