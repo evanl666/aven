@@ -324,3 +324,205 @@ async def test_a_replaced_key_is_used_without_restarting():
 
     assert model.client is not before
     assert model.client.api_key == "sk-ant-the-new-one"
+
+
+# --- a model that will not take a parameter we send ---------------------------
+#
+# Found by pointing a benchmark sweep at Haiku 4.5: aven sends
+# {"thinking": {"type": "adaptive"}} unconditionally, Haiku refuses it, and
+# every single request came back 400 before any work happened. aven could not
+# talk to that model at all, and what reached the screen was an SDK traceback.
+
+
+def bad_request(message, status=400):
+    """A BadRequestError shaped the way the SDK builds one.
+
+    Named apart from the `refusal` above it: that one builds an SDK error from
+    a class, this one from a message, and the first draft of this file had the
+    second shadowing the first - which broke two tests written months earlier.
+    """
+    import anthropic
+    import httpx
+
+    # The envelope matters. The SDK does not stringify as the provider's
+    # sentence - it stringifies as a status code and the whole JSON body:
+    #
+    #   Error code: 400 - {'type': 'error', 'error': {'type':
+    #   'invalid_request_error', 'message': 'adaptive thinking is not
+    #   supported on this model'}, 'request_id': 'req_011Cfb4o...'}
+    #
+    # A fake that carries only the sentence makes `str(exc)` look clean and
+    # lets a test pass that would fail against the real thing.
+    body = {
+        "type": "error",
+        "error": {"type": "invalid_request_error", "message": message},
+        "request_id": "req_0123456789",
+    }
+    return anthropic.BadRequestError(
+        f"Error code: {status} - {body}",
+        response=httpx.Response(
+            status_code=status, request=httpx.Request("POST", "https://api.anthropic.com/v1/messages")
+        ),
+        body=body,
+    )
+
+
+class RefusingOnce:
+    """Refuses the first request, then behaves - like the real thing does."""
+
+    def __init__(self, why, reply):
+        self.why = why
+        self.reply = reply
+        self.requests = []
+        self.refused = False
+        self.messages = SimpleNamespace(stream=self._stream)
+
+    def _stream(self, **request):
+        self.requests.append(request)
+        # Counted separately from `requests`, which a test clears to look at
+        # the second call on its own.
+        if not self.refused:
+            self.refused = True
+            raise bad_request(self.why)
+        return FakeStream(self.reply, [])
+
+
+async def test_a_model_that_refuses_thinking_is_asked_again_without_it():
+    client = RefusingOnce(
+        "adaptive thinking is not supported on this model",
+        response(block(type="text", text="done")),
+    )
+    model = Claude(client=client)
+
+    _, message = await drain(model([{"role": "user", "content": []}]))
+
+    assert message.text == "done", "the refusal was fatal"
+    assert len(client.requests) == 2
+    assert "thinking" in client.requests[0]
+    assert "thinking" not in client.requests[1]
+
+
+async def test_the_second_request_is_otherwise_identical():
+    """Only the one parameter is dropped. Anything else would be a new request."""
+    client = RefusingOnce(
+        "adaptive thinking is not supported on this model",
+        response(block(type="text", text="done")),
+    )
+    await drain(Claude(system="You are aven.", client=client)([{"role": "user", "content": []}]))
+
+    first, second = client.requests
+    assert {k: v for k, v in first.items() if k != "thinking"} == second
+
+
+async def test_it_is_remembered_so_only_one_request_is_wasted():
+    client = RefusingOnce(
+        "adaptive thinking is not supported on this model",
+        response(block(type="text", text="done")),
+    )
+    model = Claude(client=client)
+    await drain(model([{"role": "user", "content": []}]))
+
+    client.reply = response(block(type="text", text="again"))
+    client.requests.clear()
+    await drain(model([{"role": "user", "content": []}]))
+
+    assert len(client.requests) == 1, "it asked with thinking a second time"
+    assert "thinking" not in client.requests[0]
+
+
+async def test_any_other_bad_request_becomes_a_readable_failure():
+    """Not an SDK traceback. The person reading it cannot act on one."""
+    from aven.harness.calling import Unreachable
+
+    class Refusing:
+        def __init__(self):
+            self.messages = SimpleNamespace(stream=self._stream)
+
+        def _stream(self, **_):
+            raise bad_request("messages.0.content: expected at least one block")
+
+    with pytest.raises(Unreachable) as caught:
+        await drain(Claude(model="claude-sonnet-5", client=Refusing())([]))
+
+    said = str(caught.value)
+    assert "claude-sonnet-5" in said
+    assert "expected at least one block" in said
+    assert "Traceback" not in said and "BadRequestError" not in said
+
+
+async def test_a_length_refusal_is_still_an_overflow_not_a_bad_request():
+    """The existing behaviour, which the new handler must not swallow."""
+    from aven.harness.calling import ContextOverflow
+
+    class TooLong:
+        def __init__(self):
+            self.messages = SimpleNamespace(stream=self._stream)
+
+        def _stream(self, **_):
+            raise bad_request("prompt is too long: 300000 tokens > 200000 maximum")
+
+    with pytest.raises(ContextOverflow):
+        await drain(Claude(client=TooLong())([]))
+
+
+async def test_no_retry_once_text_has_already_been_handed_over():
+    """A refusal mid-stream must not be retried, or the caller sees it twice.
+
+    A parameter refusal always arrives before any content, so in practice this
+    never happens. It is guarded anyway: if it ever does, the failure mode is
+    duplicated output in somebody's transcript, which is the kind of thing that
+    gets diagnosed as the model repeating itself.
+    """
+    class RefusingLate:
+        def __init__(self):
+            self.requests = []
+            self.messages = SimpleNamespace(stream=self._stream)
+
+        def _stream(self, **request):
+            self.requests.append(request)
+            return LateFailure()
+
+    class LateFailure(FakeStream):
+        def __init__(self):
+            super().__init__(None, [])
+
+        @property
+        def text_stream(self):
+            async def chunks():
+                yield "half an answer"
+                raise bad_request("adaptive thinking is not supported on this model")
+
+            return chunks()
+
+    from aven.harness.calling import Unreachable
+
+    client = RefusingLate()
+    chunks = []
+    # Unreachable rather than the SDK error: a late refusal is still a refusal,
+    # and it is read by the same person as every other one.
+    with pytest.raises(Unreachable):
+        async for item in Claude(client=client)([]):
+            chunks.append(item)
+
+    assert chunks == ["half an answer"]
+    assert len(client.requests) == 1, "asked again after the caller already had text"
+
+
+async def test_the_message_is_the_providers_sentence_and_not_its_envelope():
+    """str() on an SDK error is a status code and a dict. Neither helps."""
+    from aven.harness.calling import Unreachable
+
+    class Refusing:
+        def __init__(self):
+            self.messages = SimpleNamespace(stream=self._stream)
+
+        def _stream(self, **_):
+            raise bad_request("messages.0.content: expected at least one block")
+
+    with pytest.raises(Unreachable) as caught:
+        await drain(Claude(client=Refusing())([]))
+
+    said = str(caught.value)
+    assert said.endswith("messages.0.content: expected at least one block")
+    for noise in ("Error code", "400", "{", "'type'", "invalid_request_error"):
+        assert noise not in said, f"{noise!r} leaked into {said!r}"

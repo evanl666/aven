@@ -46,6 +46,7 @@ TEXT: dict[str, str] = {
     "usage.cache": "缓存读 {read} · 写 {written}",
     "usage.line": "{requests} 次请求 · 输入 {input}({cache}) · 输出 {output}",
 
+    "model.refused": "{model} 拒绝了这个请求:{why}",
     "model.bad_key": "Anthropic 拒绝了这个 API key。已经轮换或吊销的 key 就是"
                      "这个表现 —— 去 Connections 里换一个,或者 export 一个新的 "
                      "ANTHROPIC_API_KEY。",

@@ -35,6 +35,28 @@ ASSUMED_WINDOW = 200_000
 # genuine bad request must not be mistaken for something compaction can fix.
 _TOO_LONG = ("prompt is too long", "too many tokens", "context window", "maximum context")
 
+# A 400 that means "this model does not do that", rather than "your request is
+# wrong". Matched on the message because the provider does not give these their
+# own error class, and asked of the provider rather than kept in a table of
+# which models can think: a capability table is a thing that goes stale
+# silently, and the provider is the authority on its own models. One wasted
+# request per process, then remembered.
+_NO_THINKING = ("thinking is not supported", "thinking.type")
+
+
+def _said_by(refusal: Exception) -> str:
+    """The provider's own sentence, without the SDK wrapper around it.
+
+    A BadRequestError stringifies as the whole JSON envelope plus a status
+    code. The part worth showing somebody is the message inside it.
+    """
+    body = getattr(refusal, "body", None)
+    if isinstance(body, dict):
+        inner = body.get("error")
+        if isinstance(inner, dict) and inner.get("message"):
+            return str(inner["message"])
+    return str(refusal)
+
 # Anthropic's stop reasons mapped onto ours. Anything unrecognised becomes
 # "error" rather than being quietly treated as a normal finish.
 _STOP_REASONS = {
@@ -144,6 +166,13 @@ class Claude:
         self.usage = Usage()
         self._window: int | None = None
 
+        # Whether this model will take a thinking parameter. Assumed yes and
+        # corrected by the provider on the first refusal, because the only
+        # alternative is a list of model names kept up to date by hand - and
+        # the cost of that list being wrong is that aven cannot talk to the
+        # model at all. Found on Haiku 4.5: every request 400'd.
+        self._thinking = True
+
     async def __call__(
         self, messages: list[LlmMessage]
     ) -> AsyncIterator[str | AssistantMessage]:
@@ -159,10 +188,12 @@ class Claude:
             "model": self.model,
             "max_tokens": self.max_tokens,
             "messages": messages,
-            # Adaptive is the default on Opus 5 anyway; saying it out loud keeps
-            # this file readable when the default changes.
-            "thinking": {"type": "adaptive"},
         }
+        if self._thinking:
+            # Adaptive is the default on Opus 5 anyway; saying it out loud keeps
+            # this file readable when the default changes. Dropped for good on
+            # a model that refuses it - see _NO_THINKING.
+            request["thinking"] = {"type": "adaptive"}
         if self.system:
             request["system"] = self.system
         schemas = [t.for_model() for t in resolve(self._tools)]
@@ -178,25 +209,51 @@ class Claude:
 
         # Streaming is also what keeps a long reply from hitting the SDK's
         # request timeout, so this is not only a matter of how it looks.
-        try:
-            async with self.client.messages.stream(**request) as stream:
-                async for chunk in stream.text_stream:
-                    yield chunk
-                complete = await stream.get_final_message()
-        except anthropic.BadRequestError as refusal:
-            if any(hint in str(refusal).lower() for hint in _TOO_LONG):
-                raise ContextOverflow(str(refusal)) from refusal
-            raise
-        # Translated, because these are read by a person rather than by the
-        # loop. The loop only needs to know that asking again will not help.
-        except anthropic.AuthenticationError as refused:
-            raise Unreachable(t("model.bad_key")) from refused
-        except anthropic.PermissionDeniedError as refused:
-            raise Unreachable(t("model.no_access", model=self.model)) from refused
-        except anthropic.RateLimitError as refused:
-            raise Unreachable(t("model.rate_limited")) from refused
-        except anthropic.APIConnectionError as unreachable:
-            raise Unreachable(t("model.unreachable", why=unreachable)) from unreachable
+        #
+        # `said` guards the one retry below. A parameter the model does not
+        # support is refused before any content arrives, so retrying is safe -
+        # but only while that is still true. Once a chunk has been handed to
+        # the caller, asking again would repeat it.
+        said = False
+        for attempt in (1, 2):
+            try:
+                async with self.client.messages.stream(**request) as stream:
+                    async for chunk in stream.text_stream:
+                        said = True
+                        yield chunk
+                    complete = await stream.get_final_message()
+                break
+            except anthropic.BadRequestError as refusal:
+                if any(hint in str(refusal).lower() for hint in _TOO_LONG):
+                    raise ContextOverflow(str(refusal)) from refusal
+
+                # "This model does not think." Drop it and ask once more, for
+                # this request and every one after it.
+                thinks = any(
+                    hint in str(refusal).lower() for hint in _NO_THINKING
+                )
+                if thinks and attempt == 1 and not said and "thinking" in request:
+                    self._thinking = False
+                    request.pop("thinking")
+                    continue
+
+                # Anything else is our request being wrong, and the person
+                # reading it cannot do anything with an SDK traceback.
+                raise Unreachable(
+                    t("model.refused", model=self.model, why=_said_by(refusal))
+                ) from refusal
+            # Translated, because these are read by a person rather than by the
+            # loop. The loop only needs to know that asking again will not help.
+            except anthropic.AuthenticationError as refused:
+                raise Unreachable(t("model.bad_key")) from refused
+            except anthropic.PermissionDeniedError as refused:
+                raise Unreachable(t("model.no_access", model=self.model)) from refused
+            except anthropic.RateLimitError as refused:
+                raise Unreachable(t("model.rate_limited")) from refused
+            except anthropic.APIConnectionError as unreachable:
+                raise Unreachable(
+                    t("model.unreachable", why=unreachable)
+                ) from unreachable
 
         self.usage.add(complete.usage)
         yield to_assistant(complete)
