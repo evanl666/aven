@@ -25,7 +25,7 @@ import json
 import sys
 from typing import Any
 
-from aven.harness.events import Event, MessageEnd
+from aven.harness.events import AgentEnd, Event, MessageEnd, TurnEnd
 from aven.harness.messages import AssistantMessage
 from aven.wire.protocol import detail_as_dict, entry_as_dict
 from aven.wire.protocol import event_as_dict as as_json
@@ -59,10 +59,23 @@ class Jsonl:
 
 
 class Final:
-    """Nothing on stdout until the end, then the answer and only the answer."""
+    """Nothing on stdout until the end, then the answer and only the answer.
+
+    Plus, on stderr, why the run ended if it did not end because the work was
+    finished. Without that a caller cannot tell a finished job from one that
+    gave up at a limit: both arrive as a confident paragraph on stdout, and the
+    one that gave up stops mid-sentence about what it was going to do next.
+
+    Found by running Terminal-Bench. Three hard tasks each ended at exactly
+    twelve requests - the default turn limit - having said "Found it, let me
+    add the printk" and then nothing. The limit was doing its job. Not saying
+    so was the bug.
+    """
 
     def __init__(self) -> None:
         self.text = ""
+        self.turns = 0
+        self.ended: str | None = None
 
     def handle(self, event: Event) -> None:
         if isinstance(event, MessageEnd) and isinstance(event.message, AssistantMessage):
@@ -71,10 +84,18 @@ class Final:
             # printing the sentence before it.
             if event.message.text:
                 self.text = event.message.text
+        elif isinstance(event, TurnEnd):
+            self.turns = event.index + 1
+        elif isinstance(event, AgentEnd):
+            self.ended = event.reason
 
     def close(self, tray: Tray, *, committed: int = 0) -> None:
         if self.text:
             print(self.text)
+        if self.ended == "max_turns":
+            print(t("stream.max_turns", turns=self.turns), file=sys.stderr)
+        elif self.ended == "truncated":
+            print(t("stream.truncated"), file=sys.stderr)
         for entry in tray.pending():
             print(t("stream.staged", preview=entry.preview), file=sys.stderr)
 

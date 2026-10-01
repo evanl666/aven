@@ -95,6 +95,12 @@ TEXT: dict[str, str] = {
     "review.rewound": "  the conversation went back to before the change too",
     # --- the print and json sinks ------------------------------------------
     "stream.staged": "not run (waiting for approval): {preview}",
+    # Why the run ended, when it did not end because the work was done.
+    # On stderr, like every other piece of commentary: a caller reading
+    # stdout wants the answer, and a caller that cares whether the answer
+    # is complete has to be able to find out without parsing it.
+    "stream.max_turns": "stopped at the turn limit ({turns}) with work still in progress; the answer above is incomplete. Raise --max-turns.",
+    "stream.truncated": "the last reply hit the output length limit and was cut off; the answer above is incomplete.",
     # --- the full-screen shell ---------------------------------------------
     "shell.help": """\
 /session   what this session is

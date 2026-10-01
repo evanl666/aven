@@ -170,3 +170,52 @@ def test_print_mode_flushes_so_a_long_running_caller_sees_each_answer(monkeypatc
     sink.close(Tray())
 
     assert flushes, "the answer has to leave the buffer when it is written"
+
+
+# --- why the run ended --------------------------------------------------------
+#
+# A caller that reads stdout gets a confident paragraph either way. The run that
+# gave up at a limit has to say so somewhere, or "finished" and "ran out of
+# turns mid-sentence" are indistinguishable to everything downstream.
+
+
+def test_print_mode_says_when_it_stopped_at_the_turn_limit(capsys):
+    sink = Final()
+    for index in range(3):
+        reply = AssistantMessage(text=f"working, step {index}", stop_reason="tool_use")
+        sink.handle(MessageEnd(message=reply))
+        sink.handle(TurnEnd(index=index, message=reply))
+    sink.handle(AgentEnd(reason="max_turns"))
+    sink.close(Tray())
+
+    out, err = capsys.readouterr()
+    assert out.strip() == "working, step 2", "stdout still carries only the answer"
+    assert "limit" in err and "3" in err, err
+    assert "incomplete" in err
+
+
+def test_print_mode_says_when_the_reply_was_cut_off(capsys):
+    sink = Final()
+    reply = AssistantMessage(text="half a sent", stop_reason="max_tokens")
+    sink.handle(MessageEnd(message=reply))
+    sink.handle(TurnEnd(index=0, message=reply))
+    sink.handle(AgentEnd(reason="truncated"))
+    sink.close(Tray())
+
+    out, err = capsys.readouterr()
+    assert out.strip() == "half a sent"
+    assert "cut off" in err
+
+
+def test_print_mode_stays_quiet_when_the_work_was_simply_done(capsys):
+    """The usual case must not grow a warning nobody needs."""
+    sink = Final()
+    reply = AssistantMessage(text="done", stop_reason="end_turn")
+    sink.handle(MessageEnd(message=reply))
+    sink.handle(TurnEnd(index=0, message=reply))
+    sink.handle(AgentEnd(reason="end_turn"))
+    sink.close(Tray())
+
+    out, err = capsys.readouterr()
+    assert out.strip() == "done"
+    assert err == "", f"unasked-for commentary: {err!r}"

@@ -35,6 +35,16 @@ from terminal_bench.agents.installed_agents.abstract_installed_agent import (
 from terminal_bench.terminal.models import TerminalCommand
 
 
+# aven defaults to 12 turns, which is right for an errand and nowhere near a
+# benchmark task. Three of the hard ones each ended at exactly twelve requests
+# mid-sentence - "Found it, let me add the printk" and then nothing.
+#
+# Not unlimited: Terminal-Bench bounds each task by wall clock, so a runaway
+# loop ends in a timeout rather than an invoice, but a number here is still
+# what stops one task from spending the whole run's budget.
+TURNS = 80
+
+
 class AvenAgent(AbstractInstalledAgent):
     @staticmethod
     def name() -> str:
@@ -67,7 +77,8 @@ class AvenAgent(AbstractInstalledAgent):
                 # than opening the full-screen app in a terminal nobody is at.
                 command=(
                     "aven-code -p "
-                    f"{shlex.quote(instruction)} --root . --yes"
+                    f"{shlex.quote(instruction)} --root . --yes "
+                    f"--max-turns {TURNS}"
                 ),
                 min_timeout_sec=0.0,
                 max_timeout_sec=float("inf"),
