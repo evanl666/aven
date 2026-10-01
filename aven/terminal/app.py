@@ -245,7 +245,7 @@ def choose(cards: list[Card], sessions: Path) -> Path | None:
 async def turn(*, session, prompt, model, tools, compactor, policy, standing,
                args, offload=None) -> None:
     """One prompt: run it, then decide what takes effect."""
-    tray = Tray(policy=policy, standing=standing)
+    tray = Tray(policy=policy, standing=standing, unattended=args.yes)
     screen = Renderer(verbose=args.verbose)
     screen.waiting(t("render.waiting"))
 
@@ -269,11 +269,17 @@ async def oneshot(*, session, prompt, model, tools, compactor, policy, standing,
     """One prompt for a caller that is not watching the screen.
 
     No review step: review asks a person a question, and there is no person
-    here. Staged work therefore stays staged unless --yes was passed, and the
-    sink reports it either way - silently discarding an unsent email because
-    nobody was around to confirm it would be the worse failure.
+    here. Staged work therefore stays staged, and the sink reports it rather
+    than dropping it - silently discarding an unsent email because nobody was
+    around to confirm it would be the worse failure.
+
+    --yes says there is nobody to ask and the caller accepts that, so the tray
+    is built unattended and irreversible calls run as they are made. The commit
+    below then has nothing left to do; it stays because "fire whatever is still
+    pending" is the correct ending for this function whether or not the tray
+    left anything pending.
     """
-    tray = Tray(policy=policy, standing=standing)
+    tray = Tray(policy=policy, standing=standing, unattended=args.yes)
     sink = Jsonl() if args.mode == "json" else Final()
 
     async for event in run(
@@ -298,7 +304,8 @@ async def watch(*, session, model, tools, compactor, policy, standing, args,
     Reversible work happens, and is undoable in the session as always. Anything
     irreversible is staged - and then the run ends with it still staged, because
     a staged call's `apply` is a closure over live objects and cannot outlive the
-    process. So it is reported and dropped, not silently committed.
+    process. So it is reported and dropped, not silently committed. With --yes
+    there is nothing to drop, because nothing was staged in the first place.
 
     That limitation is the honest one to state rather than work around: a queue
     of purchases waiting on a person, persisted by serialising closures, is a
@@ -322,7 +329,7 @@ async def watch(*, session, model, tools, compactor, policy, standing, args,
         while True:
             for trigger in due(triggers, memory):
                 note(DIM(t("cli.firing", name=trigger.name)))
-                tray = Tray(policy=policy, standing=standing)
+                tray = Tray(policy=policy, standing=standing, unattended=args.yes)
                 sink = Final()
                 async for event in run(
                     session=session, prompt=trigger.prompt, model=model, tools=tools,

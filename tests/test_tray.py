@@ -230,3 +230,66 @@ async def test_rewind_point_names_the_message_the_changes_came_from(tmp_path):
 
     assistant_ids = [m.id for m in s.history() if m.kind == "assistant"]
     assert tray.rewind_point() == assistant_ids[0]
+
+
+# --- unattended ---------------------------------------------------------------
+#
+# The flag that says nobody is here. What it must change is the TIMING: the
+# call happens while the model can still read the result of it. What it must
+# not change is the RECORD: an irreversible call that nobody approved has to
+# say so on the entry.
+
+
+def test_unattended_runs_irreversible_calls_at_once():
+    log, _, _, send = recorder()
+    tray = Tray(unattended=True)
+    output, staged = tray.execute(send, {"item": "a"})
+
+    assert staged is False, "staged work in a run with nobody to unstage it"
+    assert output == "sent a", "the model must see what the call returned"
+    assert log == ["sent:a"]
+    assert tray.pending() == []
+
+
+def test_unattended_still_records_that_nobody_approved_it():
+    _, _, _, send = recorder()
+    tray = Tray(unattended=True)
+    tray.execute(send, {"item": "a"})
+
+    entry = tray.entries[-1]
+    assert entry.state == "committed"
+    assert entry.approved_by, "an unaudited irreversible call"
+    assert "unattended" in entry.approved_by
+
+
+def test_unattended_is_off_by_default():
+    """Omission is the safe direction, and the default is omission."""
+    log, _, _, send = recorder()
+    tray = Tray()
+    _, staged = tray.execute(send, {"item": "a"})
+
+    assert staged is True
+    assert log == []
+
+
+def test_unattended_fires_the_same_calls_committing_later_would_have():
+    """The claim the change rests on: same set, different moment.
+
+    If these two ever diverge, --yes means something other than what its help
+    text says, and the divergence is the part nobody would notice.
+    """
+    one, _, _, send_one = recorder()
+    staged_then_committed = Tray()
+    staged_then_committed.execute(send_one, {"item": "a"})
+    staged_then_committed.execute(send_one, {"item": "b"})
+    staged_then_committed.commit()
+
+    two, _, _, send_two = recorder()
+    straight_through = Tray(unattended=True)
+    straight_through.execute(send_two, {"item": "a"})
+    straight_through.execute(send_two, {"item": "b"})
+
+    assert one == two == ["sent:a", "sent:b"]
+    assert [e.state for e in staged_then_committed.entries] == [
+        e.state for e in straight_through.entries
+    ]

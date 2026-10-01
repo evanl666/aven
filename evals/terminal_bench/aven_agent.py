@@ -16,6 +16,13 @@ reading of any score from this run is: *this measures whether the harness gets
 in the way, not whether its safety model is any good.* Nothing here exercises
 staging, approval, the sandbox or undo, and a benchmark that rewards an agent
 for `rm -rf` and a confident summary would score that agent well.
+
+The first run of this adapter is what found the bug in that flag. `--yes` used
+to commit the tray *after* the loop finished, so during the run every shell
+command still came back "staged, waiting for the user to approve" - and the
+model, correctly, stopped and explained that it could not see any output. It
+spent nine requests writing a plan. The flag now builds the tray unattended,
+so the calls happen while their results can still be read.
 """
 
 import os

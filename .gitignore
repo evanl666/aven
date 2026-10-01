@@ -14,3 +14,8 @@ gui/src-tauri/target/
 gui/src-tauri/gen/
 # the dev sidecar is a machine-specific wrapper, not source
 gui/src-tauri/binaries/
+
+# Terminal-Bench writes a run here: transcripts, recordings, the task's own
+# files. Machine output, not source - and it carries the benchmark's task text
+# and oracle transcripts, which do not belong in a public repository.
+runs/

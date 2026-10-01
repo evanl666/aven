@@ -29,6 +29,11 @@ from aven.text import t
 
 State = Literal["applied", "pending", "committed", "undone", "discarded", "failed"]
 
+# What `approved_by` says when nothing approved it and nobody could have. Not
+# the name of whatever flag the caller used: the harness does not know what the
+# apps above it call their flags.
+UNATTENDED = "an unattended run; nobody was asked"
+
 _MARKS: dict[State, str] = {
     "applied": "✓",
     "pending": "⏸",
@@ -84,7 +89,10 @@ class Tray:
     """Holds the entries for one run and decides when they take effect."""
 
     def __init__(
-        self, policy: Policy | None = None, standing: Standing | None = None
+        self,
+        policy: Policy | None = None,
+        standing: Standing | None = None,
+        unattended: bool = False,
     ) -> None:
         self.entries: list[Entry] = []
         self.policy = policy
@@ -93,6 +101,25 @@ class Tray:
         # which is what the tray did before there was such a thing and is the
         # right thing for it to do when nobody said otherwise.
         self.standing = standing or Standing()
+
+        # Nobody is here to approve anything, and the caller has said so.
+        #
+        # This changes WHEN staged work fires, not WHAT fires. The caller that
+        # sets this is the caller that was already going to call commit() on
+        # everything the moment the run ended, so the set of calls that take
+        # effect is identical either way. What was wrong was the timing: a model
+        # told "staged, waiting for the user to approve" stops and waits, so it
+        # never reaches the second half of its own plan and the run ends having
+        # described the work instead of doing it. Firing as the call is made is
+        # the only arrangement in which an unattended run can read what it just
+        # did.
+        #
+        # Not routed through Standing, deliberately. An approval there names one
+        # tool and a fragment of the preview, and has no wildcard precisely so
+        # that "allow everything" is not something anybody writes by accident.
+        # This is not an approval; it is the absence of an approver, and it
+        # lives on the tray for one run rather than in a file that outlives it.
+        self.unattended = unattended
 
     # -- during the run -----------------------------------------------------
 
@@ -138,7 +165,7 @@ class Tray:
             # new one and a substring match would honour it silently. A raised
             # call is asked about, every time.
             granted = None if verdict is not None else self.standing.covering(tool, preview)
-            if granted is None:
+            if granted is None and not self.unattended:
                 self.entries.append(
                     Entry(
                         tool=tool.name,
@@ -170,7 +197,10 @@ class Tray:
                     undo=result.undo,
                     origin_message_id=origin_message_id,
                     call_id=call_id,
-                    approved_by=str(granted),
+                    # Either way it says why this was not asked about, because a
+                    # transcript in which an irreversible call simply happened
+                    # is a transcript that cannot be audited.
+                    approved_by=str(granted) if granted else UNATTENDED,
                 )
             )
             return result.output, False
