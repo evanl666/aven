@@ -1,0 +1,31 @@
+{
+    "id": "443bc388-7826-4eed-b5b2-6a191cc5194b",
+    "results": [
+        {
+            "id": "0c1a7719-1898-4f27-951f-67d0c37d3c06",
+            "trial_name": "count-dataset-tokens.1-of-1.2026-09-30__22-43-10",
+            "task_id": "count-dataset-tokens",
+            "instruction": "Tell me how many deepseek tokens are there in the science domain of the open-thoughts/OpenThoughts-114k dataset on huggingface.\nHelpful context on the dataset is in the dataset README.\nYou should use the Qwen2.5-1.5B-Instruct tokenizer.\nTo provide the final answer, write the integer number of tokens without spaces or commas (e.g. \"1000000\") to the file /app/answer.txt.\n",
+            "is_resolved": null,
+            "failure_mode": "unknown_agent_error",
+            "parser_results": null,
+            "recording_path": null,
+            "total_input_tokens": null,
+            "total_output_tokens": null,
+            "trial_started_at": null,
+            "trial_ended_at": null,
+            "agent_started_at": null,
+            "agent_ended_at": null,
+            "test_started_at": null,
+            "test_ended_at": null
+        }
+    ],
+    "pass_at_k": {},
+    "n_resolved": 0,
+    "n_unresolved": 1,
+    "resolved_ids": [],
+    "unresolved_ids": [
+        "count-dataset-tokens"
+    ],
+    "accuracy": 0.0
+}

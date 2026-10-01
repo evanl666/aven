@@ -1,0 +1,30 @@
+{
+    "run_id": "2026-09-30__22-43-10",
+    "uuid": "539be4c1-4f6e-47cd-9e48-967c094006e8",
+    "dataset_path": null,
+    "dataset_name": "terminal-bench-core",
+    "dataset_version": "0.1.1",
+    "output_path": "/Users/evan/workspace/agent/aven/runs",
+    "agent_name": "oracle",
+    "no_rebuild": false,
+    "cleanup": true,
+    "log_level": 20,
+    "task_ids": [
+        "count-dataset-tokens"
+    ],
+    "exclude_task_ids": null,
+    "n_tasks": null,
+    "n_concurrent_trials": 1,
+    "n_attempts": 1,
+    "dataset_size": 1,
+    "accuracy": 0.0,
+    "model_name": "Oracle",
+    "start_time": "2026-10-01T05:43:10.607474+00:00",
+    "end_time": "2026-10-01T05:43:10.713268+00:00",
+    "commit_hash": "8a11bd8a9210c15d9396391508f8520e7603dfef",
+    "username": "Evan L",
+    "s3_bucket": null,
+    "agent_kwargs": null,
+    "pass_at_k": {},
+    "resumed_at": null
+}

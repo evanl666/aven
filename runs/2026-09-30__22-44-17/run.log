@@ -1,0 +1,16 @@
+Processing tasks in duration order (longest first):
++-----+----------------------+------------+------------+
+|   # | Task Name            | Duration   | Source     |
++=====+======================+============+============+
+|   1 | count-dataset-tokens | 5m 30s     | calculated |
++-----+----------------------+------------+------------+
+Total tasks: 1
+Starting harness run
+Run ID: 2026-09-30__22-44-17
+Running task: count-dataset-tokens
+Running docker compose command: docker compose -p count-dataset-tokens-1-of-1-2026-09-30__22-44-17 -f /Users/evan/.cache/terminal-bench/terminal-bench-core/0.1.1/count-dataset-tokens/docker-compose.yaml build
+Running docker compose command: docker compose -p count-dataset-tokens-1-of-1-2026-09-30__22-44-17 -f /Users/evan/.cache/terminal-bench/terminal-bench-core/0.1.1/count-dataset-tokens/docker-compose.yaml up -d
+Starting recording.
+Sending keys: ['asciinema rec --stdin /logs/agent.cast', 'Enter'] min_timeout_sec: 3.0 max_timeout_sec: 180.0
+Sending keys: ['clear', 'Enter'] min_timeout_sec: 0.0 max_timeout_sec: 180.0
+Sending keys: ['bash /oracle/solution.sh', '; tmux wait -S done', 'Enter'] min_timeout_sec: 0.0 max_timeout_sec: inf
