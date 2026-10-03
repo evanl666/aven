@@ -54,6 +54,9 @@ TEXT: dict[str, str] = {
     "model.stream_lost": "the connection to the model kept dropping "
                           "mid-reply - {tries} attempts, last one: {why}",
     "model.stream_again": "\n[the connection dropped mid-reply; asking again]\n",
+    "model.too_long": "This conversation is longer than the model can read, and "
+                      "shortening it was not enough. Start a fresh session, or ask "
+                      "for less at once.\n  ({why})",
     "model.refused": "{model} refused the request: {why}",
     "model.bad_key": "Anthropic rejected the API key. One that has been rotated "
                      "or revoked fails exactly like this — replace it in "
@@ -98,6 +101,9 @@ TEXT: dict[str, str] = {
     "review.undone": "undone",
     "review.rewound": "  the conversation went back to before the change too",
     # --- the print and json sinks ------------------------------------------
+    "stream.doing": "  · {what}",
+    "stream.doing_staged": "  ⏸ {what}  (waiting for you)",
+    "stream.doing_failed": "  ! {what}  (failed)",
     "stream.staged": "not run (waiting for approval): {preview}",
     # Why the run ended, when it did not end because the work was done.
     # On stderr, like every other piece of commentary: a caller reading

@@ -560,3 +560,135 @@ def test_nothing_anywhere_is_reported_as_nothing(monkeypatch, tmp_path):
     monkeypatch.setattr(app, "vault_for", lambda *a, **k: Locked(tmp_path / "empty.json"))
 
     assert app.key_source() == ""
+
+
+# --- the prompt must describe the tray it actually has -----------------------
+#
+# Found by a benchmark sweep. --yes fires irreversible calls as they are made,
+# but both apps' prompts were written when it committed them at the end, and
+# they went on telling the model that a build would be held and would not run.
+# A model that believes it cannot compile does not compile - it writes the code
+# and tells you how to test it yourself. Four of thirty tasks ended that way.
+
+
+def prompt_seen(monkeypatch, *replies):
+    """Run with a fake model that keeps the system prompt it was handed."""
+    seen: dict[str, str] = {}
+    queue = list(replies) or [AssistantMessage(text="done")]
+
+    class Capturing:
+        def __init__(self, **kw):
+            if kw.get("system"):
+                seen["system"] = kw["system"]
+            self.usage = SimpleNamespace(last_input=0)
+
+        async def context_window(self):
+            return 200_000
+
+        async def __call__(self, messages):
+            return replace(queue.pop(0) if len(queue) > 1 else queue[0], id=new_id())
+
+    monkeypatch.setattr(foundation, "Claude", Capturing)
+    return seen
+
+
+def test_unattended_runs_are_told_nobody_is_there(box, monkeypatch):
+    seen = prompt_seen(monkeypatch)
+    quiet_stdin(monkeypatch)
+
+    cli.main(["-p", "做点事", "--yes", "--root", str(box)])
+
+    said = seen["system"]
+    assert "Nobody is at this terminal" in said
+    assert "Somebody is at this terminal" not in said, "both halves cannot be true"
+    assert "staged" in said, "it still has to say what staged would have meant"
+
+
+def test_attended_runs_are_told_somebody_is_there(box, monkeypatch):
+    seen = prompt_seen(monkeypatch)
+    keys(monkeypatch, "d")
+
+    cli.main(["-p", "做点事", "--root", str(box)])
+
+    said = seen["system"]
+    assert "Somebody is at this terminal" in said
+    assert "Nobody is at this terminal" not in said
+    assert "HAS NOT HAPPENED" in said
+
+
+def test_the_prompt_never_promises_staging_that_will_not_happen(box, monkeypatch):
+    """The one that ties the words to the behaviour.
+
+    If the prompt says nothing will come back staged, then an irreversible call
+    in that same run must not come back staged. This is the invariant the bug
+    broke, and the only test here that would have caught it.
+    """
+    seen = prompt_seen(
+        monkeypatch,
+        AssistantMessage(
+            tool_calls=[ToolCall(name="write_file",
+                                 args={"path": "Downloads/新的.txt", "content": "x"})],
+            stop_reason="tool_use",
+        ),
+        AssistantMessage(text="写好了"),
+    )
+    quiet_stdin(monkeypatch)
+
+    cli.main(["-p", "写个文件", "--yes", "--root", str(box), "--protect", "Downloads"])
+
+    promised_nothing_waits = 'nothing will come back "staged"' in seen["system"]
+    nothing_waited = (box / "Downloads" / "新的.txt").exists()
+
+    assert promised_nothing_waits, "the unattended prompt no longer makes the promise"
+    assert nothing_waited, "it promised the call would happen, and it did not"
+
+
+def test_a_coding_run_is_told_the_shell_is_not_sandboxed_to_the_folder(box, monkeypatch):
+    """download-youtube gave up in one request: "My tools only allow me to read,
+    write, and manage files within this local project folder." It had a shell."""
+    import aven.apps.cli_code.main as code
+
+    monkeypatch.setattr(code, "SESSIONS", box / "code-sessions")
+    seen = prompt_seen(monkeypatch)
+    quiet_stdin(monkeypatch)
+
+    code.main(["-p", "do something", "--yes", "--root", str(box)])
+
+    # Whitespace-normalised: the prompt is wrapped prose, so a sentence to
+    # assert on spans lines and a literal match would depend on where.
+    said = " ".join(seen["system"].split())
+    assert "real shell" in said
+    assert "not its limit" in said, "the folder limit has to be scoped to the file tools"
+    assert "how they could check it for themselves is not finishing the job" in said
+
+
+def test_a_context_that_cannot_be_shortened_ends_with_a_sentence(box, monkeypatch, capsys):
+    """It used to end with aven.harness.calling.ContextOverflow on the screen.
+
+    The loop compacts and asks again; reaching the top means that did not get
+    it under the limit, so there is nothing to retry - and the provider's own
+    words, "prompt is too long: 200155 tokens > 200000 maximum", are not
+    something a person can act on.
+    """
+    from aven.harness.calling import ContextOverflow
+
+    class TooLong:
+        def __init__(self, **_):
+            self.usage = SimpleNamespace(last_input=0)
+
+        async def context_window(self):
+            return 200_000
+
+        async def __call__(self, messages):
+            raise ContextOverflow("prompt is too long: 200155 tokens > 200000 maximum")
+
+    monkeypatch.setattr(foundation, "Claude", TooLong)
+    quiet_stdin(monkeypatch)
+
+    assert cli.main(["-p", "做点事", "--yes", "--root", str(box)]) == 1
+
+    said = capsys.readouterr().err
+    assert "ContextOverflow" not in said
+    assert "Traceback" not in said
+    assert "fresh session" in said, "it has to say what to do instead"
+    assert "200155" in said, "and keep the number for whoever wants it"

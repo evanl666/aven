@@ -217,6 +217,7 @@ async def run(
                     call=call,
                     result=message,
                     staged=staged,
+                    preview=found.preview(call.args) if found else call.name,
                     detail=found.detail_for(call.args) if found else None,
                 )
         except (asyncio.CancelledError, GeneratorExit):

@@ -6,6 +6,7 @@ to recognise our banner in it.
 """
 
 import json
+from pathlib import Path
 
 from aven.terminal.stream import Final, Jsonl, as_json
 from aven.harness.events import (
@@ -219,3 +220,152 @@ def test_print_mode_stays_quiet_when_the_work_was_simply_done(capsys):
     out, err = capsys.readouterr()
     assert out.strip() == "done"
     assert err == "", f"unasked-for commentary: {err!r}"
+
+
+# --- progress, while it is still happening ------------------------------------
+#
+# Final printed nothing until close(), so a one-shot run showed nothing for its
+# whole duration - and a run killed by a wall clock showed nothing ever. Four
+# tasks in a thirty-task benchmark sweep were killed after twenty minutes each
+# and their logs hold the banner and then nothing at all: no record of what had
+# been tried, because the only record was going to be written at the end.
+
+
+def ran(name="run_command", preview="run: pytest -q", staged=False, error=False):
+    call = ToolCall(id="c9", name=name, args={})
+    result = ToolResultMessage(
+        tool_call_id="c9", tool_name=name, output="...", is_error=error
+    )
+    return ToolEnd(call=call, result=result, preview=preview, staged=staged)
+
+
+def test_each_call_is_reported_as_it_happens(capsys):
+    sink = Final()
+    sink.handle(ran(preview="run: pytest -q"))
+    sink.handle(ran(preview="edit main.py: foo"))
+
+    out, err = capsys.readouterr()
+    assert out == "", "progress is commentary and belongs on stderr"
+    assert "run: pytest -q" in err
+    assert "edit main.py: foo" in err
+
+
+def test_the_answer_still_arrives_alone_on_stdout(capsys):
+    sink = Final()
+    sink.handle(ran())
+    reply = AssistantMessage(text="done", stop_reason="end_turn")
+    sink.handle(MessageEnd(message=reply))
+    sink.handle(TurnEnd(index=0, message=reply))
+    sink.handle(AgentEnd(reason="end_turn"))
+    sink.close(Tray())
+
+    out, err = capsys.readouterr()
+    assert out.strip() == "done", "a caller piping stdout must get only the result"
+    assert "pytest" in err
+
+
+def test_a_staged_call_reads_differently_from_one_that_ran(capsys):
+    sink = Final()
+    sink.handle(ran(preview="send mail to a@b", staged=True))
+
+    err = capsys.readouterr().err
+    assert "send mail to a@b" in err
+    assert "waiting" in err, "it has to be visibly not done"
+
+
+def test_a_failed_call_says_so(capsys):
+    sink = Final()
+    sink.handle(ran(preview="run: make", error=True))
+
+    err = capsys.readouterr().err
+    assert "run: make" in err and "failed" in err
+
+
+def test_the_result_itself_is_never_printed(capsys):
+    """This is a progress line, not a transcript - and a result is sometimes
+    forty thousand characters. The session file is the transcript."""
+    call = ToolCall(id="c9", name="run_command", args={})
+    enormous = "x" * 40_000
+    sink = Final()
+    sink.handle(
+        ToolEnd(
+            call=call,
+            result=ToolResultMessage(
+                tool_call_id="c9", tool_name="run_command", output=enormous
+            ),
+            preview="run: cat big.log",
+        )
+    )
+
+    out, err = capsys.readouterr()
+    assert enormous not in err and enormous not in out
+    assert len(err) < 200
+
+
+def test_a_tool_with_no_preview_still_gets_a_line(capsys):
+    """Every surface must work from the preview alone, and some tools have none."""
+    sink = Final()
+    sink.handle(ran(name="recall", preview=""))
+
+    assert "recall" in capsys.readouterr().err
+
+
+def test_progress_can_be_turned_off(capsys):
+    """--mode json has its own stream; two of them interleaved is neither."""
+    sink = Final(trace=False)
+    sink.handle(ran())
+
+    assert capsys.readouterr().err == ""
+
+
+def test_progress_survives_the_process_being_killed(tmp_path):
+    """Progress has to be out of the process before the process dies.
+
+    The reason the benchmark logs were empty was that nothing was written at
+    all, not that something was written and lost: sys.stderr has been
+    line-buffered even when piped since Python 3.9, so the flush in _say is
+    belt-and-braces rather than the thing that saves this. I had that wrong
+    and this test is where I found out - it passed with the flush removed.
+
+    It is kept because it tests the property capsys cannot: that a line
+    reaches a real pipe while the run is still going. Collecting the lines and
+    printing them at the end would satisfy every other test in this file and
+    fail this one, which is exactly the regression worth guarding against.
+    """
+    import subprocess
+    import sys as _sys
+
+    script = tmp_path / "slow.py"
+    script.write_text(
+        "import time\n"
+        "from aven.harness.events import ToolEnd\n"
+        "from aven.harness.messages import ToolCall, ToolResultMessage\n"
+        "from aven.terminal.stream import Final\n"
+        "sink = Final()\n"
+        "sink.handle(ToolEnd(\n"
+        "    call=ToolCall(id='c1', name='run_command', args={}),\n"
+        "    result=ToolResultMessage(tool_call_id='c1', tool_name='run_command',\n"
+        "                             output='ok'),\n"
+        "    preview='run: the-thing-it-was-doing',\n"
+        "))\n"
+        "time.sleep(60)\n",
+        encoding="utf-8",
+    )
+
+    going = subprocess.Popen(
+        [_sys.executable, str(script)],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        cwd=str(Path(__file__).resolve().parent.parent),
+    )
+    try:
+        going.wait(timeout=2)
+    except subprocess.TimeoutExpired:
+        pass
+    going.kill()
+    _, err = going.communicate(timeout=10)
+
+    assert b"the-thing-it-was-doing" in err, (
+        "killed mid-run and the progress was still in the buffer - which is "
+        "how four benchmark tasks came back with empty logs"
+    )

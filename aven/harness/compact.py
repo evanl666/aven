@@ -179,7 +179,26 @@ class Compactor:
     measure: Callable[[list[LlmMessage]], int] = field(default=estimate_tokens)
 
     def size(self, llm_messages: list[LlmMessage]) -> int:
-        return self.measure(llm_messages) or estimate_tokens(llm_messages)
+        """How big the request about to be sent is, as well as it can be known.
+
+        Two sources, and the answer is whichever is larger.
+
+        `measure` is exact and stale: the CLI passes one that reports what the
+        provider counted for the LAST request, which costs nothing because the
+        number came back with the reply. `estimate_tokens` is approximate and
+        current: it reads the messages that are about to go out.
+
+        Trusting the exact one alone was a bug. One turn that returns a huge
+        tool result makes the next request jump past the window in a single
+        step, and a measurement of the turn before it cannot see that coming -
+        a benchmark task died on "prompt is too long: 200155 tokens > 200000",
+        over by 155, having been told the context was comfortably inside it.
+
+        Taking the larger costs an occasional early summary, because the
+        estimate is deliberately pessimistic. That is the cheap direction to be
+        wrong in; the other one is a rejected request.
+        """
+        return max(self.measure(llm_messages), estimate_tokens(llm_messages))
 
     def too_long(self, llm_messages: list[LlmMessage]) -> bool:
         return self.size(llm_messages) >= self.limit

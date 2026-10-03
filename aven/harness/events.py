@@ -55,6 +55,15 @@ class ToolEnd:
     call: ToolCall
     result: ToolResultMessage
 
+    # What the call would do, in one line, as the tool itself says it. Every
+    # surface can rely on this; `detail` below is what only some tools have.
+    #
+    # On the event rather than recomputed from the call, because computing it
+    # needs the Tool object and only the loop has that. A renderer with the
+    # name and the arguments and no preview ends up inventing its own wording
+    # for every tool, which is the same sentence written twice.
+    preview: str = ""
+
     # What the call would do, in a shape richer than a line, when the tool has
     # one. Carried on the event so every surface gets it from the same place -
     # the terminal draws it under a staged entry, a window draws it as a card,

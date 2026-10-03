@@ -784,3 +784,41 @@ async def test_a_later_compaction_is_told_to_carry_the_earlier_one_forward(tmp_p
     assert CARRIED.strip() not in first, "there was no earlier summary to carry"
     assert CARRIED.strip() in second
     assert "earlier_conversation" in second, "and it is in there to be carried"
+
+
+# --- the size of the request about to be sent --------------------------------
+#
+# The CLI hands in a `measure` that reports what the provider counted for the
+# LAST request: exact, free, and one turn stale. One turn that returns a huge
+# tool result makes the next request jump past the window in a single step, and
+# a measurement of the turn before cannot see it. A benchmark task died on
+# "prompt is too long: 200155 tokens > 200000" - over by 155.
+
+
+def test_size_notices_a_result_the_last_measurement_could_not_have_seen():
+    from aven.harness.compact import Compactor
+
+    small_and_stale = Compactor(model=None, limit=1_000, measure=lambda _: 100)
+
+    tiny = [{"role": "user", "content": "hi"}]
+    assert small_and_stale.size(tiny) == 100, "the exact number wins when it is bigger"
+
+    enormous = [{"role": "user", "content": "x" * 400_000}]
+    assert small_and_stale.size(enormous) > 1_000, "a huge result went unnoticed"
+    assert small_and_stale.too_long(enormous)
+
+
+def test_the_exact_count_is_still_preferred_when_it_is_the_larger():
+    """It is the real number, and the estimate is deliberately pessimistic."""
+    from aven.harness.compact import Compactor
+
+    said = Compactor(model=None, limit=10_000, measure=lambda _: 9_000)
+    assert said.size([{"role": "user", "content": "short"}]) == 9_000
+
+
+def test_a_measure_that_knows_nothing_still_gets_an_answer():
+    """The default measure IS the estimate; zero must not mean zero."""
+    from aven.harness.compact import Compactor
+
+    said = Compactor(model=None, limit=10, measure=lambda _: 0)
+    assert said.size([{"role": "user", "content": "x" * 4_000}]) > 0

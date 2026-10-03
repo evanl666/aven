@@ -48,6 +48,8 @@ TEXT: dict[str, str] = {
 
     "model.stream_lost": "与模型的连接在回复中途反复断开 —— 试了 {tries} 次,最后一次:{why}",
     "model.stream_again": "\n[连接在回复中途断开,正在重新请求]\n",
+    "model.too_long": "这段对话已经超过模型能读的长度,压缩之后仍然不够。"
+                      "请新开一个会话,或者一次少做一点。\n  ({why})",
     "model.refused": "{model} 拒绝了这个请求:{why}",
     "model.bad_key": "Anthropic 拒绝了这个 API key。已经轮换或吊销的 key 就是"
                      "这个表现 —— 去 Connections 里换一个,或者 export 一个新的 "
@@ -89,6 +91,9 @@ TEXT: dict[str, str] = {
     "review.undone": "撤销了",
     "review.rewound": "  对话也回退到了改动之前",
     # --- the print and json sinks ------------------------------------------
+    "stream.doing": "  · {what}",
+    "stream.doing_staged": "  ⏸ {what}(等你确认)",
+    "stream.doing_failed": "  ! {what}(失败)",
     "stream.staged": "未执行(等待确认):{preview}",
     "stream.max_turns": "在轮次上限({turns})处停止,工作尚未完成;上面的答案是不完整的。请调高 --max-turns。",
     "stream.truncated": "最后一条回复达到输出长度上限被截断;上面的答案是不完整的。",

@@ -134,6 +134,7 @@ def event_as_dict(event: Event) -> dict[str, Any]:
                 "type": "tool_end",
                 "call": call_as_dict(event.call),
                 "result": to_dict(event.result),
+                "preview": event.preview,
                 "detail": detail_as_dict(event.detail),
                 # True means it did NOT happen: the call is in the tray waiting
                 # for a decision.

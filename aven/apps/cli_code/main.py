@@ -23,35 +23,40 @@ from aven.apps.cli_code.tools import code_tools
 from aven.harness.toolbox import ToolBox
 from aven.terminal.app import Blueprint, Kit, launch
 from aven.toolkit import file_tools, skill_tools
+from aven.toolkit.offload import Keeper
 
-SESSIONS = Path.home() / ".aven" / "code-sessions"
+HOME = Path.home() / ".aven"
+SESSIONS = HOME / "code-sessions"
 
 SYSTEM = """You are aven-code, a coding agent running on this person's own computer.
 
 Answer in the language they write to you in.
 
-You may only act inside one folder - the project - and every path is relative to
-it. The tools refuse anything outside it.
+The file tools may only reach inside one folder - the project - and every path
+is relative to it. They refuse anything outside it.
+
+run_command is a real shell on this computer, and that limit is not its limit.
+Use it for what only a shell can do: build, run the tests, install a dependency,
+start a server, fetch something over the network. Nothing here blocks you from
+reaching the network or from using the tools the machine has.
 
 Read before you write. grep and glob are bounded, they skip what should not be
 searched, and they need nobody's approval; prefer them over shelling out to do
-the same thing.
+the same thing. So do not reach for run_command to read a file or list a
+directory - read_file, list_dir, grep and glob do those without interrupting
+anybody.
 
 Your tools come in three kinds:
 - read-only, usable at any time
 - reversible, so go ahead: file edits can be rolled back whenever
-- irreversible, which do not happen now - they join a queue and wait to be
-  confirmed
+- irreversible - a build, an install, a commit, a move, a delete. What happens
+  to those is said at the end of this prompt, and it depends on how this run was
+  started.
 
-run_command is the one tool whose kind depends on what you pass it. A command
-that only reads runs immediately. Anything that could change something - a build,
-an install, a commit, a move, a delete - is held for this person to confirm, and
-its result will say "staged". "staged" means IT HAS NOT RUN. Do not treat its
-effects as real and do not keep reasoning as though they were: finish what you
-can, then say what is waiting.
-
-So do not reach for run_command to read a file or list a directory. read_file,
-list_dir, grep and glob do those without interrupting anybody.
+Do not report work as finished that you have not run. If you wrote something
+that is meant to compile, compile it. If you wrote a test, run it. If you
+started a server, call it. Telling somebody how they could check it for
+themselves is not finishing the job - it is handing the job back.
 
 Match the code you are editing - its naming, its idiom, how much it comments.
 When you are done, say what you changed in a sentence or two."""
@@ -71,7 +76,16 @@ def assemble(args: argparse.Namespace, roots: list[Path], found_skills: list) ->
     and the file tools in the first turn of almost every task, so a two-stage
     catalogue would only cost a round trip and a cache miss to arrive at the same
     place.
+
+    Results too big to carry go to a file, which matters more here than it does
+    for the assistant: `cat` on a generated file and a build log are both
+    ordinary here and both enormous, and a result kept in the conversation is
+    resent on every turn afterwards. A benchmark task died on "prompt is too
+    long: 200155 tokens > 200000" - over by 155 - with the mechanism to prevent
+    it sitting in the other app.
     """
+    keeper = Keeper(HOME / "code-results")
+
     return Kit(
         box=ToolBox(
             core=(
@@ -80,9 +94,11 @@ def assemble(args: argparse.Namespace, roots: list[Path], found_skills: list) ->
                 # A second root is somewhere to read and write, not a second cwd.
                 + code_tools(roots[0], allow=frozenset(args.allow))
                 + skill_tools(found_skills)
+                + keeper.tools()
             ),
             groups={},
-        )
+        ),
+        offload=keeper.keep,
     )
 
 

@@ -25,7 +25,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from aven.harness.agent import run
-from aven.harness.calling import Unreachable
+from aven.harness.calling import ContextOverflow, Unreachable
 from aven.harness.compact import Compactor
 from aven.harness.connect import Connections
 from aven.harness.context import find as find_instructions
@@ -52,6 +52,37 @@ from aven.terminal.stream import Final, Jsonl
 from aven.wire.rpc import Conversation, serve_stdio, write
 from aven import text as language
 from aven.text import t
+
+
+# What happens to an irreversible call, said to the model.
+#
+# Here rather than in either app's prompt, because it is a fact about the tray
+# and the apps do not own the tray. It used to be written into both prompts as
+# a constant, which was true until --yes started firing staged work as it was
+# made - and then the prompt went on telling the model that a build would be
+# held and would not run.
+#
+# A model that believes it cannot compile does not compile. It writes the code
+# and tells you how to test it yourself. Four tasks in a thirty-task benchmark
+# sweep ended exactly that way, one of them with the words "You can test it
+# with: rustc main.c.rs" from an agent that had a shell and 79 unused turns.
+#
+# English, like every string the model reads: instructions to a model are code,
+# and they belong next to the logic they steer.
+ATTENDED = """Somebody is at this terminal.
+
+An irreversible call does not happen when you make it. It joins a queue and
+waits for them, and its result comes back saying "staged". "staged" means IT
+HAS NOT HAPPENED. Do not treat its effects as real and do not keep reasoning as
+though they were: finish whatever else you can, then tell them what is waiting
+on them."""
+
+UNATTENDED = """Nobody is at this terminal.
+
+This run was started with that accepted, so there is nobody to ask and nothing
+to wait for: every call happens as you make it, including the irreversible
+ones, and nothing will come back "staged". Run what you need to run. Check your
+own work by running it - that is the only check there is."""
 
 
 def note(message: str) -> None:
@@ -521,6 +552,15 @@ async def launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
     except Unreachable as stopped:
         print(RED(str(stopped)), file=sys.stderr)
         return 1
+    except ContextOverflow as full:
+        # The loop already tried compacting and asking again; reaching here
+        # means that did not get it under the limit, so there is nothing left
+        # to retry and the provider's own sentence - "prompt is too long:
+        # 200155 tokens > 200000 maximum" - is not something anybody can act
+        # on. Said in terms of what to do instead, with the number kept for
+        # whoever wants it.
+        print(RED(t("model.too_long", why=str(full))), file=sys.stderr)
+        return 1
 
 
 async def _launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
@@ -598,6 +638,11 @@ async def _launch(blueprint: Blueprint, argv: list[str] | None = None) -> int:
         system += "\n\n" + t("cli.instructions_header") + "\n\n" + read_instructions(
             instruction_files
         )
+
+    # Last, and from here rather than from either app, because this is the one
+    # sentence the model must not be wrong about and it is a fact about the
+    # tray - which neither app owns. Said once, in the place that knows.
+    system += "\n\n" + (UNATTENDED if args.yes else ATTENDED)
 
     picked = {"model": args.model} if args.model else {}
     model = Claude(tools=tools, system=system, cache=args.cache, **picked)

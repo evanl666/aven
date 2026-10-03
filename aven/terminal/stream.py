@@ -25,7 +25,7 @@ import json
 import sys
 from typing import Any
 
-from aven.harness.events import AgentEnd, Event, MessageEnd, TurnEnd
+from aven.harness.events import AgentEnd, Event, MessageEnd, ToolEnd, TurnEnd
 from aven.harness.messages import AssistantMessage
 from aven.wire.protocol import detail_as_dict, entry_as_dict
 from aven.wire.protocol import event_as_dict as as_json
@@ -58,6 +58,21 @@ class Jsonl:
         sys.stdout.flush()
 
 
+def _did(event: ToolEnd) -> str:
+    """One line saying what just ran, for somebody watching stderr.
+
+    The preview, because it is the sentence a person would have been shown
+    before approving - so it is already written to be read, and it is already
+    short. Falls back to the tool's name when there is none.
+    """
+    said = event.preview or event.call.name
+    if event.staged:
+        return t("stream.doing_staged", what=said)
+    if event.result.is_error:
+        return t("stream.doing_failed", what=said)
+    return t("stream.doing", what=said)
+
+
 class Final:
     """Nothing on stdout until the end, then the answer and only the answer.
 
@@ -72,10 +87,11 @@ class Final:
     so was the bug.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, *, trace: bool = True) -> None:
         self.text = ""
         self.turns = 0
         self.ended: str | None = None
+        self.trace = trace
 
     def handle(self, event: Event) -> None:
         if isinstance(event, MessageEnd) and isinstance(event.message, AssistantMessage):
@@ -84,10 +100,34 @@ class Final:
             # printing the sentence before it.
             if event.message.text:
                 self.text = event.message.text
+        elif isinstance(event, ToolEnd):
+            # One line per call, on stderr, as it happens.
+            #
+            # Without this a one-shot run prints nothing at all until it ends,
+            # and a run that never ends prints nothing ever. Four tasks in a
+            # thirty-task benchmark sweep were killed by a wall clock after
+            # twenty minutes each, and their logs hold the banner and then
+            # nothing: no record of what had been tried, because the only
+            # record was going to be written at the end.
+            #
+            # Deliberately not the result, only the call. The result is the
+            # thing that is sometimes forty thousand characters long, and this
+            # is a progress line, not a transcript - the session file is the
+            # transcript.
+            self._say(_did(event))
         elif isinstance(event, TurnEnd):
             self.turns = event.index + 1
         elif isinstance(event, AgentEnd):
             self.ended = event.reason
+
+    def _say(self, line: str) -> None:
+        # flush is belt-and-braces: sys.stderr has been line-buffered even when
+        # it is a pipe since Python 3.9, so it is not what gets this out of a
+        # process about to be killed. What matters is that the line is written
+        # now rather than collected and printed at the end, which is what this
+        # whole method exists to stop.
+        if self.trace:
+            print(line, file=sys.stderr, flush=True)
 
     def close(self, tray: Tray, *, committed: int = 0) -> None:
         if self.text:

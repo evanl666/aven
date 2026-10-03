@@ -8,6 +8,7 @@ that matters - not "does `ls` run" but "does anything that writes slip through".
 
 import argparse
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -265,3 +266,50 @@ def test_both_apps_are_the_same_foundation():
     assert type(blueprint()) is type(assistant)
     assert blueprint().program == "aven-code"
     assert assistant.program == "aven"
+
+
+# --- big results do not stay in the conversation -----------------------------
+#
+# The assistant has had this since it was built; aven-code did not, which is
+# backwards - `cat` on a generated file and a build log are both ordinary here
+# and both enormous. A benchmark task died on "prompt is too long: 200155
+# tokens > 200000", over by 155, with the fix sitting in the other app.
+
+
+def test_a_big_result_is_kept_out_of_the_conversation(tmp_path, monkeypatch):
+    import aven.apps.cli_code.main as code
+    from aven.toolkit.offload import BIG
+
+    monkeypatch.setattr(code, "HOME", tmp_path / "home")
+    kit = code.assemble(
+        SimpleNamespace(allow=[]), [tmp_path], []
+    )
+
+    assert kit.offload is not None, "aven-code is carrying everything again"
+
+    huge = "x" * (BIG * 3)
+    stood_in = kit.offload("call-1", "run_command", huge)
+
+    assert len(stood_in) < len(huge) / 4
+    assert "kept out of the conversation" in stood_in
+    assert "recall(" in stood_in, "and how to read it back"
+
+
+def test_the_tool_to_read_it_back_is_there_from_the_first_turn(tmp_path, monkeypatch):
+    """A result can be offloaded on turn one; recall cannot be in a group."""
+    import aven.apps.cli_code.main as code
+
+    monkeypatch.setattr(code, "HOME", tmp_path / "home")
+    kit = code.assemble(SimpleNamespace(allow=[]), [tmp_path], [])
+
+    assert "recall" in {t.name for t in kit.box.active()}
+
+
+def test_a_small_result_is_left_alone(tmp_path, monkeypatch):
+    """Below the threshold the round trip costs more than carrying it."""
+    import aven.apps.cli_code.main as code
+
+    monkeypatch.setattr(code, "HOME", tmp_path / "home")
+    kit = code.assemble(SimpleNamespace(allow=[]), [tmp_path], [])
+
+    assert kit.offload("call-1", "list_dir", "three\nshort\nlines") == "three\nshort\nlines"
