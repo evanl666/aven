@@ -31,6 +31,7 @@ from aven.harness.connect import Connections
 from aven.harness.context import find as find_instructions
 from aven.harness.context import read as read_instructions
 from aven.harness.messages import new_id
+from aven.harness.progress import Watch
 from aven.harness.session import Session
 from aven.harness.vault import vault_for
 from aven.toolkit import registry
@@ -283,6 +284,7 @@ async def turn(*, session, prompt, model, tools, compactor, policy, standing,
     async for event in run(
         session=session, prompt=prompt, model=model, tools=tools,
         tray=tray, compactor=compactor, max_turns=args.max_turns,
+        watch=Watch(),
         offload=offload,
     ):
         screen.handle(event)
@@ -316,6 +318,7 @@ async def oneshot(*, session, prompt, model, tools, compactor, policy, standing,
     async for event in run(
         session=session, prompt=prompt, model=model, tools=tools,
         tray=tray, compactor=compactor, max_turns=args.max_turns,
+        watch=Watch(),
         offload=offload,
     ):
         sink.handle(event)
@@ -365,6 +368,7 @@ async def watch(*, session, model, tools, compactor, policy, standing, args,
                 async for event in run(
                     session=session, prompt=trigger.prompt, model=model, tools=tools,
                     tray=tray, compactor=compactor, max_turns=args.max_turns,
+        watch=Watch(),
         offload=offload,
                     source=trigger.source,
                 ):

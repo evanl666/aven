@@ -97,6 +97,7 @@ TEXT: dict[str, str] = {
     "stream.staged": "未执行(等待确认):{preview}",
     "stream.max_turns": "在轮次上限({turns})处停止,工作尚未完成;上面的答案是不完整的。请调高 --max-turns。",
     "stream.truncated": "最后一条回复达到输出长度上限被截断;上面的答案是不完整的。",
+    "stream.stalled": "已停止:它在反复做同一个调用并得到同一个结果,被提醒后仍然如此。上面的答案是不完整的。",
     # --- the full-screen shell ---------------------------------------------
     "shell.help": """\
 /session   这个会话的基本情况

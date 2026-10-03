@@ -136,6 +136,8 @@ class Final:
             print(t("stream.max_turns", turns=self.turns), file=sys.stderr)
         elif self.ended == "truncated":
             print(t("stream.truncated"), file=sys.stderr)
+        elif self.ended == "stalled":
+            print(t("stream.stalled"), file=sys.stderr)
         for entry in tray.pending():
             print(t("stream.staged", preview=entry.preview), file=sys.stderr)
 

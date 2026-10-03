@@ -84,7 +84,7 @@ class TurnEnd:
 
 @dataclass(frozen=True, kw_only=True)
 class AgentEnd:
-    reason: Literal["end_turn", "max_turns", "truncated"]
+    reason: Literal["end_turn", "max_turns", "truncated", "stalled"]
 
 
 Event = AgentStart | TurnStart | MessageDelta | MessageEnd | ToolStart | ToolEnd | TurnEnd | AgentEnd

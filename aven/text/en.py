@@ -111,6 +111,7 @@ TEXT: dict[str, str] = {
     # is complete has to be able to find out without parsing it.
     "stream.max_turns": "stopped at the turn limit ({turns}) with work still in progress; the answer above is incomplete. Raise --max-turns.",
     "stream.truncated": "the last reply hit the output length limit and was cut off; the answer above is incomplete.",
+    "stream.stalled": "stopped: it was repeating the same call and getting the same result, and said so when told. The answer above is incomplete.",
     # --- the full-screen shell ---------------------------------------------
     "shell.help": """\
 /session   what this session is

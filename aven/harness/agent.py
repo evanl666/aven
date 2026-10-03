@@ -42,6 +42,7 @@ from aven.harness.messages import (
     to_llm,
 )
 from aven.harness.session import Session
+from aven.harness.progress import Watch
 from aven.harness.steering import Steering
 from aven.harness.tools import Tool
 from aven.harness.toolbox import ToolSource, resolve
@@ -76,6 +77,7 @@ async def run(
     max_turns: int = 12,
     source: str = "chat",
     offload: Callable[[str, str, str], str] | None = None,
+    watch: Watch | None = None,
 ) -> AsyncIterator[Event]:
     """Run one prompt to completion, yielding events as they happen.
 
@@ -212,6 +214,8 @@ async def run(
                 session.append(message)
                 answered += 1
                 yield MessageEnd(message=message)
+                if watch is not None:
+                    watch.saw(call.name, call.args, message.output)
                 found = by_name.get(call.name)
                 yield ToolEnd(
                     call=call,
@@ -246,6 +250,25 @@ async def run(
             yield ToolEnd(call=call, result=message, staged=False)
 
         yield TurnEnd(index=index, message=reply)
+
+        # Between turns, the same moment steering uses and for the same
+        # reason: every tool call has its result, so a message can be appended
+        # without orphaning one.
+        #
+        # Told once, then stopped. See harness/progress.py for why a stall is
+        # worth a sentence before it is worth ending the turn over.
+        if watch is not None:
+            found_stuck = watch.stuck()
+            if found_stuck is not None:
+                what, times = found_stuck
+                if watch.told():
+                    yield AgentEnd(reason="stalled")
+                    return
+                yield MessageEnd(
+                    message=session.append(
+                        UserMessage(text=watch.note(what, times), source="progress")
+                    )
+                )
 
     # A model that keeps calling tools would otherwise run until the money is
     # gone. Stopping is a bug report, not a failure mode to hide.
