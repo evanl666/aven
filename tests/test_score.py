@@ -10,6 +10,7 @@ So the test does not hardcode the line. It asks aven to produce one and checks
 the pattern against that.
 """
 
+import json
 import sys
 from pathlib import Path
 
@@ -352,3 +353,91 @@ def test_the_two_readers_of_that_line_agree(tmp_path):
 
     requests, went_in, read, written, came_out = usage_in(log)
     assert from_pane(line) == (went_in, came_out)
+
+
+# --- who is answerable for a failure ----------------------------------------
+#
+# The stopping condition for "fix the harness, run again, repeat" is "no
+# failure is the harness's fault any more", and that condition is worthless if
+# the person who made the changes is also the one deciding. Every signal is a
+# string the harness itself emitted or a field the runner recorded.
+
+
+def finished_run(tmp_path, tasks):
+    """A run directory. tasks: {name: (solved, agent.log text, failure_mode)}."""
+    run = tmp_path / "2026-01-01__00-00-00"
+    results = []
+    for name, (solved, text, mode) in tasks.items():
+        (run / name / "trial" / "sessions").mkdir(parents=True)
+        (run / name / "trial" / "sessions" / "agent.log").write_text(text, encoding="utf-8")
+        (run / name / "trial" / "results.json").write_text(
+            json.dumps({"task_id": name, "is_resolved": solved, "failure_mode": mode}),
+            encoding="utf-8",
+        )
+        results.append({"task_id": name, "is_resolved": solved})
+    (run / "results.json").write_text(json.dumps({"results": results}), encoding="utf-8")
+    return run
+
+
+def test_a_failure_with_no_harness_signal_belongs_to_the_model(tmp_path):
+    from evals.terminal_bench.blame import blame
+
+    run = finished_run(tmp_path, {
+        "wrong-answer": (False, "  9 requests · in 100 (cache read 0 · wrote 0) · out 9\n",
+                         "unset"),
+    })
+    assert blame(run)["wrong-answer"]["harness"] == []
+
+
+def test_each_signal_is_recognised(tmp_path):
+    from evals.terminal_bench.blame import blame
+
+    cases = {
+        "install": ("INSTALL_FAIL_STATUS\n", "unset", "install failed"),
+        "dropped": ("httpx2.RemoteProtocolError: peer closed\n", "unset", "stream dropped"),
+        "overflow": ("aven.harness.calling.ContextOverflow: too long\n", "unset",
+                     "context overflow"),
+        "staged": ("staged, waiting for the user to approve: send mail\n", "unset",
+                   "work left staged"),
+        "outside": ("'/etc/x' is outside /app\n", "unset", "sandbox refusal"),
+        "capped": ("stopped at the turn limit (80) with work still in progress\n",
+                   "unset", "hit the turn cap"),
+        "circles": ("stopped: it was repeating the same call and getting the same "
+                    "result\n", "unset", "stalled"),
+        "clock": ("  5 requests · in 10 (cache read 0 · wrote 0) · out 1\n",
+                  "agent_timeout", "wall-clock timeout"),
+        "silent": ("", "unset", "no log at all"),
+    }
+    run = finished_run(tmp_path, {n: (False, text, mode) for n, (text, mode, _) in cases.items()})
+    found = blame(run)
+    for name, (_, _, expected) in cases.items():
+        assert expected in found[name]["harness"], f"{name}: {found[name]['harness']}"
+
+
+def test_a_solved_task_is_never_blamed(tmp_path):
+    """Even one that limped: if the tests pass, there is nothing to answer for."""
+    from evals.terminal_bench.blame import blame
+
+    run = finished_run(tmp_path, {
+        "slow-but-right": (True, "stopped at the turn limit (80)\n", "unset"),
+    })
+    assert blame(run)["slow-but-right"]["harness"] == []
+
+
+def test_the_comparison_names_a_regression(tmp_path):
+    """A round that fixes two faults and breaks one task has to say both."""
+    from evals.terminal_bench.blame import moved
+
+    before = finished_run(tmp_path / "a", {
+        "alpha": (False, "INSTALL_FAIL_STATUS\n", "unset"),
+        "beta": (True, "  3 requests · in 1 (cache read 0 · wrote 0) · out 1\n", "unset"),
+    })
+    after = finished_run(tmp_path / "b", {
+        "alpha": (True, "  4 requests · in 1 (cache read 0 · wrote 0) · out 1\n", "unset"),
+        "beta": (False, "  9 requests · in 1 (cache read 0 · wrote 0) · out 1\n", "unset"),
+    })
+    said = moved(before, after)
+
+    assert "newly solved" in said and "+ alpha" in said
+    assert "REGRESSED" in said and "- beta" in said
+    assert "harness faults  1 -> 0" in said
