@@ -2,6 +2,7 @@
 
 import io
 import os
+from pathlib import Path
 from dataclasses import replace
 from types import SimpleNamespace
 
@@ -692,3 +693,76 @@ def test_a_context_that_cannot_be_shortened_ends_with_a_sentence(box, monkeypatc
     assert "Traceback" not in said
     assert "fresh session" in said, "it has to say what to do instead"
     assert "200155" in said, "and keep the number for whoever wants it"
+
+
+# --- stdin that nobody will ever write to ------------------------------------
+#
+# `sys.stdin.read()` waits for EOF, and an unattended run - a cron line, a CI
+# step, a harness that backgrounded the process - routinely inherits a pipe
+# that stays open forever. aven simply stopped: no output, no timeout, no clue.
+# It cost fifty-three minutes of a benchmark run to notice, and what was
+# finally diagnostic was that the session file had never been written at all.
+
+
+def answers_with_stdin_held_open(prompt, wait=8.0):
+    """Run `piped(prompt)` in a real process, with the write end held open.
+
+    A subprocess, because the bug needs a real pipe: a StringIO cannot block
+    and Popen.communicate() closes stdin as part of its job, which is how the
+    first version of this test passed against the bug.
+    """
+    import subprocess
+    import sys as _sys
+    import time
+
+    root = Path(__file__).resolve().parent.parent
+    snippet = (
+        f"import sys; sys.path.insert(0, {str(root)!r});"
+        "from aven.terminal.app import piped;"
+        "sys.stdout.write(piped(sys.argv[1] or None) or '<empty>');"
+        "sys.stdout.flush()"
+    )
+    going = subprocess.Popen(
+        [_sys.executable, "-c", snippet, prompt],
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+        cwd=str(root),
+    )
+    began = time.time()
+    try:
+        while time.time() - began < wait:
+            if going.poll() is not None:
+                return going.stdout.read().decode()
+            time.sleep(0.1)
+        return None  # never answered
+    finally:
+        going.kill()
+        going.stdin.close()
+
+
+def test_a_pipe_nobody_writes_to_does_not_stop_a_run_that_has_its_prompt():
+    said = answers_with_stdin_held_open("sort out the downloads")
+
+    assert said is not None, (
+        "it is still waiting on a pipe that will never be written to - the "
+        "failure mode is a cron job that does nothing and says nothing"
+    )
+    assert said == "sort out the downloads"
+
+
+def test_a_pipe_is_still_waited_for_when_it_is_the_whole_request():
+    """`cat diff | aven` must wait: there is no prompt, so stdin is the request
+    and giving up on it would be giving up on the input."""
+    assert answers_with_stdin_held_open("", wait=3.0) is None
+
+
+def test_material_piped_in_still_arrives_before_the_prompt(monkeypatch):
+    """The documented behaviour, which the fix must not cost."""
+    import io
+
+    from aven.terminal.app import piped
+
+    monkeypatch.setattr("sys.stdin", io.StringIO("diff --git a/x b/x\n+一行"))
+    said = piped("review this change")
+
+    assert said.startswith("diff --git")
+    assert said.endswith("review this change")

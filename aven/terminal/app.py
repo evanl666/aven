@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import os
+import select
 import sys
 import time
 from collections.abc import Callable
@@ -408,16 +409,66 @@ async def serve_rpc(*, session, model, tools, compactor, policy, standing, args,
     return await serve_stdio(conversation)
 
 
-def piped(prompt: str | None) -> str:
+# How long to wait for a pipe to say something, when the prompt arrived on the
+# command line and so the pipe is optional. Generous: a producer in a pipeline
+# starts at the same moment aven does, and `git diff` on a large repository can
+# take a moment to reach its first byte.
+PIPE_GRACE = 2.0
+
+
+def _waitable(stream) -> bool:
+    """Whether `select` can be asked about this stream at all."""
+    try:
+        select.select([stream], [], [], 0)
+    except (OSError, ValueError, TypeError, AttributeError):
+        return False
+    return True
+
+
+def piped(prompt: str | None, grace: float = PIPE_GRACE) -> str:
     """The prompt, with anything piped in put before it.
 
     `git diff | aven -p "review this change"` should work: the pipe is the
     material and the argument says what to do with it, so the material goes
     first.
+
+    The awkward part is that a pipe nobody ever writes to is indistinguishable
+    from one that is about to be written to, and `sys.stdin.read()` waits for
+    EOF either way. An unattended run - a cron line, a CI step, a harness that
+    put the process in the background - routinely inherits a pipe that stays
+    open forever, and aven simply stopped: no output, no timeout, no clue. It
+    cost fifty-three minutes of a benchmark run to notice, and what was finally
+    diagnostic was that the session file had never been written at all.
+
+    What settles it is whether the prompt is already complete:
+
+    - no prompt argument, so stdin IS the request (`cat diff | aven`). Waiting
+      is the whole point, and waiting indefinitely is correct.
+    - a prompt argument, so stdin is extra material. Wait a moment for it, and
+      if the pipe has nothing to say, get on with the job.
+
+    `select` reports a pipe readable at EOF as well as when it holds data, so
+    an empty-and-closed pipe and /dev/null both return at once; only an open
+    pipe with no writer waits out the grace.
     """
     if sys.stdin.isatty():
         return prompt or ""
-    piped_in = sys.stdin.read().strip()
+
+    if prompt and _waitable(sys.stdin):
+        # Only when the wait can be bounded. A stdin that cannot be selected on
+        # is not a real OS stream - a StringIO, or a platform that will not
+        # select a pipe - and reading one of those does not hang, so "cannot
+        # tell" falls through to reading rather than to discarding the
+        # material. Dropping what somebody piped in is the worse mistake of the
+        # two, and the only one that is silent.
+        ready, _, _ = select.select([sys.stdin], [], [], grace)
+        if not ready:
+            return prompt
+
+    try:
+        piped_in = sys.stdin.read().strip()
+    except OSError:
+        return prompt or ""
     if not piped_in:
         return prompt or ""
     return f"{piped_in}\n\n{prompt}" if prompt else piped_in
