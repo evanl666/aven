@@ -11,6 +11,8 @@ of them changed when it arrived.
 
 from __future__ import annotations
 
+import asyncio
+import importlib
 from collections.abc import AsyncIterator
 from dataclasses import dataclass
 from typing import Any
@@ -42,6 +44,58 @@ _TOO_LONG = ("prompt is too long", "too many tokens", "context window", "maximum
 # silently, and the provider is the authority on its own models. One wasted
 # request per process, then remembered.
 _NO_THINKING = ("thinking is not supported", "thinking.type")
+
+# How many times a dropped stream is worth re-asking, and how long to wait
+# between. Short, and few: a genuine outage should end the turn rather than
+# sit there re-sending a long context, and each retry pays for the whole
+# prompt again at cache-read price.
+TRIES = 3
+PAUSE = 1.0
+
+
+def _dropped_errors() -> tuple[type[BaseException], ...]:
+    """Whatever the SDK's HTTP library calls a connection that went away.
+
+    Found the awkward way: a mid-stream drop does NOT arrive as
+    anthropic.APIConnectionError. It is raised while iterating the response,
+    escapes the SDK's own wrapping, and lands as httpx2.RemoteProtocolError -
+    a class from a library this project does not depend on and whose name
+    carries a version number the SDK may change.
+
+    So the types are looked up rather than imported. Both spellings are
+    checked because both are installed and only the SDK knows which it uses;
+    if neither is importable the tuple is empty and nothing is caught, which
+    is exactly how this behaved before.
+    """
+    found: list[type[BaseException]] = [anthropic.APIConnectionError]
+    for library in ("httpx2", "httpx"):
+        try:
+            module = importlib.import_module(library)
+        except ImportError:
+            continue
+        for name in (
+            "RemoteProtocolError", "ReadError", "ReadTimeout",
+            "WriteError", "ConnectError", "ProtocolError",
+        ):
+            found_class = getattr(module, name, None)
+            if isinstance(found_class, type) and issubclass(found_class, BaseException):
+                found.append(found_class)
+    return tuple(found)
+
+
+_DROPPED = _dropped_errors()
+
+
+def _dropped_how(dropped: BaseException) -> str:
+    """The sentence, with the library's class name kept.
+
+    Kept deliberately: "the connection dropped" is what happened, and
+    RemoteProtocolError against ReadTimeout is the difference between the
+    server hanging up and the network going quiet. Somebody debugging their
+    own wifi wants to know which.
+    """
+    said = str(dropped).strip()
+    return f"{type(dropped).__name__}: {said}" if said else type(dropped).__name__
 
 
 def _said_by(refusal: Exception) -> str:
@@ -210,12 +264,14 @@ class Claude:
         # Streaming is also what keeps a long reply from hitting the SDK's
         # request timeout, so this is not only a matter of how it looks.
         #
-        # `said` guards the one retry below. A parameter the model does not
-        # support is refused before any content arrives, so retrying is safe -
-        # but only while that is still true. Once a chunk has been handed to
-        # the caller, asking again would repeat it.
+        # `said` guards the parameter retry below. A parameter the model does
+        # not support is refused before any content arrives, so retrying is
+        # safe - but only while that is still true. Once a chunk has been
+        # handed to the caller, asking again would repeat it.
         said = False
-        for attempt in (1, 2):
+        attempt = 0
+        while True:
+            attempt += 1
             try:
                 async with self.client.messages.stream(**request) as stream:
                     async for chunk in stream.text_stream:
@@ -223,6 +279,34 @@ class Claude:
                         yield chunk
                     complete = await stream.get_final_message()
                 break
+
+            # The connection died part-way through the reply. Measured on a
+            # 30-task benchmark sweep: thirteen of the thirty ended here, with
+            #
+            #   httpx2.RemoteProtocolError: peer closed connection without
+            #   sending complete message body (incomplete chunked read)
+            #
+            # reaching the screen as a raw traceback and the task abandoned.
+            # Nothing was wrong with the request; the network hiccuped, which
+            # over a reply that takes a minute to arrive is ordinary.
+            #
+            # Retried even when text has already been streamed, which is the
+            # opposite of the rule above, because the alternative here is
+            # losing the turn. What was streamed went to a renderer; what goes
+            # into the conversation is `complete`, and that never arrived - so
+            # the session cannot end up holding the reply twice.
+            except _DROPPED as dropped:
+                if attempt > TRIES:
+                    raise Unreachable(
+                        t("model.stream_lost", tries=TRIES, why=_dropped_how(dropped))
+                    ) from dropped
+                if said:
+                    # Say so, rather than appearing to repeat itself.
+                    yield t("model.stream_again")
+                    said = False
+                await asyncio.sleep(PAUSE * attempt)
+                continue
+
             except anthropic.BadRequestError as refusal:
                 if any(hint in str(refusal).lower() for hint in _TOO_LONG):
                     raise ContextOverflow(str(refusal)) from refusal

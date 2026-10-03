@@ -526,3 +526,153 @@ async def test_the_message_is_the_providers_sentence_and_not_its_envelope():
     assert said.endswith("messages.0.content: expected at least one block")
     for noise in ("Error code", "400", "{", "'type'", "invalid_request_error"):
         assert noise not in said, f"{noise!r} leaked into {said!r}"
+
+
+# --- a connection that dies mid-reply ----------------------------------------
+#
+# Thirteen of thirty benchmark tasks ended here: the stream dropped part-way
+# through the model's answer, the error escaped the SDK's own wrapping as
+# httpx2.RemoteProtocolError, and aven printed a traceback and abandoned the
+# task. A reply that takes a minute to arrive over somebody's wifi is going to
+# meet this, so it has to be survivable rather than fatal.
+
+
+@pytest.fixture(autouse=True)
+def _no_waiting(monkeypatch):
+    """The backoff is real seconds. A test suite must not pay for them."""
+    import aven.model.claude as claude
+
+    monkeypatch.setattr(claude, "PAUSE", 0.0)
+
+
+class DroppingStream(FakeStream):
+    """Yields some text, then the connection goes away."""
+
+    def __init__(self, chunks, how):
+        super().__init__(None, chunks)
+        self.how = how
+
+    @property
+    def text_stream(self):
+        async def chunks():
+            for chunk in self._chunks:
+                yield chunk
+            raise self.how
+
+        return chunks()
+
+
+class DropsThenWorks:
+    """Drops the first `times` streams, then answers."""
+
+    def __init__(self, times, reply, chunks=("some ", "words"), how=None):
+        import httpx2
+
+        self.times = times
+        self.reply = reply
+        self.chunks = list(chunks)
+        self.how = how or httpx2.RemoteProtocolError(
+            "peer closed connection without sending complete message body"
+        )
+        self.requests = []
+        self.messages = SimpleNamespace(stream=self._stream)
+
+    def _stream(self, **request):
+        self.requests.append(request)
+        if len(self.requests) <= self.times:
+            return DroppingStream(self.chunks, self.how)
+        return FakeStream(self.reply, ["the answer"])
+
+
+async def test_a_dropped_stream_is_asked_again_rather_than_crashing():
+    client = DropsThenWorks(1, response(block(type="text", text="the answer")))
+
+    chunks, message = await drain(Claude(client=client)([]))
+
+    assert message is not None, "the turn was lost"
+    assert message.text == "the answer"
+    assert len(client.requests) == 2
+
+
+async def test_the_restart_is_announced_so_it_does_not_look_like_repetition():
+    """The caller already has text on screen. Silently re-streaming reads as
+    the model repeating itself, which gets diagnosed as a model problem."""
+    client = DropsThenWorks(1, response(block(type="text", text="the answer")))
+
+    chunks, _ = await drain(Claude(client=client)([]))
+
+    said = "".join(chunks)
+    assert "some words" in said, "what arrived before the drop was thrown away"
+    assert "dropped" in said.lower(), f"restart not announced: {said!r}"
+
+
+async def test_what_the_conversation_keeps_is_never_the_partial_text():
+    """The reason retrying after yielding is safe here at all.
+
+    Streamed chunks go to a renderer. The message that goes into the session is
+    the completed one, and the dropped attempt never produced one - so the
+    conversation cannot end up holding the reply twice.
+    """
+    client = DropsThenWorks(1, response(block(type="text", text="the answer")))
+
+    _, message = await drain(Claude(client=client)([]))
+
+    assert message.text == "the answer"
+    assert "some words" not in message.text
+
+
+async def test_it_gives_up_after_a_few_tries_with_a_readable_failure():
+    """A real outage must end the turn, not re-send a long context forever."""
+    from aven.harness.calling import Unreachable
+    from aven.model.claude import TRIES
+
+    client = DropsThenWorks(99, response(block(type="text", text="never")))
+
+    with pytest.raises(Unreachable) as caught:
+        await drain(Claude(client=client)([]))
+
+    said = str(caught.value)
+    assert "RemoteProtocolError" in said, "which kind of drop is what you debug with"
+    assert "Traceback" not in said
+    assert len(client.requests) == TRIES + 1
+
+
+async def test_a_drop_before_any_text_is_also_survived():
+    client = DropsThenWorks(
+        2, response(block(type="text", text="the answer")), chunks=()
+    )
+
+    _, message = await drain(Claude(client=client)([]))
+
+    assert message.text == "the answer"
+    assert len(client.requests) == 3
+
+
+async def test_a_read_timeout_counts_as_a_drop_too():
+    """The network going quiet and the server hanging up need the same answer."""
+    import httpx2
+
+    client = DropsThenWorks(
+        1,
+        response(block(type="text", text="the answer")),
+        how=httpx2.ReadTimeout("timed out"),
+    )
+
+    _, message = await drain(Claude(client=client)([]))
+    assert message.text == "the answer"
+
+
+async def test_the_caught_types_include_the_one_that_actually_escaped():
+    """Looked up rather than imported, so this is worth asserting out loud."""
+    import httpx2
+
+    from aven.model.claude import _DROPPED
+
+    assert httpx2.RemoteProtocolError in _DROPPED
+    assert anthropic_connection_error() in _DROPPED
+
+
+def anthropic_connection_error():
+    import anthropic
+
+    return anthropic.APIConnectionError

@@ -46,6 +46,8 @@ TEXT: dict[str, str] = {
     "usage.cache": "缓存读 {read} · 写 {written}",
     "usage.line": "{requests} 次请求 · 输入 {input}({cache}) · 输出 {output}",
 
+    "model.stream_lost": "与模型的连接在回复中途反复断开 —— 试了 {tries} 次,最后一次:{why}",
+    "model.stream_again": "\n[连接在回复中途断开,正在重新请求]\n",
     "model.refused": "{model} 拒绝了这个请求:{why}",
     "model.bad_key": "Anthropic 拒绝了这个 API key。已经轮换或吊销的 key 就是"
                      "这个表现 —— 去 Connections 里换一个,或者 export 一个新的 "

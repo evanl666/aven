@@ -51,6 +51,9 @@ TEXT: dict[str, str] = {
 
     # The provider saying no. The most likely way a first run ends, so each one
     # names the thing to go and fix rather than describing the failure.
+    "model.stream_lost": "the connection to the model kept dropping "
+                          "mid-reply - {tries} attempts, last one: {why}",
+    "model.stream_again": "\n[the connection dropped mid-reply; asking again]\n",
     "model.refused": "{model} refused the request: {why}",
     "model.bad_key": "Anthropic rejected the API key. One that has been rotated "
                      "or revoked fails exactly like this — replace it in "
