@@ -206,36 +206,78 @@ def read_run(where: Path) -> list[Task]:
     return tasks
 
 
+# The leftmost column, which is a name rather than a number.
+NAME, MARK = 34, 4
+
+# The numeric columns are NOT fixed. They were, in three separate format
+# strings - which is three places that have to agree about six numbers, and
+# they stopped agreeing the first time a total went past eight digits: 704
+# requests beside 13,952,143 tokens printed as "70413,952,143", because a
+# field too narrow for its number does not truncate, it grows, and pushes the
+# number next to it into contact.
+#
+# Widening the fields only moves the magnitude at which that happens. So the
+# table measures its own contents instead: every column is as wide as the
+# widest thing in it, which makes overflow unrepresentable rather than
+# unlikely. A thirty-task run and a three-hundred-task run both line up.
+COLUMNS = ("req", "input", "cached", "out", "hit", "$")
+GAP = 2
+
+
+def _cells(task: Task) -> list[str]:
+    return [
+        f"{task.requests:,}",
+        f"{task.total_input:,}",
+        f"{task.cache_read:,}",
+        f"{task.output:,}",
+        f"{task.hit_rate:.0%}",
+        f"{task.cost:.3f}",
+    ]
+
+
 def report(tasks: list[Task]) -> str:
     rows = sorted(tasks, key=lambda x: (-x.cost, x.name))
     measured = [x for x in tasks if x.measured]
     solved = [x for x in tasks if x.resolved]
 
-    out = [
-        f"{'task':<34}{'':<4}{'req':>5}{'input':>10}{'cached':>10}"
-        f"{'out':>8}{'hit':>7}{'$':>9}",
-        "-" * 87,
-    ]
-    for task in rows:
-        mark = "ok " if task.resolved else "   "
-        if not task.measured:
-            out.append(f"{task.name:<34}{mark:<4}{'- never ran -':>49}")
-            continue
-        out.append(
-            f"{task.name:<34}{mark:<4}{task.requests:>5}{task.total_input:>10,}"
-            f"{task.cache_read:>10,}{task.output:>8,}"
-            f"{task.hit_rate:>6.0%}{task.cost:>9.3f}"
-        )
-
     spent = sum(x.cost for x in tasks)
     read = sum(x.cache_read for x in tasks)
     went_in = sum(x.total_input for x in tasks)
+    summed = [
+        f"{sum(x.requests for x in tasks):,}",
+        f"{went_in:,}",
+        f"{read:,}",
+        f"{sum(x.output for x in tasks):,}",
+        f"{(read / went_in if went_in else 0):.0%}",
+        f"{spent:.2f}",
+    ]
+
+    # Measured over the header, every measured row, and the total - the total
+    # is wider than any row, which is what the fixed widths kept getting wrong.
+    body = [_cells(task) for task in rows if task.measured] + [summed]
+    widths = [
+        max(len(COLUMNS[n]), *(len(cells[n]) for cells in body)) + GAP
+        for n in range(len(COLUMNS))
+    ]
+    rule = NAME + MARK + sum(widths)
+
+    def line(start: str, cells: list[str]) -> str:
+        return start + "".join(
+            f"{cell:>{width}}" for cell, width in zip(cells, widths)
+        )
+
+    out = [line(f"{'task':<{NAME}}{'':<{MARK}}", list(COLUMNS)), "-" * rule]
+
+    for task in rows:
+        start = f"{task.name:<{NAME}}{'ok ' if task.resolved else '   ':<{MARK}}"
+        if not task.measured:
+            out.append(start + f"{'- never ran -':>{sum(widths)}}")
+            continue
+        out.append(line(start, _cells(task)))
 
     out += [
-        "-" * 87,
-        f"{'total':<34}{'':<4}{sum(x.requests for x in tasks):>5}{went_in:>10,}"
-        f"{read:>10,}{sum(x.output for x in tasks):>8,}"
-        f"{(read / went_in if went_in else 0):>6.0%}{spent:>9.2f}",
+        "-" * rule,
+        line(f"{'total':<{NAME}}{'':<{MARK}}", summed),
         "",
         f"  accuracy            {len(solved)}/{len(tasks)}"
         f"  ({len(solved) / len(tasks):.1%})" if tasks else "  no tasks",

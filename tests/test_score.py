@@ -216,3 +216,86 @@ def test_a_more_specific_model_name_wins_over_one_it_contains(monkeypatch):
 
     mini, said = score.prices_for("anthropic/claude-sonnet-5-mini")
     assert mini["input"] == 0.5, f"matched the shorter fragment: {said}"
+
+
+# --- the table ---------------------------------------------------------------
+
+
+def test_a_row_is_never_wider_than_the_table(tmp_path):
+    """The decisive check, and the one a parser cannot do.
+
+    704 requests beside 13,952,143 tokens printed as "70413,952,143": a field
+    too narrow for its number does not truncate, it grows, and the number
+    beside it gets pushed into contact. Whether two numbers are touching is
+    impossible to tell by reading the characters - "70413" is a perfectly good
+    number - but an overflowing field always makes the line longer than the
+    rule above it. So the width is the test.
+
+    A first version of this test looked at the characters and skipped every
+    digit that followed a digit, which is exactly the case it was meant to
+    catch. It passed against the bug.
+    """
+    from evals.terminal_bench.score import Task, report
+
+    # Big enough that the totals reach the magnitude that broke it: nine-digit
+    # token counts, summed over thirty tasks.
+    big = [
+        Task(
+            name=f"task-{n:02d}", resolved=n % 3 == 0, requests=99,
+            total_input=999_999_999, cache_read=999_999_998,
+            cache_write=1, output=9_999_999,
+        )
+        for n in range(30)
+    ]
+
+    printed = report(big).splitlines()
+    rule = len(printed[1])
+    for line in printed:
+        if line.startswith(("task-", "total")):
+            assert len(line) == rule, f"{len(line)} wide, rule is {rule}: {line!r}"
+
+
+def test_the_header_lines_up_with_the_rows(tmp_path):
+    """Header, rows and total are one set of widths or they drift apart."""
+    from evals.terminal_bench.score import Task, report
+
+    lines = report([
+        Task(name="a", resolved=True, requests=5, total_input=100,
+             cache_read=50, cache_write=10, output=7),
+    ]).splitlines()
+
+    header, rule, row, rule2, total = lines[0], lines[1], lines[2], lines[3], lines[4]
+    assert len(rule) == len(rule2)
+    assert len(header) == len(rule) == len(row) == len(total), (
+        f"header {len(header)}, rule {len(rule)}, row {len(row)}, total {len(total)}"
+    )
+
+
+def test_every_cell_stays_a_separate_word(tmp_path):
+    """Equal line widths are not enough - "70413,952,143" is 13 wide either way.
+
+    Dropping the gap between columns keeps every line exactly as wide as the
+    rule and still runs two numbers together, so the width test above passes
+    against it. This one splits the row back into words and insists they are
+    the cells that went in.
+    """
+    from evals.terminal_bench.score import NAME, _cells, report
+
+    big = [
+        Task(
+            name=f"task-{n:02d}", resolved=True, requests=999,
+            total_input=123_456_789, cache_read=123_456_788,
+            cache_write=1, output=1_234_567,
+        )
+        for n in range(30)
+    ]
+
+    printed = report(big).splitlines()
+    for line, task in zip(printed[2:], sorted(big, key=lambda x: (-x.cost, x.name))):
+        if not line.startswith("task-"):
+            continue
+        assert line[NAME:].split() == ["ok", *_cells(task)], line
+
+    total = next(x for x in printed if x.startswith("total"))
+    # Seven words: nothing merged, and the percentage did not swallow a digit.
+    assert len(total.split()) == 7, total
