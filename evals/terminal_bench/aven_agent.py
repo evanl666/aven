@@ -26,6 +26,7 @@ so the calls happen while their results can still be read.
 """
 
 import os
+import re
 import shlex
 from pathlib import Path
 
@@ -43,6 +44,21 @@ from terminal_bench.terminal.models import TerminalCommand
 # loop ends in a timeout rather than an invoice, but a number here is still
 # what stops one task from spending the whole run's budget.
 TURNS = 80
+
+
+# The line aven ends on:
+#
+#   11 requests · in 65127 (cache read 53784 · wrote 11322) · out 2059
+#
+# Only the totals are taken. The cache split matters a great deal to what a run
+# costs and there is nowhere in AgentResult to put it, so it stays in
+# score.py, which reads the same line out of the log.
+_USAGE = re.compile(r"requests\s+·\s+in\s+(\d+)\s+\(.*?\)\s+·\s+out\s+(\d+)")
+
+
+def _usage_in(pane: str) -> tuple[int, int] | None:
+    found = _USAGE.findall(pane.replace("\r", "\n"))
+    return (int(found[-1][0]), int(found[-1][1])) if found else None
 
 
 class AvenAgent(AbstractInstalledAgent):
@@ -86,3 +102,28 @@ class AvenAgent(AbstractInstalledAgent):
                 append_enter=True,
             ),
         ]
+
+    def perform_task(self, instruction, session, logging_dir=None):
+        """Run the task, then put what it cost where everybody reads it.
+
+        AbstractInstalledAgent returns AgentResult(0, 0) - hard-coded, for
+        every installed agent there is, because it only ever sees the terminal
+        and cannot know what the thing inside it spent. So results.json says
+        zero tokens for aven, aider, goose and Claude Code alike, and the only
+        way to compare two harnesses on cost is to write a log scraper per
+        harness.
+
+        aven prints the number itself, on its last line, so this one does not
+        need scraping from outside: the pane is read here and the figure goes
+        into the field every other tool already looks at.
+        """
+        result = super().perform_task(instruction, session, logging_dir)
+
+        counted = _usage_in(session.capture_pane())
+        if counted is None:
+            return result
+
+        went_in, came_out = counted
+        return result.model_copy(
+            update={"total_input_tokens": went_in, "total_output_tokens": came_out}
+        )

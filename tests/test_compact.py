@@ -822,3 +822,93 @@ def test_a_measure_that_knows_nothing_still_gets_an_answer():
 
     said = Compactor(model=None, limit=10, measure=lambda _: 0)
     assert said.size([{"role": "user", "content": "x" * 4_000}]) > 0
+
+
+# --- the overhead the estimate cannot see ------------------------------------
+#
+# estimate_tokens reads the messages. The request also carries the system
+# prompt and every tool's schema, which this object does not have, so the
+# estimate is short by that much - 1,518 tokens and then 3,441 on a real
+# three-turn run. The gap is a constant within a run, and the provider's exact
+# count is what can teach it.
+
+
+def replay(*turns):
+    """Drive size() through (exact-count-now, estimate-now) pairs."""
+    import aven.harness.compact as module
+    from aven.harness.compact import Compactor
+
+    exact = [0]
+    said = []
+    kept = module.estimate_tokens
+    try:
+        counter = Compactor(model=None, limit=10 ** 9, measure=lambda _m: exact[0])
+        for now, guess in turns:
+            exact[0] = now
+            module.estimate_tokens = lambda _m, g=guess: g
+            said.append(counter.size([]))
+        return said, counter
+    finally:
+        module.estimate_tokens = kept
+
+
+def test_the_overhead_is_learned_from_the_first_exact_count():
+    """The numbers from the real run this came out of."""
+    said, counter = replay((0, 31), (1_549, 5_261), (8_702, 5_362))
+
+    assert said == [31, 6_779, 8_803]
+    assert counter._overhead == 3_441
+
+
+def test_nothing_is_assumed_before_there_is_anything_to_learn_from():
+    said, counter = replay((0, 500))
+
+    assert said == [500], "it invented an overhead out of nothing"
+    assert counter._overhead == 0
+
+
+def test_a_huge_result_is_seen_even_on_the_turn_it_arrives():
+    """The failure this whole function exists for."""
+    said, _ = replay((0, 100), (1_000, 100), (1_050, 190_000))
+
+    assert said[-1] > 190_000, "the jump went unnoticed"
+
+
+def test_the_exact_count_is_a_floor_when_even_this_reads_low():
+    said, _ = replay((0, 10), (50_000, 10))
+
+    assert said[-1] == 50_000
+
+
+def test_a_shrinking_conversation_does_not_poison_the_overhead():
+    """Compaction and branching both make the conversation smaller.
+
+    The exact count still refers to the bigger one, so the difference is
+    briefly large. It must not come out negative, and it must not stick.
+    """
+    said, counter = replay(
+        (0, 100_000),        # a long conversation
+        (103_000, 100_000),  # counted: overhead 3,000
+        (103_000, 2_000),    # compacted - much smaller now
+        (5_000, 2_000),      # counted again: overhead 3,000 once more
+    )
+
+    assert counter._overhead >= 0
+    assert counter._overhead == 3_000, f"the overhead drifted: {counter._overhead}"
+    assert said[2] == 103_000, "the stale count is still the floor, which is safe"
+
+
+def test_the_overhead_never_goes_negative():
+    """An estimate that reads higher than the provider's count is possible -
+    CJK is counted whole and often is not."""
+    _, counter = replay((0, 9_000), (1_000, 100))
+
+    assert counter._overhead == 0
+
+
+def test_two_calls_in_one_turn_do_not_learn_twice():
+    """maybe_compact asks, and a caller may ask again before anything is sent."""
+    said, counter = replay((0, 31), (1_549, 5_261), (1_549, 5_261))
+
+    assert counter._overhead == 1_518
+    assert said[1] == said[2]

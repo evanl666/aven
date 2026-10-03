@@ -178,27 +178,57 @@ class Compactor:
     # exact and costs nothing because the number came back with the last reply.
     measure: Callable[[list[LlmMessage]], int] = field(default=estimate_tokens)
 
+    # Learned, never configured. See size(). Not constructor arguments: a
+    # caller who set these would be claiming to know something about a
+    # conversation that has not happened yet.
+    _overhead: int = field(default=0, init=False, repr=False)
+    _handed: int = field(default=0, init=False, repr=False)
+    _exact: int = field(default=0, init=False, repr=False)
+
     def size(self, llm_messages: list[LlmMessage]) -> int:
         """How big the request about to be sent is, as well as it can be known.
 
-        Two sources, and the answer is whichever is larger.
+        Two sources, neither sufficient alone.
 
-        `measure` is exact and stale: the CLI passes one that reports what the
-        provider counted for the LAST request, which costs nothing because the
-        number came back with the reply. `estimate_tokens` is approximate and
-        current: it reads the messages that are about to go out.
+        `measure` is exact and stale. The CLI passes one that reports what the
+        provider counted for the LAST request - free, because the number came
+        back with the reply, and blind to anything that arrived since. Trusting
+        it alone was the bug: one turn that returns a huge tool result makes the
+        next request jump past the window in a single step, and a count of the
+        turn before cannot see that coming. A benchmark task died on "prompt is
+        too long: 200155 tokens > 200000", over by 155, having been told the
+        context was comfortably inside it.
 
-        Trusting the exact one alone was a bug. One turn that returns a huge
-        tool result makes the next request jump past the window in a single
-        step, and a measurement of the turn before it cannot see that coming -
-        a benchmark task died on "prompt is too long: 200155 tokens > 200000",
-        over by 155, having been told the context was comfortably inside it.
+        `estimate_tokens` is approximate and current. It reads the messages
+        about to go out, so it sees the jump - but it reads only the messages.
+        The request also carries the system prompt and every tool's schema, and
+        this object has neither, so the estimate is short by that much. On a
+        real three-turn run the gap was 1,518 tokens and then 3,441.
 
-        Taking the larger costs an occasional early summary, because the
-        estimate is deliberately pessimistic. That is the cheap direction to be
-        wrong in; the other one is a rejected request.
+        What closes it is that the gap is a CONSTANT within a run - the tools
+        and the system prompt do not change between turns - and the exact
+        number is what can teach it. So each fresh count is compared against
+        the estimate of the conversation it was counting, and the difference is
+        carried forward. The estimate stays current; the overhead stays
+        accurate; neither has to know what the other knows.
+
+        Measured on that same run: 6,779 where the estimate alone said 5,261
+        and the stale count said 1,549, and 8,803 against a real 8,702 - just
+        over, which is the direction to be wrong in. The exact number is still
+        taken as a floor, for the turns where even this reads low.
         """
-        return max(self.measure(llm_messages), estimate_tokens(llm_messages))
+        guess = estimate_tokens(llm_messages)
+        exact = self.measure(llm_messages)
+
+        # A number we have not seen before is the count for the conversation we
+        # were handed last time, which is the one it was counting.
+        if exact and exact != self._exact:
+            if self._handed:
+                self._overhead = max(0, exact - self._handed)
+            self._exact = exact
+        self._handed = guess
+
+        return max(guess + self._overhead, exact)
 
     def too_long(self, llm_messages: list[LlmMessage]) -> bool:
         return self.size(llm_messages) >= self.limit

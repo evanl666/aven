@@ -299,3 +299,56 @@ def test_every_cell_stays_a_separate_word(tmp_path):
     total = next(x for x in printed if x.startswith("total"))
     # Seven words: nothing merged, and the percentage did not swallow a digit.
     assert len(total.split()) == 7, total
+
+
+# --- what a run cost, where every tool already looks -------------------------
+
+
+def test_the_adapter_reads_avens_own_usage_line_off_the_pane():
+    """AbstractInstalledAgent returns AgentResult(0, 0), hard-coded, for every
+    installed agent there is - so results.json says zero tokens for aven,
+    aider, goose and Claude Code alike. aven prints the number itself."""
+    from evals.terminal_bench.aven_agent import _usage_in
+
+    pane = (
+        "root@abc:/app# aven-code -p 'do it' --root . --yes --max-turns 80\n"
+        "  · run: pytest -q\n"
+        "The tests pass.\n"
+        "  11 requests · in 65127 (cache read 53784 · wrote 11322) · out 2059\n"
+        "root@abc:/app# "
+    )
+    assert _usage_in(pane) == (65_127, 2_059)
+
+
+def test_a_pane_with_no_usage_line_reports_nothing_rather_than_zero():
+    """A container where the install failed never printed one, and zero is a
+    number somebody would average in."""
+    from evals.terminal_bench.aven_agent import _usage_in
+
+    assert _usage_in("bash: aven-code: command not found\nINSTALL_FAIL_STATUS") is None
+
+
+def test_the_last_usage_line_on_the_pane_wins():
+    from evals.terminal_bench.aven_agent import _usage_in
+
+    pane = (
+        "  2 requests · in 100 (cache read 0 · wrote 100) · out 9\n"
+        "  7 requests · in 900 (cache read 800 · wrote 100) · out 70\n"
+    )
+    assert _usage_in(pane) == (900, 70)
+
+
+def test_the_two_readers_of_that_line_agree(tmp_path):
+    """score.py reads it from the log, the adapter reads it from the pane.
+
+    Two parsers of one sentence is two things to keep in step, so the test
+    that matters is that they get the same numbers from the same line.
+    """
+    from evals.terminal_bench.aven_agent import _usage_in as from_pane
+
+    line = "  11 requests · in 65127 (cache read 53784 · wrote 11322) · out 2059\n"
+    log = tmp_path / "agent.log"
+    log.write_text(line, encoding="utf-8")
+
+    requests, went_in, read, written, came_out = usage_in(log)
+    assert from_pane(line) == (went_in, came_out)
