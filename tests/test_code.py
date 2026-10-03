@@ -313,3 +313,51 @@ def test_a_small_result_is_left_alone(tmp_path, monkeypatch):
     kit = code.assemble(SimpleNamespace(allow=[]), [tmp_path], [])
 
     assert kit.offload("call-1", "list_dir", "three\nshort\nlines") == "three\nshort\nlines"
+
+
+# --- what the prompt insists on, each line from an observed failure ----------
+
+
+def prompt_of_code_app():
+    from aven.apps.cli_code.main import SYSTEM
+    return " ".join(SYSTEM.split())
+
+
+def test_the_prompt_says_the_shell_is_not_limited_to_the_folder():
+    """download-youtube gave up in one request: "My tools only allow me to
+    read, write, and manage files within this local project folder.\""""
+    said = prompt_of_code_app()
+    assert "real shell" in said
+    assert "not its limit" in said
+
+
+def test_the_prompt_forbids_reporting_unrun_work():
+    """polyglot-rust-c wrote the code and said "You can test it with: rustc"."""
+    said = prompt_of_code_app()
+    assert "how they could check it for themselves is not finishing the job" in said
+
+
+def test_the_prompt_forbids_moving_the_goalposts():
+    """processing-pipeline changed /data/output/ to ./output/ and announced
+    success, the same way in two independent runs. Three of four hidden tests
+    checked the path it had changed."""
+    said = prompt_of_code_app()
+    assert "Meet the task as it is written" in said
+    assert "Moving the goalposts and reporting success" in said
+
+
+def test_the_prompt_forbids_documentation_nobody_asked_for():
+    """get-bitcoin-nodes spent its last turns on INDEX.md, START_HERE.md and
+    QUICKSTART.md, then echoed "PROJECT COMPLETE", and timed out."""
+    said = prompt_of_code_app()
+    assert "Do not write files nobody asked for" in said
+    for unwanted in ("README", "SUMMARY", "QUICKSTART"):
+        assert unwanted in said
+
+
+def test_the_prompt_asks_for_independent_calls_in_one_turn():
+    """Every extra turn re-sends the whole conversation: 31 turns a task, and
+    one task ending at 6,139 tokens of context billed 73,595."""
+    said = prompt_of_code_app()
+    assert "Issue independent calls together in one turn" in said
+    assert "re-sends the whole conversation" in said

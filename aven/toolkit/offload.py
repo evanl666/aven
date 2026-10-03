@@ -39,9 +39,28 @@ from typing import Annotated
 from aven.harness.tools import Tool, tool
 
 # Below this, keeping it in the conversation costs less than the round trip to
-# fetch it back. A few thousand characters is a directory listing or a short
-# file, and asking for those twice would be slower and no cheaper.
-BIG = 6_000
+# fetch it back.
+#
+# The right threshold depends on how many turns are left, which this object has
+# no way to know. Priced on Haiku, with the average context measured over a
+# thirty-task benchmark run and a recall costing one extra turn, offloading
+# starts paying above:
+#
+#      5 turns left   ~19,800 characters
+#     10 turns left   ~10,300
+#     20 turns left    ~5,500
+#     40 turns left    ~3,000
+#
+# A fixed number is therefore wrong at both ends. What settles where to put it
+# is the asymmetry rather than the midpoint: offloading too eagerly costs at
+# most one recall, while keeping too long costs the result's size on every turn
+# that follows - about eight times more at the sizes that matter. So this sits
+# below the break-even for the measured average of thirty-one turns per task.
+#
+# It does not go lower than this, for a reason that is not about cost: a result
+# behind a tool call is a result a weaker model may fail to ask for. Hiding
+# more of them saves money and risks the task.
+BIG = 4_000
 
 # How much one recall may return, so reading back cannot undo the saving.
 MOST = 12_000

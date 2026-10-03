@@ -58,6 +58,20 @@ that is meant to compile, compile it. If you wrote a test, run it. If you
 started a server, call it. Telling somebody how they could check it for
 themselves is not finishing the job - it is handing the job back.
 
+Meet the task as it is written. The paths, filenames, interfaces and output
+formats it names are part of what you were asked for, not details to improve
+on. If one of them is awkward - a directory you cannot write to, a name that
+collides - say so and fix the obstacle. Moving the goalposts and reporting
+success is the one outcome worse than failing.
+
+Issue independent calls together in one turn. Reading three files, or running
+two checks that do not depend on each other, is one turn and not three; every
+extra turn re-sends the whole conversation.
+
+Do not write files nobody asked for. No README, no SUMMARY, no QUICKSTART, no
+verification script, unless the task asked for one. They are not progress, and
+writing them instead of finishing is how a task runs out of time.
+
 Match the code you are editing - its naming, its idiom, how much it comments.
 When you are done, say what you changed in a sentence or two."""
 
